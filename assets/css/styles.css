@@ -1,0 +1,430 @@
+@charset "utf-8";
+/* CSS Document */
+/* Body */
+body {
+  font-family: Roboto, sans-serif;
+  background-color: #EAEAEA;
+  margin: 0;
+  padding: 0;
+  overflow: visible !important;
+  height: 110%;
+}
+/* Anchor links */
+a:link {
+text-decoration:none;
+border:1px solid #1c75c0;
+border-radius: 3px;
+color: #1c75c0;
+}
+a:hover {
+background-color: #1c75c0;
+color: #fff;
+}
+a:active {
+background-color: #000;
+color: #fff;}
+a:visited {
+/*color: purple;*/
+}
+
+/* Headings */
+h1 {}
+h2 {}
+h3 {}
+h4 {}
+h5 {}
+h6 {}
+/* Paragraph */
+p {}
+/* Image */
+img {}
+/* Lists */
+ol {}
+ul {}
+li {}
+/* starts container */
+div#content-container {
+  position: relative;
+  margin: 87px auto 50px auto;
+  padding: 0 10px 10px 10px;
+  width: 100%;
+  height: auto;
+  min-width: 250px;
+  max-width: 1280px;
+  overflow: auto;
+  outline: 1px solid red;
+}
+/* ends container */
+/* Header */
+header {}
+/* starts Branding */
+div#branding {
+  position: fixed;
+  top: 0;
+  z-index: 3;
+  margin: 0 auto;
+  padding: 6px 0 3px 0;
+  width: 100%;
+  min-width: 161px;
+  text-align: center;
+  background-color: #1c75c0;
+}
+div#branding img {
+  margin: 0;
+  padding: 0;
+  width: 180px
+}
+
+div#branding a:hover {
+  background-color:none;
+  border: none; 
+}
+/* ends Branding */
+/* Nav menu */
+nav#homepage {
+  max-width: 250px;
+  outline: 3px solid green;
+  display: none;
+}
+nav ul {}
+nav ul li {
+  padding: 10px 0 0 10px;
+}
+nav ul li ul li {
+  padding-right: none !important;
+  outline: 1px solid blue;
+}
+/* ends Nav menu */
+/* starts Nav wayback */
+nav#menuwayback {
+  float: right;
+  display: none;
+  outline: 3px solid green;
+}
+/* ends Nav wayback */
+/* Section */
+section {
+  float: left;
+  width: 100%
+}
+/* Form */
+form {}
+form#searchForm {
+  position: relative;
+  width: 100%;
+  max-width: 1366px;
+  margin: 0px auto;
+  text-align: center;
+  float: left
+}
+form#searchForm input[type="search"] {
+  width: 100%;
+  max-width: 1366px;
+  height: 45px !important;
+  text-align: left;
+  transition: ::-webkit-input-placeholder 0.5s ease 0s;
+  transition: ::-moz-placeholder 0.5s ease 0s;
+  transition: ::-ms-input-placeholder 0.5s ease 0s;
+  transition: ::-moz-placeholder 0.5s ease 0s;
+  background-color: #eaeaea !important;
+  padding-left: 15px;
+  border: 1px solid transparent !important;
+  font-size: 19px !important;
+  font-family: 'Roboto', sans-serif !important;
+  transition: background-color 0.5s ease 0s !important;
+  -webkit-box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0);
+  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0);
+  padding-right: 3% !important;
+}
+form#searchForm button#submit-search {
+  background: transparent url(../img/magnifier.svg) no-repeat 0 0;
+  background-size: 25px;
+  border: none;
+  outline: none;
+  text-indent: -9999px;
+  height: 25px;
+  width: 25px;
+  z-index: 1;
+  right: 9px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+}
+form#searchForm button#date-left, form#searchForm button#date-right {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  background: transparent url(../img/calendar.svg) no-repeat 0 0;
+  outline: none;
+  border: none;
+}
+/* Date Left */
+form#searchForm button#date-left {
+  float: left;
+}
+
+#calendarYearLeft {
+  position: relative;
+  bottom: 30px;
+  left: 1.1px;
+  padding-top: -2px !important;
+  font-size: 1.2em;
+  font-family: helvetica, arial !important;
+}
+#calendarMonthLeft {
+  position: relative;
+  top: 8px;
+  left: 12px;
+  font-size: 0.9em;
+  letter-spacing: 0px;
+  color: #1a73ba;
+  font-family: helvetica, arial !important;
+}
+#calendarDayLeft {
+  position: relative;
+  top: 29px;
+  left: -9.8px;
+  font-size: 1.1em;
+  letter-spacing: -1px;
+  color: #1a73ba;
+  font-family: helvetica, arial !important;
+}
+/* Date Right */
+form#searchForm a#date-right {
+  float: right;
+}
+/* Pages, Images and Advanced search links */
+div#option-buttons {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0
+}
+/* Ionic */
+ion-range#dual-range {
+  float: left;
+  padding: 0;
+  margin: 20px 0;
+  outline: 1px solid green;
+  border-radius:60px;
+  /*border: 1px solid #ccc;*/
+}
+a.Buttons {
+  float: left;
+  padding: 8px 10px;
+  margin-right: 10px; 
+}
+div#option-buttons a#PageButton {}
+div#option-buttons a#ImageButton {}
+div#option-buttons a#advancedSearchButton {
+  float: right;
+  margin-right: 0;
+}
+/* Advanced Search */
+div#accordion {
+  float: left;
+  width: 100%;
+  outline: 1px solid red;
+}
+fieldset {}
+select {}
+input {}
+button {}
+/* Table */
+table {}
+th {}
+tr {}
+td {}
+/* Home content */
+section#home-content {
+  float: left;
+  width: 100%;
+  outline: 4px solid blue;
+}
+section#home-content div {
+  float: left;
+  width: 25%;
+  height: auto;
+  max-height: 100%;
+  outline: 1px solid red;
+}
+section#home-content div#news {
+  float: left;
+  width: 100%;
+  height: 25%;
+  outline: 1px solid blue;
+}
+/* Footer */
+footer {
+  float: left;
+  width: 100%;
+  outline: 4px solid green
+}
+footer ul {
+  float: left;
+  width: /*250px*/ 25%;
+}
+footer section {
+  width: 100%
+}
+footer section#useful-links {
+  outline: 2px solid #000;
+  float: left
+}
+footer section#useful-links ul {
+  outline: 1px solid red;
+  width: 25%;
+  height: 23vh
+}
+footer section#useful-links ul li {
+  padding-bottom: 10px;
+  font-size: 0.8em;
+}
+footer section#useful-links ul li a {
+  text-decoration: none;
+  border: none;
+}
+footer section#useful-links ul li:first-child {
+  font-weight: bold;
+}
+/* Institutional */
+footer section#institutional {
+  float: left;
+  outline: 3px solid orange;
+}
+
+footer section#institutional li a {
+ text-decoration: none;
+ border: none;
+ font
+}
+
+footer section#institutional p#design {
+float: right;
+font-size:0.8em;
+}
+/*********************************/
+/********* MEDIA QUERIES *********/
+/*********************************/
+/* 
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+@media (min-width: 1281px) {
+  //CSS
+}
+/* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+@media (min-width: 1025px) and (max-width: 1280px) {
+  //CSS
+}
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Home content */
+  section#home-content {
+    float: left;
+    width: 100%;
+  }
+  section#home-content div {
+    float: left;
+    width: 50%;
+    height: 25%;
+    outline: 1px solid red;
+  }
+  section#home-content div#news {
+    float: left;
+    width: 100%;
+    height: 50%;
+    outline: 1px solid blue;
+  }
+  footer ul {
+    float: left;
+    width: 50%;
+    height: auto;
+  }
+}
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  //CSS
+}
+
+
+@media (min-width: 960px) and (max-width: 1024px) {
+  footer section#useful-links ul {
+  outline: 1px solid red;
+  width: 25%;
+  height: 23vh
+} 
+}
+
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+@media (min-width: 481px) and (max-width: 767px) {
+  /* Home content */
+  section#home-content {
+    float: left;
+    width: 100%;
+  }
+  section#home-content div {
+    float: left;
+    width: 50%;
+    height: 25%;
+    outline: 1px solid red;
+  }
+  section#home-content div#news {
+    float: left;
+    width: 100%;
+    height: 50%;
+    outline: 1px solid blue;
+  }
+  footer ul {
+    float: left;
+    width: 50%;
+    height: auto;
+  }
+}
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+@media (min-width: 320px) and (max-width: 480px) {
+  /* Home content */
+  section#home-content {
+    float: left;
+    width: 100%;
+  }
+  section#home-content div {
+    float: left;
+    width: 100%;
+    height: 50vh;
+    outline: 1px solid red;
+  }
+  section#home-content div#news {
+    float: left;
+    width: 100%;
+    height: 50vh;
+    outline: 1px solid blue;
+  }
+  footer ul {
+    float: left;
+    width: 100%;
+    height: 50vh;
+  }
+   footer ul {
+    float: left;
+    width: 100%;
+    height: 50vh;
+  }
+}
+@media (min-width : 321px) and (max-width : 1024px) {}
+

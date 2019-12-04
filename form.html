@@ -1,0 +1,134 @@
+
+				<form method="get" action="search.jsp">
+					<input type="hidden" name="l" value="pt" />
+		            <div class="expandable-div">   
+						<fieldset id="words">
+							<legend>Palavras<i class="fa iCarret yearCarret fa-caret-down pull-right right-15" aria-hidden="true"></i></legend>
+							<div class="box-content container-fluid">
+								<div id="label-palavras-1">
+									<label for="adv_and" class="row  col-xs-12 no-padding-left label-padding-top">Tenham estas palavras:</label>
+									<div class="withTip ">
+										<input type="text" id="adv_and" class="row  col-xs-10" name="adv_and" value="" />
+										<div class="row  col-xs-10 no-padding-left">
+											<span class="tip">ex.: expo 98</span>
+										</div>										
+									</div>
+								</div>
+
+								<div id="label-palavras-2">
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="adv_phr">Tenham esta express&atilde;o ou frase:</label>
+									<div class="withTip">
+										<input type="text" class="row  col-xs-10" id="adv_phr" name="adv_phr" value="" />
+										<div class="row  col-xs-10 no-padding-left">
+											<span class="tip">ex.: pavilh&atilde;o da utopia</span>
+										</div>											
+									</div>
+								</div>
+
+								<div id="label-palavras-3">
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="adv_not"><strong>N&atilde;o</strong> tenham estas palavras:</label>
+									<div class="withTip">
+										<input type="text" class="row  col-xs-10" id="adv_not" name="adv_not" value="" />
+										<div class="row  col-xs-10 no-padding-left">
+											<span class="tip">ex.: concerto</span>
+										</div>	
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>	
+
+					<div class="expandable-div">
+						<fieldset id="date">
+							<legend>Data<i class="fa iCarret yearCarret fa-caret-down pull-right right-15" aria-hidden="true"></i></legend>
+							<div class="box-content container-fluid">
+								<div id="label-data-1">
+
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="dateStart_top">Entre</label>
+									<div class="withTip">
+										<input size="10" class="row  date-advanced no-padding-left" type="text" id="dateStart_top" name="dateStart" value="01/01/1996" /><a class="calendar-anchor-advanced" id="startDateCalendarAnchor"><img src="/img/calendario-drop-down.svg"/></a>
+									</div>
+									<label id="labelDateEnd" class="row  col-xs-12 no-padding-left label-padding-top" for="dateEnd_top">e</label>
+									<div class="withTip">
+										<input type="text" class="row  date-advanced no-padding-left" id="dateEnd_top" name="dateEnd" size="10" value="01/12/2018" /><a class="calendar-anchor-advanced" id="endDateCalendarAnchor"><img src="/img/calendario-drop-down.svg"/></a>
+									</div>
+								</div>
+								<div id="label-data-2">
+									<label for="sort" class="row  col-xs-12 no-padding-left label-padding-top">Ordenadas por: </label>							
+    								<ion-select id="sort" name="sort" interface="action-sheet" placeholder="Select One"  class="row  col-xs-10 no-padding-left formatTypeDropdown">
+										
+											<ion-select-option value="relevance" selected>Relev&acirc;ncia</ion-select-option>										
+											<ion-select-option  value="new">Recentes primeiro</ion-select-option>	
+											<ion-select-option  value="old">Antigas primeiro</ion-select-option>
+										    	
+  								  	</ion-select>									
+								</div>
+							</div>
+						</fieldset>
+					</div>	
+					<div class="expandable-div">
+						<fieldset id="format">
+							<legend>Formato<i class="fa iCarret yearCarret fa-caret-down pull-right right-15" aria-hidden="true"></i></legend>
+							<div class="box-content container-fluid ">
+								<div id="label-format-1">
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="formatType">Ver as p&aacute;ginas com o formato:</label>
+									
+									<ion-select id="formatType" name="format" interface="action-sheet" placeholder="Select One"  class="row  col-xs-10 no-padding-left formatTypeDropdown">
+									
+										<ion-select-option value="all" selected>Todos os formatos</ion-select-option>
+										<ion-select-option value="pdf">Adobe PDF (.pdf)</ion-select-option><ion-select-option value="ps">Adobe PostScript (.ps)</ion-select-option><ion-select-option value="html">HTML (.htm, .html)</ion-select-option><ion-select-option value="xls">Microsoft Excel (.xls)</ion-select-option><ion-select-option value="ppt">Microsoft PowerPoint (.ppt)</ion-select-option><ion-select-option value="doc">Microsoft Word (.doc)</ion-select-option><ion-select-option value="rft">Rich Text Format (.rtf)</ion-select-option>										
+									</ion-select>
+								</div>
+							</div>
+						</fieldset>
+					</div>	
+
+					<div class="expandable-div">
+						<fieldset id="domains">
+							<legend>S&iacute;tio Web< aria-hidden="true"></i></legend>
+							<div class="box-content container-fluid ">
+								<div id="label-domains-1">
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="site">Com este endere&ccedil;o:</label>
+									<div class="withTip">
+										<input class="row  col-xs-10 no-padding-left" type="text" id="site" name="site" value="" />
+										<span class="row  col-xs-10 no-padding-left tip">ex.: www.arquivo.pt</span>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>	
+
+					<div class="expandable-div">
+						<fieldset id="num_result_fieldset">
+							<legend>N&uacute;mero de resultados<i class="fa iCarret yearCarret fa-caret-down pull-right right-15" aria-hidden="true"></i></legend>
+							<div class="box-content container-fluid ">
+								<div id="label-num-result-fieldset-1">
+									<label class="row  col-xs-12 no-padding-left label-padding-top" for="num-result">Mostrar:</label>
+									<div>
+										<ion-select id="num-result" interface="action-sheet" placeholder="Select One"  class="row  col-xs-10 no-padding-left formatTypeDropdown" id="num-result" name="hitsPerPage">
+										<ion-select-option selected>10</ion-select-option><ion-select-option>20</ion-select-option><ion-select-option>30</ion-select-option><ion-select-option>50</ion-select-option><ion-select-option>100</ion-select-option>
+										</ion-select >										
+									</div>	
+									<label class="row  col-xs-12 no-padding-left">resultados por p&aacute;gina</label>
+								</div>
+							</div>
+						</fieldset>
+					</div>	
+
+					<div id="bottom-submit" class="text-center button-advanced">
+						<button type="submit" value="Pesquisar no Arquivo" alt="Pesquisar no Arquivo" class="myButtonStyle col-xs-offset-3 col-xs-6" name="btnSubmitBottom" id="btnSubmitBottom" accesskey="e" >
+						Pesquisar
+						<span class="glyphicon glyphicon-search padding-left-5"></span>
+						</button>
+					</div>
+				</form>
+
+
+
+
+
+
+
+
+
+
