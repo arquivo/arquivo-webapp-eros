@@ -1,38 +1,53 @@
-<!-- starts meta viewport -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- ends meta viewport --> 
-
 <!-- starts css styles links -->
-<link rel="stylesheet" type="text/css" href="assets/css/reset.css" media="screen">
+<link rel="stylesheet"  type="text/css" href="assets/css/reset.css" media="screen">
+<link rel="stylesheet"  type="text/css" href="assets/css/ionic.bundle.css" media="screen">
+
 <link rel="stylesheet" type="text/css" href="assets/css/styles.css" media="screen">
-<!-- ends css styles links -->
+<link rel="stylesheet" type="text/css" href="assets/css/print.css" media="print">
+<!-- ends css styles links --> 
+
+<!-- starts js functions -->
+<script src="assets/js/functions.js"></script> 
+<!-- ends js functions --> 
 
 <!-- starts google fonts links -->
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
 <!-- ends google fonts links --> 
 
 <!-- starts ionic slider javascript and css links --> 
-<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@4.7.4/dist/ionic/ionic.esm.js"></script>
-  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core@4.7.4/dist/ionic/ionic.js"></script>
-  <link rel="stylesheet" href="assets/css/ionic.bundle.css"/>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@4.7.4/dist/ionic/ionic.esm.js"></script> 
+<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core@4.7.4/dist/ionic/ionic.js"></script>
 <!-- ends ionic slider javascript and css --> 
 
 <!-- starts jquery and slider css styles links -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script> 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 <!-- ends jquery and slider css styles --> 
 
-<!-- starts accordion -->
+<!-- starts accordion --> 
 <script>
   $( function() {
     $( "#accordion" ).accordion({
       collapsible: true
     });
   });
-  </script>
-<!-- ends accordion -->
+  </script> 
+<!-- ends accordion --> 
+
+<!-- opens opening and closing advanced search form --> 
+<script>
+function openAdvancedSearchForm(){
+ document.getElementById('accordion').style.display = "block";
+ document.getElementById('closeAdvancedSearch').style.display = "block";
+return false;
+}
+
+function closeAdvancedSearch(){
+ document.getElementById('accordion').style.display = "none";
+return false;
+}
+</script> 
+<!-- ends opening and closing advanced search form --> 
 
 <!-- starts Google Analytics (new version) --> 
 <!--<script>
@@ -42,5 +57,5 @@
 	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 	ga('create', 'UA-21825027-1', 'auto');
 	ga('send', 'pageview');
-</script> -->
+</script> --> 
 <!-- ends Google Analytics (new version)-->

@@ -74,7 +74,7 @@ body.backdrop-no-scroll {
   --ion-color-tint: var(--ion-color-medium-tint, #a2a4ab) !important
 }
 .ion-color-dark {
-  --ion-color-base: var(--ion-color-dark, #222428) !important;
+  --ion-color-base: var(--ion-color-dark, #1c75c0) !important;
   --ion-color-base-rgb: var(--ion-color-dark-rgb, 34, 36, 40) !important;
   --ion-color-contrast: var(--ion-color-dark-contrast, #fff) !important;
   --ion-color-contrast-rgb: var(--ion-color-dark-contrast-rgb, 255, 255, 255) !important;
@@ -819,3 +819,4 @@ sub {
 .ion-hide-xl-down {
   display: none !important
 }
+
