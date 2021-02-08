@@ -1,25 +1,78 @@
 @charset "utf-8";
 /* Start main CSS styles ---------------------------------------------*/
 
+/* BODY ****************************************************************** */
 
-/* Body */
 body {
   overflow: auto;
+  overflow-x:hidden;
 }
 
-/* Main */
-main {
-  width:100%;
-  height: auto;
-  max-width: 960px;
-  display:flex;
-  flex-direction: row;
-  flex-wrap: wrap; 
-  padding:0;
-  margin: 0 auto;
+/* ANCHOR LINKS ********************************************************** */
+
+a {
+  color:white;
+}
+a:hover {
+  color:blue;
+  background-color: white;
+}
+a:active {
+  color:blue;
+  background-color: white;
+}
+a:visited {
+  color: blueviolet; 
 }
 
-/* Header ************************************************************/
+/* BUTTONS ************************************************************** */
+
+button {
+  position: relative;
+  z-index: 1;
+  background-color: #1c75c0;
+  color: white;
+  border-radius: 5px ;
+  border: 1px solid #1c75c0;
+  outline: none;
+}
+button:hover {
+  background-color: white;
+  color: #1c75c0;
+  border: 1px solid #1c75c0;
+  cursor: pointer;
+  outline: none;
+}
+button:active {
+  background-color: #033f72;
+  color: #f9fcff;
+  cursor: pointer;
+  border: 1px solid #033f72;
+  outline: none;
+}
+
+/* HEADINGS  ************************************************************* */
+
+h1, h2, h3, h4, h5, h6 {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+h1, h2 {
+  visibility: collapse;
+  height: 0;
+}
+
+/* PARAGRAPH ************************************************************* */
+
+/* Lists */
+
+/* Definition lists */
+
+/* Images */
+
+/* HEADER *********************************************************** */
+
 header {
   width: 100%;
   height: auto;
@@ -29,131 +82,209 @@ header {
   padding: 8px 0 4px 0;
  }
 
- header button#nav-menu-button  {
+header a#logo-arquivo-link:hover {
+  background-color: transparent;
+}
+
+/* Skip navigation menu and go to main content */
+header a#skip-navigation-links {
+  display: none;
+}
+
+header button#nav-menu-button-left  {
   position: absolute;
   left: 13px; 
   font-size: 0.8em;
   border-radius: 5px;   
   width: 54px;
+  height: 31px;   
+ }
+
+ header button#nav-options-right-button  {
+  position: absolute;
+  right: 13px; 
+  font-size: 0.8em;
+  border-radius: 5px; 
+  display: block;  
+  width: 66px;
   height: 31px; 
  }
+
  header img {
   width: 162px;
  } 
 
-button {
-  background-color: #1c75c0;
-  color: white;
-  border-radius: 5px ;
-  border: 1px solid #1c75c0;
-  outline: none;
+ /* Main ************************************************************* */
+main {
+  width:100%;
+  height: auto;
+  max-width: 980px;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap; 
+  padding:0 10px;
+  margin: 0 auto;
 }
 
-button:hover {
-  background-color: white;
-  color: #1c75c0;
-  border: 1px solid #1c75c0;
-  cursor: pointer;
-  outline: none;
+/* nav menus: left nav, options, replay and replay right nav  **************************************************************** */
 
-}
-
-button:active {
-  background-color: #033f72;
-  color: #f9fcff;
-  cursor: pointer;
-  border: 1px solid #033f72;
-  outline: none;
-
-}
- 
-/* nav  */
-
- nav {  
-  position: absolute;
-  top: 0;
-  left: -200px;
- }
- .background-top-curve {
-  border-top-left-radius: 10px !important;
-  border-top-right-radius: 10px !important;
-  height: 24px;  
-  background-color: white !important;
-  width: 100%; 
-  position: relative;
-    z-index: 0;
-margin: 0;
-top: 4px;
-}
-
-nav#left-nav {
+nav#left-nav, nav#options-right-nav, nav#replay-nav, nav#replay-right-nav  {
 position: absolute;
 z-index: 3;
 top: 0px;
-left: -200px;    
-width: 200px;
 background-color:#033f72;
-padding: 46px 0px;
+padding: 46.5px 0px;
 height: 100vh;    
-transition: 0.2s;
+transition: 0.25s;
 color: white;
 outline: none;
 }
 
-nav#left-nav button {
+nav#left-nav { 
+  left: -209px;    
+  width: 200px; 
+}
+
+nav#options-right-nav { 
+  right: -209px;    
+  width: 200px;  
+  display: none;
+}
+
+nav#replay-nav { 
+  left: -209px;    
+  width: 200px; 
+  display: none; 
+}
+
+nav#replay-right-nav { 
+  right: -209px;     
+  width: 200px;
+  display: none; 
+}
+
+/* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
+
+.background-top-curve {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  height: 20px;  
+  background-color: white;
+  width: 100%; 
+  position: relative;
+  z-index: 0;
+  margin: 0;
+  top: 4px;
+}
+
+nav#left-nav button, nav#options-right-nav button, nav#replay-nav button, nav#replay-right-nav button {
   position: absolute;
   z-index: 3;
   top: 5px;
-  right: 8px;
+  right: 7px;
   background-color: transparent;
   border: none;
   outline: none;
   color: white;
   }
 
-  nav#left-nav button span {
+nav#left-nav button span, nav#options-right-nav button span  {
     font-size: 26px;
     font-weight: lighter;  
     }
 
-nav#left-nav section {
-  position: relative;
+nav#left-nav section, nav#options-right-nav section  {
+position: relative;
 z-index: 3;
 margin: 0 0 0 0;
 padding: 0;
 height: 100%;
 color: white;
-  }
+}
 
-nav#left-nav h3  {
+nav#left-nav h3, nav#options-right-nav h3, nav#replay-nav h3, nav#replay-right-nav h3, nav#left-nav h4, nav#options-right-nav h4, nav#replay-nav h4, nav#replay-right-nav h4  {
    visibility: collapse;
    height: 0;
     }
 
-nav#left-nav section ul {
+/* Accordion menus: left nav, options, replay and replay right nav ********************************** */
+
+.accordion-left-menun {
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 1.25em;
+  transition: 0.1s;
+}
+.active, .accordion-left-menu:hover {
+  background-color: transparent;
+}
+.accordion-left-menu:after {
+  content: "\002B";
+  float: right;
+  font-size: inherit;
+}
+.active:after {
+  content: "\2212";
+  float: right;
+  font-size: 1.25em;
+}
+.panel {
+  padding: 0 18px;
+  background-color: transparent;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+/* starts nav MENU: left and right **************************************************
+***********************************************************************************
+******************************************************************************* */
+
+nav#left-nav section ul, nav#options-right-nav section ul {
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   line-height: 2.6em;
-  text-align: left;
-  font-size: 0.9em;
+  text-align: left;  
   }
 
-  nav#left-nav section ul > li { 
+nav#left-nav section ul > li, nav#options-right-nav section ul > li { 
   border-top: 1px solid #e3e3e32e; 
-  }
+  display: block;  
+}
 
-  nav#left-nav section ul > li a{ 
+nav#left-nav section ul > li a, nav#options-right-nav section ul > li a{ 
     display: block;
     text-decoration: none;
     color: white;
-    padding: 6px 6px 6px 15px;
-    }
-    nav#left-nav section ul > li a:hover {    
-      color:#033f72;
-      background-color: white;
-      }
+    padding: 0px 16px 0px 15px;
+    font-size: 0.85em;   
+  }
 
-/* Section -- */
+/* starts Font Awesome icons */
+nav#left-nav section ul > li span, nav#options-right-nav section ul > li span { 
+  padding-right: 8px;  
+}
+/* ends Font Awesome icons */
+
+nav#left-nav section ul > li a:hover, nav#options-right-nav section ul > li a:hover {    
+  color:#033f72;
+  background-color: white;
+}
+/* nav sub-menu ******************************************************************* */
+nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a { 
+  padding: 0 0 0 25px;
+  font-size: 0.85em;
+}
+/* ends nav MENU: left and right ************************************************** */
+
+
+/* Section: *********************************************************************** */
 
 section {
   margin:0 auto;
@@ -164,8 +295,10 @@ section {
 section#search-tools {
   display: flex;
   width: 100%;
+  max-width: 980px;
   flex-direction: row;
-  flex-wrap: wrap;   
+  flex-wrap: wrap;  
+  padding: 0 10px;  
 } 
 
 section#search-tools h3, form#search-form h4, section#search-tools-buttons h4, section#home-content h4,section#important-info h3 {
@@ -245,8 +378,7 @@ form#search-form {
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  max-width: 960px;
-  
+  max-width: 960px;  
   }
 
 form#search-form span.search-input-button {
@@ -267,7 +399,7 @@ form#search-form span.search-input-button {
     border-radius: 10px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px; 
-    transition: 0.5s;
+    transition: 0.2s;
     }
 
     form#search-form input:hover {
@@ -293,11 +425,12 @@ section#home-content {
   justify-content: space-between;
 }
 
-section#home-content h4 {
+section#home-content h3, section#home-content h4 {
 visibility: collapse;
+height: 0;
 }
 
-/* article */
+/* article ************************************************************* */
 article {
   justify-content: space-between;
   margin: 5px 0px;
@@ -328,7 +461,7 @@ figure {
 }
 
 article#arquivo-pt-award {  
-  margin: 0 0 10px 0;
+  margin: 0 0 5px 0;
   background-color: #eaeaea !important;
   width: 100%;
   overflow: hidden;
@@ -349,34 +482,7 @@ article#arquivo-pt-award figure{
   width: 100%;
 }
 
-/* Anchor links */
-
-a {
-  color:white;
-}
-
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-h1, h2 {
-  outline: 1px solid red;
-  visibility: collapse;
-  height: 0;
-}
-
-/* Paragraph */
-
-/* Lists */
-
-/* definition lists */
-
-/* Images */
-
-/* Footer */
+/* Footer * ******************************************************/
 
 footer {
 background-color: #033f72;
@@ -395,10 +501,20 @@ footer a {
   text-decoration: none;
 }
 
+footer a:hover, footer a:active, footer a:visited {
+ color:white;
+  background-color: transparent;
+
+}
+
+footer a:hover {
+  color: inherit;
+  text-decoration: underline;
+ }
+
 footer section {
   padding: 0;
-  margin: 0 auto;
-  
+  margin: 0 auto;  
 }
 
 footer section#important-info {
@@ -406,9 +522,10 @@ footer section#important-info {
   flex-direction: row;
   justify-content: inherit;
   flex-wrap: wrap;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;  
+  width: 100%; 
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 10px; 
 }
 
 footer section section {
@@ -436,7 +553,7 @@ footer section#institutional h4 {
 
 footer section#institutional img {  
   height: 49px;
-  margin:10px 50px
+  margin: 20px 5%;
 }
 
 footer section#institutional p {  
@@ -487,20 +604,31 @@ footer section#institutional p {
   ##Screen = B/w 481px to 767px
 */
 @media (min-width: 481px) and (max-width: 767px) { 
+  .background-top-curve {    
+    height: 10px;
+}
   article {
     width: 100%;
    }
-   footer section {
-    width: 50%;
+   footer section section {
+   width: 50%;
+   padding: 20px 30px 20px 50px;
    }
-
 }
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 480px
 */
 @media (min-width: 320px) and (max-width: 480px) {
+  .background-top-curve {    
+    height: 10px;
+}
+  
   article {
     width: 100%;
    }
+  footer section section {
+    width: 100%;
+    padding: 20px;
+    }
 }

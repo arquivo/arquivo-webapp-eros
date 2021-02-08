@@ -1,3 +1,4 @@
+<!-- starts footer -->  
 <footer> 
   <!-- starts wrap About, News, Collaborate and Help sections -->
   <section id="important-info">
@@ -7,35 +8,36 @@
     <!-- About -->
     <h4>About</h4>
     <ul>      
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/o-que-e-o-arquivo-pt/">O que &eacute; o Arquivo.pt?</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/publicacoes/">Publica&ccedil;&otilde;es</a></li>
-      <li><a href="http://arquivo.pt/exemplos">Exemplos de p&aacute;ginas preservadas</a></li>
-      <li><a href="http://arquivo.pt/imprensa"> &Aacute;rea de imprensa</a></li>
-      <li><a href=" https://github.com/arquivo/pwa-technologies/wiki"> C&oacute;digo-aberto & APIs </a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/acerca/termos-e-condicoes/"> Termos e condi&ccedil;&otilde;es </a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/what-is-arquivo-pt/">What is Arquivo.pt?</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/publications/">Publications</a></li>
+      <li><a href="https://arquivo.pt/examples/">Examples of preserved pages</a></li>
+      <li><a href="https://arquivo.pt/press">Press</a></li>
+      <li><a href=" https://github.com/arquivo/pwa-technologies/wiki">Open-source and API</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/about/terms-and-conditions/">Terms and Conditions</a></li>
     </ul>    
   </section>
   <section id="news">
   <!-- News -->
   <h4>News</h4>
     <ul>      
-      <li><a href="https://groups.google.com/forum/#!forum/divulgarquivopt/join">Subscrever lista de email</a></li>
-      <li><a href="http://arquivo.pt/noticias">&Uacute;ltimas novidades</a></li>
-      <li><a href="https://twitter.com/#!/arquivoweb_pt">Twitter</a></li>
-      <li><a href="http://www.facebook.com/pages/Arquivo-da-Web-Portuguesa/113463705350330">Facebook</a></li>
-      <li><a href="//sobre.arquivo.pt/pt/rss">Subscreva RSS</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/publicacoes/videos/">V&iacute;deos</a></li>
+      <li><a href="https://groups.google.com/forum/#!forum/arquivopt-international/join">Subscribe mailing list</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/news/">Latest news</a></li>
+      <li><a href="https://twitter.com/pt_webarchive">Twitter</a></li>
+      <li><a href="https://www.facebook.com/PortugueseWebArchive/">Facebook</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/rss/">Subscribe RSS</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/publications/videos/">Videos</a></li>
     </ul> 
     </section>
     <section id="collaborations">
     <!-- Collaborations -->
     <h4>Collaborations</h4>
-    <ul>      
-      <li><a href="http://arquivo.pt/sugerir">Sugira site</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/imprensa/material-de-divulgacao/">Material de divulga&ccedil;&atilde;o</a></li>
-      <li><a href="http://arquivo.pt/recomendacoes">Crie sites preserv&aacute;veis</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/colabore/fornecimento-de-conteudos-historicos-da-web-portuguesa/">Forne&ccedil;a conte&uacute;dos hist&oacute;ricos</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/colabore/id/">Investiga&ccedil;&atilde;o e desenvolvimento</a></li>
+    <ul>     
+      <li><a href="https://arquivo.pt/awards">Arquivo.pt Awards</a></li> 
+      <li><a href="https://arquivo.pt/suggest">Suggest a site</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/about/press/dissemination-materials/">Dissemination materials</a></li>
+      <li><a href="https://arquivo.pt/recommendations">Publish preservable sites</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/">Supply historical web content</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/collaborate/rd/">Research & development</a></li>
     </ul>
     </section>
     <section id="help">
@@ -43,12 +45,13 @@
     <!-- Help -->
     <h4>Help</h4>
     <ul>
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/pesquisa/">Pesquisa</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/pesquisa-avancada/">Pesquisa avan&ccedil;ada</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/acesso-a-conteudos-arquivados/">Acesso</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/recolha-e-arquivo-de-conteudos/">Recolha</a></li>
-      <li><a href="http://arquivo.pt/faq">Perguntas frequentes</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/contacto/">Contacto</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/search/">Search</a></li>
+      <li><a href="http://sobre.arquivo.pt/pt/ajuda/pesquisa-avancada/">Advanced search</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/access-to-archived-contents/">Access</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/crawling-and-archiving-web-content/">Crawling and archiving</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/">Frequently asked questions</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/help/training-courses-by-arquivo-pt/">Training courses</a></li>
+      <li><a href="https://sobre.arquivo.pt/en/contact/">Contact</a></li>
     </ul>
     </section>      
 </section>
@@ -68,3 +71,4 @@
   </section>
   <!-- ends institutional links -->  
 </footer>
+<!-- ends footer --> 
