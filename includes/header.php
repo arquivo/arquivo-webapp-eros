@@ -21,14 +21,11 @@
 <!-- ends javascripts files, Google  Font and CSS links -->
 </head>
 <body id="homepage-id" class="homepage-class">  
-  
-  <h1>Arquivo.pt - search pages from the past!</h1>
-  <h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
+ <!-- starts WCAG 2.1: G1: Add a link (the first link of the page) at the top of each page to directly access the main content area -->
+<a href="#main-content" id="skip-navigation-links" class="button" title="Skip navigation links and jump to the main content">Skip links</a> 
 <header>  
-
-<!-- starts WCAG 2.1: G1: Add a link (the first link of the page) at the top of each page to directly access the main content area -->
-  <a href="#main-content" id="skip-navigation-links" class="button" title="Skip navigation links and jump to the main content">Skip links</a> 
   <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
+  <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openLeftMenuNav()"></button>
   <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()" style="display:none" >Options</button> 
   <a id="logo-arquivo-link" href="#">
     <img id="logo-arquivo" src="assets/img/arquivo-logo-white.svg" alt="Arquivo.pt">
@@ -47,10 +44,12 @@
 <section id="search-tools">
 <h2>Search Tools</h2>
 <!-- starts search tools input -->
-<form id="search-form" action="search-query.php" method="get">
+<form id="search-form" action="search-query.php" method="post">
 <h3>Search input</h3>
-  <span class="search-input-button"><input type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off">
-  <button id="submit-search" type="submit">Search</button></span>
+  <span class="search-input-button">
+  <input type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off">
+  <button id="submit-search" type="submit"  aria-hidden="true" value="search mobile menu button">Search</button>
+  <button id="submit-search-mobile" type="submit" class="fas fa-search" aria-hidden="true" value="search mobile menu button"></button></span>
 <!-- ends search tools input -->
   <!-- starts ionic slider --> 
   <section id="search-tools-date-slider">   
@@ -60,8 +59,7 @@
   </script>
   <ion-range ion-padding-start="" id="dual-range" dual-knobs="" pin="" color="dark" min="1996" max="2021" step="1" class="ion-color ion-color-dark md in-item range-has-pin hydrated">  
     
-  <button type="button" rel="modal:open" class="clean-button-no-fill" id="sliderCircleRight" onclick="" slot="end"> 
- 
+  <button type="button" rel="modal:open" class="clean-button-no-fill" id="sliderCircleRight" onclick="" slot="end">  
     <script>
        document.write('<span id="calendarDayRight">'+removeZeroInDay("31")+'</span>'+
        '<br>'+
@@ -69,16 +67,19 @@
        '<span id="calendarYearRight">2021</span>');
     </script><span id="calendarDayRight">31</span><br>    
     <span id="calendarMonthRight">dez</span><br>
-    <span id="calendarYearRight">2021</span> </button>
-    <input size="10" class="display-none" type="text" id="dateStart_top" name="dateStart" value="01/01/1998">
-    <input size="10" class="display-none" type="text" id="dateEnd_top" name="dateEnd" value="31/12/2018">
+    <span id="calendarYearRight">2021</span> 
+  </button>
+    <input size="10" class="display-none" type="text" id="dateStart_top" name="dateStart" value="01/01/1996">
+    <input size="10" class="display-none" type="text" id="dateEnd_top" name="dateEnd" value="31/12/2020">
+    
     <button type="button" class="clean-button-no-fill" id="sliderCircleLeft" slot="start" onclick="openDateStart()"> 
-    <script>
-       document.write('<span id="calendarDayLeft">'+removeZeroInDay("01")+'</span><br>');
-       document.write('<span id="calendarMonthLeft">'+getMonthShortName("01")+'</span>');
-    </script><span id="calendarDayLeft">1</span><br>
+      <script>
+        document.write('<span id="calendarDayLeft">'+removeZeroInDay("01")+'</span><br>');
+        document.write('<span id="calendarMonthLeft">'+getMonthShortName("01")+'</span>');
+      </script><span id="calendarDayLeft">1</span><br>
     <span id="calendarMonthLeft">jan</span> <br>
-    <span id="calendarYearLeft">1996</span> </button>
+    <span id="calendarYearLeft">1996</span> 
+  </button>
     <script>
         function openDateStart(){
              $('#ionDateStart').click();
@@ -109,3 +110,6 @@
 <!-- ends search tools buttons -->
 </section>
 <!-- ends search tools section -->
+
+<h1>Arquivo.pt - search pages from the past!</h1>
+  <h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>

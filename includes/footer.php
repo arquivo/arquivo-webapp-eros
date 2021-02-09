@@ -1,3 +1,6 @@
+<!-- starts white background bottom corner rounded shape -->
+<div class="background-bottom-curve"></div>
+<!-- ends white background top corner rounded shape -->
 <!-- starts footer -->  
 <footer> 
   <!-- starts wrap About, News, Collaborate and Help sections -->

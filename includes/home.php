@@ -2,9 +2,10 @@
   <h3>Highlighted</h3>
     <article id="arquivo-pt-award"> 
         <h4>Arquivo.pt Award</h4>
-        <figure>
-            <a href="#"><img src="assets/img/homepage-premio-card-en.jpg" alt="Click here toknow more about this award" title="Click here to know more about this award"></a>
-        </figure> 
+       <picture>
+            <source media="(min-width:320px) and (max-width:550px)" srcset="assets/img/homepage-premio-card-mobile-en.jpg" title="Click here to know more about this award">
+            <img src="assets/img/homepage-premio-card-en.jpg" alt="Click here to know more about this award" title="Click here to know more about this award">
+       </picture>       
     </article>     
     <article id="what-is-arquivo-pt">  
         <h4>What is Arquivo.pt?</h4>
