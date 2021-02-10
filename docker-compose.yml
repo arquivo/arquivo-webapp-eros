@@ -7,6 +7,4 @@ services:
         - NODE_ENV=production
       volumes:
         - ./:/home/node/app
-      ports:
-        - "80:3000"
       command: "npm start"
