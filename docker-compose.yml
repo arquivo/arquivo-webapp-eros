@@ -2,6 +2,7 @@ version: "2.4"
 services:
     node:
       image: "node:15.8.0-alpine3.10"
+      network_mode: host
       working_dir: /home/node/app
       environment:
         - NODE_ENV=production
