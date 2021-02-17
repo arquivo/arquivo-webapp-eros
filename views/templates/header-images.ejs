@@ -27,7 +27,7 @@
   <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
   <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openLeftMenuNav()"></button>
   <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()" style="display:none" >Options</button> 
-  <a id="logo-arquivo-link" href="#">
+  <a id="logo-arquivo-link" href="/">
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
   </a>
 <!-- Include left and right nav -->
@@ -41,10 +41,12 @@
 <!-- starts modal with calendar -->
 
 <!-- ends modal with calendar -->
+<h1>Arquivo.pt - search pages from the past!</h1>
+<h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
 <section id="search-tools">
 <h2>Search Tools</h2>
 <!-- starts search tools input -->
-<form id="search-form" action="search-query.php" method="post">
+<form id="search-form" action="images-search-results" method="GET">
 <h3>Search input</h3>
   <span class="search-input-button">
   <input type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off">
@@ -97,19 +99,16 @@
 <!-- starts search tools buttons -->
 <section id="search-tools-buttons">
   <h4>Search Pages and Images Buttons</h4>
-  <form id="search-form-pages" class="buttons" action="/pages/" method="get">
+  <form id="search-form-pages" class="buttons" action="pages" method="get">
     <button type="submit" value="Pages">Pages</button>
   </form>
-  <form id="search-form-images" class="buttons" action="/images" method="get">
+  <form id="search-form-images" class="buttons" action="images" method="get">
     <button type="submit" value="Images">Images</button>
   </form>
-  <form id="search-form-advanced" class="buttons" action="advanced-search" method="get">
+  <form id="search-form-advanced" class="buttons" action="images-advanced-search" method="get">
     <button type="submit" value="Advanced Search">Advanced Search</button>
   </form>
 </section>
 <!-- ends search tools buttons -->
 </section>
 <!-- ends search tools section -->
-
-<h1>Arquivo.pt - search pages from the past!</h1>
-  <h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
