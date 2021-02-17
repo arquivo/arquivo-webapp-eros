@@ -683,6 +683,11 @@ section#search-tools #submit-search {
 section#search-tools #submit-search-mobile {
   display: block; 
  }
+
+ section#home-content h4 {  
+  font-size: 0.95em;
+}
+
   article {
     width: 49.1%;
    }
@@ -721,6 +726,10 @@ section#search-tools #submit-search-mobile {
     width: 31px;
     height: 31px;
   }
+
+  section#home-content h4 {  
+    font-size: 0.95em;
+}
 
   .background-top-curve {    
     height: 10px;
