@@ -4,6 +4,7 @@
 /* BODY ****************************************************************** */
 
 body {
+  font-family: arial,sans-serif;
   overflow: auto;
   overflow-x:hidden;
 }
@@ -154,19 +155,28 @@ nav#left-nav {
 nav#options-right-nav { 
   right: -209px;    
   width: 200px;  
+ }
+
+/* Enables options to be visible when searching for pages and images */ 
+
+body#landing-pages button#nav-options-right-button, body#landing-images button#nav-options-right-button  { 
+  display: block;
+}
+/* Disables options to be visible when searching for pages and images */ 
+
+body#homepage button#nav-options-right-button  { 
   display: none;
 }
 
 nav#replay-nav { 
   left: -209px;    
-  width: 200px; 
-  display: none; 
+  width: 200px;  
 }
 
 nav#replay-right-nav { 
   right: -209px;     
   width: 200px;
-  display: none; 
+ 
 }
 
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
@@ -468,6 +478,112 @@ section#home-content h4 {
   font-size: 1em;
 }
 
+/* Pages search results */
+
+body#pages-search-results button#nav-options-right-button {
+  display: block;
+}
+
+section#pages-results  {
+  height: 100%;
+  padding: 20px 0;
+}
+
+section#pages-results h3  {
+  visibility: collapse;
+  height: 0;
+}
+
+section#pages-results > p  {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-top: 0;
+  padding-bottom: 5px;
+  padding-right: 8px;
+  font-size: 14px;
+  color:#70757a;
+}
+
+section#pages-results ul {
+  position: relative;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 10px;
+  padding: 20px;
+  border: 1px solid #e7e7e7;
+  border-radius: 3px;
+  box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+} 
+
+section#pages-results ul:hover, section#pages-results ul:active {
+  transition: box-shadow 0.3s;
+  box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 25%);
+}
+
+section#pages-results ul > li > p {
+  font-family: arial,sans-serif;
+  color: #4d5156;
+  font-size: 14px;
+  line-height: 1.58;
+  text-align: left;
+}
+
+section#pages-results ul > li > p.results-url, section#pages-results ul > li > p.results-date  {
+  padding-bottom: 10px;
+}
+
+section#pages-results ul > li > a  {
+  text-decoration: none; 
+}
+
+section#pages-results ul > li > a:hover  {
+  text-decoration:underline; 
+}
+
+section#pages-results ul > li > a.results-url  {
+  color: #009688;
+  font-size: 14px;   
+}
+
+section#pages-results ul > li > a.results-title  {
+  display: block;
+  padding: 10px 0 0 0;
+  font-size: 20px;
+  color: #1a0dab;     
+}
+
+section#pages-results ul > li > a.results-date  {
+  color: #1a0dab;
+  font-size: 20px; 
+  font-style: italic; 
+}
+
+section#pages-results ul > li > a.results-summary  {
+  display: block;
+  text-decoration: none;
+  padding-bottom: 0;
+  color: #4d5156;
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+/* Pages search results */
+
+section#home-content h3 {
+visibility: collapse;
+height: 0;
+}
+
+section#home-content h4 {
+  padding: 11px 6px 11px 14px;
+  font-weight: normal;
+  font-size: 1em;
+}
+
+
 /* article ************************************************************* */
 article {
   justify-content: space-between;
@@ -621,6 +737,9 @@ footer section#institutional p {
   section#search-tools #submit-search-mobile {
     display: none; 
    }
+   body#pages-search-results button#nav-options-right-button, body#images-search-results button#nav-options-right-button  {
+    display: block;
+  }
 }
 /* 
   ##Device = Laptops, Desktops
