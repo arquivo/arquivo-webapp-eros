@@ -38,9 +38,10 @@ button {
   z-index: 1;
   color: white;
   background-color: #1c75c0;
-  border-radius: 5px;
+  border-radius: 3px;
   border: 1px solid #1c75c0;
   outline: none;
+  font-size: small;
   
 }
 button:hover {
@@ -95,11 +96,11 @@ header a#logo-arquivo-link:hover {
 
 header button#nav-menu-button-left  {
   position: absolute;
-  left: 13px;
+  left: 10px;
   width: 54px;
   height: 31px;  
   font-size: 0.8em;
-  border-radius: 5px;    
+  border-radius: 3px;    
  }
 
  header button#nav-menu-mobile-button-left {
@@ -108,11 +109,11 @@ header button#nav-menu-button-left  {
 
  header button#nav-options-right-button  {
   position: absolute;
-  right: 13px; 
+  right: 10px; 
   width: 66px;
   height: 31px;
   font-size: 0.8em;
-  border-radius: 5px; 
+  border-radius: 3px; 
   display: block;    
  }
 
@@ -152,7 +153,7 @@ nav#left-nav {
   width: 200px; 
 }
 
-nav#options-right-nav { 
+nav#options-right-nav {   
   right: -209px;    
   width: 200px;  
  }
@@ -188,8 +189,8 @@ nav#replay-right-nav {
   margin: 0;  
   height: 20px;  
   background-color: white;  
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;  
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;  
 }
 
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
@@ -202,8 +203,8 @@ nav#replay-right-nav {
   margin: 0;    
   height: 20px;
   background-color: white;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 nav#left-nav button, nav#options-right-nav button, nav#replay-nav button, nav#replay-right-nav button {
@@ -341,18 +342,18 @@ section#search-tools h3, form#search-form h4, section#search-tools-buttons h4, s
   height: 0;
 } 
 section#search-tools #submit-search, section#search-tools #submit-search-mobile {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
   width: 146px; 
   height: 45px;  
 } 
 
 section#search-tools #submit-search-mobile { 
   width: 100%;
-  max-width: 44px;
-  height: 45px; 
+  max-width: 43px;
+  height: 43px; 
 } 
 
 section#search-tools form input {
@@ -433,12 +434,13 @@ form#search-form span.search-input-button {
     width: 100%;
     display: flex;
     flex-direction: row;
-    background: #ffffff url(../img/magnifier.svg) no-repeat 10px 14px;
-    padding-left: 32px;
+    background: #ffffff url(../img/magnifier.svg) no-repeat 14px 14px;
+    padding-top: 3px;
+    padding-left: 42px;
     border: 1px solid #ccc;
     outline: none !important;
     font-size: 18 px !important;    
-    border-radius: 10px;
+    border-radius: 3px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px; 
     transition: 0.2s;
@@ -478,31 +480,39 @@ section#home-content h4 {
   font-size: 1em;
 }
 
-/* Pages search results */
+/* Pages and images search results */
 
 body#pages-search-results button#nav-options-right-button {
   display: block;
 }
 
-section#pages-results  {
+body#pages-search-results section#pages-results,
+body#images-search-results section#images-results,
+body#images-search-results main#main-content
+ {
+  /*max-width: 1920px; */ 
+}
+
+section#pages-results, section#images-results {
   height: 100%;
   padding: 20px 0;
 }
 
-section#pages-results h3  {
+section#pages-results h3, section#images-results h3  {
   visibility: collapse;
   height: 0;
 }
 
-section#pages-results > p  {
+section#pages-results > p, section#images-results > p  {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-top: 0;
-  padding-bottom: 5px;
-  padding-right: 8px;
+  padding-bottom: 10px;  
   font-size: 14px;
   color:#70757a;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 section#pages-results ul {
@@ -574,7 +584,86 @@ section#pages-results ul > li > a.results-summary em  {
   font-weight: bold;
 }
 
-/* ends Pages search results */
+section#images-results ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: stretch;
+}
+
+section#images-results ul > li {
+ width: 20%;
+ min-width: 180px;
+ margin: 0 0 0 0;
+ padding: 10px;
+ border: 1px solid #e7e7e7;
+ display: flex;
+ flex-direction: row;
+ flex-wrap: wrap;
+ flex-grow: 1;
+ flex-shrink: 1;
+ justify-items: center;
+ align-content:flex-start;
+ align-items: center;
+ justify-content: center;
+ }
+
+ section#images-results ul > li > ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: center;
+  font-size: small;
+  }
+
+ section#images-results ul > li > ul > li {
+    width: 100%;
+    display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: center;
+    font-size: 0.9em;
+    padding: 0;
+    border: none;
+  }
+
+  section#images-results ul > li > ul > li:nth-child(2) {
+    padding: 12px 0 5px 0;
+    
+  }
+
+  section#images-results ul > li > ul > li a  {
+    color: teal;
+    text-decoration: none; 
+    font-size: x-small;
+    display: flex; 
+    justify-content: center;
+    width: ;
+
+  }
+
+  section#images-results ul > li > ul > li p  {
+    text-overflow: ellipsis;
+    overflow: hidden; 
+  }
+
+ section#images-results ul li a img {
+  box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+  max-width: 180px;
+ }
+
+ section#images-results ul li:hover a img {
+  box-shadow: 0px 5px 12px 0px rgb(0 0 0 / 50%);
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+ }
+/* ends Pages and images search results */
 
 section#home-content h3 {
 visibility: collapse;
@@ -586,7 +675,6 @@ section#home-content h4 {
   font-weight: normal;
   font-size: 1em;
 }
-
 
 /* article ************************************************************* */
 article {
@@ -699,7 +787,7 @@ height: 0;
 
 footer section section h4 {
   padding-bottom: 3px;
-  font-size: 1.050em;
+  font-size: 1.1em;
   font-weight: 500;
   
 }
@@ -718,7 +806,7 @@ footer section#institutional h4 {
 }
 
 footer section#institutional img {  
-  height: 49px;
+  height: 45px;
   margin: 20px 5%;
 }
 
@@ -727,7 +815,7 @@ footer section#institutional p {
   margin: 0 auto;
   padding: 25px 0 0 0;
   color: black;
-  font-size: small;  
+  font-size: x-small;  
 }
  
 /*********************************/
@@ -790,8 +878,8 @@ footer section#institutional p {
     display: block;
     position: absolute;
     left: 13px; 
-    font-size: 0.8em;
-    border-radius: 5px;   
+    font-size: 1.2em;
+    border-radius: 3px;   
     width: 31px;
     height: 31px;
   }
