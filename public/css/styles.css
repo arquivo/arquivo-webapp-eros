@@ -464,15 +464,19 @@ form#search-form input {
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);
 
     }
-
+/* Slider */
     form#search-form ion-range {          
       height: auto;
       display:flex;
       flex-direction: row;
       padding: 0;
-      }
+    }
 
-/* HOME CONTENT ---*/
+    form#search-form ion-range .range-pin {          
+     outline: 1px solid red;
+    }
+
+/* HOME CONTENT --- */
 
 section#home-content {
   width: 100%;
@@ -605,6 +609,7 @@ section#images-results ul {
 }
 
 section#images-results ul > li {
+ position: relative;
  width: 20%;
  min-width: 180px;
  margin: 0 0 0 0;
@@ -619,6 +624,30 @@ section#images-results ul > li {
  align-items: center;
  justify-content: center;
  }
+
+ section#images-results ul > li button.zoom-image {
+  position: absolute;
+  right: 0;
+  top: 0px;
+  padding: 5px;
+  font-size: initial; 
+  display: none;  
+  color:white;
+  background-color:#009687d0;
+  border: none; 
+ }
+
+  section#images-results ul > li:hover button.zoom-image {
+  display: block; 
+  color:white; 
+  background-color:#009687c5;
+ }
+
+ section#images-results ul > li button.zoom-image:hover {
+  color:white; 
+  background-color:#026157c0;   
+ }
+
  section#images-results ul > li:hover {  
   background-color: #f5f5f5;
   }
@@ -627,6 +656,7 @@ section#images-results ul > li {
   }
 
  section#images-results ul > li > ul {
+  
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -647,25 +677,44 @@ section#images-results ul > li {
     border: none;
   }
 
-  section#images-results ul > li > ul > li:nth-child(2) {
-    padding: 12px 0 5px 0;    
+  section#images-results ul > li > ul > li {
+    width: 100%;
+    display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: center;
+    font-size: 0.9em;
+    padding: 0;
+    border: none;
+  }
+
+  section#images-results ul > li > ul > li.results-url {
+    display: flex;
+    padding: 10px 0 5px 0;    
   }
 
   section#images-results ul > li > ul > li a  {
+    padding-top: 10px;
     color: teal;
     text-decoration: none; 
     font-size: x-small;
     display: flex; 
     justify-content: center;
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    
   }
 
   section#images-results ul > li > ul > li a:hover  {
     background-color: transparent;
+  
   }
 
   section#images-results ul > li > ul > li p  {
     text-overflow: ellipsis;
-    overflow: hidden; 
+    overflow: hidden;
+    padding-top: 4px; 
   }
 
  section#images-results ul li a img {
@@ -677,12 +726,13 @@ section#images-results ul > li {
  }
 
  section#images-results ul li:hover a img {
-  box-shadow: 0px 5px 12px 0px rgb(0 0 0 / 50%);
+  box-shadow: 0px 5px 12px 0px rgb(0 0 0 / 60%);
     cursor: pointer;
     transition: box-shadow 0.3s;
  }
 
  section.navigation-tools {
+  position: relative;
   display: flex;
   max-width: 100%;
   flex-direction: row;
@@ -946,6 +996,14 @@ section#search-tools #submit-search-mobile {
    article iframe {     
     height: 157px;      
 }
+  /* Images: results */
+  section#images-results ul li a img {
+    box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    width: 100%;
+    max-width: 180px;
+  }
    footer section section {
    width: 50%;
    padding: 20px 30px 20px 50px;
@@ -1000,6 +1058,7 @@ section#search-tools #submit-search-mobile {
     article iframe {     
       height: 200px;      
   }
+
   footer section section {
     width: 100%;
     padding: 12px;
@@ -1050,6 +1109,7 @@ section#search-tools #submit-search {
     article iframe {     
       height: 200px;      
   }
+
   footer section section {
     width: 100%;
     padding: 12px;

@@ -820,12 +820,3 @@ sub {
 .ion-hide-xl-down {
   display: none !important
 }
-
-:root .range-knob-handle {
-  --knob-size: 14px;
-  --bar-height: 1px;
-  }
-
-  .range-knob-a {
-    outline: 1px solid red;
-  }
