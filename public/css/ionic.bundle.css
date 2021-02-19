@@ -1,5 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
+
 html.ios {
   --ion-default-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Roboto", sans-serif
 }
@@ -820,3 +821,11 @@ sub {
   display: none !important
 }
 
+:root .range-knob-handle {
+  --knob-size: 14px;
+  --bar-height: 1px;
+  }
+
+  .range-knob-a {
+    outline: 1px solid red;
+  }
