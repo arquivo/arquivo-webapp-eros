@@ -59,6 +59,12 @@ button:active {
   cursor: pointer;
 }
 
+/* Serach button */
+button#submit-search {
+  font-size: initial;
+}
+
+
 /* HEADINGS  ************************************************************* */
 
 h1, h2, h3, h4, h5, h6 {
@@ -135,6 +141,11 @@ main {
 
 body#images-search-results main, body#images-search-results section#images-results  {  
   max-width: 100%;
+}
+
+body#images-search-results main {  
+  width: 100%;
+  max-width: 2560px;
 }
 /* nav menus: left nav, options, replay and replay right nav  **************************************************************** */
 
@@ -410,28 +421,6 @@ section#search-tools-buttons form#search-form-advanced button  {
   display: block;
 }
 
-section.navigation-tools {
-  display: flex;
-  max-width: 100%;
-  flex-direction: row;
-  flex-wrap: wrap;  
-  justify-content: space-between;
-  padding: 20px 0;  
-  border-top: 1px solid #ccc;
-  align-content: center;
-  align-items: center;
-  font-size: small;
-} 
-
-section.navigation-tools p {
-  color: #4d5156;
-} 
-
-section.navigation-tools button {
-  padding: 6px 8px;
-  border-radius: 3px;
-} 
-
 form {
   display: flex;
   flex-direction: row;
@@ -516,7 +505,7 @@ section#pages-results, section#images-results {
 }
 
 section#pages-results h3, section#images-results h3  {
-  visibility: collapse;
+  visibility: hidden;
   height: 0;
 }
 
@@ -526,7 +515,7 @@ section#pages-results > p, section#images-results > p  {
   white-space: nowrap;
   padding-top: 0;
   padding-bottom: 10px;  
-  font-size: 14px;
+  font-size: 13px;
   color:#70757a;
   max-width: 960px;
   margin: 0 auto;
@@ -543,6 +532,11 @@ section#pages-results ul {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
+} 
+
+section#pages-results ul:last-child {
+  margin-bottom: 0px !important; 
+  outline: 1px solid red; 
 } 
 
 section#pages-results ul:hover, section#pages-results ul:active {
@@ -687,6 +681,29 @@ section#images-results ul > li {
     cursor: pointer;
     transition: box-shadow 0.3s;
  }
+
+ section.navigation-tools {
+  display: flex;
+  max-width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;  
+  justify-content: space-between;
+  padding: 20px 0;  
+  border-top: 1px solid #ccc;
+  align-content: center;
+  align-items: center;
+  font-size: small;
+} 
+
+section.navigation-tools p {
+  color: #4d5156;
+} 
+
+section.navigation-tools button {
+  padding: 6px 8px;
+  border-radius: 3px;
+} 
+
 /* ends Pages and images search results */
 
 section#home-content h3 {
