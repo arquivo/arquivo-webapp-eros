@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Slider - Range slider</title>
+  <link rel="stylesheet" href="jQuery%20UI%20Slider%20-%20Range%20slider_files/jquery-ui.css">
+  <link rel="stylesheet" href="jQuery%20UI%20Slider%20-%20Range%20slider_files/style.htm">
+  <script src="jQuery%20UI%20Slider%20-%20Range%20slider_files/jquery-1.js"></script>
+  <script src="jQuery%20UI%20Slider%20-%20Range%20slider_files/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 1996,
+      max: 2021,
+      values: [ 1996, 2021 ],
+      slide: function( event, ui ) {
+        $( "#startYear" ).val( ui.values[ 0 ]);
+        $( "#endYear" ).val( ui.values[ 1 ]);
+      }
+      
+    });
+    $( "#startYear" ).val($("#slider-range" ).slider( "values", 0 ));
+     $( "#endYear" ).val($("#slider-range" ).slider( "values", 1 ));
+  });
+  </script>
+  <style>
+      input[type=text] {width:35px;outline: 1px solid red;text-align: center;}
+  </style>
+</head>
+<body style="padding: 20px;">
+ 
+<div style="margin:0;padding:0;position: relative;">   
+  <input type="button" id="startYear" readonly="readonly" style="border:0; color:#f6931f; font-weight:normal;position: absolute;
+  left: 0;padding:20px 10px">
+  <input type="button" id="endYear" readonly="readonly" style="border:0; color:white; font-weight:normal;position: absolute;
+  right: 0;padding:20px 10px;
+background-color: #1c75c0 !important;
+" value="2006">
+  <div style="background-color: rgb(199, 198, 198);margin: 0 70px;" id="slider-range" ></div>  
+</div>
+</body>
+</html>

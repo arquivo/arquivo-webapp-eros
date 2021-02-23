@@ -31,6 +31,24 @@
     $( "#datepicker" ).datepicker();
   } );
   </script>
+
+<!-- starts jquery and slider css styles -->
+<script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 1996,
+      max: 2021,
+      values: [ 1996, 2021 ],
+      slide: function( event, ui ) {
+        $( "#startYear" ).val( ui.values[ 0 ]);
+        $( "#endYear" ).val( ui.values[ 1 ]);
+      }      
+    });
+    $( "#startYear" ).val($("#slider-range" ).slider( "values", 0 ));
+     $( "#endYear" ).val($("#slider-range" ).slider( "values", 1 ));
+  });
+  </script>
 <!-- ends jquery and slider css styles --> 
 
 <!-- starts JQuery modal -->
@@ -38,6 +56,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 <!-- ends JQuery modal -->
 
+<!-- starts datepicker -->
+<script>
+	$( function() {
+	  $( "#datepicker" ).datepicker();
+	} );
+	</script>
+<!-- ends datepicker -->
 
 <!-- opens opening and closing advanced search form --> 
 <script>
