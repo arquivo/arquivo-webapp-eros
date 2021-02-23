@@ -36,48 +36,33 @@
   <button id="submit-search" type="submit"  aria-hidden="true" value="search mobile menu button">Search</button>
   <button id="submit-search-mobile" type="submit" class="fas fa-search" aria-hidden="true" value="search mobile menu button"></button></span>
 <!-- ends search tools input -->
-  <!-- starts ionic slider --> 
+  
+<!-- starts slider --> 
   <section id="search-tools-date-slider">   
   <h4>Search Date Slider</h4>
-  <script>
-    document.write('<ion-range ion-padding-start id="dual-range" dual-knobs pin color="dark" min="'+minYear+'" max="'+maxYear+'" step="1">');
-  </script>
-  <ion-range ion-padding-start="" id="dual-range" dual-knobs="" pin="" color="dark" min="1996" max="2021" step="1" class="ion-color ion-color-dark md in-item range-has-pin hydrated">  
+
+  <div id="slider-range-container">   
     
-  <button type="button" rel="modal:open" class="clean-button-no-fill" id="sliderCircleRight" onclick="" slot="end">  
-    <script>
-       document.write('<span id="calendarDayRight">'+removeZeroInDay("31")+'</span>'+
-       '<br>'+
-       '<span id="calendarMonthRight">'+getMonthShortName("12")+'</span><br>'+ 
-       '<span id="calendarYearRight">2021</span>');
-    </script><span id="calendarDayRight">31</span><br>    
-    <span id="calendarMonthRight">dez</span><br>
-    <span id="calendarYearRight">2021</span> 
-  </button>
-    <input size="10" class="display-none" type="text" id="dateStart_top" name="dateStart" value="01/01/1996">
-    <input size="10" class="display-none" type="text" id="dateEnd_top" name="dateEnd" value="31/12/2020">
-    
-    <button type="button" class="clean-button-no-fill" id="sliderCircleLeft" slot="start" onclick="openDateStart()"> 
-      <script>
-        document.write('<span id="calendarDayLeft">'+removeZeroInDay("01")+'</span><br>');
-        document.write('<span id="calendarMonthLeft">'+getMonthShortName("01")+'</span>');
-      </script><span id="calendarDayLeft">1</span><br>
-    <span id="calendarMonthLeft">jan</span> <br>
-    <span id="calendarYearLeft">1996</span> 
-  </button>
-    <script>
-        function openDateStart(){
-             $('#ionDateStart').click();
-             return;        
-             }       
-        function openDateEnd(){
-             $('#ionDateEnd').click();
-        return;        
-       }                                              
-    </script> 
-  </ion-range>
+    <!-- starts: start year  -->
+    <a href="#ex1" rel="modal:open"><input type="button" id="startYear" readonly="readonly">
+    <span class="searchCalendarDay" id="calendarDayStart">01 Jan</span></a>
+
+   <!-- start  year button  -->     
+       
+    <div id="slider-range"></div>  
+
+    <!-- starts end year  -->
+    <a href="#ex1" rel="modal:open"><input type="button" rel="modal:open" id="endYear" readonly="readonly">   
+    <span class="searchCalendarDayRight" id="calendarDayStart">23 Feb</span></a>
+
+  </div><!-- Modal HTML embedded directly into document -->
+  <div id="ex1" class="modal" style="text-align: center;"> 
+    <div id="datepicker"></div>
+  </div>
+  
   </section>
-  <!-- ends ionic slider -->      
+  <!-- ends range slider -->  
+
 </form>
 <!-- starts search tools buttons -->
 <section id="search-tools-buttons">
@@ -90,8 +75,9 @@
   </form>
   <form id="search-form-advanced" class="buttons" action="pages-advanced-search" method="get">
     <button type="submit" value="Advanced Search">Advanced Search</button>
-  </form>
-</section>
+  </form>  
+ </section>
 <!-- ends search tools buttons -->
 </section>
 <!-- ends search tools section -->
+

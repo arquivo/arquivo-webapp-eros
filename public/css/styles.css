@@ -7,6 +7,7 @@ body {
   font-family: arial,sans-serif;
   overflow: auto;
   overflow-x:hidden;
+  -webkit-font-smoothing: subpixel-antialiased;  
 }
 
 /* Skip navigation menu and go direct to main content */
@@ -374,7 +375,77 @@ section#search-tools form input {
   border-right: none;
 } 
 
-section#search-tools-date-slider{
+/*  starts Range Slider*/
+
+section#search-tools-date-slider input#startYear, section#search-tools-date-slider input#endYear  {
+  position: absolute;
+  top: 0;
+  padding: 0px 8px 20px 8px;
+  width: 43px;
+  height: 43px;
+  font-size: 13px;
+  font-weight: normal;
+  color: white;
+  background-color: #1c75c0;
+  background-image: none;
+  border: 0;
+  border-radius: 3px; 
+}
+
+#startYear  {    
+  left: 0;
+}
+
+
+#endYear  {  
+  right: 0;
+}
+
+section#search-tools-date-slider a {
+text-decoration: none;
+}
+.ui-widget-header {
+  background: #1c75c0 !important;
+  border: none !important;
+}
+.ui-datepicker table {
+
+  background-color: white !important;
+}
+
+.modal {
+  display: none;
+  vertical-align: middle;
+  position: relative;
+  z-index: 2;
+  max-width: 337px !important;
+  box-sizing: border-box;
+  width: 90%;
+  background: #fff;
+  padding: 15px 30px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 0 10px #000;
+  -moz-box-shadow: 0 0 10px #000;
+  -o-box-shadow: 0 0 10px #000;
+  -ms-box-shadow: 0 0 10px #000;
+  box-shadow: 0 0 10px #000;
+  text-align: center;
+  height: inherit;
+  max-height: 50%;
+}
+
+#datepicker {
+  display: block ruby;
+}
+.ui-datepicker-inline, .ui-datepicker {
+  display: contents;
+}
+
+section#search-tools-date-slider {
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -384,8 +455,95 @@ section#search-tools-date-slider{
   padding: 0;
 }
 
-ion-range {
-  padding: 0;
+.ui-widget.ui-widget-content {
+  border: 0.66px solid #ccc;
+  height: 1.01em;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default {
+  background: #1c75c0;
+  font-weight: normal;
+  color: #454545;
+  border-radius: 10px;
+  margin-top: 2px;
+}
+#slider-range-container {
+position: relative;
+  margin: 0 auto;
+padding: 6px 0 0 0;
+border: none;
+width: 100%;
+height: 43px;
+  }
+
+  #slider-range-container span.searchCalendarDay {
+    position: relative;
+    z-index: 1;
+    color: white;
+    width: 100%;
+    width: 43px;
+    font-size: 11px;
+    margin-top: 20px;
+    top: 16px;
+    left: 5px;
+    font-size: 11px;
+    border-top: 1px solid #ffffff6b;
+    padding-top: 3px;
+  }
+
+  .ui-slider-horizontal .ui-slider-handle {
+    
+    margin-left: -.4em !important;
+}
+
+  #slider-range-container span.searchCalendarDayRight {
+    position: absolute;
+    z-index: 1;
+    color: white;
+    width: 100%;
+    width: 35px;
+    font-size: 11px;
+    margin-top: 0px;
+    top: 22px;
+    right: 4px;
+    font-size: 11px;
+    border-top: 1px solid #ffffff6b;
+    padding-top: 4px;
+    display: block;
+  }
+
+
+#slider-range {
+margin: auto 70px;
+border: none;
+background-color: darkgray;
+height: 0.06em;
+
+  }
+
+  .ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 1 !important;
+    top: -0.5em !important;
+    width: 0.8em !important;
+    height: 0.8em !important;
+    cursor: default;
+    background-color: #1c75c0 !important;  
+    outline: none !important; 
+    cursor: grab !important;
+}
+
+.ui-slider .ui-slider-handle:hover {
+  
+  background-color: #1c75c0;   
+}
+
+.ui-slider .ui-slider-handle:active {
+  background-color: #1c75c0;
+  width: 1em !important;
+    height: 1em !important;
+    top: -0.6em !important;
+    cursor: grab;
 }
 
 section#search-tools-buttons   {
@@ -1123,4 +1281,18 @@ section#search-tools #submit-search {
       height: 36px;
       margin: 20px 5%;
   }
+}
+
+
+
+
+.range-knob-handle {
+  left: 0px;
+  top: calc((var(--height) - var(--knob-handle-size)) / 2);
+  margin-left: calc(0px - var(--knob-handle-size) / 2);
+  position: absolute;
+  width: var(--knob-handle-size);
+  height: 1px !important;
+  color: #e2e2e2 !important;
+  text-align: center;
 }
