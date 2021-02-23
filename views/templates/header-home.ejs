@@ -26,8 +26,11 @@
 <!-- ends modal with calendar -->
 <h1>Arquivo.pt - search pages from the past!</h1>
 <h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
+
+<!-- starts search tools section -->
 <section id="search-tools">
 <h2>Search Tools</h2>
+
 <!-- starts search tools input -->
 <form id="search-form" action="pages-search-results" method="GET">
 <h3>Search input</h3>
@@ -37,33 +40,39 @@
   <button id="submit-search-mobile" type="submit" class="fas fa-search" aria-hidden="true" value="search mobile menu button"></button></span>
 <!-- ends search tools input -->
   
-<!-- starts slider --> 
+<!-- starts range slider block --> 
   <section id="search-tools-date-slider">   
   <h4>Search Date Slider</h4>
-
-  <div id="slider-range-container">   
+  
+  <section id="slider-range-container">   
     
     <!-- starts: start year  -->
-    <a href="#ex1" rel="modal:open"><input type="button" id="startYear" readonly="readonly">
+    <a href="#ex1" rel="modal:open"><input type="button" id="startYear">
     <span class="searchCalendarDay" id="calendarDayStart">01 Jan</span></a>
-
-   <!-- start  year button  -->     
-       
+    <!-- ends: start year  -->
+   
+    <!-- starts range slider  -->       
     <div id="slider-range"></div>  
+    <!-- ends range slider  --> 
 
-    <!-- starts end year  -->
-    <a href="#ex1" rel="modal:open"><input type="button" rel="modal:open" id="endYear" readonly="readonly">   
+    <!-- starts end year button  -->
+    <a href="#ex1" rel="modal:open"><input type="button" id="endYear">   
     <span class="searchCalendarDayRight" id="calendarDayStart">23 Feb</span></a>
+    <!-- ends: end year  -->
 
-  </div><!-- Modal HTML embedded directly into document -->
-  <div id="ex1" class="modal" style="text-align: center;"> 
+    </section>
+
+  <!-- starts modal datepicker -->
+  <div id="ex1" class="modal"> 
     <div id="datepicker"></div>
-  </div>
-  
-  </section>
-  <!-- ends range slider -->  
+  </div> 
+  <!-- ends modal datepicker -->
 
+  </section>
+  <!-- ends range slider block -->  
 </form>
+<!-- ends search tools input -->
+
 <!-- starts search tools buttons -->
 <section id="search-tools-buttons">
   <h4>Search Pages and Images Buttons</h4>
