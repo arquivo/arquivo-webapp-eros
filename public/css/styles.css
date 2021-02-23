@@ -158,7 +158,7 @@ top: 0px;
 padding: 46.5px 0px;
 height: 100vh;
 color: white;
-background-color:#033f72;   
+background-color:rgba(3,63,114,0.95);   
 outline: none;
 transition: 0.25s
 }
@@ -308,7 +308,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a{
     text-decoration: none;
     color: white;
     padding: 0px 16px 0px 15px;
-    font-size: 0.75em;   
+    font-size: 0.8em;   
   }
 
 /* starts Font Awesome icons */
@@ -697,7 +697,7 @@ section#pages-results > p, section#images-results > p  {
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-top: 0;
-  padding-bottom: 20px;  
+  padding-bottom: 10px;  
   font-size: 13px;
   color:#70757a;
   max-width: 960px;
