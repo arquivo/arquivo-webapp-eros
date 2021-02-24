@@ -25,7 +25,7 @@ a:hover {
   background-color: white;
 }
 a:active {
-  color:blue;
+  color:#033f72;
   background-color: white;
 }
 a:visited {
@@ -158,7 +158,7 @@ top: 0px;
 padding: 46.5px 0px;
 height: 100vh;
 color: white;
-background-color:rgba(3,63,114,0.95);   
+background-color:rgba(3,63,114,1);   
 outline: none;
 transition: 0.25s
 }
@@ -218,23 +218,36 @@ nav#replay-right-nav {
   margin: 0;    
   height: 12px;
   background-color: white;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 1px;
+  border-bottom-right-radius: 1px;
 }
 
 nav#left-nav button, nav#options-right-nav button, nav#replay-nav button, nav#replay-right-nav button {
   position: absolute;
   z-index: 3;
-  top: 5px;
+  top: 12px;
   right: 7px;
-  background-color: transparent;
+  background-color: #224d75;
   border: none;
   outline: none;
   color: white;
   }
 
+  nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-nav button:hover, nav#replay-right-nav button:hover {
+    background-color: white;
+    border: none;
+    outline: none;
+    color: #033f72;
+    }
+    nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-nav button:active, nav#replay-right-nav button:active {
+      background-color: #033f72;
+      border: none;
+      outline: none;
+      color: white;
+      }  
+
 nav#left-nav button span, nav#options-right-nav button span  {
-    font-size: 26px;
+    font-size: 20px;
     font-weight: lighter;  
     }
 
@@ -272,7 +285,7 @@ nav#left-nav h3, nav#options-right-nav h3, nav#replay-nav h3, nav#replay-right-n
 .accordion-left-menu:after {
   content: "\002B";
   float: right;
-  font-size: inherit;
+  font-size: large;
 }
 .active:after {
   content: "\2212";
@@ -498,7 +511,7 @@ height: 43px;
     width: 43px;
     font-size: 11px;
     margin-top: 20px;
-    top: 16px;
+    top: 17px;
     left: 5px;
     font-size: 11px;
     border-top: 1px solid #ffffff8a;
@@ -520,9 +533,8 @@ height: 43px;
   margin-top: 0px;
   top: 22px;
   right: 3px;
-  font-size: 10px;
   border-top: 1px solid #ffffff8a;
-  padding-top: 5px;
+  padding-top: 3px;
   display: block;
   text-align: center;
 }
@@ -567,6 +579,15 @@ height: 0.06em;
   transition: 0.4s;
 }
 
+/* Shows year effect when dragging range slider */
+
+.ui-slider .ui-slider-handle:active #endYear {
+  background-color: #033f72 !important;  
+  -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
+  box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
+  transition: 0.4s;
+}
+
 section#search-tools-buttons   {
   position: relative;  
   display: flex;
@@ -582,7 +603,7 @@ section#search-tools-buttons form {
 }
 
 section#search-tools-buttons form button  {
-  padding: 4px 8px 6px 8px; 
+  padding: 5px 8px 6px 8px; 
   height: auto;
   width: auto;
 }
@@ -683,6 +704,8 @@ body#pages-search-results button#nav-options-right-button {
 }
 
 section#pages-results, section#images-results {
+  position: relative;
+  z-index: 0;
   height: 100%;
   padding: 20px 0;
 }
@@ -773,7 +796,7 @@ section#pages-results ul > li > a.results-summary em  {
   font-weight: bold;
 }
 
-body#pages-search-results section#pages-results ul:last-child {
+section#pages-results + ul:nth-last-child(1) {
   margin-bottom: 0px !important; 
   outline: 1px solid red !important; 
 } 
@@ -809,7 +832,7 @@ section#images-results ul > li {
   right: 0;
   top: 0px;
   padding: 5px;
-  font-size: initial; 
+  font-size: small; 
   display: none;  
   color:white;
   background-color:#009687d0;
@@ -1112,6 +1135,9 @@ footer section#institutional p {
    body#pages-search-results button#nav-options-right-button, body#images-search-results button#nav-options-right-button  {
     display: block;
   }
+  header button#nav-options-right-button-mobile {
+    display: none;
+  }
 }
 /* 
   ##Device = Laptops, Desktops
@@ -1121,6 +1147,9 @@ footer section#institutional p {
   section#search-tools #submit-search-mobile {
     display: none; 
    }
+   header button#nav-options-right-button-mobile {
+    display: none;
+  }
 }
 /* 
   ##Device = Tablets, Ipads (portrait)
@@ -1130,6 +1159,9 @@ footer section#institutional p {
   section#search-tools #submit-search-mobile {
     display: none; 
    }
+   header button#nav-options-right-button-mobile {
+    display: none;
+  }
 }
 /* 
   ##Device = Tablets, Ipads (landscape)
@@ -1139,12 +1171,18 @@ footer section#institutional p {
   section#search-tools #submit-search-mobile {
     display: none; 
    }
+   header button#nav-options-right-button-mobile {
+    display: none;
+  }
 }
 
 @media (min-width: 482px) and (max-width: 900px) {
  section#search-tools #submit-search-mobile {
   display: none; 
  }
+ header button#nav-options-right-button-mobile {
+  display: none;
+}
 }
 /* 
   ##Device = Low Resolution Tablets, Mobiles (Landscape)
@@ -1158,11 +1196,25 @@ footer section#institutional p {
     display: block;
     position: absolute;
     left: 13px; 
-    font-size: 1.2em;
+    font-size: 1.050em;
     border-radius: 3px;   
     width: 31px;
     height: 31px;
   }
+
+body#pages-search-results button#nav-options-right-button {
+    display: none;
+}
+
+body#pages-search-results button#nav-options-right-button-mobile {
+  display: block;
+  position: absolute;
+  right: 13px; 
+  font-size: 1.050em;
+  border-radius: 3px;   
+  width: 31px;
+  height: 31px;
+}
 
   .background-top-curve {    
     height: 10px;
@@ -1232,8 +1284,18 @@ section#search-tools #submit-search-mobile {
     height: 31px;
   }
 
-  section#home-content h4 {  
-    font-size: 0.95em;
+  body#pages-search-results button#nav-options-right-button {
+    display: none;
+}
+
+body#pages-search-results button#nav-options-right-button-mobile {
+  display: block;
+  position: absolute;
+  right: 13px; 
+  font-size: 1.050em;
+  border-radius: 3px;   
+  width: 31px;
+  height: 31px;
 }
 
   .background-top-curve {    
@@ -1250,6 +1312,10 @@ section#search-tools #submit-search {
 
 section#search-tools #submit-search-mobile {
  display: block; 
+}
+
+section#home-content h4 {  
+  font-size: 0.95em;
 }
     article {
     width: 100%;
@@ -1285,12 +1351,26 @@ section#search-tools #submit-search-mobile {
   header button#nav-menu-mobile-button-left {
     display: block;
     position: absolute;
-    left: 13px; 
+    left: 10px; 
     font-size: 0.9em;
     border-radius: 5px;   
     width: 31px;
     height: 31px;
   }
+
+  body#pages-search-results button#nav-options-right-button {
+    display: none;
+}
+
+body#pages-search-results button#nav-options-right-button-mobile {
+  display: block;
+  position: absolute;
+  right: 10px; 
+  font-size: 1.050em;
+  border-radius: 3px;   
+  width: 31px;
+  height: 31px;
+}
 
   .background-top-curve {    
     height: 10px;
