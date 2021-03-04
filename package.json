@@ -3,6 +3,9 @@
     "datetime-periods": "^1.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "js-datepicker": "^5.18.0",
+    "lightpick": "^1.6.2",
+    "simplepicker": "^2.0.3",
     "start": "^5.1.0"
   }
 }
