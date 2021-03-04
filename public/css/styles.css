@@ -3,8 +3,8 @@
 
 /* BODY ****************************************************************** */
 
-body {
-  font-family: arial,sans-serif;
+body {  
+  font-family: Helvetica, sans-serif;
   overflow: auto;
   overflow-x:hidden;
   -webkit-font-smoothing: subpixel-antialiased;  
@@ -21,15 +21,19 @@ a {
   color:white;
 }
 a:hover {
-  color:blue;
+  color:#1c75c0;
   background-color: white;
 }
 a:active {
   color:#033f72;
   background-color: white;
 }
-a:visited {
-  color: blueviolet; 
+
+
+/* ANCHOR LINKS for search results page: visited ********************************************************** */
+
+body#pages-search-results a.results-title:visited {
+  color:darkmagenta; 
 }
 
 /* BUTTONS ************************************************************** */
@@ -69,7 +73,8 @@ button#submit-search {
 /* HEADINGS  ************************************************************* */
 
 h1, h2, h3, h4, h5, h6 {
-  width: 100%;
+  width:100%;
+  max-width: 100%;
   padding: 0;
   margin: 0;  
 }
@@ -134,11 +139,15 @@ main {
   width:100%;
   height: auto;
   max-width: 980px;
-  padding:0 10px;
-  margin: 0 auto;
+  padding:0px;
+  margin: 0 auto 50px auto;
   display:flex;
   flex-direction: row;
   flex-wrap: wrap; 
+}
+
+body#homepage main {
+  margin: 0 auto 50px auto;
 }
 
 body#images-search-results main, body#images-search-results section#images-results  {  
@@ -158,7 +167,7 @@ top: 0px;
 padding: 46.5px 0px;
 height: 100vh;
 color: white;
-background-color:rgba(3,63,114,1);   
+background-color:rgba(3,63,114,0.95);   
 outline: none;
 transition: 0.25s
 }
@@ -167,6 +176,45 @@ nav#left-nav {
   left: -209px;    
   width: 200px; 
 }
+
+/* Copy URL alert and others */
+ section#alert-container { 
+  position: absolute;
+  top: -50px;
+  z-index: 2;
+  width: 100%;
+  max-width: 100%;  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  background-color: #011b31;
+  transition: 0.5s;
+}
+
+/* Copy URL tooltip */
+section#alert-container p { 
+  padding-bottom: 19px;
+  width: 100%;
+  background-color: #011b31;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: baseline;
+  justify-items: center;
+  align-items: baseline;
+  font-size: 0.85em;
+  color: white;
+  transition: 0.5s; 
+}
+
+section#alert-container p span { 
+  padding-right: 5px;
+}
+
+/* Options menu for both: pages and images search results */
 
 nav#options-right-nav {   
   right: -209px;    
@@ -191,8 +239,7 @@ nav#replay-nav {
 
 nav#replay-right-nav { 
   right: -209px;     
-  width: 200px;
- 
+  width: 200px; 
 }
 
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
@@ -213,9 +260,9 @@ nav#replay-right-nav {
 .background-bottom-curve {
   position: relative;
   z-index: 0;
-  bottom: -58px;
+  bottom: 1px;
   width: 100%;
-  margin: 0;    
+  margin: 0;
   height: 12px;
   background-color: white;
   border-bottom-left-radius: 1px;
@@ -285,7 +332,7 @@ nav#left-nav h3, nav#options-right-nav h3, nav#replay-nav h3, nav#replay-right-n
 .accordion-left-menu:after {
   content: "\002B";
   float: right;
-  font-size: large;
+  font-size: initial;
 }
 .active:after {
   content: "\2212";
@@ -348,7 +395,18 @@ nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li 
 /* ends nav MENU: left and right ************************************************** */
 
 
-/* Section: *********************************************************************** */
+/* Sections: *********************************************************************** */
+
+/* Header container wrap */
+section.header-content-container {
+margin: 65px auto 0 auto;
+padding: 0 10px;
+}
+
+section.header-content-container h3 {
+  visibility: collapse;
+  height: 0;
+  }
 
 section {
   margin:0 auto;
@@ -364,8 +422,8 @@ section#search-tools {
   flex-wrap: wrap;
   width: 100%;
   max-width: 980px;
-  margin-top: 67px;
-  padding: 0 10px;      
+  margin: 0px;
+  padding: 0px;      
 } 
 
 section#search-tools h3, form#search-form h4, section#search-tools-buttons h4, section#important-info h3 {
@@ -377,8 +435,9 @@ section#search-tools #submit-search, section#search-tools #submit-search-mobile 
   border-bottom-right-radius: 4px;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
-  width: 127px; 
-  height: 45px;  
+  width: 100%;
+  max-width: 113px;
+  height: 45px; 
 } 
 
 section#search-tools #submit-search-mobile { 
@@ -387,45 +446,160 @@ section#search-tools #submit-search-mobile {
   height: 43px; 
 } 
 
-section#search-tools form input {
+
+section#search-tools form  #date-container-start:hover input[type="text"], section#search-tools form  #date-container-end:hover input[type="text"] {
+  color:#1c75c0;     
+} 
+section#search-tools form  #date-container-start:active input[type="text"], section#search-tools form  #date-container-end:active input[type="text"] {
+  color:white;     
+}   
+
+/*  starts Range Slider ********************************************************************** */
+
+
+/* Calendar buttons input values: year, day and month */
+
+section#search-tools form input[type="text"] {
   border: 1px solid #ccc;
   border-right: none;
 } 
+section#search-tools form input[type="text"].calendar-year-input {
+  position: relative;
+  z-index: 1;
+  top: -4px;
+  left: -3.93px;
+  max-width: 36px;
+  height: 32px;
+  padding-bottom: 12px;
+  padding-top: 4px;
+  font-family: inherit;
+  font-size: 15.2px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+section#search-tools form input[type="text"].calendar-day-month-input {
+  position: relative;
+  z-index: 0;
+  top: -24px;
+  left: -1.65px;
+  max-width: 34px;
+  height: 11px;
+  padding: 8px 0 0 0;
+  padding-top: 2px;
+  font-size: 10.8px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-top: 2px solid #ffffff6b;
+  outline: none;
+}
 
-/*  starts Range Slider*/
+/* Left and right calendar icon */
 
-section#search-tools-date-slider #startYear, section#search-tools-date-slider #endYear  {
-  position: absolute;
-  top: 0;
+section#search-tools-date-slider #date-container-start, section#search-tools-date-slider #date-container-end {
+  position: absolute;   
+  margin: 0;
+  width: 30px;
+  height: 27px;
   padding: 3px 8px 20px 6.9px;
-  width: 43px;
-  height: 43px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: center;  
   font-size: 13.5px;
   font-weight: normal;
   color: white;
-  background-color: #1c75c0;
-  background-image: none;
-  border: 0;
-  border-radius: 3px;
+  background-color: #1c75c0;      
+  background: transparent url(../img/calendar.svg) no-repeat center;
+  background-size: cover;
+  border: 0; 
+}
+
+section#search-tools-date-slider #date-container-start  {
+  top: -6px;  
+  left: 0px;
+  height: 27px;
+}
+
+section#search-tools-date-slider #date-container-end  {
+  top: -6px;  
+  right: 0px;
+  cursor: pointer;
+}
+
+section#search-tools-date-slider #date-container-start li.search-calendar-year, section#search-tools-date-slider #date-container-end li.search-calendar-year {
+  margin-top: 2.05px;
+}
+
+section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end li.search-calendar-year input[type="button"] {
+    padding: 6.9px 0 0.3px 0;
+    margin: 0;
+    margin-top: 0.5px;
+    margin-bottom: 2.5px;
+    text-align: center;
+    font-size: 1.4em;
+    background-color: transparent;
+    color: white;    
+    background-image: none;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #ffffff91;
+}
+
+
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-month
+{
+text-align: center;
+cursor: pointer;
+color: #1c75c0;
+}
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:hover li.search-calendar-year input[type="button"]
+{
+color: #1c75c0;
+}
+
+section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="button"]
+{
+color: white;
+}
+
+section#search-tools-date-slider #date-container-start li, section#search-tools-date-slider #date-container-end li {
+  font-size:10px;
+  text-align: center;
+  cursor: pointer;  
   display: block;
+  }
+
+section#search-tools-date-slider #date-container-start li.search-calendar-month, section#search-tools-date-slider #date-container-end li.search-calendar-month {
+  position: relative;
+  left: -0.3px;
+  width: 12px;
+  margin-right: 2px;
+  text-align: left;
+  padding: 0;
+
 }
 
-#startYear  {    
-  left: 0;
+section#search-tools-date-slider #date-container-start:hover, section#search-tools-date-slider #date-container-end:hover {     
+  background: transparent url(../img/calendar.svg) no-repeat 0px -102px ;
+  background-size: 100%;
+  
 }
 
-#endYear  {  
-  right: 0;
-}
-
-#startYear:hover, #endYear:hover  {    
-  color: #1c75c0;
-  background-color: white;
-}
-
-#startYear:active, #endYear:active  {    
-  color: #1c75c0;
-  background-color: white;
+section#search-tools-date-slider #date-container-start:active, section#search-tools-date-slider #date-container-end:active {     
+  background: transparent url(../img/calendar.svg) no-repeat 0px 0px ;
+  background-size: 100%;
+ 
 }
 
 section#search-tools-date-slider a {
@@ -435,9 +609,79 @@ text-decoration: none;
   background: #1c75c0 !important;
   border: none !important;
 }
-.ui-datepicker table {
 
+.ui-datepicker .ui-datepicker-header {
+  position: relative;
+  padding: .2em 0;
   background-color: white !important;
+}
+
+/* Datepicker: !mportant styles applied to override jquery UI default CSS */
+#ui-datepicker-div {
+  position: absolute;
+  top: 170.05px !important;
+  border: none !important;
+  height: auto;
+  padding: 15px;
+  border-radius: 2px;
+  background-color: rgba(255,255,255,1);
+  
+}
+
+/* Selected date */
+
+.ui-state-active {
+  background-color: #1c75c0 !important;
+}
+
+
+#ui-datepicker-div thead {
+  font-size:0.9em !important;
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+  /*border: 1px solid #ffffff !important;*/
+  /*background: #c9e9fa !important;*/
+  color: #3f3f3f !important;
+}
+
+.ui-datepicker .ui-datepicker-title select, .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+  width: 45%;
+  border: 1px solid #ccc;
+  font-size: 0.85em !important;
+  border: 1px solid #ccc !important;
+  
+}
+
+.ui-widget-content .ui-state-default {
+  font-size: small !important;
+  border: none !important;
+  /*border-radius: 1px !important;*/
+  
+}
+
+td a.ui-state-default {
+  font-size: small !important;
+  border: none !important;
+  border-radius: 1px !important;
+}
+
+.ui-state-highlight {
+  background-color: #c9e9ff !important;
+}
+
+.ui-datepicker table {
+  background-color: white !important;
+}
+
+/* Modal: image description */
+
+.modal a.close-modal {
+  background-color: transparent !important;
+}
+
+.modal a.close-modal:hover {
+  filter:invert(1);
 }
 
 .modal {
@@ -445,25 +689,36 @@ text-decoration: none;
   vertical-align: middle;
   position: relative;
   z-index: 2;
-  max-width: 337px !important;
   box-sizing: border-box;
-  width: 90%;
-  background: #fff;
+  width: 100%;
+  background: #ebebeb;
   padding: 15px 30px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -o-border-radius: 8px;
   -ms-border-radius: 8px;
-  border-radius: 8px;
-  -webkit-box-shadow: 0 0 10px #000;
-  -moz-box-shadow: 0 0 10px #000;
-  -o-box-shadow: 0 0 10px #000;
-  -ms-box-shadow: 0 0 10px #000;
-  box-shadow: 0 0 10px #000;
+  border-radius: 2px !important;
+  -webkit-box-shadow: 0 0 10px #000 !important;
+  -moz-box-shadow: 0 0 10px #000 !important;
+  -o-box-shadow: 0 0 10px #000 !important;
+  -ms-box-shadow: 0 0 10pxrgb(10, 8, 8) !important;
+  box-shadow: 0 0 10px #000 !important;
   text-align: center;
   height: inherit;
-  max-height: 50%;
+  max-height: 85% !important;
+  max-width: 960px !important;
+  box-sizing: border-box;
+  width: 100% !important;
+  background: #fff;
+  padding: 15px !important;
 }
+
+.modal img {
+  padding-bottom: 15px;
+
+}
+
+/* Datepicker */
 
 #datepicker {
   display: block ruby;
@@ -482,6 +737,22 @@ section#search-tools-date-slider {
   padding: 0;
 }
 
+ul#date-container-start, ul#date-container-end {
+  position: absolute;
+  z-index: 0;
+  width: 50px;
+  height: 50px;}
+
+ul#date-container-start {
+  top:0;
+  left:-1px;
+}
+
+ul#date-container-end {
+  top:0;
+  right:-1px;
+}
+
 .ui-widget.ui-widget-content {
   border: 0.66px solid #ccc;
   height: 1.01em;
@@ -492,18 +763,20 @@ section#search-tools-date-slider {
   font-weight: normal;
   color: #454545;
   border-radius: 10px;
+  outline: none;
   margin-top: 2px;
 }
+
+
 #slider-range-container {
 position: relative;
-  margin: 0 auto;
-padding: 6px 0 0 0;
+margin: 0 auto;
+padding: 22px 0;
 border: none;
 width: 100%;
-height: 43px;
-  }
+}
 
-  #slider-range-container span.searchCalendarDay {
+  #slider-range-container span.search-calendar-day-month {
     position: relative;
     z-index: 1;
     color: white;
@@ -523,79 +796,54 @@ height: 43px;
     margin-left: -.4em !important;
 }
 
-#slider-range-container span.searchCalendarDayRight {
-  position: absolute;
-  z-index: 1;
-  color: white;
-  width: 100%;
-  width: 36px;
-  font-size: 11px;
-  margin-top: 0px;
-  top: 22px;
-  right: 3px;
-  border-top: 1px solid #ffffff8a;
-  padding-top: 3px;
-  display: block;
-  text-align: center;
-}
-
-
 #slider-range {
 margin: auto 70px;
 border: none;
 background-color: darkgray;
 height: 0.06em;
 
-  }
+}
 
   .ui-slider .ui-slider-handle {
     position: absolute;
     z-index: 1 !important;
-    top: -0.5em !important;
-    width: 0.8em !important;
-    height: 0.8em !important;
-    cursor: default;
-    background-color: #1c75c0 !important;  
-    outline: none !important; 
+    top: -0.54em !important;
+    width: 0.65em !important;
+    height: 0.65em !important;
+    background-color: #1c75c0 !important;
+    outline: none !important;
     cursor: grab !important;
-    -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 0%);
-    box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 0%);
+    -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 0%);
+    box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 0%);
     transition: 0.5s;
+    border: 1px solid transparent !important;
 }
 
-.ui-slider .ui-slider-handle:hover {
-  
-  background-color: #1c75c0;   
+.ui-slider .ui-slider-handle:hover {    
+  background-color: #5b1661;   
 }
 
 .ui-slider .ui-slider-handle:active {
-  background-color: #033f72 !important;;
+  background-color: #033f72 !important;
   width: 1.1em !important;
   height: 1.1em !important;
-  top: -0.8em !important;
-  cursor: grab;  
-  -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
-  box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
+  top: -1.3em !important;
+  cursor: grab;
+  -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 55%);
+  box-shadow: 0px 4px 5px -2px rgb(255 255 255 / 30%);
   transition: 0.4s;
-}
-
-/* Shows year effect when dragging range slider */
-
-.ui-slider .ui-slider-handle:active #endYear {
-  background-color: #033f72 !important;  
-  -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
-  box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 55%);
-  transition: 0.4s;
+  border: 7px solid #eef9ffed !important;
+  border-radius: 20px;
 }
 
 section#search-tools-buttons   {
-  position: relative;  
+  position: relative;    
+  width: 960px;
   display: flex;
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 0 0 17px 0;
-    padding: 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 11px auto 10px auto;
+  padding: 0;
 }
 
 section#search-tools-buttons form {
@@ -634,7 +882,8 @@ form#search-form {
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  max-width: 960px;  
+  max-width: 960px; 
+  height: 101px; 
   }
 
 form#search-form span.search-input-button {
@@ -643,38 +892,28 @@ form#search-form span.search-input-button {
   flex-direction: row;
 }
 
-form#search-form input {
+form#search-form input#submit-search-input {
     width: 100%;
     display: flex;
     flex-direction: row;
-    background: #ffffff url(../img/magnifier.svg) no-repeat 14px 14px;
+    background: #ffffff url(../img/magnifier.svg) no-repeat 16px 15px;
     padding-top: 3px;
     padding-left: 42px;
     border: 1px solid #ccc;
-    outline: none !important;
-    font-size: 18 px !important;    
+    outline: none;
+    font-size: 1em;    
     border-radius: 3px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px; 
     transition: 0.2s;
     }
 
-    form#search-form input:hover {
+    form#search-form input#submit-search-input:hover {
       -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);
-
     }
 /* Slider */
-    form#search-form ion-range {          
-      height: auto;
-      display:flex;
-      flex-direction: row;
-      padding: 0;
-    }
 
-    form#search-form ion-range .range-pin {          
-     outline: 1px solid red;
-    }
 
 /* HOME CONTENT --- */
 
@@ -798,7 +1037,6 @@ section#pages-results ul > li > a.results-summary em  {
 
 section#pages-results + ul:nth-last-child(1) {
   margin-bottom: 0px !important; 
-  outline: 1px solid red !important; 
 } 
 
 section#images-results ul {
@@ -827,8 +1065,9 @@ section#images-results ul > li {
  justify-content: center;
  }
 
- section#images-results ul > li button.zoom-image {
+ section#images-results ul > li button.zoom-image, section#images-results ul > li a.zoom-image  {
   position: absolute;
+  z-index: 1;
   right: 0;
   top: 0px;
   padding: 5px;
@@ -836,18 +1075,21 @@ section#images-results ul > li {
   display: none;  
   color:white;
   background-color:#009687d0;
-  border: none; 
+  border: none;
+   
  }
 
-  section#images-results ul > li:hover button.zoom-image {
+  section#images-results ul > li:hover button.zoom-image, section#images-results ul > li:hover a.zoom-image {
   display: block; 
   color:white; 
   background-color:#009687c5;
+  transition: 0.5s;
  }
 
- section#images-results ul > li button.zoom-image:hover {
+ section#images-results ul > li button.zoom-image:hover, section#images-results ul > li a.zoom-image:hover {
   color:white; 
-  background-color:#026157c0;   
+  background-color:#026157c0;
+  cursor: pointer;   
  }
 
  section#images-results ul > li:hover {  
@@ -949,18 +1191,28 @@ section#images-results ul > li {
 
 section.navigation-tools p {
   color: #4d5156;
+  padding: 0 25px;
 } 
 
 section.navigation-tools button {
   padding: 6px 8px;
-  border-radius: 3px;
+  border-radius: 2px;
 } 
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
-  border-top:none;
+  border-top: 1px solid #e8e8e8;
+  justify-content: center;
+  margin-top: 0px;
+  padding-top: 50px;
 }
 
+body#pages-search-results section.navigation-tools {
+  border-top: none;    
+}
 
+body#pages-search-results section.navigation-tools section#pages-results ul:last-child() {
+  padding-bottom: none;    
+}
 
 /* ends Pages and images search results */
 
@@ -969,24 +1221,31 @@ visibility: collapse;
 height: 0;
 }
 
-section#home-content h4 {
-  padding: 11px 6px 11px 14px;
-  font-weight: normal;
-  font-size: 1em;
-}
 
 /* article ************************************************************* */
 article {
   justify-content: space-between;
-  margin: 5px 0px;
+  margin: 4px 0px 0 0;
   padding: 0;  
   background-color:#f0f0f0;
   border-radius: 3px;
-  width: 49.30%;
+  width: /* Two column grid: 49.30%*/ 24.3%;
+  height: inherit;
 }
 
 article figure {
   border-radius: 3px;
+}
+
+article figure img {
+  height: 100%;   
+  filter: saturate(1) sepia(0.1);
+  transition: 1s;
+}
+
+article:hover figure img { 
+  filter: saturate(2.92) sepia(0.7) ;
+  transition: 1s;
 }
 
 article img {
@@ -997,7 +1256,7 @@ article img {
 /* Youtube Player*/
 article iframe {
   width: 100%;
-  height:266px;
+  height:271px;
   border-radius: 3px;
 }
 
@@ -1013,7 +1272,17 @@ figure {
 article#arquivo-pt-award {  
   margin: 0 0 5px 0;  
   width: 100%;
-  overflow: hidden;
+  overflow: hidden; 
+}
+
+article#arquivo-pt-award picture img {    
+  filter: saturate(0.9) sepia(0) ;
+  transition: 1s;
+}
+
+article#arquivo-pt-award:hover picture img {  
+  filter: saturate(1) sepia(0.15);
+  transition: 1s;
 }
 
 article h3 {  
@@ -1034,31 +1303,31 @@ article#arquivo-pt-award figure{
 /* Footer * ******************************************************/
 
 footer {
-background-color: #033f72;
-color: white;
-margin: 50px 0 0 0;
+background-color: #e5e5e5;
+color: #444;
+margin: 0px 0 0 0;
 padding: 50px 0 0 0;
+text-rendering: optimizeLegibility;
 }
 
 footer ul {
   line-height: 1.5em;
+  
 }
 
 footer a {
-  color: white;
-  font-size: 0.8em;  
+  color: #444;
+  font-size: 0.85em;  
   text-decoration: none;
 }
 
-footer a:hover, footer a:active, footer a:visited {
- color:white;
+footer a:hover {
+ color:rgb(0, 0, 0);
   background-color: transparent;
-
 }
 
-footer a:hover {
-  color: inherit;
-  text-decoration: underline;
+footer a:active {
+  color:rgb(0, 0, 0);
  }
 
 footer section {
@@ -1072,7 +1341,7 @@ footer section#important-info {
   justify-content: inherit;
   flex-wrap: wrap;
   width: 100%; 
-  max-width: 980px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 10px; 
 }
@@ -1090,9 +1359,9 @@ height: 0;
 
 footer section section h4 {
   padding-bottom: 3px;
-  font-size: 1.1em;
-  font-weight: 500;
-  
+  font-size: 0.95em;
+  font-weight: bold; 
+  color: #444;  
 }
 
 footer section#institutional {  
@@ -1216,6 +1485,10 @@ body#pages-search-results button#nav-options-right-button-mobile {
   height: 31px;
 }
 
+section.header-content-container {
+  margin: -5px auto 0 auto;  
+}
+
   .background-top-curve {    
     height: 10px;
 }
@@ -1253,7 +1526,7 @@ section#search-tools #submit-search-mobile {
 
    footer section section {
    width: 50%;
-   padding: 20px 30px 20px 50px;
+   padding: 20px 0px;
    }
    footer section section h4 {
     font-size: 1em;
@@ -1268,7 +1541,7 @@ section#search-tools #submit-search-mobile {
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 480px
 */
-@media (min-width: 320px) and (max-width: 480px) {
+@media (min-width: 0px) and (max-width: 480px) {
   
   header button#nav-menu-button-left {
     display: none;
@@ -1298,8 +1571,12 @@ body#pages-search-results button#nav-options-right-button-mobile {
   height: 31px;
 }
 
-  .background-top-curve {    
+.background-top-curve {    
     height: 10px;
+}
+
+section.header-content-container {
+  margin: -5px auto 0 auto;  
 }
 
 section#search-tools { 
@@ -1362,6 +1639,10 @@ section#home-content h4 {
     display: none;
 }
 
+body#homepage button#nav-options-right-button-mobile {
+  display: none;  
+}
+
 body#pages-search-results button#nav-options-right-button-mobile {
   display: block;
   position: absolute;
@@ -1374,6 +1655,10 @@ body#pages-search-results button#nav-options-right-button-mobile {
 
   .background-top-curve {    
     height: 10px;
+}
+
+section.header-content-container {
+  margin: -5px auto 0 auto;  
 }
 
 section#search-tools { 
@@ -1400,8 +1685,8 @@ section#search-tools #submit-search {
     }
 
   footer section section h4 {
-      font-size: 1em;
-      font-weight: 500;
+      font-size: 0.9em;
+      font-weight: 700;
   }
   footer section#institutional img {
       height: 36px;
