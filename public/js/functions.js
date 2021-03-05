@@ -21,14 +21,28 @@ function closeOptionsMenuNav() {
 }
 // ends: menu opening and closing button for top nav right menu button ///////////////////////////////////
 
-// starts: menu opening and closing button for top nav right menu button /////////////////////////////////
-function openRightMenuNav() {
+//////////////////////////////////////////////////
+// REPLAY ////////////////////////////////////////
+//////////////////////////////////////////////////
+
+
+// starts: menu opening and closing button for top nav left replay menu button //////////////////////////////////
+function openReplayLeftMenuNav() {
+  document.getElementById("replay-left-nav").style.cssText = "left:0px;"; 
+}
+function closeReplayLeftMenuNav() {
+  document.getElementById("replay-left-nav").style.cssText = "left:-200px";
+}
+// ends: menu opening and closing button for top nav left replay menu button ////////////////////////////////////
+
+// starts: menu opening and closing button for top nav right replay menu button /////////////////////////////////
+function openReplayRightMenuNav() {
     document.getElementById("replay-right-nav").style.cssText = "right:0px;"; 
 }
-function closeRightMenuNav() {
+function closeReplayRightMenuNav() {
     document.getElementById("replay-right-nav").style.cssText = "right:-200px";  
 }
-// ends: menu opening and closing button for top nav right menu button 
+// ends: menu opening and closing button for replay top nav right replay menu button 
 
 // starts: copy URL to clipboard on click 
 function copyURlToClipboard() {
