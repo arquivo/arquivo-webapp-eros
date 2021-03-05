@@ -135,7 +135,34 @@ header button#nav-menu-button-left  {
  } 
 
  /* Main ************************************************************* */
-main {
+/* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
+
+.background-top-curve {
+  position: relative;
+  z-index: 0;
+  top: 4px;
+  margin: 0;
+  height: 4px;
+  background-color: white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+/* "hidden" white rectangle with both left and right bottom corners curved, above footer */ 
+
+.background-bottom-curve {
+  position: relative;
+  z-index: 0;
+  bottom: 1px;
+  width: 100%;
+  margin: 0;
+  height: 12px;
+  background-color: white;
+  border-bottom-left-radius: 1px;
+  border-bottom-right-radius: 1px;
+}
+
+ main {
   width:100%;
   height: auto;
   max-width: 980px;
@@ -158,11 +185,12 @@ body#images-search-results main {
   width: 100%;
   max-width: 2560px;
 }
-/* nav menus: left nav, options, replay and replay right nav  **************************************************************** */
 
-nav#left-nav, nav#options-right-nav, nav#replay-nav, nav#replay-right-nav  {
+/* nav menus: left nav, options, and replay right nav  **************************************************************** */
+
+nav#left-nav, nav#options-right-nav, nav#replay-left-nav, nav#replay-right-nav  {
 position: absolute;
-z-index: 3;
+z-index: 2;
 top: 0px;
 padding: 46.5px 0px;
 height: 100vh;
@@ -172,9 +200,95 @@ outline: none;
 transition: 0.25s
 }
 
-nav#left-nav { 
+nav#left-nav, nav#replay-left-nav { 
   left: -209px;    
   width: 200px; 
+}
+
+body#landing-replay div.background-top-curve {
+  display: none;
+  outline: 1px solid red;
+}
+
+body#landing-replay main#main-content {
+  display: flex;
+  flex-direction: row;
+  justify-content:flex-end;
+  justify-items: right;
+  flex-grow: 1; 
+  height: 100vh;
+  width: 100%;
+  max-width: calc(100% - 200px);
+  padding: 0 0 0 200px;
+  margin: 0;
+  outline: 1px solid rgb(9, 105, 13);
+}
+
+body#landing-replay main#main-content iframe  {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  width: inherit;
+  outline: 1px solid rgb(9, 105, 13);
+}
+
+nav#replay-left-nav { 
+  z-index: 1;
+  top:43px;
+  left: 0px;    
+  width: 200px; 
+}
+
+nav#replay-right-nav { 
+  right: -209px;     
+  width: 200px; 
+}
+
+nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 7px;
+  background-color: #224d75;
+  border: none;
+  outline: none;
+  color: white;
+}
+
+nav#replay-right-nav button, nav#options-right-nav button {
+  left: 7px;
+}
+
+  nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-left-nav button:hover, nav#replay-right-nav button:hover {
+    background-color: white;
+    border: none;
+    outline: none;
+    color: #033f72;
+    }
+    nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-left-nav button:active, nav#replay-right-nav button:active {
+      background-color: #033f72;
+      border: none;
+      outline: none;
+      color: white;
+      }  
+
+nav#left-nav button span, nav#options-right-nav button span, nav#replay-right-nav button  {
+    font-size: 20px;
+    font-weight: lighter;  
+    }
+
+nav#left-nav section, nav#options-right-nav section, nav#replay-right-nav section  {
+position: relative;
+z-index: 3;
+margin: 0 0 0 0;
+padding: 0;
+height: 100%;
+color: white;
+}
+
+nav#left-nav h3, nav#options-right-nav h3, nav#replay-left-nav h3, nav#replay-right-nav h3, nav#left-nav h4, nav#options-right-nav h4, nav#replay-left-nav h4, nav#replay-right-nav h4  {
+   visibility: collapse;
+   height: 0;
 }
 
 /* Copy URL alert and others */
@@ -232,85 +346,6 @@ body#homepage button#nav-options-right-button  {
   display: none;
 }
 
-nav#replay-nav { 
-  left: -209px;    
-  width: 200px;  
-}
-
-nav#replay-right-nav { 
-  right: -209px;     
-  width: 200px; 
-}
-
-/* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
-
-.background-top-curve {
-  position: relative;
-  z-index: 0;
-  top: 4px;
-  margin: 0;
-  height: 4px;
-  background-color: white;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-/* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
-
-.background-bottom-curve {
-  position: relative;
-  z-index: 0;
-  bottom: 1px;
-  width: 100%;
-  margin: 0;
-  height: 12px;
-  background-color: white;
-  border-bottom-left-radius: 1px;
-  border-bottom-right-radius: 1px;
-}
-
-nav#left-nav button, nav#options-right-nav button, nav#replay-nav button, nav#replay-right-nav button {
-  position: absolute;
-  z-index: 3;
-  top: 12px;
-  right: 7px;
-  background-color: #224d75;
-  border: none;
-  outline: none;
-  color: white;
-  }
-
-  nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-nav button:hover, nav#replay-right-nav button:hover {
-    background-color: white;
-    border: none;
-    outline: none;
-    color: #033f72;
-    }
-    nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-nav button:active, nav#replay-right-nav button:active {
-      background-color: #033f72;
-      border: none;
-      outline: none;
-      color: white;
-      }  
-
-nav#left-nav button span, nav#options-right-nav button span  {
-    font-size: 20px;
-    font-weight: lighter;  
-    }
-
-nav#left-nav section, nav#options-right-nav section  {
-position: relative;
-z-index: 3;
-margin: 0 0 0 0;
-padding: 0;
-height: 100%;
-color: white;
-}
-
-nav#left-nav h3, nav#options-right-nav h3, nav#replay-nav h3, nav#replay-right-nav h3, nav#left-nav h4, nav#options-right-nav h4, nav#replay-nav h4, nav#replay-right-nav h4  {
-   visibility: collapse;
-   height: 0;
-    }
 
 /* Accordion menus: left nav, options, replay and replay right nav ********************************** */
 
@@ -347,23 +382,23 @@ nav#left-nav h3, nav#options-right-nav h3, nav#replay-nav h3, nav#replay-right-n
   transition: max-height 0.2s ease-out;
 }
 
-/* starts nav MENU: left and right **************************************************
+/* starts nav MENU: replay, left and right **************************************************
 ***********************************************************************************
 ******************************************************************************* */
 
-nav#left-nav section ul, nav#options-right-nav section ul {
+nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav section ul, nav#replay-right-nav section ul  {
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   line-height: 2.6em;
   text-align: left;  
   }
 
-nav#left-nav section ul > li, nav#options-right-nav section ul > li { 
+nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
   border-top: 1px solid #e3e3e32e; 
   display: block;  
 }
 
-nav#left-nav section ul > li a, nav#options-right-nav section ul > li a{ 
+nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
     display: block;
     text-decoration: none;
     color: white;
@@ -372,27 +407,27 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a{
   }
 
 /* starts Font Awesome icons */
-nav#left-nav section ul > li span, nav#options-right-nav section ul > li span { 
+nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
   padding-right: 8px;  
 }
 /* ends Font Awesome icons */
 
-nav#left-nav section ul > li a:hover, nav#options-right-nav section ul > li a:hover {    
+nav#left-nav section ul > li a:hover, nav#options-right-nav section ul > li a:hover, nav#replay-left-nav section ul > li a:hover, nav#replay-right-nav section ul > li a:hover {    
   color:#033f72;
   background-color: white;
 }
 
-nav#left-nav section ul > li a:active, nav#options-right-nav section ul > li a:active {    
+nav#left-nav section ul > li a:active, nav#options-right-nav section ul > li a:active, nav#replay-left-nav section ul > li a:active, nav#replay-right-nav section ul > li a:active {    
   color: white;
   background-color: #033f72;
 }
 
 /* nav sub-menu ******************************************************************* */
-nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a { 
+nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a, nav#reply-left-nav section ul > li > ul > li a, nav#reply-right-nav section ul > li > ul > li a { 
   padding: 0 0 0 25px;
   font-size: 0.85em;
 }
-/* ends nav MENU: left and right ************************************************** */
+/* ends nav MENU: replay left and right ************************************************** */
 
 
 /* Sections: *********************************************************************** */
@@ -917,7 +952,7 @@ form#search-form input#submit-search-input {
 
 /* HOME CONTENT --- */
 
-section#home-content {
+section#home-content, section#body-content  {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -925,12 +960,12 @@ section#home-content {
   justify-content: space-between;
 }
 
-section#home-content h3 {
+section#home-content h3, section#body-content h3 {
 visibility: collapse;
 height: 0;
 }
 
-section#home-content h4 {
+section#home-content h4, section#body-content h4 {
   padding: 11px 6px 11px 14px;
   font-weight: normal;
   font-size: 1em;
@@ -1216,7 +1251,7 @@ body#pages-search-results section.navigation-tools section#pages-results ul:last
 
 /* ends Pages and images search results */
 
-section#home-content h3 {
+section#home-content h3, section#body-content h3 {
 visibility: collapse;
 height: 0;
 }
@@ -1505,7 +1540,7 @@ section#search-tools #submit-search-mobile {
   display: block; 
  }
 
- section#home-content h4 {  
+ section#home-content h4, section#body-content h4 {  
   font-size: 0.95em;
 }
 
@@ -1591,7 +1626,7 @@ section#search-tools #submit-search-mobile {
  display: block; 
 }
 
-section#home-content h4 {  
+section#home-content h4, section#body-content h4  {  
   font-size: 0.95em;
 }
     article {
