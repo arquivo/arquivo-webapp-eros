@@ -21,91 +21,15 @@
 <!-- starts Arquivo.pt js functions -->
 <script src="js/functions.js"></script> 
 <!-- ends js functions --> 
-<!-- starts datepicker -->
-<script>
-  $( function callDatepicker() {
-    $( "#date-container-start" ).datepicker();
-  } );
-</script>
-<script>
-	$( function callDatepicker() {
-	  $( "#date-container-end" ).datepicker();
-	} );
-  </script>
-<!-- ends datepicker -->
-<!-- starts jquery slider -->
-<script>
-  $( function() {
-    $( "#slider-range" ).slider({
-      range: true,
-      min: 1996,
-      max: 2021,
-      values: [ 1996, 2021 ],
-      slide: function( event, ui ) {
-        $( "#start-year" ).val( ui.values[ 0 ]);
-        $( "#end-year" ).val( ui.values[ 1 ]);
-      }      
-    });
-    $( "#start-year" ).val($("#slider-range" ).slider( "values", 0 ));
-     $( "#end-year" ).val($("#slider-range" ).slider( "values", 1 ));
-  });
-  </script>
-<!-- ends jquery slider --> 
 
 <!-- starts JQuery modal -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 <!-- ends JQuery modal -->
 
-<!-- starts datepicker left calendar -->
-<script>  
-	$(function () {	
-		
-	  $(".call-datepicker-start-year").datepicker({
-		
-		dateFormat:"yy dd M",		
-		changeYear:true,
-		changeMonth:true,
-		  onSelect: function(dateCalendarLeft) {
-			var calendarActulDate = new Date("yy dd M");
-			$(('#end-year').substring(5));
-			var x = document.getElementById("calendar-day-month-start").value;
-	        if(x != "") {	  		  
-			$('#calendar-day-month-start').val(dateCalendarLeft.substring(5));
-	        }	
-	        else if(x == "") {
-		    $('#calendar-day-month-start').val(calendarActulDate);			
-	   } 
-	 }
-   });
- });		
-</script>
-<!-- ends datepicker left calendar -->
-
-<!-- starts datepicker right calendar -->
-<script>  
-	$(function () {	
-		
-	  $(".call-datepicker-end-year").datepicker({
-		
-		dateFormat:"yy dd M",		
-		changeYear:true,
-		changeMonth:true,
-		  onSelect: function(dateCalendarRight) {
-			var calendarActulDate = new Date("yy dd M");
-			$(('#end-year').substring(5));
-			var x = document.getElementById("calendar-day-month-end").value;
-	        if(x != "") {	  		  
-			$('#calendar-day-month-end').val(dateCalendarRight.substring(5));
-	        }	
-	        else if(x == "") {
-		    $('#calendar-day-month-end').val(calendarActulDate);			
-	   } 
-	 }
-   });
- });		
-</script>
-<!-- ends datepicker end year -->
+<!-- starts js datepicker -->
+<script src="js/datepicker.js"></script> 
+<!-- ends js datepicker -->
 
 <!-- starts Google Analytics (new version) --> 
 <script>
