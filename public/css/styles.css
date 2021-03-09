@@ -300,10 +300,6 @@ span.number-of-versions:hover {
   display: block;
 }
 
-
-  
-}
-
 span.number-of-versions a {
 text-decoration: none;
 }
@@ -567,15 +563,8 @@ height: 0;
 display: none;
 }
 
-body#table-list nav#replay-table-list-nav li:hover {
-  
-}
-
-
-
-
 body#table-list nav#replay-table-list-nav li.menu-pages-replay-date-hour a  {
-  padding: 10px 0 10px 20px;
+  padding: 10px 0 10px 50px;
   width: 100%;
   display: block;
   text-decoration: none;
