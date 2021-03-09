@@ -271,28 +271,42 @@ nav#replay-left-nav li#replay-table button {
 
 li.menu-pages-replay-year a {
  text-decoration: none;
+ padding: 10px;
+ display: block;
 }
 
 li.menu-pages-replay-year a:hover {
-  text-decoration: none;
-  color:#033f;
+ color:#224d75;
+ background-color: white;
+ text-decoration: none;
  }
 
 span.number-of-versions {
-  padding: 4px 5px;
+  padding: 5px;
   border: 1px solid white;
   border-radius: 1px;
   text-align: right;
   float: right;
   font-size: 0.8em;
   margin-left: 10px;
+  margin-top: -4px;
+}
+
+span.number-of-versions:hover {
+  padding: 4px 5px;
+  border: 1px solid white;
+  color:#033f72;
+  background-color: white;
+  display: block;
+}
+
+
+  
 }
 
 span.number-of-versions a {
 text-decoration: none;
 }
-
-
 
 a:hover span.number-of-versions {
   padding: 4px 5px;
@@ -300,12 +314,20 @@ a:hover span.number-of-versions {
 }
 
 li.menu-pages-replay-month a {
-padding-left:25px;
+  padding: 10px 0 10px 20px
+}
+
+li.menu-pages-replay-month a:hover {
+  color:#224d75;
 }
 
 li.menu-pages-replay-date-hour a {
   padding-left:40px;
   font-size: 0.9em;
+}
+
+li.menu-pages-replay-date-hour a:hover {
+  color: #033f72;
 }
 /* Dare selected on the replauy menu */
 li.date-selected a {
