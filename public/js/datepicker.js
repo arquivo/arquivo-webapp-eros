@@ -48,6 +48,16 @@ $(function () {
         max: maxYear,
         values: [minYear, maxYear],
 
+        //creates the slider tooltip
+        create: function(event,ui){
+            var $tooltip = $('<span>').addClass('slider-toolip').hide();
+            $(event.target).append($tooltip);
+        },
+
+        start: function(event,ui){
+            $(event.target).find('.slider-toolip').first().show()
+        },
+
         //Update datepickers visually as the user drags the slider
         slide: function (event, ui) {
             var startDate = $( "#start-year" ).datepicker('getDate');
@@ -56,6 +66,15 @@ $(function () {
             endDate.setFullYear(ui.values[ 1 ]);
             $( "#start-year" ).datepicker('setDate',startDate);
             $( "#end-year" ).datepicker('setDate',endDate);
+
+            $(event.target).find('.slider-toolip').first()
+            .text(ui.value)
+            .position({
+                my: 'center bottom',
+                at: 'center top',
+                of: ui.handle,
+                //offset: "0,0"
+            });
         },
 
         //Update the datepickers after the user drops the slider
@@ -82,6 +101,8 @@ $(function () {
                 minDate: startDate,
                 defaultDate: endDate
             }));
+
+            $(event.target).find('.slider-toolip').first().hide().text('')
         }
     });
     $("#start-year").val($("#slider-range").slider("values", 0));
