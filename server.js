@@ -60,6 +60,13 @@ app.get('/replay',function (req, res) {
 });
 // ends Replay
 
+// starts Replay table results
+app.get('/replay-table-list-results',function (req, res) {
+  res.render('pages/replay-table-list-results');
+});
+// ends Replay table results
+
+
 
 // ends website Routes ////////////////////////////////////////////////////////////////////////////////
 

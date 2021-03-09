@@ -1,0 +1,73 @@
+<!-- starts Image Advanced Search Form -->
+<section class="form-container">
+    <h3>Image Advanced Search Form</h3>
+<!-- starts pages advanced search -->
+<form id="advanced-search-form-images" class="advanced-search-form" action="images-search-results" method="GET">
+<fieldset>
+  <legend>Fill the form</legend>
+   <!-- With these words -->
+   <label for="words"><strong>With</strong> these Words:</label>
+   <input id="words" type="text" name="words">
+   <small>ex: group draw</small>
+   <!-- With this phrase -->
+   <label for="words"><strong>With</strong> this phrase:</label>
+   <input id="words" type="text" name="words">
+   <small>ex: euro 2004</small>
+   <!-- Any of these words -->
+   <label for="words"><strong>Without</strong> any of these Words:</label>
+   <input id="words" type="text" name="words">
+   <small>ex: rugby</small>   
+   <!-- Formats -->
+   <label for="format-type"><strong>Images with the format:</strong></label>
+   <select id="format-type" name="format-type" class="">
+    <option value="all">All formats</option>
+    <option value="jpg">Joint Photographic Experts Group (.jpg)</option>
+    <option value="png">Portable Network Graphics (.png)</option>
+    <option value="gif">Graphics Interchange Format (.gif)</option>
+    <option value="bmp">Bitmap Image File (.bmp)</option>
+    <option value="webp">WEBP (.webp)</option>
+   </select>  
+   <!-- words -->
+   <label for="image-size"><strong>Size:</strong></label>
+    <select id="image-size" name="image-size" class="">
+     <option value="all" selected>All formats</option>
+     <option value="small">Small</option>
+     <option value="medium">Medium</option>
+     <option value="large">Large</option>
+    </select>  
+   <!-- words -->
+   <label for="safe-search"><strong>Safe search:</strong></label>
+   <select id="safe-search" name="safe-search" class="">
+    <option value="remove-explicit">Remove explicit</option>
+    <option value="show-all">All</option>
+   </select>  
+
+   <label for="words"><strong>Website:</strong></label>
+   <input id="words" type="text" name="words">
+   <small>ex: www.arquivo.pt</small> 
+
+   <!-- Number of results: images -->
+   <label for="number-of-results-images"><strong>Number of results:</strong></label>
+   <select id="number-of-results-images" name="number-of-results-images" class="">
+   <option selected>10</option>
+    <option>20</option>
+    <option>30</option>
+    <option>50</option>
+    <option>100</option>
+    <option>500</option>
+    <option>1000</option>
+    <option>2000</option> 
+  </select>   
+  
+  <!-- starts advanced search navigation -->
+  <section class="navigation-tools">
+    <h3>Pages aAdvanced search navigation</h3> 
+    <button type="submit" class="search-form-advanced-button" value="Advanced Search">Search</button>
+  </section> 
+  <!-- ends advanced search navigation -->
+</fieldset>      
+</form>
+<!-- ends pages advanced search -->
+</section>
+    
+  

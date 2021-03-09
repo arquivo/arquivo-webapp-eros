@@ -137,7 +137,7 @@ header button#nav-menu-button-left  {
  /* Main ************************************************************* */
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
 
-.background-top-curve {
+header .background-top-curve {
   position: relative;
   z-index: 0;
   top: 4px;
@@ -150,7 +150,7 @@ header button#nav-menu-button-left  {
 
 /* "hidden" white rectangle with both left and right bottom corners curved, above footer */ 
 
-.background-bottom-curve {
+footer .background-bottom-curve {
   position: relative;
   z-index: 0;
   bottom: 1px;
@@ -192,10 +192,10 @@ nav#left-nav, nav#options-right-nav, nav#replay-left-nav, nav#replay-right-nav  
 position: absolute;
 z-index: 2;
 top: 0px;
-padding: 46.5px 0px;
+padding:46.5px 0px 46.5px 0;
 height: 100vh;
 color: white;
-background-color:rgba(3,63,114,0.95);   
+background-color:rgba(3,63,114,1);   
 outline: none;
 transition: 0.25s
 }
@@ -205,12 +205,11 @@ nav#left-nav, nav#replay-left-nav {
   width: 200px; 
 }
 
-body#landing-replay div.background-top-curve {
-  display: none;
-  outline: 1px solid red;
+nav#replay-right-nav  {
+  padding: 46.5px 0px 46.5px 0;  
 }
 
-body#landing-replay main#main-content {
+body#landing-replay main.main-content {
   display: flex;
   flex-direction: row;
   justify-content:flex-end;
@@ -224,12 +223,16 @@ body#landing-replay main#main-content {
   outline: 1px solid rgb(9, 105, 13);
 }
 
-body#landing-replay main#main-content iframe  {
+body#landing-replay header .background-top-curve {
+  display: none;
+    
+}
+
+body#landing-replay main.main-content iframe  {
   padding: 0;
   margin: 0;
   max-width: 100%;
-  width: inherit;
-  outline: 1px solid rgb(9, 105, 13);
+  width: inherit; 
 }
 
 nav#replay-left-nav { 
@@ -255,19 +258,58 @@ nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, n
   color: white;
 }
 
+nav#replay-left-nav li#replay-table button { 
+  background-color: #1c75c0;
+  left: 10px;
+  width: 71px;
+  height: 31px;
+  font-size: 0.75em;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+  color: white;  
+}
+
+nav#replay-left-nav span.number-of-versions {
+  padding: 4px 5px;
+  border: 1px solid white;
+  border-radius: 1px;
+  text-align: right;
+  margin-left: 42px;
+  font-size: 0.95em;
+}
+
+nav#replay-left-nav a:hover span.number-of-versions {
+  padding: 4px 5px;
+  border: 1px solid #00294c;
+}
+
+nav#replay-left-nav li.menu-pages-replay-month a {
+padding-left:25px;
+}
+
+nav#replay-left-nav li.menu-pages-replay-date-hour a {
+  padding-left:40px;
+}
+/* Dare selected on the replauy menu */
+nav#replay-left-nav li.date-selected a {
+  background-color:#00324b;
+}
+
+
 nav#replay-right-nav button, nav#options-right-nav button {
   left: 7px;
 }
 
-nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-left-nav button:hover, nav#replay-right-nav button:hover {
+nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-left-nav li#replay-table button:hover, nav#replay-right-nav button:hover {
     background-color: white;
     border: none;
     outline: none;
     color: #033f72;
     }
-    nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-left-nav button:active, nav#replay-right-nav button:active {
+    nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-left-nav li#replay-table button:active, nav#replay-right-nav button:active {
       background-color: #033f72;
-      border: none;
+      border: none; 
       outline: none;
       color: white;
 }  
@@ -398,6 +440,14 @@ nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-
   display: block;  
 }
 
+nav#left-nav section ul > li#replay-table {
+margin-top: 14px;
+}
+
+body#landing-replay #replay-list, body#landing-replay span.number-of-versions {
+  display: none;
+}
+
 nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
     display: block;
     text-decoration: none;
@@ -405,6 +455,10 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
     padding: 0px 16px 0px 15px;
     font-size: 0.8em;   
   }
+
+nav#replay-left-nav section {
+  margin-top: 14px;
+}
 
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
@@ -419,7 +473,7 @@ nav#left-nav section ul > li a:hover, nav#options-right-nav section ul > li a:ho
 
 nav#left-nav section ul > li a:active, nav#options-right-nav section ul > li a:active, nav#replay-left-nav section ul > li a:active, nav#replay-right-nav section ul > li a:active {    
   color: white;
-  background-color: #033f72;
+  background-color: #00101e;
 }
 
 /* nav sub-menu ******************************************************************* */
@@ -449,6 +503,7 @@ section {
   width: auto;
   max-width: 960px;
 }
+
 section#search-tools {
   position: relative;
   z-index: 0;
@@ -498,7 +553,7 @@ section#search-tools form input[type="text"] {
   border: 1px solid #ccc;
   border-right: none;
 } 
-section#search-tools form input[type="text"].calendar-year-input {
+section#search-tools form input[type="text"].calendar-year-input, input[type="text"].calendar-year-input {
   position: relative;
   z-index: 1;
   top: -4px;
@@ -516,7 +571,7 @@ section#search-tools form input[type="text"].calendar-year-input {
   border: none;
   outline: none;
 }
-section#search-tools form input[type="text"].calendar-day-month-input {
+section#search-tools form input[type="text"].calendar-day-month-input, input[type="text"].calendar-day-month-input {
   position: relative;
   z-index: 0;
   top: -24px;
@@ -536,7 +591,7 @@ section#search-tools form input[type="text"].calendar-day-month-input {
 
 /* Left and right calendar icon */
 
-section#search-tools-date-slider #date-container-start, section#search-tools-date-slider #date-container-end {
+section#search-tools-date-slider #date-container-start, section#search-tools-date-slider #date-container-end, #date-container-start, #date-container-end {
   position: absolute;   
   margin: 0;
   width: 30px;
@@ -556,13 +611,13 @@ section#search-tools-date-slider #date-container-start, section#search-tools-dat
   border: 0; 
 }
 
-section#search-tools-date-slider #date-container-start  {
+section#search-tools-date-slider #date-container-start, #date-container-start  {
   top: -6px;  
   left: 0px;
   height: 27px;
 }
 
-section#search-tools-date-slider #date-container-end  {
+section#search-tools-date-slider #date-container-end, #date-container-end   {
   top: -6px;  
   right: 0px;
   cursor: pointer;
@@ -885,7 +940,7 @@ section#search-tools-buttons form {
   margin-right: 7px;
 }
 
-section#search-tools-buttons form button  {
+section#search-tools-buttons form button, button.search-form-advanced-button  {
   padding: 5px 8px 6px 8px; 
   height: auto;
   width: auto;
@@ -898,11 +953,78 @@ section#search-tools-buttons form#search-form-advanced {
 
 section#search-tools-buttons form#search-form-advanced button  {
   position: absolute; 
-  right:0;
+  right:0;  
   height: auto;
   width: auto;
   display: block;
 }
+
+section.form-container {
+  position: relative;
+  padding: 0 0 0 0;
+  width: 100%; 
+}
+
+/* Advanced Search forms: pages and images */
+
+section.form-container h3,
+section.form-container legend {
+ visibility: collapse;
+ height: 0;
+}
+
+section.form-container fieldset, 
+section.form-container label,
+section.form-container input[type="text"],
+section.form-container small {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;  
+}
+
+section.form-container label strong{
+  font-weight: bold;  
+}
+
+section.form-container label {
+  padding-left: 22px;
+  background: transparent url(../img/advanced-arrow.svg) no-repeat center left;
+  width: auto;
+  padding-left: 22px;
+  max-width: 100%;
+  font-size: 0.9em;  
+}
+
+section.form-container input[type="text"], section.form-container select {
+ padding: 10px 0 10px 10px;
+ margin: 10px 0 5px 0;
+ width: -webkit-fill-available;
+ width: -moz-available;
+ max-width: -webkit-fill-available; 
+ transition: 0.5s;
+}
+
+section.form-container select { 
+  margin: 10px 0 15px 0;
+  width: 100%;  
+  max-width: -webkit-fill-available; 
+ }
+
+section.form-container input[type="text"]:focus, section.form-container select:focus {
+  transition: 0.5s;
+ }
+
+section.form-container small {
+ margin-bottom: 15px;
+ font-size: smaller;
+ font-style: italic;
+ color: #444;
+ padding: 0 10px; 
+}
+
+section.form-container small:last-child {
+margin-bottom: 40px; 
+ }
 
 form {
   display: flex;
@@ -919,7 +1041,7 @@ form#search-form {
   flex-direction: row;
   max-width: 960px; 
   height: 101px; 
-  }
+}
 
 form#search-form span.search-input-button {
   width: 100%;
@@ -947,8 +1069,16 @@ form#search-form input#submit-search-input {
       -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);
     }
-/* Slider */
 
+     /* Advanced search form */
+     form.advanced-search-form section.navigation-tools {      
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      border: none;
+    }
+   
+/* Slider */
 
 /* HOME CONTENT --- */
 
@@ -1012,6 +1142,10 @@ section#pages-results ul {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
+} 
+
+section#pages-results ul.sub-results {
+  margin-left: 20px;  
 } 
 
 section#pages-results ul:hover, section#pages-results ul:active {
@@ -1232,6 +1366,8 @@ section.navigation-tools p {
 section.navigation-tools button {
   padding: 6px 8px;
   border-radius: 2px;
+  font-size: inherit;
+  z-index: 0;
 } 
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
@@ -1242,7 +1378,8 @@ body#pages-search-results section.navigation-tools, body#images-search-results s
 }
 
 body#pages-search-results section.navigation-tools {
-  border-top: none;    
+  border-top: none;   
+  clear: both; 
 }
 
 body#pages-search-results section.navigation-tools section#pages-results ul:last-child() {
@@ -1607,9 +1744,6 @@ body#pages-search-results button#nav-options-right-button-mobile {
   height: 31px;
 }
 
-.background-top-curve {    
-    height: 10px;
-}
 
 section.header-content-container {
   margin: -5px auto 0 auto;  
@@ -1687,10 +1821,6 @@ body#pages-search-results button#nav-options-right-button-mobile {
   border-radius: 3px;   
   width: 31px;
   height: 31px;
-}
-
-  .background-top-curve {    
-    height: 10px;
 }
 
 section.header-content-container {
