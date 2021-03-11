@@ -1,18 +1,23 @@
-<!-- starts menu left navigation -->
+<!-- starts replay: table and list -->
 <nav id="replay-table-list-nav">
     <h3>Replay table list</h3> 
     <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
+   
+    <!-- starts table and list navigation buttons -->
     <section class="table-list-buttons">
         <h4>Replay table list menu navigation buttons</h4>
       <form id="replay-table action="replay-table-list-results" method="GET"><button><span class="fas fa-table" aria-hidden="true"></span> Table</button></form>
       <button id="replay-list" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
     </section>
+    <!-- ends table and list navigation buttons -->
+
+        
+
+    <!-- starts list: show results as a list -->  
     <section>
-        <h4>Replay left menu navigation list</h4> 
-          <ul>
-            <!-- starts table and list: show results as a table or as a list -->      
-            <!-- ends table and list: show results as a table or as a list -->    
-            <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-left-menu">2021<span class="number-of-versions">10 versions</span></a>
+        <h4>Replay menu navigation list</h4> 
+          <ul>            
+            <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-left-menu">1996<span class="number-of-versions">10 versions</span></a>
               <ul class="panel">
                 <li class="menu-pages-replay-month"><a href="#">January</a></li>
                 <li class="menu-pages-replay-date-hour"><a href="#">11 January at 10:04</a></li>
@@ -27,10 +32,45 @@
               </ul>
             </li>
           </ul>
-      </section>
+     </section>
+     <!-- ends list: show results as a list --> 
+
     </nav> 
-    <!-- ends left nav menu list -->
-    <!-- starts accordion -->  
+    <!-- ends replay: table and list -->
+    <!-- starts table: shows results as a table -->
+    <table>        
+        <thead>
+            <tr id="display-year" class="year-table-row">
+                <th id="year-01" class="year-table-head">1996</th>
+                <th id="year-02" class="year-table-head">1997</th>
+                <th id="year-03" class="year-table-head">1998</th>
+                <th id="year-04" class="year-table-head">1999</th>
+                <th id="year-05" class="year-table-head">2000</th>
+                <th id="year-06" class="year-table-head">2001</th>
+                <th id="year-07" class="year-table-head">2002</th>
+                <th id="year-08" class="year-table-head">2003</th>
+                <th id="year-09" class="year-table-head">2004</th>
+                <th id="year-10" class="year-table-head">2005</th>           
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="display-date-month" class="date-month-table-row">
+                <td id="date-month-01" class="year-month-data"><a id="link-01" title="Insert title here">25 Jan</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-02" title="Insert title here">25 Fev</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-03" title="Insert title here">25 Mar</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-04" title="Insert title here">25 Apr</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-05" title="Insert title here">25 May</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-06" title="Insert title here">25 Jun</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-07" title="Insert title here">25 Jul</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-08" title="Insert title here">25 Aug</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-09" title="Insert title here">25 Sep</a></td>
+                <td id="date-month-01" class="year-month-data"><a id="link-10" title="Insert title here">25 Oct</a></td>
+            </tr>            
+        </tbody>
+    </table>
+    <!-- ends table: shows results as a table -->
+
+    <!-- starts accordion for list -->  
     <script>
     var acc = document.getElementsByClassName("accordion-left-menu");
     var i;
@@ -47,5 +87,4 @@
       });
     }
     </script>
-    <!-- ends accordion -->  
-    <!-- ends left nav menu --> 
+    <!-- ends accordion for list -->
