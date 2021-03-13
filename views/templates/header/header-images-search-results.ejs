@@ -1,4 +1,13 @@
 
+
+<!-- starts Modal HTML embedded directly into document -->
+<div id="modal-window" class="modal">
+  <img src="img/lisboa-image-details-01.jpg" alt="Electrico de Lisboa" style="max-width: 100%;">
+  <p>Arquivo.pt image description layout design here: to contain full description, links, and other related images, etc.</p>
+  <a href="#" rel="modal:close">Close</a>
+</div>
+<!-- ends Modal HTML embedded directly into document -->
+
 <!-- starts alerts -->
 <section id="alert-container">
     <h3>Search Tools</h3>
@@ -12,12 +21,13 @@
   <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openLeftMenuNav()"></button>
   <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()">Options</button> 
   <button id="nav-options-right-button-mobile" class="fas fa-ellipsis-h" aria-hidden="true" value="top navigation right menu options button" onclick="openOptionstMenuNav()"></button> 
+
   <a id="logo-arquivo-link" href="/">
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
   </a>
 <!-- Include left and right nav -->
-<%- include("left_nav_menu") -%>
-<%- include("options_right_nav_menu") -%>
+<%- include("../menu/left_nav_menu") -%>
+<%- include("../menu/options_right_nav_menu") -%>
 <!-- starts white background top corner rounded shape -->
 <div class="background-top-curve"></div>
 <!-- ends white background top corner rounded shape -->
@@ -28,16 +38,15 @@
 <!-- ends modal with calendar -->
 <h1>Arquivo.pt - search pages from the past!</h1>
 <h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
-
 <!-- starts content container -->
 <section class="header-content-container">
-  <h3>Content container</h3>  
+<h3>Content container</h3>  
 
 <section id="search-tools">
 <h3>Search Tools</h3>
 <!-- starts search tools input -->
-<form id="search-form" action="pages-search-results" method="GET">
-<h4>Search input</h4>
+<form id="search-form" action="images-search-results" method="GET">
+  <h4>Search input</h4>
   <span class="search-input-button">
   <input id="submit-search-input" type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off">
   <button id="submit-search" type="submit"  aria-hidden="true" value="search mobile menu button">Search</button>
@@ -72,11 +81,11 @@
     <!-- ends right calendar icon -->
 
   </section>
-  <!-- ends range slider container --> 
+  <!-- ends range slider container -->  
 </section>
 <!-- ends range slider block -->  
-</form>
 
+</form>
 <!-- starts search tools buttons -->
 <section id="search-tools-buttons">
   <h4>Search Pages and Images Buttons</h4>
