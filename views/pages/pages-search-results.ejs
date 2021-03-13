@@ -1,12 +1,32 @@
- <!-- starts include header -->     
- <%- include("../templates/header-pages-search-results") -%>
- <!-- ends include header --> 
- <!-- starts main container--> 
- <main class="main-content">      
-    <!-- starts include home content -->     
-    <%- include("../templates/body-pages-search-results") -%>
-    <!-- ends include home content -->         
-    </main>
-    <!-- ends main container-->
-<!-- starts footer -->
- <%- include("../templates/footer") -%>
+<!doctype html>
+<html lang="en-GB">
+
+    <!-- starts global document: <head>...</head> -->
+    <%- include("../templates/head") -%>
+    <!-- ends global document: <head>...</head> -->
+
+    <!-- starts document body content -->
+    <body id="pages-search-results" class="pages-search-results-cl">  
+
+        <!-- starts include header -->     
+        <%- include("../templates/header-pages-search-results") -%>
+        <!-- ends include header --> 
+
+        <!-- starts main container--> 
+        <main class="main-content">      
+
+            <!-- starts include home content -->     
+            <%- include("../templates/body-pages-search-results") -%>
+            <!-- ends include home content -->    
+
+        </main>
+        <!-- ends main container-->
+        
+    <!-- starts footer -->
+    <%- include("../templates/footer") -%>
+    <!-- ends footer --> 
+
+    </body>
+    <!-- ends document body content -->
+
+</html>
