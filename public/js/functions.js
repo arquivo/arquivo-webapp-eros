@@ -45,7 +45,17 @@ function closeReplayRightMenuNav() {
 // ends: menu opening and closing button for replay top nav right replay menu button 
 
 // starts: copy URL to clipboard on click 
-function copyURlToClipboard() {
+function copyURLToClipboard() {
+  var urlCopier = document.createElement('input');
+  var text = window.location.href;
+
+  document.body.appendChild(urlCopier);
+  urlCopier.value = text;
+  urlCopier.select();
+  document.execCommand('copy');
+  document.body.removeChild(urlCopier);
+
+  alertsMessageIn();
 }
 // ends: copy URL to clipboard on click 
 
@@ -54,7 +64,7 @@ function copyURlToClipboard() {
 // alert message in
 function alertsMessageIn() {
   document.getElementById("alert-container").style.cssText = "top:0;height:47px;opacity:1;transition:0.3s"; 
-  setTimeout("document.getElementById('alert-container')", 2000); 
+  setTimeout(alertsMessageOut, 2000); 
 }
 // alert message out
 function alertsMessageOut() {
