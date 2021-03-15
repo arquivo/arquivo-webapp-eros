@@ -1,14 +1,11 @@
-<!-- starts global document: <head>...</head> -->
-<%- include("../templates/head") -%>
-<!-- ends global document: <head>...</head> -->
 
-<body id="landing-replay" class="landing-replay-cl"> 
 
 <!-- starts Modal HTML embedded directly into document -->
 <div id="modal-window" class="modal"> 
   <a href="#" rel="modal:close">Close</a>
 </div>
 <!-- ends Modal HTML embedded directly into document -->
+
 <!-- starts alerts -->
 <section id="alert-container">
     <h3>Search Tools</h3>
@@ -25,9 +22,9 @@
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
   </a>
 <!-- starts include: replay, left and right nav -->
-<%- include("left_nav_menu") -%>
-<%- include("left_nav_replay_menu") -%>
-<%- include("replay_right_nav_menu") -%>
+<%- include("../menu/left_nav_menu") -%>
+<%- include("../menu/left_nav_replay_menu") -%>
+<%- include("../menu/replay_right_nav_menu") -%>
 <!-- ends include: replay, left and right nav -->
 
 <!-- starts white background top corner rounded shape -->

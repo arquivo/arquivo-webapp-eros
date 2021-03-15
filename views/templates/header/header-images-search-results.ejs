@@ -1,9 +1,4 @@
-<!-- starts global document: <head>...</head> -->
-<%- include("../templates/head") -%>
-<!-- ends global document: <head>...</head> -->
 
-<!-- starts document body content -->
-<body id="images-search-results" class="images-search-results-cl">  
 
 <!-- starts Modal HTML embedded directly into document -->
 <div id="modal-window" class="modal">
@@ -31,8 +26,8 @@
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
   </a>
 <!-- Include left and right nav -->
-<%- include("left_nav_menu") -%>
-<%- include("options_right_nav_menu") -%>
+<%- include("../menu/left_nav_menu") -%>
+<%- include("../menu/options_right_nav_menu") -%>
 <!-- starts white background top corner rounded shape -->
 <div class="background-top-curve"></div>
 <!-- ends white background top corner rounded shape -->
@@ -60,34 +55,7 @@
 <!-- ends search tools input -->
   
 <!-- starts range slider block --> 
- <section id="search-tools-date-slider">   
-  <h4>Search Date Slider</h4>  
-  
-  <!-- starts range slider container -->
-  <section id="slider-range-container">     
-    <h4>Slider Date Calendars</h4> 
-    
-    <!-- starts left calendar icon -->
-    <ul id="date-container-start">      
-      <li class="search-calendar-year"><input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input" name="from-year" value="1996" readonly></li>    
-      <li class="search-calendar-day-month"><input type="text"  id="calendar-day-month-start" class="calendar-day-month-input" value="01 Jan" readonly></li>
-    </ul>
-    <!-- ends left calendar icon -->
-
-    <!-- starts slider handles -->
-    <div id="slider-range"></div>
-    <!-- ends slider handles -->
-
-    <!-- starts right calendar icon -->
-    <ul id="date-container-end"> 
-      <li class="search-calendar-year"><input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input" name="to-year" value="2021" readonly></li>    
-      <li class="search-calendar-day-month"><input type="text" id="calendar-day-month-end" class="call-datepicker calendar-day-month-input" value="01 Mar" readonly></li>
-    </ul>
-    <!-- ends right calendar icon -->
-
-  </section>
-  <!-- ends range slider container -->  
-</section>
+<%- include('../fragments/search-tools-date-slider') %>
 <!-- ends range slider block -->  
 
 </form>

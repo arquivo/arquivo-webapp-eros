@@ -1,13 +1,25 @@
- <!-- starts include header -->     
- <%- include("../templates/header-images-search-results") -%>
- <!-- ends include header --> 
- <!-- starts main container--> 
- <main class="main-content">      
-    <!-- starts include home content -->     
-    <%- include("../templates/body-images-search-results") -%>
-    <!-- ends include home content -->         
-    </main>
-    <!-- ends main container-->
-<!-- starts footer -->
- <%- include("../templates/footer") -%>
-<!-- ends footer --> 
+<!doctype html>
+<html lang="en-GB">
+
+    <!-- starts global document: <head>...</head> -->
+    <%- include("../templates/head") -%>
+    <!-- ends global document: <head>...</head> -->
+
+    <!-- starts document body content -->
+    <body id="images-search-results" class="images-search-results-cl">  
+        <!-- starts include header -->     
+        <%- include("../templates/header/header-images-search-results") -%>
+        <!-- ends include header --> 
+        <!-- starts main container--> 
+        <main class="main-content">      
+            <!-- starts include home content -->     
+            <%- include("../templates/body/body-images-search-results") -%>
+            <!-- ends include home content -->         
+        </main>
+        <!-- ends main container-->
+        <!-- starts footer -->
+        <%- include("../templates/footer") -%>
+        <!-- ends footer --> 
+    </body>
+    <!-- ends document body content -->
+</html>

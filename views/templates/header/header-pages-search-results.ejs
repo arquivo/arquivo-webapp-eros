@@ -1,8 +1,4 @@
-<!-- starts global document: <head>...</head> -->
-<%- include("../templates/head") -%>
-<!-- ends global document: <head>...</head> -->
 
-<body id="landing-images" class="landing-images-cl">  
 <!-- starts alerts -->
 <section id="alert-container">
     <h3>Search Tools</h3>
@@ -14,13 +10,14 @@
 <header>  
   <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
   <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openLeftMenuNav()"></button>
-  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()" style="display:none" >Options</button> 
+  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()">Options</button> 
+  <button id="nav-options-right-button-mobile" class="fas fa-ellipsis-h" aria-hidden="true" value="top navigation right menu options button" onclick="openOptionstMenuNav()"></button> 
   <a id="logo-arquivo-link" href="/">
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
   </a>
 <!-- Include left and right nav -->
-<%- include("left_nav_menu") -%>
-<%- include("options_right_nav_menu") -%>
+<%- include("../menu/left_nav_menu") -%>
+<%- include("../menu/options_right_nav_menu") -%>
 <!-- starts white background top corner rounded shape -->
 <div class="background-top-curve"></div>
 <!-- ends white background top corner rounded shape -->
@@ -34,13 +31,13 @@
 
 <!-- starts content container -->
 <section class="header-content-container">
-<h3>Content container</h3>  
+  <h3>Content container</h3>  
 
 <section id="search-tools">
 <h3>Search Tools</h3>
 <!-- starts search tools input -->
-<form id="search-form" action="images-search-results" method="GET">
-  <h4>Search input</h4>
+<form id="search-form" action="pages-search-results" method="GET">
+<h4>Search input</h4>
   <span class="search-input-button">
   <input id="submit-search-input" type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off">
   <button id="submit-search" type="submit"  aria-hidden="true" value="search mobile menu button">Search</button>
@@ -49,38 +46,10 @@
 <!-- ends search tools input -->
   
 <!-- starts range slider block --> 
- <section id="search-tools-date-slider">   
-  <h4>Search Date Slider</h4>  
-  
-  <!-- starts range slider container -->
-  <section id="slider-range-container">     
-    <h4>Slider Date Calendars</h4> 
-    
-    <!-- starts left calendar icon -->
-    <ul id="date-container-start">      
-      <li class="search-calendar-year"><input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input" name="from-year" value="1996" readonly></li>    
-      <li class="search-calendar-day-month"><input type="text"  id="calendar-day-month-start" class="calendar-day-month-input" value="01 Jan" readonly></li>
-    </ul>
-    <!-- ends left calendar icon -->
-
-    <!-- starts slider handles -->
-    <div id="slider-range"></div>
-    <!-- ends slider handles -->
-
-    <!-- starts right calendar icon -->
-    <ul id="date-container-end"> 
-      <li class="search-calendar-year"><input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input" name="to-year" value="2021" readonly></li>    
-      <li class="search-calendar-day-month"><input type="text" id="calendar-day-month-end" class="call-datepicker calendar-day-month-input" value="01 Mar" readonly></li>
-    </ul>
-    <!-- ends right calendar icon -->
-
-  </section>
-  <!-- ends range slider container --> 
-
-</section>
+<%- include('../fragments/search-tools-date-slider') %>
 <!-- ends range slider block -->  
- 
 </form>
+
 <!-- starts search tools buttons -->
 <section id="search-tools-buttons">
   <h4>Search Pages and Images Buttons</h4>
@@ -90,7 +59,7 @@
   <form id="search-form-images" class="buttons" action="images" method="get">
     <button type="submit" value="Images">Images</button>
   </form>
-  <form id="search-form-advanced" class="buttons" action="images-advanced-search" method="get">
+  <form id="search-form-advanced" class="buttons" action="pages-advanced-search" method="get">
     <button type="submit" value="Advanced Search">Advanced Search</button>
   </form>
 </section>
