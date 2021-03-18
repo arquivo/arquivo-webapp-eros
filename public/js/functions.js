@@ -86,3 +86,19 @@ function closeAdvancedSearch(){
 return false;
 }
 // ends: accordion function /////////////////////////////////////////////////////////////////////////////
+
+// starts: accordion function ////////////////////////////////////////////////////////////////////////////
+
+// opens replay page on fullscreen
+function opensFullScreen() { 
+  document.getElementById('replay-in-iframe').style.cssText = "padding: 0;margin:0;width: 100%;position: absolute;z-index: 1;top:0;left:0;height: 100%;0.5s";  
+  document.getElementById('fullscreen-mode').style.cssText = "display: inline-block; position: absolute; z-index: 2; top: 0; right: 12px; height: 50px; width: 162px; background-color: transparent; box-shadow: none !important; 0.5s";  
+
+}
+
+// closes replay page on fullscreen
+function closesFullScreen() {
+  document.getElementById('replay-in-iframe').style.cssText = "padding: 0; margin: 101px 0 0 0; max-width: 100%;  width: inherit; 0.5s";  
+  document.getElementById('fullscreen-mode').style.cssText = "display: none; transition: 0.5s";  
+
+}

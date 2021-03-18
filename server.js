@@ -66,9 +66,21 @@ app.get('/replay-table-list-results',function (req, res) {
 });
 // ends Replay table results
 
+// starts not found page
+app.get('/not-found',function (req, res) {
+  res.render('pages/not-found');
+});
+// ends not found page
+
+// starts not found page
+app.get('/search-suggestion',function (req, res) {
+  res.render('pages/search-suggestion');
+});
+// ends not found page
 
 
-// ends website Routes ////////////////////////////////////////////////////////////////////////////////
+
+// ends website Routes ///////////////////////////////////////////////////////
 
 // Open browser port: ${port} 
 //////////////////////////////////////////////////////////////////////////////
