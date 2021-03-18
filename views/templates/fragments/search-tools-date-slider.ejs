@@ -12,9 +12,10 @@
                     name="from-year" value="1996" readonly>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="calendar-day-month-start" class="calendar-day-month-input" value="01 Mar"
+                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 Mar"
                     readonly>
             </li>
+            <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
         </ul>
         <!-- ends left calendar icon -->
 
@@ -29,9 +30,10 @@
                     value="2021" readonly>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="calendar-day-month-end" class="call-datepicker calendar-day-month-input"
+                <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
                     value="01 Mar" readonly>
             </li>
+            <input type="hidden" name="dateEnd" id="end-date" value="<%= (new Date()).toLocaleDateString('pt-PT') %>">
         </ul>
         <!-- ends right calendar icon -->
 
