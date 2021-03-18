@@ -11,8 +11,23 @@ body {
 }
 
 /* Skip navigation menu and go direct to main content */
-a#skip-navigation-links {
-  display: none;
+a#skip-navigation-links, 
+a#skip-navigation-links:hover,
+a#skip-navigation-links:visited {
+  position: absolute;
+  top:-500px;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+}
+
+a#skip-navigation-links:active, 
+a#skip-navigation-links:focus,
+a#skip-navigation-links:visited {
+  position: static;  
+  width: auto;
+  height: auto;
 }
 
 /* ANCHOR LINKS ********************************************************** */
@@ -41,6 +56,7 @@ body#pages-search-results a.results-title:visited {
 button {
   position: relative;
   z-index: 1;
+  padding: 5px 8px 6px 8px;
   color: white;
   background-color: #1c75c0;
   border-radius: 3px;
@@ -93,6 +109,39 @@ h1, h2 {
 
 /* HEADER *********************************************************** */
 
+body#landing-replay p#chosen-url {
+  padding: 15px 0px ;
+  font-size: 0.85em;
+}
+
+body#landing-replay p#chosen-url span.icon-link {
+  padding-right: 5px;
+  font-size: 0.8em;
+  position: relative;
+  top: -1px;
+}
+
+body#landing-replay p#chosen-url a {
+  text-decoration: none;
+}
+
+body#landing-replay p#chosen-url a:hover {
+  text-decoration: underline;
+  color: white;
+  background-color: transparent;
+}
+
+body#landing-replay nav#replay-right-nav a.link-line-height {
+  display: flex;
+  line-height: 1.4em;
+  padding: 11px 20px;
+}
+
+body#landing-replay nav#replay-right-nav a.link-line-height span {
+  font-size: 0.8em;
+  position: relative;
+  top: 4px;
+}
 
 /* TABLE *************************************************************** */
 
@@ -142,6 +191,39 @@ color: #00294c;
     text-align: center;
     font-size: small;
   }
+
+/* Modal*/
+section#technical-details ul {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height:auto;
+  max-height: 500px;
+  padding: 10px 0px 10px 15px;
+
+}
+section#technical-details ul li {  
+  padding: 10px 0;
+  color: black;
+  border-bottom: 1px solid #cccccc73;
+  text-align: left;
+  line-height: 1.4em;
+  font-size: 0.85em;
+}
+
+section#technical-details ul li:last-child {
+   border-bottom: none;
+}
+
+section#technical-details ul li strong {
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+div.jquery-modal section#technical-details ul li a {
+  color:#1c75c0;
+  text-decoration: none;  
+  display: inline;
+}
 
 /* header */
 
@@ -248,7 +330,7 @@ height: 100vh;
 color: white;
 background-color:rgba(3,63,114,1);   
 outline: none;
-transition: 0.25s
+transition: 0.25s;
 }
 
 nav#left-nav, nav#replay-left-nav { 
@@ -281,17 +363,18 @@ body#landing-replay header .background-top-curve {
 
 body#landing-replay main.main-content iframe  {
   padding: 0;
-  margin: 0;
+  margin: 101px 0 0 0;
   max-width: 100%;
   width: inherit; 
 }
 
 nav#replay-left-nav { 
   z-index: 1;
-  top:43px;
+  top: 90px;
   left: 0px;    
   width: 200px; 
   overflow: auto;
+  border-top: 1px solid #cccccc47;
 }
 
 nav#replay-right-nav { 
@@ -302,12 +385,13 @@ nav#replay-right-nav {
 nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
   position: absolute;
   z-index: 3;
-  top: 12px;
+  top: 15px;
   right: 7px;
   background-color: #224d75;
   border: none;
   outline: none;
   color: white;
+  padding: 0px 5px;
 }
 
 nav#replay-left-nav li#replay-table button { 
@@ -369,7 +453,6 @@ li.menu-pages-replay-month a {
   font-weight: bold;
   font-size: 0.8em;
   border-bottom: 1px solid #cccccc47;
-
 }
 
 li.menu-pages-replay-month a:hover {
@@ -384,9 +467,10 @@ li.menu-pages-replay-date-hour a {
 li.menu-pages-replay-date-hour a:hover {
   color: #033f72;
 }
-/* Dare selected on the replauy menu */
+
+/* Date selected on the replay menu */
 li.date-selected a {
-  background-color:#00324b;
+  /* To use in future: background-color:#00324b;
   color: #fbff85 /* white */
 }
 
@@ -398,9 +482,7 @@ li.date-selected a::before {
 
 li.date-selected a:hover {
    color:#00324b;
-
 }
-
 
 nav#replay-right-nav button, nav#options-right-nav button {
   left: 7px;
@@ -496,22 +578,11 @@ body#homepage button#nav-options-right-button  {
 
 /* Accordion menus: left nav, options, replay and replay right nav ********************************** */
 
-.accordion-left-menun {
-  background-color: transparent;
-  color: white;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 1.25em;
-  transition: 0.1s;
-}
+
 .active, .accordion-left-menu:hover {
   background-color: transparent;
 }
-.accordion-left-menu:after {
+.accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after {
   content: "\002B";
   float: right;
   font-size: initial;
@@ -571,14 +642,13 @@ body#landing-replay nav#replay-left-nav li.date-selected a:hover {
   color:rgba(3,63,114,1);
  }
 
-
 nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
     display: block;
     text-decoration: none;
     color: white;
     padding: 0px 16px 0px 19px;
     font-size: 0.8em;   
-  }
+}
 
 nav#replay-left-nav section {
   margin-top: 14px;
@@ -600,9 +670,17 @@ nav#left-nav section ul > li a:active, nav#options-right-nav section ul > li a:a
   background-color: #00101e;
 }
 
+nav#replay-left-nav section ul > li.menu-pages-replay-month a {
+ padding-left: 30px;
+}
+
+nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
+  padding-left: 39px;
+}
+
 /* nav sub-menu ******************************************************************* */
 nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a, nav#reply-left-nav section ul > li > ul > li a, nav#reply-right-nav section ul > li > ul > li a { 
-  padding: 0 0 0 25px;
+  padding: 0 0 0 30px;
   font-size: 0.85em;
 }
 /* ends nav MENU: replay left and right ************************************************** */
@@ -665,6 +743,26 @@ body#table-list nav#replay-table-list-nav li.menu-pages-replay-date-hour:hover a
 }
 
 /* Table */
+
+/* Not found terms */
+
+section#not-found-container {
+  width: 100%;
+  padding: 0 10px;  
+}
+
+section#not-found-container h3, section#not-found-container h4 {
+  visibility: collapse;
+  height: 0;
+}
+
+section#not-found-message {  
+margin: auto;
+    width: 100%;
+    max-width: 960px;
+    font-size: 13px;   
+    border-radius: 5px;
+}
 
 /* Sections: *********************************************************************** */
 
@@ -896,8 +994,7 @@ text-decoration: none;
   height: auto;
   padding: 15px;
   border-radius: 2px;
-  background-color: rgba(255,255,255,1);
-  
+  background-color: rgba(255,255,255,1);  
 }
 
 /* Selected date */
@@ -905,7 +1002,6 @@ text-decoration: none;
 .ui-state-active {
   background-color: #1c75c0 !important;
 }
-
 
 #ui-datepicker-div thead {
   font-size:0.9em !important;
@@ -948,21 +1044,31 @@ td a.ui-state-default {
 
 /* Modal: image description */
 
-.modal a.close-modal {
+.blocker {
+  padding: 50px !important;
+}
+
+section.modal a.close-modal {
   background-color: transparent !important;
+  position: absolute !important;
+  z-index: 1 !important;
+  filter: invert(1);
+  transition: 0.5s;
 }
 
-.modal a.close-modal:hover {
-  filter:invert(1);
+section.modal a.close-modal:hover {
+  /*filter:invert(1);*/
+  filter: drop-shadow(2px 4px 6px black);
+  transition: 0.5s;
 }
 
-.modal {
+section.modal {
   display: none;
   vertical-align: middle;
   position: relative;
   z-index: 2;
   box-sizing: border-box;
-  width: 100%;
+  width: auto;
   background: #ebebeb;
   padding: 15px 30px;
   -webkit-border-radius: 8px;
@@ -976,18 +1082,146 @@ td a.ui-state-default {
   -ms-box-shadow: 0 0 10pxrgb(10, 8, 8) !important;
   box-shadow: 0 0 10px #000 !important;
   text-align: center;
-  height: inherit;
-  max-height: 85% !important;
-  max-width: 960px !important;
+  height: auto;
+  max-height: auto !important;    
   box-sizing: border-box;
-  width: 100% !important;
   background: #fff;
+  padding: 15px 0 15px 10px !important;
+}
+
+body#images-search-results section.modal {
   padding: 15px !important;
 }
 
-.modal img {
-  padding-bottom: 15px;
+section.modal h3 {
+  visibility: collapse;
+  height: 0;
+}
 
+section.modal img {
+  max-width: 100%;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+section.modal ul.replay-options {
+    display: flex;      
+    padding-top: 9px; 
+    padding-right: 10px;    
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+section.modal ul.replay-options li:first-child {
+  width: 100%;
+}
+
+section.modal ul.replay-options li p {
+  font-size: 0.85em;
+  line-height: normal;
+}
+
+section.modal ul.replay-options li button {
+  margin: 10px;
+  width: 114px;
+}
+
+div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
+  width: 100%;
+  max-width: 300px;
+}
+
+body#landing-replay section#fullscreen-mode {
+  display: none;
+  transition: 0.5s;  
+}
+
+div.jquery-modal section#replay-with-old-browser {
+  width: 100%;
+  max-width: 320px;
+}
+
+section.image-details-navigation {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+section.image-details-navigation button span  {
+  margin-right: 4px;
+}
+
+section.image-details-navigation h4, section.image-details-description h4 {
+visibility: collapse;
+height: 0;
+}
+
+section.image-details-description  {
+  display: flex;
+  flex-direction: column;
+  text-align: initial;
+  padding-top: 10px;
+}
+
+section.image-details-description h5  {
+font-weight: bold;
+padding: 10px 0;
+font-size: 0.85em;
+}
+
+section.image-details-description p  {
+ padding-bottom: 10px;
+ font-size: 0.85em;
+}
+
+section.image-details-description p a  {
+  color: #1c75c0;
+  text-decoration: none;
+}
+
+section.image-details-description p a:hover  {
+  color: #1c75c0;
+  text-decoration: underline;
+}
+
+button#previous-image-button {
+  position: absolute;
+  left: -70px;
+  top: 0;
+}
+
+button#next-image-button {
+  position: absolute;
+  right: -70px;
+  top: 0;
+}
+
+button.image-navigation-button { 
+    width: 70px;
+    height: calc(95%);
+    background: transparent;
+    border: none;
+}
+
+button.image-navigation-button { 
+  width: 70px;
+  height: calc(95%);
+  background: transparent;
+  border: none;
+} 
+
+button.image-navigation-button span { 
+  font-size: 2em;
+}
+
+section.image-details-description p span { 
+  position: relative;
+  top: -0.825px;
+  font-size: 0.8em;
+  color: #777;  
 }
 
 /* Datepicker */
@@ -1123,7 +1357,7 @@ section#search-tools-buttons form {
 }
 
 section#search-tools-buttons form button, button.search-form-advanced-button  {
-  padding: 5px 8px 6px 8px; 
+  padding: 5px 8px; 
   height: auto;
   width: auto;
 }
@@ -1237,6 +1471,7 @@ form#search-form input#submit-search-input {
     flex-direction: row;
     background: #ffffff url(../img/magnifier.svg) no-repeat 16px 15px;    
     padding-left: 42px;
+    padding-right: 13px;
     border: 1px solid #ccc;
     outline: none;
     font-size: 1em;    
@@ -1302,7 +1537,7 @@ section#pages-results h3, section#images-results h3  {
   height: 0;
 }
 
-section#pages-results > p, section#images-results > p  {
+section#pages-results > p, section#images-results > p, section#not-found-container > p  {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1312,6 +1547,91 @@ section#pages-results > p, section#images-results > p  {
   color:#70757a;
   max-width: 960px;
   margin: 0 auto;
+}
+
+section#not-found-container p#no-results-were-found {
+    background-color: #fbf2f2;
+    color: #d05289;
+    margin: auto;
+    width: auto;
+    max-width: 955px;
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 3px;
+}
+
+section#search-suggestion-container h3, section#search-suggestion-container h4 {
+  visibility: collapse;
+  height: 0;
+}
+
+section#search-suggestion-message p {
+  background-color: #f2fbf6;;
+  color: #000000;
+  margin: auto;
+  width: auto;
+  max-width: 955px;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 3px;
+}
+
+section#not-found-container, section#search-suggestion-container   {  
+  padding: 0 10px; 
+  font-size: 13px;
+  color:#70757a;  
+  margin: 0 auto;
+  width: 100%;
+}
+
+section#not-found-container ul li, section#search-suggestion-message ul li   {
+  margin: auto;
+  width: 100%; 
+  font-size: inherit;
+  margin-top: 5px;  
+  border-radius: 5px;
+  list-style-type: disc;
+  list-style-position: inside;
+  padding-left: 20px;
+}
+
+section#not-found-message > ul, section#search-suggestion-message > ul  {
+  background-color: #f6f6f6;
+  color: #000000;
+  margin: auto;
+  width: auto;    
+  font-size: 13px;
+  margin-top: 10px;  
+  padding: 15px 15px 20px 15px;
+  border-radius: 3px;
+  display: list-item;
+}
+
+section#not-found-message > ul li.fix-padding, section#search-suggestion-message > ul li.fix-padding   {
+  padding-top: 10px; 
+}
+
+section#not-found-container section#not-found-message ul li:first-child {
+  margin-top: 20px;
+ }
+
+section#not-found-message span.bold-text, section#search-suggestion-message span.bold-text  {
+  font-weight: bold;
+}
+
+
+section#not-found-message > ul li a, section#search-suggestion-message > ul li a, section#search-suggestion-message p a  {   
+  color: #1c75c0;
+  text-decoration: none;   
+}
+section#not-found-message > ul li a:hover, section#search-suggestion-message > ul li a:hover, section#search-suggestion-message p a:hover   {   
+  color: #1c75c0;
+  background-color:  transparent;
+  text-decoration: underline;   
 }
 
 section#pages-results ul {
@@ -1339,7 +1659,8 @@ section#pages-results ul:hover, section#pages-results ul:active {
 section#pages-results ul > li > p {
   font-family: arial,sans-serif;
   color: #4d5156;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: bold;
   line-height: 1.58;
   text-align: left;
 }
@@ -1358,7 +1679,7 @@ section#pages-results ul > li > a:hover  {
 
 section#pages-results ul > li > a.results-url  {
   color: #009688;
-  font-size: 14px;   
+  font-size: 13px;   
 }
 
 section#pages-results ul > li > a.results-title  {
@@ -1575,7 +1896,6 @@ section#home-content h3, section#body-content h3 {
 visibility: collapse;
 height: 0;
 }
-
 
 /* article ************************************************************* */
 article {
@@ -1829,16 +2149,20 @@ footer section#institutional p {
     border: none;
   }
 
-  header button#nav-menu-mobile-button-left:hover {
+header button#nav-menu-mobile-button-left:hover {
     color: white;
     border: none;
   }
 
-body#pages-search-results button#nav-options-right-button {
+body#pages-search-results button#nav-options-right-button,
+body#images-search-results button#nav-options-right-button,
+body#landing-replay button#nav-options-right-button {
     display: none;
 }
 
-body#pages-search-results button#nav-options-right-button-mobile {
+body#pages-search-results button#nav-options-right-button-mobile,
+body#images-search-results button#nav-options-right-button-mobile,
+body#landing-replay button#nav-options-right-button-mobile {
   display: block;
   position: absolute;
   right: 13px; 
@@ -1872,6 +2196,15 @@ section#search-tools #submit-search-mobile {
 
  section#home-content h4, section#body-content h4 {  
   font-size: 0.95em;
+}
+
+body#landing-replay main.main-content {
+  padding-left: 0;
+  max-width: 100%;
+}
+
+nav#replay-left-nav {
+  display: none;
 }
 
   article {
@@ -1924,11 +2257,16 @@ section#search-tools #submit-search-mobile {
     border: none;
   }
 
-  body#pages-search-results button#nav-options-right-button {
+
+body#pages-search-results button#nav-options-right-button,
+body#images-search-results button#nav-options-right-button,
+body#landing-replay button#nav-options-right-button {
     display: none;
 }
 
-body#pages-search-results button#nav-options-right-button-mobile {
+body#pages-search-results button#nav-options-right-button-mobile,
+body#images-search-results button#nav-options-right-button-mobile,
+body#landing-replay button#nav-options-right-button-mobile {
   display: block;
   position: absolute;
   right: 13px; 
@@ -1936,7 +2274,7 @@ body#pages-search-results button#nav-options-right-button-mobile {
   border-radius: 3px;   
   width: 31px;
   height: 31px;
-  background: none;
+  background-color: transparent;
   border: none;
 }
 
@@ -2003,7 +2341,7 @@ section#home-content h4, section#body-content h4  {
     border: none;
   }
 
-  body#pages-search-results button#nav-options-right-button {
+body#pages-search-results button#nav-options-right-button {
     display: none;
 }
 

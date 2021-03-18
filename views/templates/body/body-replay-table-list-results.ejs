@@ -17,7 +17,7 @@
     <section>
         <h4>Replay menu navigation list</h4> 
           <ul>            
-            <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-left-menu">1996<span class="number-of-versions">10 versions</span></a>
+            <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-replay-list">1996<span class="number-of-versions">10 versions</span></a>
               <ul class="panel">
                 <li class="menu-pages-replay-month"><a href="#">January</a></li>
                 <li class="menu-pages-replay-date-hour"><a href="#">11 January at 10:04</a></li>
@@ -72,11 +72,11 @@
 
     <!-- starts accordion for list -->  
     <script>
-    var acc = document.getElementsByClassName("accordion-left-menu");
+    var replayList = document.getElementsByClassName("accordion-replay-list");
     var i;
     
-    for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
+    for (i = 0; i < replayList.length; i++) {
+      replayList[i].addEventListener("click", function() {
         this.classList.toggle("active");
         var panel = this.nextElementSibling;
         if (panel.style.maxHeight) {
