@@ -1,125 +1,164 @@
 $(function () {
-    //Constants
-    const minYear = 1996;
-    const maxYear = (new Date()).getFullYear(); 
-    const defaultDatepickerOptions = {
-        dateFormat: "yy dd M",
-        changeYear: true,
-        changeMonth: true,
-        minDate: new Date('01 Jan '+minYear),
-        maxDate: new Date(),
-        yearRange: ""+minYear+":"+maxYear,
-        onSelect: function (dateCalendar,base) {
+    //Make sure the targets exist
+    if ($('#search-tools-date-slider').length) {
 
-            //Current date in format "yy dd M"
-            var calendarCurrentDate = formatDate(new Date());
+        //Constants
+        const minDate = new Date(1996, 0, 1);
+        const maxDate = new Date();
+        const minYear = minDate.getFullYear();
+        const maxYear = maxDate.getFullYear();
+        const modal = $('#modal');
+        const inputMask = { regex: "[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]", insertMode: false };
+        var modalDatepickerContent = null;
 
-            var dayMonth = base.input.parent().parent().find('.calendar-day-month-input').first();
-
-            if (dayMonth.val() != "") {
-                dayMonth.val(dateCalendar.substring(5));
-                base.input.val(dateCalendar);
-                base.input.datepicker( "option", "defaultDate",new Date(dateCalendar));
+        //load modal datepicker template into local variable
+        $.ajax({
+            url: '/fragments/modal-datepicker.html',
+            success: function (data) {
+                modalDatepickerContent = data
             }
-            else if (dayMonth.val() == "") {
-                dayMonth.val(calendarCurrentDate.substring(5));
-                base.input.val(calendarCurrentDate);
-                base.input.datepicker( "option", "defaultDate",new Date(calendarCurrentDate));
+        });
+
+        //converts dd/mm/yyyy into Date object
+        let stringToDate = function (dateString) {
+            return new Date(dateString.split('/').reverse().join('/'))
+        }
+
+        //Updates the sliders' positions
+        let updateSlider = function () {
+            $('#slider-range').slider("values", 0, stringToDate($("#start-date").val()).getFullYear());
+            $('#slider-range').slider("values", 1, stringToDate($("#end-date").val()).getFullYear());
+        };
+
+        //Sets up the logic in the modal
+        let setupModalDatepicker = function (type) {
+            const outInputId = type + '-date';
+            const otherOutInputId = type === 'start' ? 'end-date' : 'start-date';;
+            const modalInputId = 'modal-datepicker-input';
+            const modalInput = $('#' + modalInputId);
+
+            const submitDate = function (newDate) {
+                $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
+                $("#" + type + "-year").val(newDate.getFullYear());
+                $("#" + type + "-day-month").val(newDate.getDate() + ' ' + newDate.getMonth()); //FIX
+                $('#modal-datepicker-datepicker').datepicker('setDate', newDate);
+                updateSlider();
             }
 
-            updateSlider();
-        },
+            //Enter clicks on "ok" button
+            modalInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    $('#modal-datepicker-confirm-button').click()
+                }
+            });
+
+            //Mask input
+            modalInput.inputmask(inputMask);
+            // default input value
+            modalInput.val($('#' + outInputId).val());
+            // on change input
+            modalInput.change(function () {
+                const dateInputValue = $(this).val();
+                // prevent change the date when the user didn't finish inserting a full date on keyboard
+                if (dateInputValue.replace('_', '').length == 10) {
+                    const newDate = stringToDate(dateInputValue);
+                    // update datepicker with newinput value
+                    submitDate(newDate);
+                }
+            });
+
+            $('#modal-datepicker-datepicker').datepicker({
+                defaultDate: stringToDate($('#' + outInputId).val()), // Set the date to highlight on first opening if the field is blank.
+                inline: true,
+                altField: '#' + modalInputId,
+                dateFormat: "dd/mm/yy",
+                changeMonth: true, // Whether the month should be rendered as a dropdown instead of text.
+                changeYear: true, // Whether the year should be rendered as a dropdown instead of text
+                yearRange: minYear + ":" + maxYear, // The range of years displayed in the year drop-down - minYear and maxYear are a global javascript variables
+                minDate: type === 'start' ? minDate : stringToDate($('#' + otherOutInputId).val()),
+                maxDate: type === 'end' ? maxDate : stringToDate($('#' + otherOutInputId).val()),
+                // monthNamesShort: $.datepicker.regional[language].monthNames,
+                onChangeMonthYear: function (y, m, i) {
+                    var d = i.selectedDay;
+
+                    // to prevent the problem when changing from a month with 31 days to a other month with <31 days
+                    // the calendar were going to the first or second day of the next month
+                    function getDaysInMonth(m, y) {
+                        return m === 2 ? y & 3 || !(y % 25) && y & 15 ? 28 : 29 : 30 + (m + (m >> 3) & 1);
+                    }
+                    const minDay = Math.min(getDaysInMonth(m, y), d);
+
+                    submitDate(new Date(y, m - 1, minDay));
+                },
+                onSelect: function (dateText, inst) {
+                    submitDate(stringToDate(dateText));
+                },
+            });
+
+            //OK button functionality
+            $('#modal-datepicker-confirm-button').click(function () {
+                const dateInputValue = $('#modal-datepicker-input').val();
+                if (dateInputValue.replace('_', '').length == 10) {
+                    const newDate = stringToDate(dateInputValue);
+                    // update datepicker with newinput value
+                    submitDate(newDate);
+                }
+                $.modal.close();
+            });
+        }
+
+        //Setup slider
+        $("#slider-range").slider({
+            range: true,
+            min: minYear,
+            max: maxYear,
+            values: [minYear, maxYear],
+
+            //Update datepickers visually as the user drags the slider
+            slide: function (event, ui) {
+                $("#start-year").val(ui.values[0]);
+                $("#end-year").val(ui.values[1]);
+            },
+
+            //Update the datepickers after the user drops the slider
+            stop: function (event, ui) {
+                let startDate = $('#start-date').val().split('/');
+                let endDate = $('#end-date').val().split('/');
+
+                startDate[2] = ui.values[0];
+                endDate[2] = ui.values[1]
+
+                $('#start-date').val(startDate.join('/'));
+                $('#end-date').val(endDate.join('/'));
+
+            }
+        });
+
+        //Create datepickers
+        ['start', 'end'].forEach(type => {
+            $(".call-datepicker-" + type + "-year").click(function () {
+                modal.html(modalDatepickerContent);
+                setupModalDatepicker(type);
+                modal.modal();
+                $('#modal-datepicker-input').select();
+            });
+        });
+
+        $('#submit-search').submit(function () {
+            const startDate = stringToDate($('#start-date'));
+            const endDate = stringToDate($('#end-date'));
+            if (startDate > endDate) {
+                modal.html('<h4 class="modalTitle"><i class="fa" aria-hidden="true"></i> ' + 'ERRO' + '</h4>' + //FIX
+                  '<div class="row"><a href="#close" rel="modal:close" class="col-xs-6 text-center leftAnchor modalOptions">OK</a></div>'
+              );
+              return false;
+            }
+            //Make sure pressing enter does not submit the search while modal is active
+            if($('.jquery-modal.blocker').length){
+                return false;
+            }
+            return true;
+          });
     }
-
-    //Helper functions
-    var formatDate = function (date){
-            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            return date.getFullYear() + ' ' + (date.getDay() < 10 ? '0' + date.getDay() : '' + date.getDay()) + ' ' + months[date.getMonth()]
-    }
-    var updateSlider = function () {
-        $('#slider-range').slider("values", 0,  $( "#start-year" ).datepicker('getDate').getFullYear());
-        $('#slider-range').slider("values", 1,  $( "#end-year" ).datepicker('getDate').getFullYear());
-    };
-
-    //Setup slider
-    $("#slider-range").slider({
-        range: true,
-        min: minYear,
-        max: maxYear,
-        values: [minYear, maxYear],
-
-        //Update datepickers visually as the user drags the slider
-        slide: function (event, ui) {
-            var startDate = $( "#start-year" ).datepicker('getDate');
-            var endDate = $( "#end-year" ).datepicker('getDate');
-            startDate.setFullYear(ui.values[ 0 ]);
-            endDate.setFullYear(ui.values[ 1 ]);
-            $( "#start-year" ).datepicker('setDate',startDate);
-            $( "#end-year" ).datepicker('setDate',endDate);
-        },
-
-        //Update the datepickers after the user drops the slider
-        stop: function (event,ui) {
-
-            var startDatepicker = $("#start-year");
-            var endDatePicker = $("#end-year");
-
-            var startDate = startDatepicker.datepicker('getDate')
-            var endDate = endDatePicker.datepicker('getDate')
-
-            startDate.setFullYear(ui.values[0]);
-            endDate.setFullYear(ui.values[1]);
-
-            var oldStartOptions = startDatepicker.datepicker('option', 'all');
-            var oldEndOptions = endDatePicker.datepicker('option', 'all');
-
-            startDatepicker.datepicker('destroy').datepicker($.extend(oldStartOptions, {
-                maxDate: endDate,
-                defaultDate: startDate
-            }));
-
-            endDatePicker.datepicker('destroy').datepicker($.extend(oldEndOptions, {
-                minDate: startDate,
-                defaultDate: endDate
-            }));
-        }
-    });
-    $("#start-year").val($("#slider-range").slider("values", 0));
-    $("#end-year").val($("#slider-range").slider("values", 1));
-
-
-    //Create left datepicker
-    $("#calendar-day-month-start").val(formatDate(defaultDatepickerOptions.minDate).substring(5));
-    $(".call-datepicker-start-year").datepicker({
-        ...defaultDatepickerOptions,
-        defaultDate: defaultDatepickerOptions.minDate,
-        onSelect: function (dateCalendar,base) {
-            var otherDatepicker = $( ".call-datepicker-end-year" );
-
-            defaultDatepickerOptions.onSelect(dateCalendar,base);
-
-            var prevOptions = otherDatepicker.datepicker('option', 'all');
-            otherDatepicker.datepicker('destroy').datepicker($.extend(prevOptions, {
-                minDate: dateCalendar
-            }));
-        }
-    });
-    
-    //Create right datepicker
-    $("#calendar-day-month-end").val(formatDate(defaultDatepickerOptions.maxDate).substring(5));
-    $(".call-datepicker-end-year").datepicker({
-        ...defaultDatepickerOptions,
-        defaultDate: defaultDatepickerOptions.maxDate,
-        onSelect: function (dateCalendar,base) {
-            var otherDatepicker = $( ".call-datepicker-start-year" );
-
-            defaultDatepickerOptions.onSelect(dateCalendar,base);
-            var prevOptions = otherDatepicker.datepicker('option', 'all');
-            otherDatepicker.datepicker('destroy').datepicker($.extend(prevOptions, {
-                maxDate: dateCalendar
-            }));
-        }
-    });
-
 });
 
