@@ -41,30 +41,11 @@
 <script src="js/functions.js"></script>
 <!-- ends js functions -->
 
+<!-- Add regional terms to imported libraries -->
+<%- include('translatelibs') -%>
+
+
 <script src="js/init.js"></script>
-<script>
-	jQuery.datepicker.regional.pt = {
-		closeText: <%- JSON.stringify(t('jQueryDatepicker.closeText',{},'pt_PT')) %>,
-		prevText: <%- JSON.stringify(t('jQueryDatepicker.prevText',{},'pt_PT')) %>,
-		nextText: <%- JSON.stringify(t('jQueryDatepicker.nextText',{},'pt_PT')) %>,
-		currentText: <%- JSON.stringify(t('jQueryDatepicker.currentText',{},'pt_PT')) %>,
-		monthNames: <%- JSON.stringify(t('jQueryDatepicker.monthNames',{},'pt_PT')) %>,
-		monthNamesShort: <%- JSON.stringify(t('jQueryDatepicker.monthNamesShort',{},'pt_PT')) %>,
-		dayNames: <%- JSON.stringify(t('jQueryDatepicker.dayNames',{},'pt_PT')) %>,
-		dayNamesShort: <%- JSON.stringify(t('jQueryDatepicker.dayNamesShort',{},'pt_PT')) %>,
-		dayNamesMin: <%- JSON.stringify(t('jQueryDatepicker.dayNamesMin',{},'pt_PT')) %>,
-		weekHeader: <%- JSON.stringify(t('jQueryDatepicker.weekHeader',{},'pt_PT')) %>,
-		dateFormat: <%- JSON.stringify(t('jQueryDatepicker.dateFormat',{},'pt_PT')) %>,
-		firstDay: <%- JSON.stringify(t('jQueryDatepicker.firstDay',{},'pt_PT')) %>,
-		isRTL: <%- JSON.stringify(t('jQueryDatepicker.isRTL',{},'pt_PT')) %>,
-		showMonthAfterYear: <%- JSON.stringify(t('jQueryDatepicker.showMonthAfterYear',{},'pt_PT')) %>,
-		yearSuffix: <%- JSON.stringify(t('jQueryDatepicker.yearSuffix',{},'pt_PT')) %>
-	};
-	jQuery.datepicker.setDefaults(jQuery.datepicker.regional.pt);
-
-	const lang = '<%- getLanguage() %>';
-
-</script>
 
 <!-- starts js datepicker -->
 <script src="js/datepicker.js"></script>
