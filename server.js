@@ -6,6 +6,21 @@ var path = require('path');
 const app = express();
 const port = 3000;
 
+// app.js
+const i18n = require('i18n-node-yaml')({
+  debug: app.get('environment') !== 'production',
+  translationFolder: path.join(__dirname, 'translations'),
+  locales: ['en', 'pt'],
+  defaultLocale: 'pt',
+  queryParameters: ['l'],
+});
+
+i18n.ready.catch(err => {
+  console.error('Failed loading translations', err);
+});
+
+app.use(i18n.middleware);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
