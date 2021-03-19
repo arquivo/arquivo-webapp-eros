@@ -1,0 +1,70 @@
+<script>
+
+	const lang = '<%- getLanguage() %>';
+    
+    <% getLocales().forEach(loc => { 
+        const lan = loc.slice(0,2); 
+        if(lan != 'en') {%>
+    
+    // jquery Datepicker
+    jQuery.datepicker.regional.<%= lan %> = {
+		closeText: <%- JSON.stringify(t('libs.jQuery.datepicker.closeText',{},loc)) %>,
+		prevText: <%- JSON.stringify(t('libs.jQuery.datepicker.prevText',{},loc)) %>,
+		nextText: <%- JSON.stringify(t('libs.jQuery.datepicker.nextText',{},loc)) %>,
+		currentText: <%- JSON.stringify(t('libs.jQuery.datepicker.currentText',{},loc)) %>,
+		monthNames: <%- JSON.stringify(t('libs.jQuery.datepicker.monthNames',{},loc)) %>,
+		monthNamesShort: <%- JSON.stringify(t('libs.jQuery.datepicker.monthNamesShort',{},loc)) %>,
+		dayNames: <%- JSON.stringify(t('libs.jQuery.datepicker.dayNames',{},loc)) %>,
+		dayNamesShort: <%- JSON.stringify(t('libs.jQuery.datepicker.dayNamesShort',{},loc)) %>,
+		dayNamesMin: <%- JSON.stringify(t('libs.jQuery.datepicker.dayNamesMin',{},loc)) %>,
+		weekHeader: <%- JSON.stringify(t('libs.jQuery.datepicker.weekHeader',{},loc)) %>,
+		dateFormat: <%- JSON.stringify(t('libs.jQuery.datepicker.dateFormat',{},loc)) %>,
+		firstDay: <%- JSON.stringify(t('libs.jQuery.datepicker.firstDay',{},loc)) %>,
+		isRTL: <%- JSON.stringify(t('libs.jQuery.datepicker.isRTL',{},loc)) %>,
+		showMonthAfterYear: <%- JSON.stringify(t('libs.jQuery.datepicker.showMonthAfterYear',{},loc)) %>,
+		yearSuffix: <%- JSON.stringify(t('libs.jQuery.datepicker.yearSuffix',{},loc)) %>
+	};
+
+    //mobile datepicker
+    jQuery.AnyPicker.i18n["<%= lan %>"] = jQuery.extend(jQuery.AnyPicker.i18n["<%= lan %>"], {
+
+    	// Common
+
+    	headerTitle: <%- JSON.stringify(t('libs.anypicker.headerTitle',{},loc)) %>,
+		setButton: <%- JSON.stringify(t('libs.anypicker.setButton',{},loc)) %>,
+		clearButton: <%- JSON.stringify(t('libs.anypicker.clearButton',{},loc)) %>,
+		nowButton: <%- JSON.stringify(t('libs.anypicker.nowButton',{},loc)) %>,
+		cancelButton: <%- JSON.stringify(t('libs.anypicker.cancelButton',{},loc)) %>,
+		dateSwitch: <%- JSON.stringify(t('libs.anypicker.dateSwitch',{},loc)) %>,
+		timeSwitch: <%- JSON.stringify(t('libs.anypicker.timeSwitch',{},loc)) %>,
+
+    	// DateTime
+
+        veryShortDays: <%- JSON.stringify(t('libs.anypicker.veryShortDays',{},loc)) %>,
+		shortDays: <%- JSON.stringify(t('libs.anypicker.shortDays',{},loc)) %>,
+		fullDays: <%- JSON.stringify(t('libs.anypicker.fullDays',{},loc)) %>,
+		shortMonths: <%- JSON.stringify(t('libs.anypicker.shortMonths',{},loc)) %>,
+		fullMonths: <%- JSON.stringify(t('libs.anypicker.fullMonths',{},loc)) %>,
+		numbers: <%- JSON.stringify(t('libs.anypicker.numbers',{},loc)) %>,
+		meridiem: 
+		{
+			a: <%- JSON.stringify(t('libs.anypicker.meridiem.a',{},loc)) %>,
+			aa: <%- JSON.stringify(t('libs.anypicker.meridiem.aa',{},loc)) %>,
+			A: <%- JSON.stringify(t('libs.anypicker.meridiem.A',{},loc)) %>,
+			AA: <%- JSON.stringify(t('libs.anypicker.meridiem.AA',{},loc)) %>
+		},
+		componentLabels: {
+			date: <%- JSON.stringify(t('libs.anypicker.componentLabels.date',{},loc)) %>,
+			day: <%- JSON.stringify(t('libs.anypicker.componentLabels.day',{},loc)) %>,
+			month: <%- JSON.stringify(t('libs.anypicker.componentLabels.month',{},loc)) %>,
+			year: <%- JSON.stringify(t('libs.anypicker.componentLabels.year',{},loc)) %>,
+			hours: <%- JSON.stringify(t('libs.anypicker.componentLabels.hours',{},loc)) %>,
+			minutes: <%- JSON.stringify(t('libs.anypicker.componentLabels.minutes',{},loc)) %>,
+			seconds: <%- JSON.stringify(t('libs.anypicker.componentLabels.seconds',{},loc)) %>,
+			meridiem: <%- JSON.stringify(t('libs.anypicker.componentLabels.meridiem',{},loc)) %>
+		}
+	
+    });
+    <% }}); %>
+	jQuery.datepicker.setDefaults(jQuery.datepicker.regional.pt);
+</script>

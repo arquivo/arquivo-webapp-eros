@@ -15,7 +15,7 @@ $(function () {
 
         //load modal datepicker template into local variable
         $.ajax({
-            url: '/fragments/modal-datepicker.html',
+            url: '/fragments/modal-datepicker?l='+lang,
             success: function (data) {
                 modalDatepickerContent = data
             }
@@ -36,7 +36,7 @@ $(function () {
         const updateDateSlider = function(newDate,type){
             $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
             $("#" + type + "-year").val(newDate.getFullYear());
-            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + newDate.getMonth()); //FIX
+            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();
         }
         //Sets up the logic in the modal
@@ -73,6 +73,7 @@ $(function () {
             });
 
             $('#modal-datepicker-datepicker').datepicker({
+                ...$.datepicker.regional[ lang ],
                 defaultDate: stringToDate($('#' + outInputId).val()), // Set the date to highlight on first opening if the field is blank.
                 inline: true,
                 altField: '#' + modalInputId,
@@ -153,6 +154,7 @@ $(function () {
                             minValue: type === 'start' ? minDate : stringToDate($('#start-date').val()),
                             maxValue: type === 'end' ? maxDate : stringToDate($('#end-date').val()),
                             theme: "iOS",
+                            lang: lang,
                             onInit: function()
                             {
                                 this.showOrHidePicker($('#'+type+'-date').val());
