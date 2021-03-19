@@ -6,12 +6,11 @@ var path = require('path');
 const app = express();
 const port = 3000;
 
-// app.js
 const i18n = require('i18n-node-yaml')({
   debug: app.get('environment') !== 'production',
   translationFolder: path.join(__dirname, 'translations'),
-  locales: ['en', 'pt'],
-  defaultLocale: 'pt',
+  locales: ['en_GB', 'pt_PT'],
+  defaultLocale: 'pt_PT',
   queryParameters: ['l'],
 });
 
@@ -92,6 +91,11 @@ app.get('/search-suggestion',function (req, res) {
   res.render('pages/search-suggestion');
 });
 // ends not found page
+
+// starts fragments
+app.get('/fragments/:id', function(req , res){
+  res.render('fragments/' + req.params.id,{layout: false});
+});
 
 
 

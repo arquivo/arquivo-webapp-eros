@@ -1,21 +1,21 @@
 <!-- starts css styles links -->
 
-<link rel="stylesheet"  type="text/css" href="css/reset.css" media="screen">
+<link rel="stylesheet" type="text/css" href="css/reset.css" media="screen">
 <link rel="stylesheet" type="text/css" href="css/styles.css" media="screen">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" media="screen">
 <!-- starts google fonts link -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
-<!-- ends css styles links --> 
+<!-- ends css styles links -->
 
 <!-- starts javascript scripts and links -->
 
 <!-- starts jquery and slider css styles links -->
-<script src="js/jquery-1.12.4.js"></script> 
-<script src="js/jquery-ui.js"></script> 
+<script src="js/jquery-1.12.4.js"></script>
+<script src="js/jquery-ui.js"></script>
 <!-- ends jquery and slider -->
 
 <!-- add touch support to jQuery-->
-<script src="js/jquery.ui.touch-punch.min.js"></script> 
+<script src="js/jquery.ui.touch-punch.min.js"></script>
 <!-- ends touch support -->
 
 <!-- starts JQuery modal -->
@@ -34,29 +34,53 @@
 <!-- ends JQuery inputmask plugin -->
 
 <!-- starts Awesome fonts -->
-<script src="js/font_awesome.js"></script> 
-<!-- ends Awesome fonts --> 
+<script src="js/font_awesome.js"></script>
+<!-- ends Awesome fonts -->
 
 <!-- starts Arquivo.pt js functions -->
-<script src="js/functions.js"></script> 
-<!-- ends js functions --> 
+<script src="js/functions.js"></script>
+<!-- ends js functions -->
 
-<script src="js/init.js"></script> 
+<script src="js/init.js"></script>
+<script>
+	jQuery.datepicker.regional.pt = {
+		closeText: <%- JSON.stringify(t('jQueryDatepicker.closeText',{},'pt_PT')) %>,
+		prevText: <%- JSON.stringify(t('jQueryDatepicker.prevText',{},'pt_PT')) %>,
+		nextText: <%- JSON.stringify(t('jQueryDatepicker.nextText',{},'pt_PT')) %>,
+		currentText: <%- JSON.stringify(t('jQueryDatepicker.currentText',{},'pt_PT')) %>,
+		monthNames: <%- JSON.stringify(t('jQueryDatepicker.monthNames',{},'pt_PT')) %>,
+		monthNamesShort: <%- JSON.stringify(t('jQueryDatepicker.monthNamesShort',{},'pt_PT')) %>,
+		dayNames: <%- JSON.stringify(t('jQueryDatepicker.dayNames',{},'pt_PT')) %>,
+		dayNamesShort: <%- JSON.stringify(t('jQueryDatepicker.dayNamesShort',{},'pt_PT')) %>,
+		dayNamesMin: <%- JSON.stringify(t('jQueryDatepicker.dayNamesMin',{},'pt_PT')) %>,
+		weekHeader: <%- JSON.stringify(t('jQueryDatepicker.weekHeader',{},'pt_PT')) %>,
+		dateFormat: <%- JSON.stringify(t('jQueryDatepicker.dateFormat',{},'pt_PT')) %>,
+		firstDay: <%- JSON.stringify(t('jQueryDatepicker.firstDay',{},'pt_PT')) %>,
+		isRTL: <%- JSON.stringify(t('jQueryDatepicker.isRTL',{},'pt_PT')) %>,
+		showMonthAfterYear: <%- JSON.stringify(t('jQueryDatepicker.showMonthAfterYear',{},'pt_PT')) %>,
+		yearSuffix: <%- JSON.stringify(t('jQueryDatepicker.yearSuffix',{},'pt_PT')) %>
+	};
+	jQuery.datepicker.setDefaults(jQuery.datepicker.regional.pt);
+
+	const lang = '<%- getLanguage() %>';
+
+</script>
 
 <!-- starts js datepicker -->
-<script src="js/datepicker.js"></script> 
+<script src="js/datepicker.js"></script>
 <!-- ends js datepicker -->
 
-<!-- starts Google Analytics (new version) --> 
+<!-- starts Google Analytics (new version) -->
 <script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	(function (i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 	ga('create', 'UA-21825027-1', 'auto');
 	ga('send', 'pageview');
 </script>
 <!-- ends Google Analytics (new version)-->
 
 <!-- ends javascript scripts and links -->
-

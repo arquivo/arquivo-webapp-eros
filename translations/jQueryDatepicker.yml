@@ -1,0 +1,41 @@
+# Traduções para o datepicker do jQuery
+closeText: 
+  pt: "Fechar"
+prevText: 
+  pt: "Anterior"
+nextText: 
+  pt: "Seguinte"
+currentText: 
+  pt: "Hoje"
+monthNames: 
+  pt: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+"Julho","Agosto","Setembro","Outubro","Novembro","Dezembro" ]
+monthNamesShort: 
+  pt: [ "Jan","Fev","Mar","Abr","Mai","Jun",
+"Jul","Ago","Set","Out","Nov","Dez" ]
+dayNames: 
+  pt: [
+  "Domingo",
+  "Segunda-feira",
+  "Terça-feira",
+  "Quarta-feira",
+  "Quinta-feira",
+  "Sexta-feira",
+  "Sábado"
+]
+dayNamesShort: 
+  pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+dayNamesMin: 
+  pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+weekHeader: 
+  pt: "Sem"
+dateFormat: 
+  pt: "dd/mm/yy"
+firstDay: 
+  pt: 1
+isRTL: 
+  pt: false
+showMonthAfterYear: 
+  pt: false
+yearSuffix: 
+  pt: "" 

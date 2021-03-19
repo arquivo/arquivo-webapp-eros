@@ -1,0 +1,112 @@
+# Traduções comuns a vários elementos
+months:
+  '01': 
+    en: January
+    pt: Janeiro
+  '02': 
+    en: February
+    pt: Fevereiro
+  '03':
+    en: March
+    pt: Março
+  '04':
+    en: April
+    pt: Abril
+  '05':
+    en: May
+    pt: Maio
+  '06':
+    en: June
+    pt: Junho
+  '07':
+    en: July
+    pt: Julho
+  '08':
+    en: August
+    pt: Agosto
+  '09':
+    en: September
+    pt: Setembro
+  '10':
+    en: October
+    pt: Outubro
+  '11':
+    en: November
+    pt: Novembro
+  '12':
+    en: December
+    pt: Dezembro
+months_alt:
+  '01':
+    en: January
+    pt: Janeiro
+  '02':
+    en: February
+    pt: Fevereiro
+  '03':
+    en: March
+    pt: Mar&#231;o
+  '04':
+    en: April
+    pt: Abril
+  '05':
+    en: May
+    pt: Maio
+  '06':
+    en: June
+    pt: Junho
+  '07':
+    en: July
+    pt: Julho
+  '08':
+    en: August
+    pt: Agosto
+  '09':
+    en: September
+    pt: Setembro
+  '10':
+    en: October
+    pt: Outubro
+  '11':
+    en: November
+    pt: Novembro
+  '12':
+    en: December
+    pt: Dezembro
+shortMonths:
+  '01':
+    en: Jan
+    pt: Jan
+  '02':
+    en: Feb
+    pt: Fev
+  '03':
+    en: Mar
+    pt: Mar
+  '04':
+    en: Apr
+    pt: Abr
+  '05':
+    en: May
+    pt: Mai
+  '06':
+    en: Jun
+    pt: Jun
+  '07':
+    en: Jul
+    pt: Jul
+  '08':
+    en: Aug
+    pt: Ago
+  '09':
+    en: Sep
+    pt: Set
+  '10':
+    en: Oct
+    pt: Out
+  '11':
+    en: Nov
+    pt: Nov
+  '12':
+    en: Dec
+    pt: Dez

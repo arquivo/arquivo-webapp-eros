@@ -15,7 +15,7 @@ $(function () {
 
         //load modal datepicker template into local variable
         $.ajax({
-            url: '/fragments/modal-datepicker.html',
+            url: '/fragments/modal-datepicker?l='+lang,
             success: function (data) {
                 modalDatepickerContent = data
             }
@@ -36,7 +36,7 @@ $(function () {
         const updateDateSlider = function(newDate,type){
             $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
             $("#" + type + "-year").val(newDate.getFullYear());
-            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + newDate.getMonth()); //FIX
+            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();
         }
         //Sets up the logic in the modal
