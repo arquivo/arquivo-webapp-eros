@@ -153,6 +153,7 @@ $(function () {
                             minValue: type === 'start' ? minDate : stringToDate($('#start-date').val()),
                             maxValue: type === 'end' ? maxDate : stringToDate($('#end-date').val()),
                             theme: "iOS",
+                            lang: lang,
                             onInit: function()
                             {
                                 this.showOrHidePicker($('#'+type+'-date').val());

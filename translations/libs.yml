@@ -1,0 +1,93 @@
+# Ficheiro para traduções de bibliotecas js 
+
+# Traduções para o datepicker do jQuery (tradução em inglês não é necessária)
+jQuery:
+  datepicker:
+    closeText: 
+      pt: "Fechar"
+    prevText: 
+      pt: "Anterior"
+    nextText: 
+      pt: "Seguinte"
+    currentText: 
+      pt: "Hoje"
+    monthNames: 
+      pt: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro" ]
+    monthNamesShort: 
+      pt: [ "Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez" ]
+    dayNames: 
+      pt: [ "Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado" ]
+    dayNamesShort: 
+      pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+    dayNamesMin: 
+      pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+    weekHeader: 
+      pt: "Sem"
+    dateFormat: 
+      pt: "dd/mm/yy"
+    firstDay: 
+      pt: 1
+    isRTL: 
+      pt: false
+    showMonthAfterYear: 
+      pt: false
+    yearSuffix: 
+      pt: "" 
+
+# traduções para o datepicker mobile (tradução em inglês não é necessária)
+anypicker:
+  headerTitle: 
+    pt: "Selecionar"
+  setButton: 
+    pt: "OK"
+  clearButton: 
+    pt: "Limpar"
+  nowButton: 
+    pt: "Agora"
+  cancelButton: 
+    pt: "Cancelar"
+  dateSwitch: 
+    pt: "Data"
+  timeSwitch: 
+    pt: "Hora"
+
+  veryShortDays: 
+    pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+  shortDays: 
+    pt: [ "Dom","Seg","Ter","Qua","Qui","Sex","Sáb" ]
+  fullDays: 
+    pt: [ "Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado" ]
+  shortMonths: 
+    pt: [ "Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez" ]
+  fullMonths: 
+    pt: [ "Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro" ]
+  numbers: 
+    pt: [ "0","1","2","3","4","5","6","7","8","9" ]
+  meridiem: 
+    a: 
+      pt: ["a","p"]
+    aa: 
+      pt: ["am","pm"]
+    A: 
+      pt: ["A","P"]
+    AA: 
+      pt: ["AM","PM"]
+  
+  componentLabels: 
+    date: 
+      pt: "Data"
+    day: 
+      pt: "Dia"
+    month: 
+      pt: "Mês"
+    year: 
+      pt: "Ano"
+    hours: 
+      pt: "Horas"
+    minutes: 
+      pt: "Minutos"
+    seconds: 
+      pt: "Segundos"
+    meridiem: 
+      pt: "Meio-dia"
+  
