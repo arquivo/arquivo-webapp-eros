@@ -57,34 +57,20 @@ $(function () {
                 }
             });
 
-        //creates the slider tooltip
-        create: function(event,ui){
-            var $tooltip = $('<span>').addClass('slider-toolip').hide();
-            $(event.target).append($tooltip);
-        },
-
-        start: function(event,ui){
-            $(event.target).find('.slider-toolip').first().show()
-        },
-
-        //Update datepickers visually as the user drags the slider
-        slide: function (event, ui) {
-            var startDate = $( "#start-year" ).datepicker('getDate');
-            var endDate = $( "#end-year" ).datepicker('getDate');
-            startDate.setFullYear(ui.values[ 0 ]);
-            endDate.setFullYear(ui.values[ 1 ]);
-            $( "#start-year" ).datepicker('setDate',startDate);
-            $( "#end-year" ).datepicker('setDate',endDate);
-
-            $(event.target).find('.slider-toolip').first()
-            .text(ui.value)
-            .position({
-                my: 'center bottom',
-                at: 'center top',
-                of: ui.handle,
-                //offset: "0,0"
+            //Mask input
+            modalInput.inputmask(inputMask);
+            // default input value
+            modalInput.val($('#' + outInputId).val());
+            // on change input
+            modalInput.change(function () {
+                const dateInputValue = $(this).val();
+                // prevent change the date when the user didn't finish inserting a full date on keyboard
+                if (dateInputValue.replace('_', '').length == 10) {
+                    const newDate = stringToDate(dateInputValue);
+                    // update datepicker with newinput value
+                    submitDate(newDate);
+                }
             });
-        },
 
             $('#modal-datepicker-datepicker').datepicker({
                 defaultDate: stringToDate($('#' + outInputId).val()), // Set the date to highlight on first opening if the field is blank.
@@ -139,16 +125,10 @@ $(function () {
                 $("#end-year").val(ui.values[1]);
             },
 
-            endDatePicker.datepicker('destroy').datepicker($.extend(oldEndOptions, {
-                minDate: startDate,
-                defaultDate: endDate
-            }));
-
-            $(event.target).find('.slider-toolip').first().hide().text('')
-        }
-    });
-    $("#start-year").val($("#slider-range").slider("values", 0));
-    $("#end-year").val($("#slider-range").slider("values", 1));
+            //Update the datepickers after the user drops the slider
+            stop: function (event, ui) {
+                let startDate = $('#start-date').val().split('/');
+                let endDate = $('#end-date').val().split('/');
 
                 startDate[2] = ui.values[0];
                 endDate[2] = ui.values[1]
