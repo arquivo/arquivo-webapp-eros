@@ -73,6 +73,7 @@ $(function () {
             });
 
             $('#modal-datepicker-datepicker').datepicker({
+                ...$.datepicker.regional[ lang ],
                 defaultDate: stringToDate($('#' + outInputId).val()), // Set the date to highlight on first opening if the field is blank.
                 inline: true,
                 altField: '#' + modalInputId,
