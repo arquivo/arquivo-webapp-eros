@@ -1346,13 +1346,49 @@ input[type="text"]#modal-datepicker-input:focus {
   filter: invert(1);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
+  transition: 0.5s;
   
 }
 #modal a.close-modal:hover {
   filter: invert(0);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
+  filter: drop-shadow(2px 4px 6px black);
+  transition: 0.5s;
 
+}
+
+.ap-theme-ios.ap-layout-popup, .ap-theme-ios.ap-layout-fixed, .ap-theme-ios.ap-layout-popover {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+.ap-theme-ios .ap-content-middle {
+  padding: 10px 0px !important;
+}
+
+.ap-theme-ios.ap-layout-popup .ap-cont, .ap-theme-ios.ap-layout-popover .ap-cont {
+  max-width: 320px !important;
+  width: 90%;
+  border-radius: 5px !important;
+  border: 1px solid #D7D7D7 !important;
+  padding: 20px 10px 10px 10px;
+}
+
+.ap-theme-ios .ap-button:not(:last-child) {
+  padding: 0 0px 0 12px !important;
+  color: #1c75c0;
+}
+
+.ap-theme-ios .ap-header__title {
+  color: #070707 !important;
+  font-size: 1.2em !important;
+  margin-left: -13px !important;
+}
+
+.ap-theme-ios .ap-button:last-child {
+  float: right;
+  padding: 0 21px 0 0px !important;
+  color: #1c75c0;
 }
 
 div.jquery-modal div#modal {
