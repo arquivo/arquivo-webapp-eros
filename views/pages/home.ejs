@@ -7,24 +7,30 @@
 
     <!-- starts document body content -->
     <body id="homepage" class="homepage-cl">
+        
+        <!-- starts wrap-all-content -->
+        <section class="wrap-all-content">
 
-        <!-- starts include header -->
-        <%- include("../templates/header/header-home") -%>
-        <!-- ends include header -->
+            <!-- starts include header home -->
+            <%- include("../templates/header/header-home") -%>
+            <!-- ends include header home -->
 
-        <!-- starts main container-->
-        <main class="main-content">
+            <!-- starts main container-->
+            <main class="main-content">
 
-            <!-- starts include home content -->
-            <%- include("../templates/body/body-home") -%>
-            <!-- ends include home content -->
+                <!-- starts include body home -->
+                <%- include("../templates/body/body-home") -%>
+                <!-- ends include body home -->
 
-        </main>
-        <!-- ends main container-->
+            </main>
+            <!-- ends main container-->
 
-        <!-- starts footer -->
-        <%- include("../templates/footer") -%>
-        <!-- ends footer -->
+            <!-- starts footer -->
+            <%- include("../templates/footer") -%>
+            <!-- ends footer -->
+        
+        </section>
+        <!-- ends wrap-all-content -->
 
     </body>
     <!-- ends document body content -->

@@ -2,12 +2,16 @@
 /* Start main CSS styles ---------------------------------------------*/
 
 /* BODY ****************************************************************** */
-
+html {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
 body {  
   font-family: Helvetica, sans-serif;
   overflow: auto;
   overflow-x:hidden;
-  -webkit-font-smoothing: subpixel-antialiased;  
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 /* Skip navigation menu and go direct to main content */
@@ -234,7 +238,10 @@ header {
   height: auto;
   padding: 8px 0 4px 0;
   background-color:#033f72;
-  text-align: center;  
+  text-align: center;
+  text-align: center;
+  left: 0;
+  right: 0;  
  }
 
 header a#logo-arquivo-link:hover {
@@ -780,8 +787,15 @@ section.header-content-container h3 {
 section {
   margin:0 auto;
   padding: 0;
-  width: auto;
+  width: initial;
   max-width: 960px;
+}
+
+body#landing-replay {
+  margin: 0;
+  padding: 0;
+  width: initial;
+  max-width: none;
 }
 
 section#search-tools {
@@ -893,13 +907,13 @@ section#search-tools-date-slider #date-container-start, section#search-tools-dat
 
 section#search-tools-date-slider #date-container-start, #date-container-start  {
   top: -6px;  
-  left: 0px;
+  left: -0.5px;
   height: 27px;
 }
 
 section#search-tools-date-slider #date-container-end, #date-container-end   {
   top: -6px;  
-  right: 0px;
+  right: -0.5px;
   cursor: pointer;
 }
 
@@ -1517,6 +1531,7 @@ section#home-content h4, section#body-content h4 {
   padding: 11px 6px 11px 14px;
   font-weight: normal;
   font-size: 1em;
+  width: fit-content;
 }
 
 /* Pages and images search results */
@@ -2018,8 +2033,7 @@ footer section#important-info {
   flex-wrap: wrap;
   width: 100%; 
   max-width: 960px;
-  margin: 0 auto;
-  padding: 0 10px; 
+  margin: 0 auto;  
 }
 
 footer section section {
@@ -2196,6 +2210,7 @@ section#search-tools #submit-search-mobile {
 
  section#home-content h4, section#body-content h4 {  
   font-size: 0.95em;
+  width: fit-content;
 }
 
 body#landing-replay main.main-content {
@@ -2297,6 +2312,7 @@ section#search-tools #submit-search-mobile {
 
 section#home-content h4, section#body-content h4  {  
   font-size: 0.95em;
+  width: fit-content;
 }
     article {
     width: 100%;
@@ -2393,5 +2409,11 @@ section#search-tools #submit-search {
   footer section#institutional img {
       height: 36px;
       margin: 20px 5%;
+  }
+}
+
+@media (min-width: 0px) and (max-width: 279px) {
+  button#nav-options-right-button-mobile {
+    display: none;
   }
 }

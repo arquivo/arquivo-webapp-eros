@@ -8,23 +8,29 @@
     <!-- starts document body content -->
     <body id="not-found" class="not-found-cl">
 
-        <!-- starts include header -->
-        <%- include("../templates/header/header-not-found") -%>
-        <!-- ends include header -->
+       <!-- starts wrap-all-content -->
+       <section class="wrap-all-content">
+       
+            <!-- starts include header not found -->
+            <%- include("../templates/header/header-not-found") -%>
+            <!-- ends include header not found -->
 
-        <!-- starts main container-->
-        <main class="main-content">
+            <!-- starts main container-->
+            <main class="main-content">
 
-            <!-- starts include home content -->
-            <%- include("../templates/body/body-not-found") -%>
-            <!-- ends include home content -->
+                <!-- starts include body not found -->
+                <%- include("../templates/body/body-not-found") -%>
+                <!-- ends include body not found -->
 
-        </main>
-        <!-- ends main container-->
+            </main>
+            <!-- ends main container-->
 
-        <!-- starts footer -->
-        <%- include("../templates/footer") -%>
-        <!-- ends footer -->
+            <!-- starts footer -->
+            <%- include("../templates/footer") -%>
+            <!-- ends footer -->
+        
+        </section>
+        <!-- ends wrap-all-content -->
 
     </body>
     <!-- ends document body content -->
