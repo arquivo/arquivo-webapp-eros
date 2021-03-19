@@ -229,6 +229,32 @@ div.jquery-modal section#technical-details ul li a {
   display: inline;
 }
 
+
+h4#modal-datepicker-title {
+  font-size: 1em;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+#modal-datepicker-datepicker {
+  height: auto !important;
+  padding-bottom: 50px !important;
+}
+
+button#modal-datepicker-confirm-button {
+  position: absolute;
+  bottom: 20px;
+  right: 27px;
+}
+
+p#modal-datepicker-input-p {
+  padding: 5px 0 20px 1px;
+    font-style: italic;
+    color: #999;
+    font-size: 0.7em;
+    letter-spacing: 1px;
+ }
+
 /* header */
 
 header {
@@ -1023,6 +1049,10 @@ text-decoration: none;
   font-size:0.9em !important;
 }
 
+#ui-datepicker-div .ui-datepicker .ui-datepicker-prev span {
+  outline: 1px solid red !important;
+}
+
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
   /*border: 1px solid #ffffff !important;*/
   /*background: #c9e9fa !important;*/
@@ -1056,6 +1086,8 @@ td a.ui-state-default {
 
 .ui-datepicker table {
   background-color: white !important;
+  border-collapse: inherit !important;
+  padding: 20px 20px 0 20px;
 }
 
 /* Modal: image description */
@@ -1240,14 +1272,137 @@ section.image-details-description p span {
   color: #777;  
 }
 
-/* Datepicker */
+/* Datepicker ***********************************/
 
 #datepicker {
   display: block ruby;
 }
+
+
+#ui-datepicker-div {
+
+}
+
+#modal-datepicker-datepicker .ui-datepicker {  
+  width: 100% !important;
+  padding: 20px 0 15px 0 !important;
+}
+
 .ui-datepicker-inline, .ui-datepicker {
   display: contents;
 }
+
+#ui-datepicker-calendar td a {
+    font-weight: normal !important;
+    color: #454545 !important;
+    text-align: center !important;
+    padding: 10px !important;
+}
+
+.ui-datepicker th {
+  font-size: 1em !important;
+  font-weight: 100 !important;
+  color: black !important;
+  border-bottom: none !important;
+}
+
+input[type="text"]#modal-datepicker-input {
+  padding: 15px 0px;
+  font-size: 1.3em;
+  border-radius: 3px;
+  text-align: center;  
+  border: 1px solid #ccc;
+  outline: 1px solid transparent;
+  transition: 0.5s;
+  width: 50%;
+}
+
+input[type="text"]#modal-datepicker-input:hover {  
+  padding: 15px 20px;
+  background-color: rgb(239, 249, 252);
+  transition: 0.5s;
+  width: 50%;
+}
+
+input[type="text"]#modal-datepicker-input:focus {  
+  background-color: rgb(239, 249, 252);
+  transition: 0.5s;
+  outline: 2px solid #000;
+}
+
+#modal-datepicker-datepicker .ui-state-default {
+  background: #1c75c0;
+  font-weight: normal;
+  color: white;
+  border-radius: 2px;
+  outline: none;
+  border: 1px solid #1c75c0 !important;
+  margin-top: 2px;
+  padding: 6px;
+  text-align: center;
+}
+
+#modal a.close-modal {
+  filter: invert(1);
+  background: transparent url("../img/close-modal.png") no-repeat 0 0;
+  background-size: 100%;
+  
+}
+#modal a.close-modal:hover {
+  filter: invert(0);
+  background: transparent url("../img/close-modal.png") no-repeat 0 0;
+  background-size: 100%;
+
+}
+
+div.jquery-modal div#modal {
+  padding: 20px 30px 15px 30px !important;
+  width: 330px;
+  border-radius: 3px !important;
+}
+
+#modal-datepicker-datepicker .ui-datepicker .ui-datepicker-prev span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: 5px;
+  top: 50%;
+  margin-top: -4px;
+}
+
+#modal-datepicker-datepicker .ui-datepicker .ui-datepicker-next span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -19px;
+  top: 50%;
+  margin-top: -4px;
+}
+
+
+#modal-datepicker-datepicker select.ui-datepicker-month, #modal-datepicker-datepicker select.ui-datepicker-year {
+  font-size: 1em !important;
+  border: 1px solid #ccc !important;
+  padding: 4px;
+  border: 1px solid #ccc !important;
+  transition: 0.5s;
+}
+
+#modal-datepicker-datepicker .ui-state-default:hover {
+  color: #1c75c0 !important;  
+  background: white !important;
+  outline: none !important; 
+  border: 1px solid #1c75c0 !important;
+  transition: 0.5s;
+}
+
+#modal-datepicker-datepicker .ui-state-active {
+  color: #f9fcff !important;
+    background-color: #033f72 !important;   
+    outline: none !important;  
+}
+
+/***********************************************/
 
 section#search-tools-date-slider {
   display: flex;
@@ -1277,7 +1432,7 @@ ul#date-container-end {
 
 .ui-widget.ui-widget-content {
   border: 0.66px solid #ccc;
-  height: 1.01em;
+  
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default {
