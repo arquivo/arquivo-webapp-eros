@@ -1,0 +1,117 @@
+
+<!-- starts WCAG 2.1: G1: Add a link (the first link of the page) at the top of each page to directly access the main content area -->
+<a href="#main-content" id="skip-navigation-links" class="button" title="Skip navigation links and jump to the main content">Skip links</a> 
+
+<!-- starts image modal when user clicks to see image its details -->
+<section id="technical-details" class="modal">
+  <h3>Page details</h3>
+  <ul>
+    <li><strong>Technical details: </strong><a href="#">Insert content here</a></li>
+    <li><strong>title:</strong><a href="#">Hotels Lisboa – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de: </a></li>
+    <li><strong>originalURL:</strong><a href="#">https://hotel-mix.de/hotels/portugal/lisbon</a></li>
+    <li><strong>linkToArchive:</strong><a href="#">https://arquivo.pt/wayback/20181015135644/https://hotel-mix.de/hotels/portugal/lisbon</a></li>
+    <li><strong>tstamp:</strong>20181015135644</li>
+    <li><strong>contentLength:</strong>332980</li>
+    <li><strong>digest:</strong>854ae745cfef7cc09f5a6da51f7217d5</li>
+    <li><strong>mimeType:</strong>text/html</li>
+    <li><strong>encoding:</strong>UTF-8</li>
+    <li><strong>date:</strong>1539611804</li>
+    <li><strong>linkToScreenshot:</strong><a href="#">https://arquivo.pt/screenshot?url=https%3A%2F%2Farquivo.pt%2FnoFrame%2Freplay%2F20181015135644%2Fhttps%3A%2F%2Fhotel-mix.de%2Fhotels%2Fportugal%2Flisbon</a></li>
+    <li><strong>linkToNoFrame:</strong><a href="#">https://arquivo.pt/noFrame/replay/20181015135644/https://hotel-mix.de/hotels/portugal/lisbon</a></li>
+    <li><strong>linkToExtractedText:</strong><a href="#">https://arquivo.pt/textextracted?m=https%3A%2F%2Fhotel-mix.de%2Fhotels%2Fportugal%2Flisbon%2F20181015135644</a></li>
+    <li><strong>linkToMetadata:</strong><a href="#">https://arquivo.pt/textsearch?metadata=https%3A%2F%2Fhotel-mix.de%2Fhotels%2Fportugal%2Flisbon%2F20181015135644</a></li>
+    <li><strong>linkToOriginalFile:</strong><a href="#">https://arquivo.pt/noFrame/replay/20181015135644id_/https://hotel-mix.de/hotels/portugal/lisbon</a></li>
+    <li><strong>snippet:</strong>Hotels Lisboa – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de Beliebte...</li>
+    <li><strong>fileName:</strong>WEB-20181015135611180-p82.arquivo.pt</li>
+    <li><strong>collection:</strong>AWP28</li>
+    <li><strong>offset:</strong>61934373</li>
+    <li><strong>statusCode:</strong>200</li>
+  </ul>
+</section>
+<!-- ends image modal when user clicks to see image and its details -->
+
+<!-- starts take screenshot -->
+<section id="screenshot" class="modal">
+  <h3>Take screenshot</h3>
+  <ul class="replay-options">
+    <li><p><span class="fas fa-camera" aria-hidden="true"></span> Take a screenshot of this page?</p></li>
+    <li><button>OK</button></li>
+    <li><button>Cancel</button></li>    
+  </ul>
+<!-- ends take screenshot -->  
+</section>
+
+<!-- starts print page -->
+<section id="print" class="modal">
+  <h3>Print page</h3>
+  <ul class="replay-options">
+    <li><p><span class="fas fa-print" aria-hidden="true"></span> Print this page?</p></li>
+    <li><button>OK</button></li>
+    <li><button>Cancel</button></li>    
+  </ul>
+<!-- ends print page -->  
+</section>
+
+<!-- starts complete page -->
+<section id="complete-the-page" class="modal">
+  <h3>Complete the page</h3>
+  <ul class="replay-options">
+    <li><p><span class="fas fa-laptop-medical" aria-hidden="true"></span> We will try to complete the page with resources from other web archives</p></li>
+    <li><button>OK</button></li>
+    <li><button>Cancel</button></li>    
+  </ul>
+<!-- ends complete -->  
+</section>
+
+<!-- starts open replay page in fullscreen -->
+<section id="fullscreen-mode" class="modal">
+  <h3>Open page in fullscreen</h3>
+  <button onclick="closesFullScreen()"><span class="fas fa-compress-arrows-alt" aria-hidden="true"></span> Exit fullscreen</button>  
+<!-- ends open replay page in fullscreen -->  
+</section>
+
+<!-- starts replay with old browser -->
+<section id="replay-with-old-browser" class="modal">
+  <h3>Complete the page</h3>
+  <ul class="replay-options">
+    <li><p><span class="fab fa-internet-explorer" aria-hidden="true"></span> You are leaving Arquivo.pt to oldweb.today</a></p></li>
+    <li><button>OK</button></li>
+    <li><button>Cancel</button></li>    
+  </ul>
+<!-- ends replay with old browser -->  
+</section>
+
+<!-- starts alerts -->
+<section id="alert-container">
+    <h3>Search Tools</h3>
+    <p id="alert-message"><span class="fas fa-copy" aria-hidden="true"></span> URL link copied</p>
+</section>
+<!-- ends alerts -->  
+
+<header>  
+  <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
+  <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openReplayRightMenuNav()"></button>
+  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openReplayRightMenuNav()" >Options</button> 
+  <a id="logo-arquivo-link" href="/">
+    <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
+  </a>
+<!-- starts include: replay, left and right nav -->
+<%- include("../menu/left_nav_menu") -%>
+<%- include("../menu/left_nav_replay_menu") -%>
+<%- include("../menu/replay_right_nav_menu") -%>
+<!-- ends include: replay, left and right nav -->
+
+<!-- starts white background top corner rounded shape -->
+<div class="background-top-curve"></div>
+<!-- ends white background top corner rounded shape -->
+
+<!-- starts white background top corner rounded shape -->
+
+<!-- starts shows url link of page selected and timestamp -->
+<p id="chosen-url"><a class="chosen-url-cl" target="_blank" href="https://hotel-mix.de/" title="https://hotel-mix.de/"><span class="icon-link fas fa-link" aria-hidden="true"></span>hotel-mix.de - 15 October at <span id="chosen-timestamp">15:53, 2018</span></a></p>
+<!-- ends shows url link of page selected and timestamp -->
+
+</header>
+
+<h1>Arquivo.pt - search pages from the past!</h1>
+<h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files archived from the web since 1996. Its main objective is the preservation of information published on the Web for research purposes.</h2>
