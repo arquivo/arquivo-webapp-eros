@@ -3,6 +3,8 @@
     "datetime-periods": "^1.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "i18n": "^0.13.2",
+    "i18n-node-yaml": "^1.0.4",
     "js-datepicker": "^5.18.0",
     "lightpick": "^1.6.2",
     "simplepicker": "^2.0.3",
