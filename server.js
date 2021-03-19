@@ -53,8 +53,34 @@ app.get('/images',function (req, res) {
 app.get('/images-advanced-search',function (req, res) {
   res.render('pages/images-advanced-search');
 });
-// ends website Routes ////////////////////////////////////////////////////////////////////////////////
 
+// starts Replay
+app.get('/replay',function (req, res) {
+  res.render('pages/replay');
+});
+// ends Replay
+
+// starts Replay table results
+app.get('/replay-table-list-results',function (req, res) {
+  res.render('pages/replay-table-list-results');
+});
+// ends Replay table results
+
+// starts not found page
+app.get('/not-found',function (req, res) {
+  res.render('pages/not-found');
+});
+// ends not found page
+
+// starts not found page
+app.get('/search-suggestion',function (req, res) {
+  res.render('pages/search-suggestion');
+});
+// ends not found page
+
+
+
+// ends website Routes ///////////////////////////////////////////////////////
 
 // Open browser port: ${port} 
 //////////////////////////////////////////////////////////////////////////////
