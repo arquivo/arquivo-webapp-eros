@@ -11,6 +11,8 @@ $(function () {
         const inputMask = { regex: "[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]", insertMode: false };
         var modalDatepickerContent = null;
 
+        const isMobile = function() {return( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) || (window.matchMedia("(max-width: 767px)").matches)};
+
         //load modal datepicker template into local variable
         $.ajax({
             url: '/fragments/modal-datepicker.html',
@@ -30,19 +32,22 @@ $(function () {
             $('#slider-range').slider("values", 1, stringToDate($("#end-date").val()).getFullYear());
         };
 
+        //Updates the dates and the slider
+        const updateDateSlider = function(newDate,type){
+            $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
+            $("#" + type + "-year").val(newDate.getFullYear());
+            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + newDate.getMonth()); //FIX
+            updateSlider();
+        }
         //Sets up the logic in the modal
         let setupModalDatepicker = function (type) {
             const outInputId = type + '-date';
-            const otherOutInputId = type === 'start' ? 'end-date' : 'start-date';;
             const modalInputId = 'modal-datepicker-input';
             const modalInput = $('#' + modalInputId);
 
             const submitDate = function (newDate) {
-                $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
-                $("#" + type + "-year").val(newDate.getFullYear());
-                $("#" + type + "-day-month").val(newDate.getDate() + ' ' + newDate.getMonth()); //FIX
+                updateDateSlider(newDate,type)
                 $('#modal-datepicker-datepicker').datepicker('setDate', newDate);
-                updateSlider();
             }
 
             //Enter clicks on "ok" button
@@ -75,8 +80,8 @@ $(function () {
                 changeMonth: true, // Whether the month should be rendered as a dropdown instead of text.
                 changeYear: true, // Whether the year should be rendered as a dropdown instead of text
                 yearRange: minYear + ":" + maxYear, // The range of years displayed in the year drop-down - minYear and maxYear are a global javascript variables
-                minDate: type === 'start' ? minDate : stringToDate($('#' + otherOutInputId).val()),
-                maxDate: type === 'end' ? maxDate : stringToDate($('#' + otherOutInputId).val()),
+                minDate: type === 'start' ? minDate : stringToDate($('#start-date').val()),
+                maxDate: type === 'end' ? maxDate : stringToDate($('#end-date').val()),
                 // monthNamesShort: $.datepicker.regional[language].monthNames,
                 onChangeMonthYear: function (y, m, i) {
                     var d = i.selectedDay;
@@ -137,10 +142,36 @@ $(function () {
         //Create datepickers
         ['start', 'end'].forEach(type => {
             $(".call-datepicker-" + type + "-year").click(function () {
-                modal.html(modalDatepickerContent);
-                setupModalDatepicker(type);
-                modal.modal();
-                $('#modal-datepicker-input').select();
+                if (isMobile()){
+                    const selectedDate = stringToDate($('#'+type+'-date').val());
+                    $('#'+type+'-date').AnyPicker(
+                        {
+                            mode: "datetime",
+                            dateTimeFormat: "dd MMM yyyy",
+                            inputDateTimeFormat: "dd/MM/yyyy",
+                            selectedDate: selectedDate,
+                            minValue: type === 'start' ? minDate : stringToDate($('#start-date').val()),
+                            maxValue: type === 'end' ? maxDate : stringToDate($('#end-date').val()),
+                            theme: "iOS",
+                            onInit: function()
+                            {
+                                this.showOrHidePicker($('#'+type+'-date').val());
+                            },
+                            onChange: function(component_i,row_i,val){
+                                updateDateSlider(val.date,type);
+                            },
+                            buttonClicked: function(buttonType){
+                                if(buttonType == 'cancel'){
+                                    updateDateSlider(selectedDate,type);
+                                }
+                            }
+                        });
+                } else {
+                    modal.html(modalDatepickerContent);
+                    setupModalDatepicker(type);
+                    modal.modal();
+                    $('#modal-datepicker-input').select();
+                }
             });
         });
 
@@ -149,16 +180,16 @@ $(function () {
             const endDate = stringToDate($('#end-date'));
             if (startDate > endDate) {
                 modal.html('<h4 class="modalTitle"><i class="fa" aria-hidden="true"></i> ' + 'ERRO' + '</h4>' + //FIX
-                  '<div class="row"><a href="#close" rel="modal:close" class="col-xs-6 text-center leftAnchor modalOptions">OK</a></div>'
-              );
-              return false;
+                    '<div class="row"><a href="#close" rel="modal:close" class="col-xs-6 text-center leftAnchor modalOptions">OK</a></div>'
+                );
+                return false;
             }
             //Make sure pressing enter does not submit the search while modal is active
-            if($('.jquery-modal.blocker').length){
+            if ($('.jquery-modal.blocker').length) {
                 return false;
             }
             return true;
-          });
+        });
     }
 });
 
