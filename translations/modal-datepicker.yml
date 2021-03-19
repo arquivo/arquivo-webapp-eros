@@ -1,0 +1,4 @@
+#Translations for modal-datepicker fragment
+header:
+  pt: 'A partir de:'
+  en: 'From:'

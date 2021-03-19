@@ -12,7 +12,7 @@
                     name="from-year" value="1996" readonly>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 Mar"
+                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
                     readonly>
             </li>
             <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
@@ -24,16 +24,18 @@
         <!-- ends slider handles -->
 
         <!-- starts right calendar icon -->
+
+        <% let currentDate = new Date() %>
         <ul id="date-container-end">
             <li class="search-calendar-year">
                 <input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input" name="to-year"
-                    value="2021" readonly>
+                    value="<%= currentDate.getFullYear() %>" readonly>
             </li>
             <li class="search-calendar-day-month">
                 <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
-                    value="01 Mar" readonly>
+                    value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly>
             </li>
-            <input type="hidden" name="dateEnd" id="end-date" value="<%= (new Date()).toLocaleDateString('pt-PT') %>">
+            <input type="hidden" name="dateEnd" id="end-date" value="<%= currentDate.toLocaleDateString('pt-PT') %>">
         </ul>
         <!-- ends right calendar icon -->
 
