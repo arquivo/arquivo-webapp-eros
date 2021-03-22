@@ -89,8 +89,9 @@
 <!-- ends alerts -->  
 
 <header>  
-  <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
-  <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openReplayRightMenuNav()"></button>
+  <!-- Include menu button -->
+  <%- include("../menu/menu-button") -%>
+  <!-- end include menu button -->
   <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openReplayRightMenuNav()" >Options</button> 
   <a id="logo-arquivo-link" href="/">
     <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
