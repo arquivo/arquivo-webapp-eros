@@ -15,8 +15,8 @@
                 <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
                     readonly>
             </li>
-            <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
         </ul>
+        <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
         <!-- ends left calendar icon -->
 
         <!-- starts slider handles -->
@@ -35,8 +35,9 @@
                 <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
                     value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly>
             </li>
-            <input type="hidden" name="dateEnd" id="end-date" value="<%= currentDate.toLocaleDateString('pt-PT') %>">
+            
         </ul>
+        <input type="hidden" name="dateEnd" id="end-date" value="<%= currentDate.toLocaleDateString('pt-PT') %>">
         <!-- ends right calendar icon -->
 
     </section>

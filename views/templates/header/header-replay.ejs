@@ -95,21 +95,21 @@
 </section>
 
 <!-- starts alerts -->
-<section id="alert-container">
-    <h3>Search Tools</h3>
-    <p id="alert-message"><span class="fas fa-copy" aria-hidden="true"></span> URL link copied</p>
-</section>
-<!-- ends alerts -->  
+<%- include("../fragments/alert-container") -%>
+<!-- ends alerts -->    
 
 <header>  
-  <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
-  <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openReplayRightMenuNav()"></button>
-  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openReplayRightMenuNav()" >Options</button> 
-  <button id="nav-options-right-button-mobile" class="fas fa-ellipsis-h" aria-hidden="true" value="top navigation right menu options button" onclick="openReplayRightMenuNav()"></button> 
+  <!-- Include menu button -->
+  <%- include("../menu/menu-button") -%>
+  <!-- end include menu button -->  
 
-  <a id="logo-arquivo-link" href="/">
-    <img id="logo-arquivo" src="img/arquivo-logo-white.svg" alt="Arquivo.pt">
-  </a>
+  <!-- Include menu button -->
+  <%- include("../menu/options-button", {functionName: 'openReplayRightMenuNav'}) -%>
+  <!-- end include menu button -->
+  
+  <!-- adds logo -->
+  <%- include("logo") -%>
+  <!-- ends logo -->
 <!-- starts include: replay, left and right nav -->
 <%- include("../menu/left_nav_menu") -%>
 <%- include("../menu/left_nav_replay_menu") -%>
