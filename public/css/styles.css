@@ -237,7 +237,7 @@ div.jquery-modal section#technical-details ul li a {
   display: inline-block;
   width: auto;
   max-width: calc(100% - 150px);
-  margin-top: 2p;
+  margin-top: 2px;
   position: relative;
   top: 5px;
 }
@@ -261,10 +261,10 @@ h4#modal-datepicker-title {
 
 button#modal-datepicker-confirm-button {
   position: absolute;
-  bottom: 20px;
-  right: 16.5px;
-  padding: 9px 33px;
-  border-radius: 2px;
+  bottom: 22px;
+  right: 23.5px;
+  padding: 7px 31px;
+  border-radius: 3px;
 }
 
 p#modal-datepicker-input-p {
@@ -1131,7 +1131,7 @@ text-decoration: none;
 
 td a.ui-state-default {  
   border: none !important;
-  border-radius: 1px !important;
+  border-radius: 3px !important;
 }
 
 .ui-state-highlight {
@@ -1400,18 +1400,18 @@ padding: 0 !important;
 }
 
 input[type="text"]#modal-datepicker-input {
-  padding: 15px 0px;
-  font-size: 1.1em;
+  padding: 5px 0px;
+  font-size: 0.9em;
   border-radius: 3px;
-  text-align: center;  
+  text-align: center;
   border: 1px solid #ccc;
   outline: 1px solid transparent;
   transition: 0.5s;
-  width: 50%;
+  width: 99%;
 }
 
 input[type="text"]#modal-datepicker-input:hover {  
-  padding: 15px 0px;
+  padding: 5px 0px;
   background-color: rgb(239, 249, 252);
   transition: 0.5s;
   width: 99%;
@@ -1431,7 +1431,7 @@ input[type="text"]#modal-datepicker-input:focus {
   outline: none;
   border: 1px solid #1c75c0 !important;
   margin-top: 0px;
-  padding: 11px;
+  padding: 7px 6px;
   text-align: center;
 }
 
@@ -1490,13 +1490,13 @@ input[type="text"]#modal-datepicker-input:focus {
 }
 
 div.jquery-modal div#modal {
-  padding: 16px !important;
+  padding: 23px !important;
   width: 330px;
   border-radius: 3px !important;
 }
 
 #modal-datepicker-datepicker .ui-datepicker .ui-datepicker-prev span {
-  display: block;
+  display: none;
   position: absolute;
   left: 50%;
   margin-left: -3px;
@@ -1505,7 +1505,7 @@ div.jquery-modal div#modal {
 }
 
 #modal-datepicker-datepicker .ui-datepicker .ui-datepicker-next span {
-  display: block;
+  display: none;
   position: absolute;
   left: 50%;
   margin-left: -12px;
@@ -1535,7 +1535,11 @@ div.jquery-modal div#modal {
     outline: none !important;  
 }
 
-/***********************************************/
+.ui-datepicker .ui-datepicker-title {
+  margin: 0 !important;
+}
+
+/* Date slider ***********************************************/
 
 section#search-tools-date-slider {
   display: flex;
@@ -1566,6 +1570,26 @@ ul#date-container-end {
 .ui-widget.ui-widget-content {
   border:none !important;
   
+}
+
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled { 
+  display: none !important;
+}
+
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
+  display: none !important;
+}
+
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+  display: none;
+}
+
+.ui-datepicker .ui-datepicker-title {
+  margin: 0 2.3em;
+  line-height: 1.8em;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default {
