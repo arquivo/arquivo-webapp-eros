@@ -45,12 +45,7 @@ module.exports = function (app) {
         res.render('pages/replay');
     });
     // ends Replay
-
-    // starts Replay table results
-    app.get('/replay-table-list-results', function (req, res) {
-        res.render('pages/replay-table-list-results');
-    });
-    // ends Replay table results
+    
 
     // starts not found page
     app.get('/not-found', function (req, res) {
@@ -63,7 +58,18 @@ module.exports = function (app) {
         res.render('pages/search-suggestion');
     });
     // ends not found page
+    
+    // starts show table 
+    app.get('/replay-table-results', function (req, res) {
+        res.render('pages/replay-table-results');
+    });
+    // ends show table
 
+    // starts show list 
+    app.get('/replay-list-results', function (req, res) {
+        res.render('pages/replay-list-results');
+    });
+    // ends show list
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
