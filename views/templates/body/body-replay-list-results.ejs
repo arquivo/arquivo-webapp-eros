@@ -1,0 +1,63 @@
+<!-- starts replay: list -->
+<nav id="replay-list-results-nav">
+    <h3>Replay list</h3> 
+    <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
+   
+    <!-- starts list navigation buttons -->
+    <section class="list-results-buttons">
+      <h4>Replay table list menu navigation buttons</h4>      
+      
+      <form id="replay-table-button" action="replay-table-results" method="GET">
+      <button><span class="fas fa-table" aria-hidden="true"></span> Table</button>
+      </form>
+      
+      <form id="replay-list-button" action="replay-list-results" method="GET"></form>
+        <button id="replay-list" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
+      </form>      
+
+    </section>
+    <!-- ends list navigation buttons -->
+
+    <!-- starts list: show results as a list -->  
+    <section id="replay-menu-list">
+        <h4>Replay menu navigation list</h4> 
+          <ul>            
+            <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-replay-list">1996<span class="number-of-versions">10 versions</span></a>
+              <ul class="panel">
+                <li class="menu-pages-replay-month"><a href="#">January</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">11 January at 10:04</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">12 January at 20:45</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">13 January at 06:23</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">14 January at 08:01</a></li>
+                <li class="date-selected menu-pages-replay-date-hour"><a href="#">15 January at 20:04</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">16 January at 21:07</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">17 January at 20:53</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">18 January at 23:09</a></li>
+                <li class="menu-pages-replay-date-hour"><a href="#">19 January at 00:16</a></li>
+              </ul>
+            </li>
+          </ul>
+     </section>
+     <!-- ends list: show results as a list --> 
+
+    </nav> 
+    <!-- ends replay: list -->
+
+    <!-- starts accordion for list -->  
+    <script>
+    var replayList = document.getElementsByClassName("accordion-replay-list");
+    var i;
+    
+    for (i = 0; i < replayList.length; i++) {
+      replayList[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+      });
+    }
+    </script>
+    <!-- ends accordion for list -->
