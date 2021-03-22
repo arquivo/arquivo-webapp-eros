@@ -1110,8 +1110,6 @@ text-decoration: none;
   font-size:0.9em !important;
 }
 
-
-
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
   /*border: 1px solid #ffffff !important;*/
   /*background: #c9e9fa !important;*/
@@ -1195,7 +1193,7 @@ section.modal {
 }
 
 body#images-search-results section.modal {
-  padding: 15px 15px 30px 15px !important;  
+  padding: 20px 20px 40px 20px !important;
 }
 
 body#landing-replay section.modal {
@@ -1276,8 +1274,7 @@ section.image-details-description  {
   display: flex;
   flex-direction: column;
   text-align: initial;
-  margin-top: 25px;
-  overflow-y: auto;
+  margin-top: 25px;  
   max-height: 211px;
 }
 
@@ -1289,7 +1286,7 @@ border-top: 1px solid #cccccc69;
 }
 
 section.image-details-description p  {
- padding-bottom: 17px;
+ padding-bottom: 10px;
  font-size: 0.75em;
 }
 
