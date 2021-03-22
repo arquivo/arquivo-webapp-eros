@@ -88,8 +88,12 @@
 <header>  
   <!-- Include menu button -->
   <%- include("../menu/menu-button") -%>
+  <!-- end include menu button -->  
+
+  <!-- Include menu button -->
+  <%- include("../menu/options-button", {functionName: 'openReplayRightMenuNav'}) -%>
   <!-- end include menu button -->
-  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openReplayRightMenuNav()" >Options</button> 
+  
   <!-- adds logo -->
   <%- include("logo") -%>
   <!-- ends logo -->
