@@ -151,11 +151,8 @@ body#landing-replay nav#replay-right-nav a.link-line-height span {
 
 table {
   margin: 0 auto;
-  width: 100%;
-  /* max-width: 960px;*/
-  background-color: white;
-}
-  
+  width: 100%; 
+}  
   
 thead,tbody {
   width: 100%;
@@ -165,6 +162,11 @@ thead,tbody {
   color: #00294c;
  cursor: pointer;
  font-weight:500;
+
+}
+
+thead {
+ background-color: white;
 
 }
 
@@ -187,14 +189,15 @@ td {
   }
 
 table td a {
-color: #00294c;
-    display: block;
-    padding: 10px 4px;
-    background-color: #e3ecf3;
-    transition: 0.2s;
-    text-align: center;
-    font-size: small;
-  }
+  color: #00294c;
+  display: block;
+  padding: 10px 4px;
+  background-color: #e3ecf3;
+  transition: 0.2s;
+  text-align: center;
+  font-size: smaller;
+  outline: 1px solid #cccccc8a;
+}
 
 /* Modal*/
 section#technical-details ul {
@@ -202,7 +205,7 @@ section#technical-details ul {
   overflow-y: auto;
   height:auto;
   max-height: 500px;
-  padding: 10px 0px 10px 15px;
+  padding: 5px 0px 10px 10px;
 
 }
 section#technical-details ul li {  
@@ -221,13 +224,56 @@ section#technical-details ul li:last-child {
 section#technical-details ul li strong {
   font-weight: bold;
   padding-right: 10px;
+  color: #4d5865;
 }
 
 div.jquery-modal section#technical-details ul li a {
   color:#1c75c0;
   text-decoration: none;  
   display: inline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  width: auto;
+  max-width: calc(100% - 150px);
+  margin-top: 2p;
+  position: relative;
+  top: 5px;
 }
+
+.strong-bold {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+h4#modal-datepicker-title {
+  font-size: 1em;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+#modal-datepicker-datepicker {
+  height: auto !important;
+  padding-bottom: 55px !important;
+}
+
+button#modal-datepicker-confirm-button {
+  position: absolute;
+  bottom: 20px;
+  right: 16.5px;
+  padding: 9px 33px;
+  border-radius: 2px;
+}
+
+p#modal-datepicker-input-p {
+  padding: 5px 0 10px 1px;
+    font-style: italic;
+    color: #999;
+    font-size: 0.7em;
+    letter-spacing: 1px;
+ }
 
 /* header */
 
@@ -281,7 +327,7 @@ header button#nav-menu-button-left  {
 header .background-top-curve {
   position: relative;
   z-index: 0;
-  top: 4px;
+  top: 5px;
   margin: 0;
   height: 4px;
   background-color: white;
@@ -416,10 +462,10 @@ nav#replay-left-nav li#replay-table button {
 
 li.menu-pages-replay-year a {
  text-decoration: none;
- padding: 10px;
+ padding: 10px 20px;
  display: block;
- font-weight: 400;
- font-size: 0.95em;
+ font-weight: bold;
+ font-size: 0.9em;
 }
 
 li.menu-pages-replay-year a:hover {
@@ -457,9 +503,9 @@ a:hover span.number-of-versions {
 }
 
 li.menu-pages-replay-month a {
-  padding: 10px 0 10px 20px;
+  padding: 10px 0 10px 30px;
   font-weight: bold;
-  font-size: 0.8em;
+  font-size: 0.9em;
   border-bottom: 1px solid #cccccc47;
 }
 
@@ -478,8 +524,8 @@ li.menu-pages-replay-date-hour a:hover {
 
 /* Date selected on the replay menu */
 li.date-selected a {
-  /* To use in future: background-color:#00324b;
-  color: #fbff85 /* white */
+  background-color:#00324b;
+  /* To use in future versions color: #fbff85 /* white */
 }
 
 li.date-selected a::before {
@@ -601,7 +647,7 @@ body#homepage button#nav-options-right-button  {
   font-size: 1.25em;
 }
 
-body#table-list main .painel {
+body#table-results main .painel {
   
  padding: 0px;
  background-color: transparent;
@@ -630,7 +676,7 @@ nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav s
   }
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
-  border-top: 1px solid #e3e3e32e; 
+  border-top: 1px solid #e3e3e32e;  
   display: block;  
 }
 
@@ -695,9 +741,9 @@ nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li 
 
 /* starts Table and list menu ************************************************** */
 
-body#table-list main {
+body#table-results main {
   width: 100%;
-  max-width: 958px;
+  max-width: 98%;
   padding: 20px 1px 1px 1px;
   display: flex;
   flex-direction: row;  
@@ -706,11 +752,22 @@ body#table-list main {
   border-radius: 3px;
 }
 
-body#table-list #replay-table-list-nav {
+body#list-results main  {
+  width: 100%;
+  max-width: 958px;
+  padding: 20px 1px 40px 1px;
+  display: flex;
+  flex-direction: row;  
+  justify-content:center;  
+  background-color: #033f72; 
+  border-radius: 3px;
+}
+
+body#table-results #replay-table-results-nav, body#list-results #replay-list-results-nav  {
   width: 100%;
 }
 
-body#table-list section.table-list-buttons {
+body#table-results section.table-results-buttons, body#list-results section.list-results-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -721,32 +778,60 @@ body#table-list section.table-list-buttons {
   padding-bottom: 10px;  
 }
 
-body#table-list section.table-list-buttons button {
- left: 10px;
-width: 64px;
-height: 31px;
-margin: 0 6px;
+body#table-results section.table-results-buttons button#replay-table-button,
+body#table-results section.table-results-buttons button#replay-list-button  {
 
+width: 64px;
+height: 27px;
+margin: 0 5px;
 }
 
-body#table-list  nav#replay-table-list-nav h3, body#table-list nav#replay-table-list-nav h4{
+body#list-results section.list-results-buttons button#replay-table,
+body#list-results section.list-results-buttons button#replay-list  {
+
+width: 64px;
+height: 27px;
+margin: 0 5px;
+}
+
+button#previous-navigation {
+ position: absolute;
+ left: 0;
+ width: auto;
+ height: auto;
+ margin: 0 18px;
+  }
+  
+button#next-navigation {
+  position: absolute;
+  right: 0;
+  width: auto;
+  height: auto;
+  margin: 0 18px;
+  }
+
+body#table-results  nav#replay-table-results-nav h3, body#table-results nav#replay-table-results-nav h4, 
+body#list-results  nav#replay-list-results-nav h3, body#list-results nav#replay-list-results-nav h4 {
 visibility: collapse;
 height: 0;
 display: none;
 }
 
-body#table-list nav#replay-table-list-nav li.menu-pages-replay-date-hour a  {
+body#table-results nav#replay-table-results-nav li.menu-pages-replay-date-hour a,
+body#list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour a {
   padding: 10px 0 10px 42px;
-  width: 100%;
+  width: auto;
   display: block;
   text-decoration: none;
-  border-bottom: 1px solid #cccccc47
+  font-weight: normal;
+  border-bottom: 1px solid #cccccc47;
 }
 
-body#table-list nav#replay-table-list-nav li.menu-pages-replay-date-hour:hover a::after  {
+body#table-results nav#replay-table-results-nav li.menu-pages-replay-date-hour:hover a::after,
+body#list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour:hover a::after {
   content: "See page \2192";
   float: right;
-  margin-right: 60px;
+  margin-right: 18px;
   padding-left: 20px;  
 }
 
@@ -777,6 +862,8 @@ margin: auto;
 /* Header container wrap */
 section.header-content-container {
 margin: 65px auto 0 auto;
+padding: 0;
+max-width: 960px;
 padding: 0 10px;
 }
 
@@ -787,9 +874,10 @@ section.header-content-container h3 {
 
 section {
   margin:0 auto;
-  padding: 0;
-  width: initial;
-  max-width: 960px;
+  padding: 0;  
+  max-width: 100%;
+
+  
 }
 
 body#landing-replay {
@@ -1022,6 +1110,8 @@ text-decoration: none;
   font-size:0.9em !important;
 }
 
+
+
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
   /*border: 1px solid #ffffff !important;*/
   /*background: #c9e9fa !important;*/
@@ -1036,15 +1126,11 @@ text-decoration: none;
   
 }
 
-.ui-widget-content .ui-state-default {
-  font-size: small !important;
-  border: none !important;
-  /*border-radius: 1px !important;*/
-  
+.ui-widget-content .ui-state-default {  
+  border: none !important;    
 }
 
-td a.ui-state-default {
-  font-size: small !important;
+td a.ui-state-default {  
   border: none !important;
   border-radius: 1px !important;
 }
@@ -1055,6 +1141,9 @@ td a.ui-state-default {
 
 .ui-datepicker table {
   background-color: white !important;
+  border-collapse: inherit !important;
+  padding: 5px 0px 0 0px !important;
+  margin: 0 !important;
 }
 
 /* Modal: image description */
@@ -1084,6 +1173,7 @@ section.modal {
   z-index: 2;
   box-sizing: border-box;
   width: auto;
+  max-width: 600px !important;
   background: #ebebeb;
   padding: 15px 30px;
   -webkit-border-radius: 8px;
@@ -1105,8 +1195,17 @@ section.modal {
 }
 
 body#images-search-results section.modal {
-  padding: 15px !important;
+  padding: 15px 15px 30px 15px !important;  
 }
+
+body#landing-replay section.modal {
+  max-width: 300px !important;
+} 
+
+body#landing-replay section#technical-details {
+  width: auto;
+  max-width: 718px !important;
+} 
 
 section.modal h3 {
   visibility: collapse;
@@ -1114,8 +1213,7 @@ section.modal h3 {
 }
 
 section.modal img {
-  max-width: 100%;
-  border: 1px solid #ccc;
+  max-width: 100%;  
   margin-bottom: 10px;
 }
 
@@ -1178,23 +1276,46 @@ section.image-details-description  {
   display: flex;
   flex-direction: column;
   text-align: initial;
-  padding-top: 10px;
+  margin-top: 25px;
+  overflow-y: auto;
+  max-height: 211px;
 }
 
 section.image-details-description h5  {
 font-weight: bold;
-padding: 10px 0;
-font-size: 0.85em;
+padding: 15px 0;
+font-size: 0.8em;
+border-top: 1px solid #cccccc69;
 }
 
 section.image-details-description p  {
- padding-bottom: 10px;
- font-size: 0.85em;
+ padding-bottom: 17px;
+ font-size: 0.75em;
+}
+
+section.image-details-description p.image-details-padding-right  {
+  padding-right: 5px;
+  display: block;
 }
 
 section.image-details-description p a  {
   color: #1c75c0;
   text-decoration: none;
+  padding-left: 17px;
+  display: block;
+  margin-top: -14px;
+  line-height: normal;
+}
+
+section.image-details-description p.image-description-date  {
+  font-size: 0.75em;
+}
+
+section.image-details-description p.image-description-date span  {
+  padding-right: 3.6px;
+  font-size: 0.9em;
+  position: relative;
+  top: -0.6px;
 }
 
 section.image-details-description p a:hover  {
@@ -1230,23 +1351,192 @@ button.image-navigation-button {
 
 button.image-navigation-button span { 
   font-size: 2em;
+  color: #ccc;
+  transition: 0.2s;
+}
+
+button.image-navigation-button span:hover { 
+  font-size: 2.4em;
+  color: rgb(255, 255, 255);
+  transition: 0.2s;
 }
 
 section.image-details-description p span { 
   position: relative;
-  top: -0.825px;
+  top: -2.825px;
   font-size: 0.8em;
-  color: #777;  
+  color: #777;
 }
 
-/* Datepicker */
+/* Datepicker ***********************************/
 
 #datepicker {
   display: block ruby;
 }
+
+.ui-datepicker {
+padding: 0 !important;
+}
+
+#modal-datepicker-datepicker .ui-datepicker {  
+  width: 100% !important;  
+}
+
 .ui-datepicker-inline, .ui-datepicker {
   display: contents;
 }
+
+#ui-datepicker-calendar td a {
+    font-weight: normal !important;
+    color: #454545 !important;
+    text-align: center !important;
+    padding: 10px !important;
+}
+
+.ui-datepicker th {
+  font-size: 1em !important;
+  font-weight: 100 !important;
+  color: black !important;
+  border-bottom: none !important;
+}
+
+input[type="text"]#modal-datepicker-input {
+  padding: 15px 0px;
+  font-size: 1.1em;
+  border-radius: 3px;
+  text-align: center;  
+  border: 1px solid #ccc;
+  outline: 1px solid transparent;
+  transition: 0.5s;
+  width: 50%;
+}
+
+input[type="text"]#modal-datepicker-input:hover {  
+  padding: 15px 0px;
+  background-color: rgb(239, 249, 252);
+  transition: 0.5s;
+  width: 99%;
+}
+
+input[type="text"]#modal-datepicker-input:focus {  
+  background-color: rgb(239, 249, 252);
+  transition: 0.5s;
+  outline: 2px solid #000;
+}
+
+#modal-datepicker-datepicker .ui-state-default {
+  background: #1c75c0;
+  font-weight: normal;
+  color: white;
+  border-radius: 2px;
+  outline: none;
+  border: 1px solid #1c75c0 !important;
+  margin-top: 0px;
+  padding: 11px;
+  text-align: center;
+}
+
+#modal a.close-modal {
+  filter: invert(1);
+  background: transparent url("../img/close-modal.png") no-repeat 0 0;
+  background-size: 100%;
+  transition: 0.5s; 
+  
+}
+#modal a.close-modal:hover {
+  filter: invert(0);
+  background: transparent url("../img/close-modal.png") no-repeat 0 0;
+  background-size: 100%;
+  filter: drop-shadow(2px 4px 6px black);
+  transition: 0.5s;
+}
+
+.ui-state-hover {
+ background-color: transparent !important;
+ border:none !important;
+ outline: none;
+}
+
+.ap-theme-ios.ap-layout-popup, .ap-theme-ios.ap-layout-fixed, .ap-theme-ios.ap-layout-popover {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+.ap-theme-ios .ap-content-middle {
+  padding: 10px 0px !important;
+}
+
+.ap-theme-ios.ap-layout-popup .ap-cont, .ap-theme-ios.ap-layout-popover .ap-cont {
+  max-width: 320px !important;
+  width: 90%;
+  border-radius: 5px !important;
+  border: 1px solid #D7D7D7 !important;
+  padding: 20px 10px 10px 10px;
+}
+
+.ap-theme-ios .ap-button:not(:last-child) {
+  padding: 0 0px 0 12px !important;
+  color: #1c75c0;
+}
+
+.ap-theme-ios .ap-header__title {
+  color: #070707 !important;
+  font-size: 1.2em !important;
+  margin-left: -13px !important;
+}
+
+.ap-theme-ios .ap-button:last-child {
+  float: right;
+  padding: 0 21px 0 0px !important;
+  color: #1c75c0;
+}
+
+div.jquery-modal div#modal {
+  padding: 16px !important;
+  width: 330px;
+  border-radius: 3px !important;
+}
+
+#modal-datepicker-datepicker .ui-datepicker .ui-datepicker-prev span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -3px;
+  top: 50%;
+  margin-top: -5px;
+}
+
+#modal-datepicker-datepicker .ui-datepicker .ui-datepicker-next span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -12px;
+  top: 50%;
+  margin-top: -5px;
+}
+
+
+#modal-datepicker-datepicker select.ui-datepicker-month, #modal-datepicker-datepicker select.ui-datepicker-year {
+  border: 1px solid #ccc !important;  
+  border: 1px solid #ccc !important;
+  transition: 0.1s;
+  padding: 5px;
+}
+
+#modal-datepicker-datepicker .ui-state-default:hover {
+  color: #1c75c0 !important;  
+  background: white !important;
+  outline: none !important; 
+  border: 1px solid #1c75c0 !important;
+  transition: 0.1s;
+}
+
+#modal-datepicker-datepicker .ui-state-active {
+  color: #f9fcff !important;
+    background-color: #033f72 !important;   
+    outline: none !important;  
+}
+
+/***********************************************/
 
 section#search-tools-date-slider {
   display: flex;
@@ -1275,8 +1565,8 @@ ul#date-container-end {
 }
 
 .ui-widget.ui-widget-content {
-  border: 0.66px solid #ccc;
-  height: 1.01em;
+  border:none !important;
+  
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default {
@@ -1328,9 +1618,9 @@ height: 0.06em;
   .ui-slider .ui-slider-handle {
     position: absolute;
     z-index: 1 !important;
-    top: -0.54em !important;
-    width: 0.65em !important;
-    height: 0.65em !important;
+    top: -0.44em !important;
+    width: 0.55em !important;
+    height: 0.55em !important;
     background-color: #1c75c0 !important;
     outline: none !important;
     cursor: grab !important;
@@ -1349,6 +1639,7 @@ height: 0.06em;
   width: 1.1em !important;
   height: 1.1em !important;
   top: -1.3em !important;
+  margin-right: 1em;;  
   cursor: grab;
   -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 55%);
   box-shadow: 0px 4px 5px -2px rgb(255 255 255 / 30%);
@@ -1358,7 +1649,8 @@ height: 0.06em;
 }
 
 section#search-tools-buttons   {
-  position: relative;    
+  position: relative; 
+  max-width: 100%;   
   width: 960px;
   display: flex;
   flex-direction: row;
@@ -1516,11 +1808,12 @@ form#search-form input#submit-search-input {
 
 section#home-content, section#body-content  {
   width: 100%;
-  padding: 0 10px;
+  padding: 0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding: 0 10px;
 }
 
 section#home-content h3, section#body-content h3 {
@@ -1551,13 +1844,26 @@ section#pages-results, section#images-results {
 section#pages-results h3, section#images-results h3  {
   visibility: hidden;
   height: 0;
+  
 }
 
-section#pages-results > p, section#images-results > p, section#not-found-container > p  {
+section#pages-results > p, section#images-results > p, section#not-found-container > p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-top: 0;
+  padding-bottom: 10px;  
+  font-size: 13px;
+  color:#70757a;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body#table-results p#estimated-results, body#list-results p#estimated-results   {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-top: 15px;
   padding-bottom: 10px;  
   font-size: 13px;
   color:#70757a;
@@ -1661,6 +1967,7 @@ section#pages-results ul {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
+  min-width: 240px;
 } 
 
 section#pages-results ul.sub-results {
@@ -1694,8 +2001,13 @@ section#pages-results ul > li > a:hover  {
 }
 
 section#pages-results ul > li > a.results-url  {
+  display: block;
   color: #009688;
-  font-size: 13px;   
+  font-size: 14px; 
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: auto;  
 }
 
 section#pages-results ul > li > a.results-title  {
@@ -1831,12 +2143,12 @@ section#images-results ul > li {
     padding-top: 10px;
     color: teal;
     text-decoration: none; 
-    font-size: x-small;
-    display: flex; 
-    justify-content: center;
+    font-size: x-small;  
     text-overflow: ellipsis;
     overflow: hidden; 
-    
+    white-space: nowrap;
+    max-width: 177px;
+    font-size: 1em;
   }
 
   section#images-results ul > li > ul > li a:hover  {
@@ -2034,7 +2346,8 @@ footer section#important-info {
   flex-wrap: wrap;
   width: 100%; 
   max-width: 960px;
-  margin: 0 auto;  
+  margin: 0 auto; 
+  padding: 0 10px; 
 }
 
 footer section section {
@@ -2187,6 +2500,12 @@ body#landing-replay button#nav-options-right-button-mobile {
   height: 31px;
   background-color: transparent;
   border: none;
+}
+
+body#pages-search-results button#nav-options-right-button-mobile:hover,
+body#images-search-results button#nav-options-right-button-mobile:hover,
+body#landing-replay button#nav-options-right-button-mobile:hover {
+  color: white
 }
 
 section.header-content-container {

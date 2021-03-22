@@ -93,12 +93,29 @@ return false;
 function opensFullScreen() { 
   document.getElementById('replay-in-iframe').style.cssText = "padding: 0;margin:0;width: 100%;position: absolute;z-index: 1;top:0;left:0;height: 100%;0.5s";  
   document.getElementById('fullscreen-mode').style.cssText = "display: inline-block; position: absolute; z-index: 2; top: 0; right: 12px; height: 50px; width: 162px; background-color: transparent; box-shadow: none !important; 0.5s";  
-
 }
 
 // closes replay page on fullscreen
 function closesFullScreen() {
   document.getElementById('replay-in-iframe').style.cssText = "padding: 0; margin: 101px 0 0 0; max-width: 100%;  width: inherit; 0.5s";  
   document.getElementById('fullscreen-mode').style.cssText = "display: none; transition: 0.5s";  
-
 }
+
+// shows replay table menu results and hide list menu results
+function showTable() {
+  var showTable = urlParam('table-results');
+  if(showTable == "show-table") {
+  document.getElementById('replay-menu-table').style.cssText = "display: block";  
+  document.getElementById('replay-menu-list').style.cssText = "display: none";  
+ }
+}
+
+// shows replay list menu results and hide table menu results
+function showList() {
+  var showTable = urlParam('table-results');
+  if(showTable == "show-list") {
+  document.getElementById('replay-menu-list').style.cssText = "display: block";  
+  document.getElementById('replay-menu-table').style.cssText = "display: none";  
+ }
+}
+
