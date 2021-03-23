@@ -2437,19 +2437,20 @@ body#arquivo-404 section {
 
 body#arquivo-404 section img {
   width: 100%;
-  max-width: 276px;
+  max-width: 247px;
 }
 
 body#arquivo-404 section h3 {
   width: fit-content;  
   visibility: visible;
   height: auto;
-  font-size:x-large;
+  font-size: 1.2em;
   padding: 10px;
 }
 
 body#arquivo-404 section p {
  padding-bottom: 10px; 
+ font-size: 0.9em; 
 }
 
 body#arquivo-404 section a {
@@ -2458,7 +2459,6 @@ body#arquivo-404 section a {
   padding: 5px;
   margin: 0 5px;
   width: 100%;
-  max-width: 50vw;
   color: #1c75c0;
   text-decoration: none;
 }
