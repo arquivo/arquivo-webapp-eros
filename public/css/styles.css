@@ -215,6 +215,7 @@ section#technical-details ul li {
   text-align: left;
   line-height: 1.4em;
   font-size: 0.85em;
+  white-space: nowrap;
 }
 
 section#technical-details ul li:last-child {
@@ -1151,6 +1152,7 @@ td a.ui-state-default {
 
 .blocker {
   padding: 50px !important;
+  width: 100vw !important;
 }
 
 section.modal a.close-modal {
@@ -1572,14 +1574,6 @@ ul#date-container-end {
 .ui-widget.ui-widget-content {
   border:none !important;
   
-}
-
-.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled { 
-  display: none !important;
-}
-
-.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
-  display: none !important;
 }
 
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
@@ -2431,7 +2425,7 @@ body#arquivo-404 section {
  align-items: center;
  align-content: center;
  align-items: center;
- padding: 0;
+ padding: 0px 20px;
  text-align: center;
 }
 
@@ -2537,6 +2531,10 @@ body#arquivo-404 section a:hover {
   ##Screen = B/w 481px to 767px
 */
 @media (min-width: 481px) and (max-width: 767px) { 
+  header {
+    width: 100vw;
+  }
+  
   header button#nav-menu-button-left {
     display: none;
   }
@@ -2646,10 +2644,7 @@ nav#replay-left-nav {
  }
 }
 
-@media and (max-width: 767px) { 
-  nav#replay-left-nav {
-    display: none;
-  }
+
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
@@ -2660,6 +2655,13 @@ nav#replay-left-nav {
   header button#nav-menu-button-left {
     display: none;
   }
+  nav#replay-left-nav {
+    display: none;
+  }
+  body#landing-replay main.main-content {
+    width: 100%;
+    max-width: 100%;
+}
 
   header button#nav-menu-mobile-button-left {
     display: block;
@@ -2673,9 +2675,7 @@ nav#replay-left-nav {
     border: none;
   }
 
-  nav#replay-left-nav {
-    display: none;
-  }
+  
 
 body#pages-search-results button#nav-options-right-button,
 body#images-search-results button#nav-options-right-button,
@@ -2748,6 +2748,14 @@ section#home-content h4, section#body-content h4  {
   header button#nav-menu-button-left {
     display: none;
   }
+  nav#replay-left-nav {
+    display: none;
+  }
+  body#landing-replay main.main-content {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+}
 
   header button#nav-menu-mobile-button-left {
     display: block;
@@ -2818,9 +2826,6 @@ section#search-tools #submit-search {
 
 @media (min-width: 0px) and (max-width: 279px) {
   button#nav-options-right-button-mobile {
-    display: none;
-  }
-  nav#replay-left-nav {
     display: none;
   }
 }
