@@ -74,6 +74,7 @@ $(function () {
 
             $('#modal-datepicker-datepicker').datepicker({
                 ...$.datepicker.regional[ lang ],
+                monthNamesShort: $.datepicker.regional[ lang ].monthNames, //Display full month names
                 defaultDate: stringToDate($('#' + outInputId).val()), // Set the date to highlight on first opening if the field is blank.
                 inline: true,
                 altField: '#' + modalInputId,
