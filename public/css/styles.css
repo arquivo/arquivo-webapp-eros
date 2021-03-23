@@ -1270,7 +1270,7 @@ section.image-details-navigation button span  {
 }
 
 section.image-details-navigation h4, section.image-details-description h4 {
-visibility: collapse;
+visibility: hidden;
 height: 0;
 }
 
@@ -2645,6 +2645,12 @@ nav#replay-left-nav {
     margin: 20px 5%;
  }
 }
+
+@media and (max-width: 767px) { 
+  nav#replay-left-nav {
+    display: none;
+  }
+
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 480px
@@ -2667,6 +2673,9 @@ nav#replay-left-nav {
     border: none;
   }
 
+  nav#replay-left-nav {
+    display: none;
+  }
 
 body#pages-search-results button#nav-options-right-button,
 body#images-search-results button#nav-options-right-button,
@@ -2809,6 +2818,9 @@ section#search-tools #submit-search {
 
 @media (min-width: 0px) and (max-width: 279px) {
   button#nav-options-right-button-mobile {
+    display: none;
+  }
+  nav#replay-left-nav {
     display: none;
   }
 }
