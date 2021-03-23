@@ -1444,9 +1444,9 @@ input[type="text"]#modal-datepicker-input:focus {
   filter: invert(1);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
-  transition: 0.5s; 
-  
+  transition: 0.5s;   
 }
+
 #modal a.close-modal:hover {
   filter: invert(0);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
@@ -1456,7 +1456,11 @@ input[type="text"]#modal-datepicker-input:focus {
 }
 
 /* Remove close modal button on home page and on both images and pages landing pages */
-body#homepage #modal a.close-modal, body#landing-pages #modal a.close-modal, body#landing-images #modal a.close-modal {
+body#homepage #modal a.close-modal,
+body#landing-pages #modal a.close-modal,
+body#landing-images #modal a.close-modal,
+body#pages-advanced-search #modal a.close-modal,
+body#images-advanced-search #modal a.close-modal {
   display: none;
 }
 
