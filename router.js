@@ -71,6 +71,12 @@ module.exports = function (app) {
     });
     // ends show list
 
+    // starts 404 
+    app.get('/arquivo-404', function (req, res) {
+        res.render('pages/arquivo-404');
+    });
+    // ends 404t
+
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
         res.render('fragments/' + req.params.id, { layout: false });
