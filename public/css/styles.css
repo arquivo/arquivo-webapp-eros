@@ -1019,7 +1019,7 @@ section#search-tools-date-slider #date-container-start, section#search-tools-dat
 
 section#search-tools-date-slider #date-container-start, #date-container-start  {
   top: -6px;  
-  left: -1px;
+  left: -0.5px;
   cursor: pointer;
 }
 
