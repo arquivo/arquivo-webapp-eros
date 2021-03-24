@@ -119,3 +119,14 @@ function showList() {
  }
 }
 
+// removes shadow from search input: homepage, page and image pages
+function removeSearchBoxShadow() {
+  document.getElementById('submit-search-input').style.cssText = "-webkit-box-shadow: 0px 0px 0px 0px rgba(255 255 0 / 0%);box-shadow: 0px 0px 0px 0px rgba(255 255 0 / 0%);" 
+}
+
+// shows shadow from search input: homepage, page and image pages
+function showsSearchBoxShadow() {
+  document.getElementById('submit-search-input').style.cssText = "-webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);" 
+}
+
+
