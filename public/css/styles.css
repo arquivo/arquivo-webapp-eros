@@ -1611,11 +1611,11 @@ body#list-results #modal a.close-modal {
 }
 
 #ap-button-cancel {
-  margin-left: -2px;
+  margin-left: -6px;
 }
 
 #ap-button-set {
-  margin-right: -2px;
+  margin-right: -9px;
 }
 
 .ap-theme-ios.ap-layout-popup .ap-cont, .ap-theme-ios.ap-layout-popover .ap-cont {
