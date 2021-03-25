@@ -1318,7 +1318,7 @@ body#landing-replay section#technical-details {
 
 section.modal h3 {
   visibility: collapse;
-  height: 0;
+  height:  0;
 }
 
 section.modal img {
