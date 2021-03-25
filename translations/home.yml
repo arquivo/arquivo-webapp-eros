@@ -1,0 +1,47 @@
+search-tools:
+  search-hint:
+    pt: 'Palavras ou URL'
+    en: 'Words or URL'
+  search:
+    pt: 'Pesquisar'
+    en: 'Search'
+  pages:
+    pt: 'Páginas'
+    en: 'Pages'
+  images: 
+    pt: 'Imagens'
+    en: 'Images'
+  advanced-search:
+    pt: 'Pesquisa avançada'
+    en: 'Advanced search'
+
+arquivo-pt-award:
+  header:
+    pt: 'Prémio Arquivo.pt 2021'
+    en: 'Arquivo.pt Award 2021'
+
+what-is-arquivo-pt:
+  header:
+    pt: 'O que é o Arquivo.pt?'
+    en: 'What is Arquivo.pt?'
+  video-url:
+    pt: 'https://www.youtube.com/embed/2HEudlXPV4o?controls=0'
+    en: 'https://www.youtube.com/embed/dqG0VILi3gs?controls=0'
+
+testimonials:
+  header:
+    pt: 'Testemunhos de utilizadores'
+    en: 'Users testimonials'
+  video-url:
+    pt: 'https://www.youtube.com/embed/noTK_wbeMC4?controls=0'
+    en: 'https://www.youtube.com/embed/_pNlBMGb5DQ?controls=0'
+
+example-preserved-pages:
+  header:
+    pt: 'Exemplos de páginas preservadas'
+    en: 'Examples of preserved pages'
+  
+themed-exhibitions:
+  header:
+    pt: 'Exposições temáticas'
+    en: 'Themed exhibitions'
