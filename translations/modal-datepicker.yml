@@ -1,4 +1,11 @@
 #Translations for modal-datepicker fragment
 header:
-  pt: 'A partir de:'
-  en: 'From:'
+  start:
+    pt: 'A partir de:'
+    en: 'From:'
+  end:
+    pt: 'Até:'
+    en: 'To:'
+datehint:
+  pt: 'dd/mm/aaaa'
+  en: 'dd/mm/yyyy'
