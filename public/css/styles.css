@@ -1597,7 +1597,7 @@ body#list-results #modal a.close-modal {
 }
 
 :lang(pt) #ap-button-set {
-    margin-right: -10px;
+    margin-right: -8px;
     text-align: center;
     font-size: 16px;
 }
