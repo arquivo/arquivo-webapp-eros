@@ -1583,7 +1583,7 @@ body#list-results #modal a.close-modal {
 /* Datepicker mobile */
 
 :lang(pt) #ap-button-cancel {  
-  margin-left: -8px;
+  margin-left: -14px;
     text-align: center;
     font-size: 16px;
 }
@@ -1597,7 +1597,7 @@ body#list-results #modal a.close-modal {
 }
 
 :lang(pt) #ap-button-set {
-    margin-right: -2px;
+    margin-right: -10px;
     text-align: center;
     font-size: 16px;
 }
@@ -1634,7 +1634,7 @@ body#list-results #modal a.close-modal {
 .ap-theme-ios .ap-header__title {
   color: #1886ff !important;
   font-size: 16px !important;
-  margin-left: -19px !important;
+  margin-left: -14px !important;
   text-align: center;
 }
 
