@@ -40,7 +40,7 @@
 
       <h4>Search input</h4>
       <span class="search-input-button">
-        <input id="submit-search-input" type="search" placeholder="<%= t('home.search-tools.search-hint') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()">
+        <input id="submit-search-input" type="search" placeholder="<%= t('home.search-tools.search-hint') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="q">
         <button id="submit-search" type="submit" aria-hidden="true" value="search mobile menu button"><%= t('home.search-tools.search') %></button>
         <button id="submit-search-mobile" type="submit" class="fas fa-search" aria-hidden="true" value="search mobile menu button"></button>
       </span>
