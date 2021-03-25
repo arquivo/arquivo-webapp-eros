@@ -5,7 +5,7 @@ header:
     en: 'From:'
   end:
     pt: 'Até:'
-    en: 'To:'
+    en: 'Until:'
 datehint:
   pt: 'dd/mm/aaaa'
   en: 'dd/mm/yyyy'
