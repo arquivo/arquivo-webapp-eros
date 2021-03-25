@@ -8,12 +8,9 @@
     <!-- starts document body content -->
     <body id="landing-images" class="landing-images-cl">
 
-        <!-- adds headers for search engines -->
-        <%- include("../templates/header/header-search-engine") -%>
-        <!-- ends headers for search engines -->
-        
-       <section id="wrap-all-content">            
-            <h3>All content</h3><h3>All content </h3>
+            <!-- adds headers for search engines -->
+            <%- include("../templates/header/header-search-engine") -%>
+            <!-- ends headers for search engines -->
        
             <!-- starts include header images -->
             <%- include("../templates/header/header-home",{searchType: 'images'}) -%>
@@ -21,18 +18,17 @@
 
             <!-- starts main container-->
             <main id="main-content">
+
                 <!-- starts include body images -->
                 <%- include("../templates/body/body-home") -%>
                     <!-- ends include body images -->
+
             </main>
             <!-- ends main container-->
 
             <!-- starts footer -->
             <%- include("../templates/footer") -%>
             <!-- ends footer -->
-        
-        </section>
-        <!-- ends wrap-all-content -->
 
     </body>
     <!-- ends document body content -->
