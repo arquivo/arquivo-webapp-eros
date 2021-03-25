@@ -1,0 +1,43 @@
+#translations for the left menu
+switch-language:
+  text:
+    pt: 'English'
+    en: 'Português'
+  url:
+    pt: '/?l=en'
+    en: '/?l=pt'
+copy-link:
+  text:
+    pt: 'Copiar link'
+    en: 'Copy link'
+pages:
+  text:
+    pt: 'Páginas'
+    en: 'Pages'
+  new-search:
+    text:
+      pt: 'Nova pesquisa'
+      en: 'New search'
+  advanced-search:
+    text:
+      pt: 'Pesquisa avançada'
+      en: 'Advanced'
+images:
+  text:
+    pt: 'Imagens'
+    en: 'Images'
+  new-search:
+    text:
+      pt: 'Nova pesquisa'
+      en: 'New search'
+  advanced-search:
+    text:
+      pt: 'Pesquisa avançada'
+      en: 'Advanced'
+about:
+  text:
+    pt: 'Sobre'
+    en: 'About'
+  url:
+    pt: 'https://sobre.arquivo.pt/pt/'
+    en: 'https://sobre.arquivo.pt/en/'
