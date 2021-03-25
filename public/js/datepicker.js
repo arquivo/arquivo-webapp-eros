@@ -45,6 +45,8 @@ $(function () {
             const modalInputId = 'modal-datepicker-input';
             const modalInput = $('#' + modalInputId);
 
+            $('#modal-datepicker-title').text(translations['modal-datepicker']['header'][type][lang]);
+
             const submitDate = function (newDate) {
                 updateDateSlider(newDate,type)
                 $('#modal-datepicker-datepicker').datepicker('setDate', newDate);

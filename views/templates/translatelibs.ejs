@@ -67,4 +67,9 @@
     });
     <% }}); %>
 	jQuery.datepicker.setDefaults(jQuery.datepicker.regional.pt);
+
+	//global translations
+	const translations = {
+		"modal-datepicker": <%- JSON.stringify(t('modal-datepicker')) %>,
+	};
 </script>
