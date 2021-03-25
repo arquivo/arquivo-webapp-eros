@@ -14,15 +14,15 @@ body {
 }
 
 /* All content wrapper*/
-div#wrap-all-content {
+#wrap-all-content {
   margin: 0 auto;
-    padding: 0;
-    max-width: 100%;
-    overflow-x: hidden;
-    overflow-y: hidden;
+  padding: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
-div#wrap-all-content h3 {
+#wrap-all-content h3 {
   visibility: collapse;
   height: 0;
 }
