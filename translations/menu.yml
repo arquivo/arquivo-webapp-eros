@@ -4,8 +4,8 @@ switch-language:
     pt: 'English'
     en: 'Português'
   url:
-    pt: '/?l=en'
-    en: '/?l=pt'
+    pt: '?l=en'
+    en: '?l=pt'
 copy-link:
   text:
     pt: 'Copiar link'
