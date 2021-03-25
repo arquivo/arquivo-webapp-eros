@@ -1,3 +1,5 @@
+const searchPages = require('./search-pages.js');
+
 module.exports = function (app) {
     // Homepage 
     app.get('/', function (req, res) {
@@ -7,8 +9,7 @@ module.exports = function (app) {
 
     // Pages search results
     app.get('/pages-search-results', function (req, res) {
-
-        res.render('pages/pages-search-results');
+        searchPages(req,res);
     });
 
     // Images search results

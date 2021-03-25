@@ -1,3 +1,5 @@
+<% if (typeof query == 'undefined') { query = ''} %>
+
 <!-- starts pages search results: create a fetch loop here -->
 <section id="not-found-container" class="not-found-container-cl">
     <h3>Not found suggestions container</h3>    
@@ -5,7 +7,7 @@
     <!-- starts not-found-message --> 
     <section id="not-found-message">
      <h4>Not found suggestions message</h4> 
-     <p id="no-results-were-found" >&rarr; No results were found for the query: <span class="bold-text">non-existent term(s) here.</span></span></p>
+     <p id="no-results-were-found" >&rarr; No results were found for the query: <span class="bold-text"><%= query %></span></span></p>
      <ul><span class="bold-text">&rarr; We suggest that you:</span>
         <li class="fix-padding">Widen the time interval.</li>
         <li>Try more general words.</li>
