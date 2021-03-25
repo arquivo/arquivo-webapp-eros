@@ -9,52 +9,52 @@
   <!-- starts Sobre, Notícias, Colabore and Ajuda -->  
   <section id="useful-links">
     <!-- About -->
-    <h4>About</h4>
+    <h4><%= t('footer.about.header') %></h4>
     <ul>      
-      <li><a href="https://sobre.arquivo.pt/en/help/what-is-arquivo-pt/">What is Arquivo.pt?</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/publications/">Publications</a></li>
-      <li><a href="https://arquivo.pt/examples/">Examples of preserved pages</a></li>
-      <li><a href="https://arquivo.pt/press">Press</a></li>
-      <li><a href=" https://github.com/arquivo/pwa-technologies/wiki">Open-source and API</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/about/terms-and-conditions/">Terms and Conditions</a></li>
+      <li><a href="<%= t('footer.about.what-is.url') %>"><%= t('footer.about.what-is.text') %></a></li>
+      <li><a href="<%= t('footer.about.publications.url') %>"><%= t('footer.about.publications.text') %></a></li>
+      <li><a href="<%= t('footer.about.examples.url') %>"><%= t('footer.about.examples.text') %></a></li>
+      <li><a href="<%= t('footer.about.press.url') %>"><%= t('footer.about.press.text') %></a></li>
+      <li><a href="<%= t('footer.about.source.url') %>"><%= t('footer.about.source.text') %></a></li>
+      <li><a href="<%= t('footer.about.terms.url') %>"><%= t('footer.about.terms.text') %></a></li>
     </ul>    
   </section>
   <section id="news">
   <!-- News -->
-  <h4>News</h4>
+  <h4><%= t('footer.news.header') %></h4>
     <ul>      
-      <li><a href="https://groups.google.com/forum/#!forum/arquivopt-international/join">Subscribe mailing list</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/news/">Latest news</a></li>
-      <li><a href="https://twitter.com/pt_webarchive">Twitter</a></li>
-      <li><a href="https://www.facebook.com/PortugueseWebArchive/">Facebook</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/rss/">Subscribe RSS</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/publications/videos/">Videos</a></li>
+      <li><a href="<%= t('footer.news.mailing-list.url') %>"><%= t('footer.news.mailing-list.text') %></a></li>
+      <li><a href="<%= t('footer.news.latest.url') %>"><%= t('footer.news.latest.text') %></a></li>
+      <li><a href="<%= t('footer.news.twitter.url') %>"><%= t('footer.news.twitter.text') %></a></li>
+      <li><a href="<%= t('footer.news.facebook.url') %>"><%= t('footer.news.facebook.text') %></a></li>
+      <li><a href="<%= t('footer.news.rss.url') %>"><%= t('footer.news.rss.text') %></a></li>
+      <li><a href="<%= t('footer.news.videos.url') %>"><%= t('footer.news.videos.text') %></a></li>
     </ul> 
     </section>
     <section id="collaborations">
     <!-- Collaborations -->
-    <h4>Collaborations</h4>
+    <h4><%= t('footer.collaborate.header') %></h4>
     <ul>     
-      <li><a href="https://arquivo.pt/awards">Arquivo.pt Awards</a></li> 
-      <li><a href="https://arquivo.pt/suggest">Suggest a site</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/about/press/dissemination-materials/">Dissemination materials</a></li>
-      <li><a href="https://arquivo.pt/recommendations">Publish preservable sites</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/">Supply historical web content</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/collaborate/rd/">Research & development</a></li>
+      <li><a href="<%= t('footer.collaborate.awards.url') %>"><%= t('footer.collaborate.awards.text') %></a></li> 
+      <li><a href="<%= t('footer.collaborate.suggest.url') %>"><%= t('footer.collaborate.suggest.text') %></a></li>
+      <li><a href="<%= t('footer.collaborate.dissemination.url') %>"><%= t('footer.collaborate.dissemination.text') %></a></li>
+      <li><a href="<%= t('footer.collaborate.publish.url') %>"><%= t('footer.collaborate.publish.text') %></a></li>
+      <li><a href="<%= t('footer.collaborate.supply.url') %>"><%= t('footer.collaborate.supply.text') %></a></li>
+      <li><a href="<%= t('footer.collaborate.rnd.url') %>"><%= t('footer.collaborate.rnd.text') %></a></li>
     </ul>
     </section>
     <section id="help">
     <!-- Collaborations -->
     <!-- Help -->
-    <h4>Help</h4>
+    <h4><%= t('footer.help.header') %></h4>
     <ul>
-      <li><a href="https://sobre.arquivo.pt/en/help/search/">Search</a></li>
-      <li><a href="http://sobre.arquivo.pt/pt/ajuda/pesquisa-avancada/">Advanced search</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/help/access-to-archived-contents/">Access</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/help/crawling-and-archiving-web-content/">Crawling and archiving</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/help/">Frequently asked questions</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/help/training-courses-by-arquivo-pt/">Training courses</a></li>
-      <li><a href="https://sobre.arquivo.pt/en/contact/">Contact</a></li>
+      <li><a href="<%= t('footer.help.search.url') %>"><%= t('footer.help.search.text') %></a></li>
+      <li><a href="<%= t('footer.help.advanced-search.url') %>"><%= t('footer.help.advanced-search.text') %></a></li>
+      <li><a href="<%= t('footer.help.access.url') %>"><%= t('footer.help.access.text') %></a></li>
+      <li><a href="<%= t('footer.help.crawling.url') %>"><%= t('footer.help.crawling.text') %></a></li>
+      <li><a href="<%= t('footer.help.faq.url') %>"><%= t('footer.help.faq.text') %></a></li>
+      <li><a href="<%= t('footer.help.courses.url') %>"><%= t('footer.help.courses.text') %></a></li>
+      <li><a href="<%= t('footer.help.contact.url') %>"><%= t('footer.help.contact.text') %></a></li>
     </ul>
     </section>      
 </section>
