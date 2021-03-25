@@ -8,12 +8,10 @@
         <!-- starts left calendar icon -->
         <ul id="date-container-start">
             <li class="search-calendar-year">
-                <input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input"
-                    name="from-year" value="1996" readonly>
+                <span type="text" id="start-year" class="calendar-year-input call-datepicker-start-year">1996</span>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
-                    readonly>
+                <span id="start-day-month" class="calendar-day-month-input">01 <%= t('common.shortMonths.01') %></span>
             </li>
         </ul>
         <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
@@ -28,12 +26,13 @@
         <% let currentDate = new Date() %>
         <ul id="date-container-end">
             <li class="search-calendar-year">
-                <input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input" name="to-year"
-                    value="<%= currentDate.getFullYear() %>" readonly>
+                <span type="text" id="end-year" class="calendar-year-input call-datepicker-start-year"><%= currentDate.getFullYear() %></span>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
-                    value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly>
+                <span id="end-day-month" class="calendar-day-month-input">
+                    <%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>
+                </span>
+
             </li>
             
         </ul>

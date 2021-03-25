@@ -35,8 +35,8 @@ $(function () {
         //Updates the dates and the slider
         const updateDateSlider = function(newDate,type){
             $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
-            $("#" + type + "-year").val(newDate.getFullYear());
-            $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
+            $("#" + type + "-year").text(newDate.getFullYear());
+            $("#" + type + "-day-month").text(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();
         }
         //Sets up the logic in the modal
@@ -125,8 +125,8 @@ $(function () {
 
             //Update datepickers visually as the user drags the slider
             slide: function (event, ui) {
-                $("#start-year").val(ui.values[0]);
-                $("#end-year").val(ui.values[1]);
+                $("#start-year").text(ui.values[0]);
+                $("#end-year").text(ui.values[1]);
             },
 
             //Update the datepickers after the user drops the slider
@@ -145,7 +145,7 @@ $(function () {
 
         //Create datepickers
         ['start', 'end'].forEach(type => {
-            $(".call-datepicker-" + type + "-year").click(function () {
+            $("#date-container-" + type).click(function () {
                 if (isMobile()){
                     const selectedDate = stringToDate($('#'+type+'-date').val());
                     $('#'+type+'-date').AnyPicker(
