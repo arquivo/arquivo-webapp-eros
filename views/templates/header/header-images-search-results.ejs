@@ -15,58 +15,19 @@
 <!-- starts image modal when user clicks to see both image and image details -->
 <section id="modal-window" class="modal">    
   <h3>Image details</h3> 
-  <button id="previous-image-button" class="image-navigation-button" onclick=""><span class="fas fa-chevron-left" aria-hidden="true"></span></button>
-  <button id="next-image-button" class="image-navigation-button" onclick=""><span class="fas fa-chevron-right" aria-hidden="true"></span></button>
+  <a href="javascript:void()" id="close-modal-tecnhical" onmousedown="closeImageDetailsModalWindow()" onmouseup="closeImageDetailsModalWindowButton()">Close</a>
+  <button id="previous-image-button" class="image-navigation-button"><span class="fas fa-chevron-left" aria-hidden="true"></span></button>
+  <button id="next-image-button" class="image-navigation-button"><span class="fas fa-chevron-right" aria-hidden="true"></span></button>
   <img src="img/lisboa-image-details-01.jpg" alt="Electrico de Lisboa">
   
-  <!-- starts Image technical details window -->
-  <section id="modal-window-image-technical-details">
-    <h3>Image technical details</h3> 
-    <h5 id="image-details-anchor">&rarr; Page details</h5> 
-    <h5 class="image-description-heading">URL:</h5> 
-    <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a class="image-details-padding-right" href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a></p>
-     
-    <h5 class="image-description-heading">Timestamp:</h5> 
-    <p class="image-description-date"><span class="far fa-clock" aria-hidden="true"></span> 4567989078994532</p>
-     
-    <h5 class="image-description-heading">Title:</h5>  
-    <p class="image-description-date"><span class="fas fa-file-signature" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
-
-    <!--starts Image details info *-->
-
-    <h5>&rarr; Image details</h5> 
-    <h5 class="image-description-heading">Source:</h5> 
-    <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a class="image-details-padding-right" href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a></p>
-        
-    <h5 class="image-description-heading">Timestamp:</h5> 
-    <p class="image-description-date"><span class="far fa-clock" aria-hidden="true"></span> 4567989078994532</p>
-        
-    <h5 class="image-description-heading">Alt:</h5>  
-    <p class="image-description-date"><span class="fas fa-file-signature" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
-   
-    <h5 class="image-description-heading">Resolution:</h5>  
-    <p class="image-description-date"><span class="fas fa-desktop"></span> 500 x 400 pixels </p>
-
-    <h5 class="image-description-heading">Mimetype:</h5>  
-    <p class="image-description-date"><span class="fas fa-camera"></span> jpg</p>
-
-    <h5 class="image-description-heading">Safe search classification:</h5>  
-    <p class="image-description-date"><span class="fas fa-search" aria-hidden="true"></span> 0.999</p>
-    <!-- ends Image details info -->
-
-    <!--starts Collection details info -->
-    <h5 id="image-details-anchor">&rarr; Collection</h5> 
-    <h5 class="image-description-heading">Name:</h5> 
-    <p class="image-description-date"><span class="fas fa-book-open" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
-  </section>
-  
+ 
   <section class="image-details-navigation">   
     <h4>Image details navigation</h4> 
     <form id="jump-to-image-details" action="https://hotel-mix.de/hotels/portugal/lisbon">
-      <button id="image-visit-url-button" class="button" value="visit page" onclick=""><span class="fas fa-eye" aria-hidden="true"></span>Visit</button> 
+      <button id="image-visit-url-button" class="button" value="visit page"><span class="fas fa-eye" aria-hidden="true"></span>Visit</button> 
     </form>
-    <form id="jump-to-image-details" action="#image-details-anchor">
-      <button id="image-details-button" class="button" value="details" onclick=""><span class="fas fa-info-circle" aria-hidden="true"></span>Details</button> 
+    <form id="jump-to-image-details" action="javascript:void()">
+      <button id="image-details-button" class="button" value="details" onclick="openImageDetailsModalWindow()"><span class="fas fa-info-circle" aria-hidden="true"></span>Details</button> 
     </form>  
   </section>
   <section class="image-details-description">  
@@ -85,12 +46,59 @@
     <p class="image-description-date"><span class="far fa-calendar" aria-hidden="true"></span> 12 March at 00:15 - 2021.</p>
     <!-- ends image page info-->    
 
-    <!--starts Collection details info -->
+    <!-- ends Collection details info -->
 
   </section>
+
+    <!-- starts Image technical details window -->
+
+    <section id="modal-window-image-technical-details">
+      <h3>Image technical details</h3> 
+      
+      <h5 id="image-details-anchor">&rarr; Page details</h5> 
+      <h5 class="image-description-heading">URL:</h5> 
+      <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a class="image-details-padding-right" href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a></p>
+       
+      <h5 class="image-description-heading">Timestamp:</h5> 
+      <p class="image-description-date"><span class="far fa-clock" aria-hidden="true"></span> 4567989078994532</p>
+       
+      <h5 class="image-description-heading">Title:</h5>  
+      <p class="image-description-date"><span class="fas fa-file-signature" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
+  
+      <!--starts Image details info -->
+  
+      <h5>&rarr; Image details</h5> 
+      <h5 class="image-description-heading">Source:</h5> 
+      <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a class="image-details-padding-right" href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a></p>
+          
+      <h5 class="image-description-heading">Timestamp:</h5> 
+      <p class="image-description-date"><span class="far fa-clock" aria-hidden="true"></span> 4567989078994532</p>
+          
+      <h5 class="image-description-heading">Alt:</h5>  
+      <p class="image-description-date"><span class="fas fa-file-signature" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
+     
+      <h5 class="image-description-heading">Resolution:</h5>  
+      <p class="image-description-date"><span class="fas fa-desktop"></span> 500 x 400 pixels </p>
+  
+      <h5 class="image-description-heading">Mimetype:</h5>  
+      <p class="image-description-date"><span class="fas fa-camera"></span> jpg</p>
+  
+      <h5 class="image-description-heading">Safe search classification:</h5>  
+      <p class="image-description-date"><span class="fas fa-search" aria-hidden="true"></span> 0.999</p>
+
+      <!-- ends Image details info -->
+  
+      <!--starts Collection details info -->
+
+      <h5 class="image-details-collection">&rarr; Collection</h5> 
+      <h5 class="image-description-heading">Name:</h5> 
+      <p class="image-description-date"><span class="fas fa-book-open" aria-hidden="true"></span> Lisboa: melhor época, hotéis, restaurantes, passeios e mais | Viagem e Turismo</p>
+    </section>
+
   <!-- ends image technical details window -->
 
 </section>
+
 <!-- ends image modal when user clicks to see both image and image details -->
 
 <!-- starts alerts -->
