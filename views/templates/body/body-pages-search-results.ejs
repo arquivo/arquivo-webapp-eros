@@ -1,53 +1,27 @@
 <!-- starts pages search results: create a fetch loop here -->
 <section id="pages-results" class="pages-results-cl">
-    <h3>Pages Search Results</h3>    
-    <p id="estimated-results" <span id="estimated-results-value">About 1.261.810.181</span> results from 1996 to 2021</p></li>
+    <% if (apiData.response_items.length == 0) { %>
+        <%- include("body-not-found", {query: apiData.request_parameters.q}) -%>
+    <% } else { %>
+        
+        <h3>Pages Search Results</h3>    
+        <p id="estimated-results"><span id="estimated-results-value">About <%= apiData.estimated_nr_results %></span> results from <%= apiData.request_parameters.from.slice(0,4) %> to <%= apiData.request_parameters.to.slice(0,4) %></p></li>
 
-    <!-- starts result #1 -->
-    <ul>
-        <li><a href="replay" class="results-url" title="hotel-mix.de/hotels/portugal/lisbon">&rarr; hotel-mix.de/hotels/portugal/lisbon</a></li>
-        <li><a href="replay" class="results-title">Hotels <em>Lisboa</em> – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de</a></li>
-        <li><p class="results-date">15 October, 2018</p></li>
-        <li><a href="replay" class="results-summary"><p>Hotels <em>Lisboa</em> – 4421 Hotels in <em>Lisboa</em>, Portugal – Spar- und Luxushotels - Hotel-mix.de Beliebte<span class="ellipsis"> ... </span> (530) Marken Keytel (37) VIP Hotels (10) SANA Hotels (7) Hoteis Heritage <em>Lisboa</em> (5) Continental<span class="ellipsis"> ... </span> Unternehmen Über Uns Allgemeine Geschäftsbedingungen Datenschutzerklärung Hotels in <em>Lisboa</em> Zimmer und<span class="ellipsis"> ... </span></p></a></li>
-    </ul>
-    <!-- ends result #1 -->
+        <% apiData.response_items.forEach((element,index) => { %>
+            <!-- starts result <%= (index+1) %> -->
+            <%- include("../fragments/page-result",{pageData: element, index:index, prevUrl: index==0? null : apiData.response_items[index-1].originalURL}) -%>
+            <!-- ends result <%= (index+1) %> -->
 
-    <!-- starts result #2 -->
-    <ul class="sub-results">
-        <li><a href="replay" class="results-url" title="hotel-mix.de/hotels/portugal/lisbon">&rarrhk; hotel-mix.de/hotels/portugal/lisbon</a></li>
-        <li><a href="replay" class="results-title">Hotels <em>Lisboa</em> – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de</a></li>
-        <li><p class="results-date">15 October, 2018</p></li>
-        <li><a href="replay" class="results-summary"><p>Hotels <em>Lisboa</em> – 4421 Hotels in <em>Lisboa</em>, Portugal – Spar- und Luxushotels - Hotel-mix.de Beliebte<span class="ellipsis"> ... </span> (530) Marken Keytel (37) VIP Hotels (10) SANA Hotels (7) Hoteis Heritage <em>Lisboa</em> (5) Continental<span class="ellipsis"> ... </span> Unternehmen Über Uns Allgemeine Geschäftsbedingungen Datenschutzerklärung Hotels in <em>Lisboa</em> Zimmer und<span class="ellipsis"> ... </span></p></a></li>
-    </ul>
-    <!-- ends result #2 -->
-
-    <!-- starts result #3 -->
-    <ul>
-        <li><a href="replay" class="results-url" title="hotel-mix.de/hotels/portugal/lisbon">&rarr; hotel-mix.de/hotels/portugal/lisbon</a></li>
-        <li><a href="replay" class="results-title">Hotels <em>Lisboa</em> – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de</a></li>
-        <li><p class="results-date">15 October, 2018</p></li>
-        <li><a href="replay" class="results-summary"><p>Hotels <em>Lisboa</em> – 4421 Hotels in <em>Lisboa</em>, Portugal – Spar- und Luxushotels - Hotel-mix.de Beliebte<span class="ellipsis"> ... </span> (530) Marken Keytel (37) VIP Hotels (10) SANA Hotels (7) Hoteis Heritage <em>Lisboa</em> (5) Continental<span class="ellipsis"> ... </span> Unternehmen Über Uns Allgemeine Geschäftsbedingungen Datenschutzerklärung Hotels in <em>Lisboa</em> Zimmer und<span class="ellipsis"> ... </span></p></a></li>
-    </ul>
-    <!-- ends result #3 -->
+        <% }); %>
+        <!-- starts navigation tools --> 
+        <section class="navigation-tools">
+            <h3>Images navigation</h3>
+            <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
+            <p>Page 1 of 100</p>
+            <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
+        </section>
+        <!-- ends navigation tools -->
     
-    <!-- starts result #4 -->
-    <ul>
-        <li><a href="replay" class="results-url" title="hotel-mix.de/hotels/portugal/lisbon">&rarr; hotel-mix.de/hotels/portugal/lisbon</a></li>
-        <li><a href="replay" class="results-title">Hotels <em>Lisboa</em> – 4421 Hotels in Lisboa, Portugal – Spar- und Luxushotels - Hotel-mix.de</a></li>
-        <li><p class="results-date">15 October, 2018</p></li>
-        <li><a href="replay" class="results-summary"><p>Hotels <em>Lisboa</em> – 4421 Hotels in <em>Lisboa</em>, Portugal – Spar- und Luxushotels - Hotel-mix.de Beliebte<span class="ellipsis"> ... </span> (530) Marken Keytel (37) VIP Hotels (10) SANA Hotels (7) Hoteis Heritage <em>Lisboa</em> (5) Continental<span class="ellipsis"> ... </span> Unternehmen Über Uns Allgemeine Geschäftsbedingungen Datenschutzerklärung Hotels in <em>Lisboa</em> Zimmer und<span class="ellipsis"> ... </span></p></a></li>
-    </ul>
-    <!-- ends result #4 -->
-    
-    
-
-     <!-- starts navigation tools --> 
-     <section class="navigation-tools">
-        <h3>Images navigation</h3>
-        <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
-        <p>Page 1 of 100</p>
-        <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
-    </section>
-    <!-- ends navigation tools -->
+    <% } %>
 </section>
 <!-- ends pages search results -->
