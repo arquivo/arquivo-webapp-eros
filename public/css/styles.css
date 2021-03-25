@@ -531,7 +531,7 @@ li.menu-pages-replay-date-hour a:hover {
 /* Date selected on the replay menu */
 li.date-selected a {
   background-color:#00324b;
-  /* To use in future versions color: #fbff85 /* white */
+  /* To use in future versions color: #fbff85 */
 }
 
 li.date-selected a::before {
