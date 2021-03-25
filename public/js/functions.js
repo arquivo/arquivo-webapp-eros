@@ -129,4 +129,20 @@ function showsSearchBoxShadow() {
   document.getElementById('submit-search-input').style.cssText = "-webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%);" 
 }
 
+// shows image technical details window that stays on top of modal image
+function openImageDetailsModalWindow() {
+  document.getElementById('modal-window-image-technical-details').style.cssText = "display: block;transition:0.5s";
+  document.getElementById('close-modal-tecnhical').style.cssText = "display:block; transition:0.5s"; 
+ 
+}
+
+// closes image technical details window that stays on top of modal image
+function closeImageDetailsModalWindow() {
+  document.getElementById('modal-window-image-technical-details').style.cssText = "display:none; transition:0.5s";   
+}
+
+// closes image technical details window that stays on top of modal image
+function closeImageDetailsModalWindowButton() {
+  document.getElementById('close-modal-tecnhical').style.cssText = "display:none; transition:0.5s";   
+}
 
