@@ -1,4 +1,4 @@
-const https = require('http');
+const https = require('https');
 const url = require('url');
 const now = new Date();
 
@@ -26,7 +26,7 @@ module.exports = function (req,res) {
         );
     }
     try {
-    const apiRequest = http.get('http://p85.arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
+    const apiRequest = https.get('https://arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
     (response) => {
         if (response.statusCode != 200) {
             console.log('Invalid status code <' + response.statusCode + '>');
