@@ -1,12 +1,6 @@
-<!-- starts h1 -->
-<h1>Arquivo.pt – search pages from the past!</h1>
-<!-- ends h1 -->
-
-<!-- starts h2 -->
-<h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files
-  archived from the web since 1996. Its main objective is the preservation of information published on the Web for
-  research purposes.</h2>
-<!-- ends h2 -->
+<% if (typeof searchType == 'undefined') { %>
+  <%  searchType = 'pages';  %>
+<% } %>
 
 <!-- starts alerts -->
 <%- include("../fragments/alert-container.ejs") -%>
@@ -26,49 +20,58 @@
   <!-- adds logo -->
   <%- include("logo") -%>
   <!-- ends logo -->
-<!-- Include left and right nav -->
-<%- include("../menu/left_nav_menu") -%>
-<%- include("../menu/options_right_nav_menu") -%>
-<!-- starts white background top corner rounded shape -->
-<div class="background-top-curve"></div>
-<!-- ends white background top corner rounded shape -->
-</header>
 
-<!-- starts search tools section -->
+  <!-- Include left and right nav -->
+  <%- include("../menu/left_nav_menu") -%>
+  <%- include("../menu/options_right_nav_menu") -%>
+  <!-- ends left and right nav -->
+
+  <!-- starts white background top corner rounded shape -->
+  <div class="background-top-curve"></div>
+  <!-- ends white background top corner rounded shape -->
+</header>
+<!-- ends header -->
 
 <!-- starts content container -->
 <section class="header-content-container">
-  <h3>Content container</h3>  
+  <h3>Content container</h3>
 
-<section id="search-tools">
-<h3>Search Tools</h3>
-<!-- starts search tools input -->
-<form id="search-form" action="pages-search-results" method="GET">
-  
-<!-- starts search tools input -->
-<%- include('../fragments/search-tools-search-bar') %>
-<!-- ends search tools input -->
-  
-<!-- starts range slider block --> 
-<%- include('../fragments/search-tools-date-slider') %>
-<!-- ends range slider block -->    
-</form>
+  <!-- starts search tools section -->
+  <section id="search-tools">
+    <h3>Search Tools</h3>
 
-<!-- starts search tools buttons -->
-<section id="search-tools-buttons">
-  <h4>Search Pages and Images Buttons</h4>
-  <form id="search-form-pages" class="buttons" action="pages" method="get">
-    <button type="submit" value="Pages">Pages</button>
-  </form>
-  <form id="search-form-images" class="buttons" action="images" method="get">
-    <button type="submit" value="Images">Images</button>
-  </form>
-  <form id="search-form-advanced" class="buttons" action="pages-advanced-search" method="get">
-    <button type="submit" value="Advanced Search">Advanced Search</button>
-  </form>
-</section>
-<!-- ends search tools buttons -->
-</section>
-<!-- ends search tools section -->
+    <!-- starts search tools input -->
+    <form id="search-form" action="<%= searchType %>-search-results" method="GET">
+
+      <!-- starts search bar -->
+      <%- include('../fragments/search-tools-search-bar') %>
+      <!-- ends search bar -->
+
+      <!-- starts range slider block -->
+      <%- include('../fragments/search-tools-date-slider') %>
+      <!-- ends range slider block -->
+
+    </form>
+    <!-- ends search tools input -->
+
+    <!-- starts search tools buttons -->
+    <section id="search-tools-buttons">
+      <h4>Search Pages and Images Buttons</h4>
+      <form id="search-form-pages" class="buttons" action="pages" method="get">
+        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
+      </form>
+      <form id="search-form-images" class="buttons" action="images" method="get">
+        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
+      </form>
+      <form id="search-form-advanced" class="buttons" action="<%= searchType %>-advanced-search" method="get">
+        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
+      </form>
+    </section>
+    <!-- ends search tools buttons -->
+  </section>
+  <!-- ends search tools section -->
 </section>
 <!-- ends content container -->
