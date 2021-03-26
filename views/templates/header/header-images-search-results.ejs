@@ -1,9 +1,3 @@
-<!-- starts h2 -->
-<h2>Arquivo.pt – the Portuguese web-archive is a research infrastructure that enables search and access to files
-  archived from the web since 1996. Its main objective is the preservation of information published on the Web for
-  research purposes.</h2>
-<!-- ends h2 -->
-
 <!-- starts alerts -->
 <%- include("../fragments/alert-container.ejs") -%>
 <!-- ends alerts -->
@@ -23,11 +17,11 @@
  
   <section class="image-details-navigation">   
     <h4>Image details navigation</h4> 
-    <form id="jump-to-image-details" action="https://hotel-mix.de/hotels/portugal/lisbon">
-      <button id="image-visit-url-button" class="button" value="visit page"><span class="fas fa-eye" aria-hidden="true"></span>Visit</button> 
+    <form id="view-image-website" action="https://hotel-mix.de/hotels/portugal/lisbon">
+      <button id="image-website-url-button" class="button" value="visit image website"><span class="fas fa-eye" aria-hidden="true"></span>Visit</button> 
     </form>
     <form id="jump-to-image-details" action="javascript:void()">
-      <button id="image-details-button" class="button" value="details" onclick="openImageDetailsModalWindow()"><span class="fas fa-info-circle" aria-hidden="true"></span>Details</button> 
+      <button id="image-details-button" class="button" value="image technical details" onclick="openImageDetailsModalWindow()"><span class="fas fa-info-circle" aria-hidden="true"></span>Details</button> 
     </form>  
   </section>
   <section class="image-details-description">  
@@ -101,9 +95,6 @@
 
 <!-- ends image modal when user clicks to see both image and image details -->
 
-<!-- starts alerts -->
-<%- include("../fragments/alert-container") -%>
-<!-- ends alerts --> 
 <header>  
   <!-- Include menu button -->
   <%- include("../menu/menu-button") -%>
