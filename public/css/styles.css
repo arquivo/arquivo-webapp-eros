@@ -68,7 +68,7 @@ body#pages-search-results a.results-title:visited {
 button {
   position: relative;
   z-index: 1;
-  padding: 5px 8.65px 7px 8.65px;
+  padding: 6px 8.65px 6px 8.65px;
   color: white;
   background-color: #1c75c0;
   border-radius: 4px;
@@ -1968,7 +1968,7 @@ form#search-form input#submit-search-input {
     display: flex;
     flex-direction: row;
     background: #ffffff url(../img/magnifier.svg) no-repeat 16px 15px;    
-    padding-top: 4px;
+    padding-top: 2px;
     padding-left: 42px;
     padding-right: 13px;    
     border: 1px solid #ccc;
@@ -2594,26 +2594,25 @@ footer section#institutional p {
 
 /*  Arquivo 404 */
 
-body#arquivo-404 section {
- text-align:center;  
- max-width:500px;
- height: 100vh;
- display: flex;
- flex-direction: column;
- justify-content: center;
- align-items: center;
- align-content: center;
- align-items: center;
- padding: 0px 20px;
- text-align: center;
+body#arquivo-404 main {
+  text-align: center;
+  max-width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;  
+  padding: 0px 0px;
+  margin-bottom: 0;  
 }
 
-body#arquivo-404 section img {
+body#arquivo-404 main img {
   width: 100%;
   max-width: 247px;
 }
 
-body#arquivo-404 section h3 {
+body#arquivo-404 main h3 {
   width: fit-content;  
   visibility: visible;
   height: auto;
@@ -2621,12 +2620,12 @@ body#arquivo-404 section h3 {
   padding: 10px;
 }
 
-body#arquivo-404 section p {
+body#arquivo-404 main p {
  padding-bottom: 10px; 
  font-size: 0.9em; 
 }
 
-body#arquivo-404 section a {
+body#arquivo-404 main a {
   display: inline;
   font-size: 0.9em;
   padding: 5px;
@@ -2636,7 +2635,7 @@ body#arquivo-404 section a {
   text-decoration: none;
 }
 
-body#arquivo-404 section a:hover {
+body#arquivo-404 main a:hover {
   text-decoration: underline;
 }
 
