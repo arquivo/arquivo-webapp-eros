@@ -2,6 +2,10 @@
 /* Start main CSS styles ---------------------------------------------*/
 
 /* BODY ****************************************************************** */
+html {
+  overflow-x: hidden;
+}
+
 body {  
   font-family: Helvetica, Arial, sans-serif;  
   -webkit-font-smoothing: subpixel-antialiased;
@@ -2081,6 +2085,16 @@ section#search-suggestion-container h3, section#search-suggestion-container h4 {
   height: 0;
 }
 
+section#not-found-message ul li.list-title {
+  padding-left: 0;
+  list-style-type: none;
+  font-weight: bold;
+}
+
+section#not-found-message ul li.list-title::before {
+ content: "";
+}
+
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
@@ -2128,10 +2142,6 @@ section#not-found-message > ul, section#search-suggestion-message > ul  {
 section#not-found-message > ul li.fix-padding, section#search-suggestion-message > ul li.fix-padding   {
   padding-top: 10px; 
 }
-
-section#not-found-container section#not-found-message ul li:first-child {
-  margin-top: 20px;
- }
 
 section#not-found-message span.bold-text, section#search-suggestion-message span.bold-text  {
   font-weight: bold;
