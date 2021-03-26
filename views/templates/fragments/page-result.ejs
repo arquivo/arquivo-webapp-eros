@@ -6,11 +6,12 @@
     <% const month = t('common.months.'+pageData.tstamp.slice(4,6)); %>
     <% const day = pageData.tstamp.slice(6,8); %>
     <% const subResult = pageData.originalURL == prevUrl; %>
-    <% console.log(prevUrl); %>
+    
     <ul class="blockUrl<%= subResult ? ' sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
         <li><a class="results-url" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
         <li><a class="results-title"><%= resultTitle %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
         <li><a href="replay" class="results-summary"><p><%- pageData.snippet %></p></a></li>
     </ul>
+    
 <% } %>

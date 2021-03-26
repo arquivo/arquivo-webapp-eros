@@ -18,21 +18,33 @@ module.exports = function (req,res) {
         maxItems: 10,
     });
     let apiReply = ''
-    https.get('https://arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
-        (response) => {
-            if (response.statusCode != 200) {
-                console.log('Invalid status code <' + response.statusCode + '>');
-            } else {
-                response.on('data', (d) => {apiReply = apiReply+d.toString()});
-                response.on('end', () => {
-                    const apiData = JSON.parse(apiReply);
-                    console.log('it worked! n: '+apiData.response_items.length);
-                    res.render('pages/pages-search-results',{
-                        requestData: requestData,
-                        apiData: apiData
-                    });
+    const handleError = function(e){
+        res.send(
+            '<pre>'+e.toString()+'</pre>'+
+            '<br>'+
+            '<pre>'+e.trace+'</pre>'
+        );
+    }
+    try {
+    const apiRequest = https.get('https://arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
+    (response) => {
+        if (response.statusCode != 200) {
+            console.log('Invalid status code <' + response.statusCode + '>');
+        } else {
+            response.on('data', (d) => {apiReply = apiReply+d.toString()});
+            response.on('end', () => {
+                const apiData = JSON.parse(apiReply);
+                res.render('pages/pages-search-results',{
+                    requestData: requestData,
+                    apiData: apiData
                 });
-            }
-            
-        });
+            });
+        }
+        
+    });
+    apiRequest.on('error',(e) => handleError(e));
+    } catch (error) {
+        handleError(e);
+    }
+    
 }
