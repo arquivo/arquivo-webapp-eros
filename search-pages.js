@@ -26,7 +26,7 @@ module.exports = function (req,res) {
         );
     }
     try {
-    const apiRequest = https.get('https://arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
+    const apiRequest = https.get('https://p85.arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
     (response) => {
         if (response.statusCode != 200) {
             console.log('Invalid status code <' + response.statusCode + '>');
