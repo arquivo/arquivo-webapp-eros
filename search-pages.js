@@ -44,7 +44,7 @@ module.exports = function (req,res) {
     });
     apiRequest.on('error',(e) => handleError(e));
     } catch (error) {
-        handleError(e);
+        handleError(error);
     }
     
 }
