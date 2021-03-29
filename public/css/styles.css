@@ -280,7 +280,7 @@ button#modal-datepicker-confirm-button {
   position: absolute;
   bottom: 22px;
   right: 23.5px;
-  padding: 7px 31px;
+  padding: 7px 30px;
   border-radius: 4px;
 }
 
@@ -413,7 +413,7 @@ nav#left-nav, nav#replay-left-nav {
 }
 
 nav#replay-right-nav  {
-  padding: 46.5px 0px 46.5px 0;  
+  padding: 53.5px 0px 46.5px 0; 
 }
 
 body#landing-replay main#main-content {
@@ -692,7 +692,11 @@ nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav s
   padding: 0 0 0 0;
   line-height: 2.6em;
   text-align: left;  
-  }
+}
+
+nav#left-nav section ul > li:first-child, nav#options-right-nav section ul > li:first-child, nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
+  border-top: none;    
+}
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
   border-top: 1px solid #e3e3e32e;  
@@ -1021,7 +1025,7 @@ section#search-tools-date-slider #date-container-start, section#search-tools-dat
   position: absolute;   
   margin: 0;
   width: 40px;
-  height: 38px;
+  height: 40px;
   padding: 3px 8px 20px 6.9px;
   display: flex;
   flex-direction: row;
@@ -1045,7 +1049,7 @@ section#search-tools-date-slider #date-container-start, #date-container-start  {
 
 section#search-tools-date-slider #date-container-end, #date-container-end   {
   top: 0px;  
-  right: -1px;
+  right: 0px;
   cursor: pointer;
 }
 
@@ -1184,6 +1188,14 @@ td a.ui-state-default {
   border-collapse: inherit !important;
   padding: 5px 0px 0 0px !important;
   margin: 0 !important;
+}
+
+/* Search tools button labes */
+
+label {
+  visibility: collapse;
+  height: 0; 
+  width: 0;
 }
 
 /* Modal: image description */
@@ -2067,6 +2079,8 @@ body#table-results p#estimated-results, body#list-results p#estimated-results   
   margin: 0 auto;
 }
 
+/* Not found and search suggestion page */
+
 section#not-found-container p#no-results-were-found {
     background-color: #fbf2f2;
     color: #d05289;
@@ -2085,16 +2099,11 @@ section#search-suggestion-container h3, section#search-suggestion-container h4 {
   height: 0;
 }
 
-section#not-found-message ul li.list-title {
+section#not-found-message ul li.list-title, section#search-suggestion-message ul li.list-title {
   padding-left: 0;
   list-style-type: none;
   font-weight: bold;
 }
-
-section#not-found-message ul li.list-title::before {
- content: "";
-}
-
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
@@ -2112,7 +2121,7 @@ section#not-found-container, section#search-suggestion-container   {
   padding: 0 10px; 
   font-size: 13px;
   color:#70757a;  
-  margin: 0 auto;
+  margin: 0 auto 100px auto;
   width: 100%;
 }
 
@@ -2464,7 +2473,7 @@ article img {
   width: 100%;
 }
 
-/* Youtube Player*/
+/* Youtube Player */
 article iframe {
   width: 100%;
   height:267px;
@@ -2473,6 +2482,11 @@ article iframe {
 
 .html5-video-player a {
   display: none !important;
+}
+
+.ytp-cued-thumbnail-overlay-image {
+  outline: 1px solid red !important;
+  background-size: auto !important;
 }
 
 figure {
@@ -2556,6 +2570,10 @@ footer section#important-info {
   max-width: 960px;
   margin: 0 auto; 
   padding: 0 10px; 
+}
+
+footer section#important-info a:hover {
+text-decoration: underline;
 }
 
 footer section section {
@@ -2649,7 +2667,6 @@ body#arquivo-404 main a:hover {
   text-decoration: underline;
 }
 
- 
 /*********************************/
 /********* MEDIA QUERIES *********/
 /*********************************/
