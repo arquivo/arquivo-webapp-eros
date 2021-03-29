@@ -1,3 +1,19 @@
+<% let startDate = new Date(1996,0,1) %>
+<% let endDate = new Date() %>
+
+<% //Get start & end dates from request parameters when available %>
+<% if(typeof requestData != 'undefined'){ %>
+    <% let year, month, day %>
+    <% if(requestData.has('dateStart')){ %>
+        <% [day,month,year] = requestData.get('dateStart').split('/'); %>
+        <% startDate = new Date(year,month-1,day); %>
+    <% } %>
+    <% if(requestData.has('dateEnd')){ %>
+        <% [day,month,year] = requestData.get('dateEnd').split('/'); %>
+        <% endDate = new Date(year,month-1,day); %>
+    <% } %>
+<% } %>
+
 <section id="search-tools-date-slider">
     <h4>Search Date Slider</h4>
 
@@ -9,14 +25,14 @@
         <ul id="date-container-start">
             <li class="search-calendar-year">
                 <input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input"
-                    value="1996" readonly>
+                    value="<%= startDate.getFullYear() %>" readonly>
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
+                <input type="text" id="start-day-month" class="calendar-day-month-input" value="<%= ('0'+startDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(startDate.getMonth()+1)).slice(-2)) %>"
                     readonly>
             </li>
         </ul>
-        <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
+        <input type="hidden" name="dateStart" id="start-date" value="<%= startDate.toLocaleDateString('pt-PT') %>">
         <!-- ends left calendar icon -->
 
         <!-- starts slider handles -->
@@ -25,19 +41,19 @@
 
         <!-- starts right calendar icon -->
 
-        <% let currentDate = new Date() %>
+        
         <ul id="date-container-end">
             <li class="search-calendar-year">
                 <input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input"
-                    value="<%= currentDate.getFullYear() %>" readonly>
+                    value="<%= endDate.getFullYear() %>" readonly>
             </li>
             <li class="search-calendar-day-month">
                 <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
-                    value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly>
+                    value="<%= ('0'+endDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(endDate.getMonth()+1)).slice(-2)) %>" readonly>
             </li>
             
         </ul>
-        <input type="hidden" name="dateEnd" id="end-date" value="<%= currentDate.toLocaleDateString('pt-PT') %>">
+        <input type="hidden" name="dateEnd" id="end-date" value="<%= endDate.toLocaleDateString('pt-PT') %>">
         <!-- ends right calendar icon -->
 
     </section>
