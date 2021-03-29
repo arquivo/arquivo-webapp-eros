@@ -53,15 +53,18 @@
     <section id="search-tools-buttons">
       <h4>Search Pages and Images Buttons</h4>
       <form id="search-form-pages" class="buttons" action="pages" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <label for="get-language-pages">Get language for pages</label>
+        <input id="get-language-pages" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
       </form>
       <form id="search-form-images" class="buttons" action="images" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <label for="">Get language for images</label>
+        <input id="get-language-images" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
       </form>
       <form id="search-form-advanced" class="buttons" action="<%= searchType %>-advanced-search" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
+        <label for="id="hidden-language">Get language for advanced search</label>
+        <input id="hidden-language" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
       </form>
     </section>
