@@ -195,6 +195,9 @@ $(function () {
             }
             return true;
         });
+
+        //Make sure slider is properly set
+        updateSlider();
     }
 });
 

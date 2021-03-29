@@ -9,13 +9,14 @@ const getApiData = function(apiRequestData){
 }
 
 module.exports = function (req,res) {
-
+    const itemsPerPage = 10;
     const requestData = new URL(req.url,req.protocol+'://'+req.headers.host).searchParams;
     const apiRequestData = new URLSearchParams({
         q: requestData.get('q') ?? '',
         from: requestData.has('dateStart') ? requestData.get('dateStart').split('/').reverse().join('')  : '19960101',
         to: (requestData.get('dateEnd') ?? now.toLocaleDateString('pt-PT')).split('/').reverse().join(''),
-        maxItems: 10,
+        offset: requestData.has('page') ? Math.max(itemsPerPage * (requestData.get('page')-1),0) : 0,
+        maxItems: itemsPerPage,
     });
     let apiReply = ''
     const handleError = function(e){
