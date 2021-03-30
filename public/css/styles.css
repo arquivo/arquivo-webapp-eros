@@ -1201,8 +1201,7 @@ label {
 /* Modal: image description */
 
 .blocker {
-  padding: 50px !important;
-  width: 100vw !important;
+  padding: 50px !important;  
 }
 
 section.modal a.close-modal {
