@@ -1,0 +1,25 @@
+<% let currentPage=1 %>
+<% let newRequestData = new URLSearchParams({}); %>
+<% if(typeof requestData != 'undefined'){ %>
+    <% for(let [name,value] of requestData.entries()) { %>
+        <% newRequestData.set(name,value); %>
+        <% if(name == 'page') {currentPage = parseInt(value);} %>
+    <% } %>
+<% } %>
+
+<section class="navigation-tools">
+    <h3>Images navigation</h3>
+    <% if (currentPage > 1) { %>
+    <form action="pages-search-results">
+        <% newRequestData.set('page',currentPage-1); %>
+        <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
+        <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
+    </form>
+    <% } %>
+    <p>Page <%= currentPage %></p>
+    <form action="pages-search-results">
+        <% newRequestData.set('page',currentPage+1); %>
+        <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
+        <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
+    </form>
+</section>

@@ -1,3 +1,19 @@
+<% let startDate = new Date(1996,0,1) %>
+<% let endDate = new Date() %>
+
+<% //Get start & end dates from request parameters when available %>
+<% if(typeof requestData != 'undefined'){ %>
+    <% let year, month, day %>
+    <% if(requestData.has('dateStart')){ %>
+        <% [day,month,year] = requestData.get('dateStart').split('/'); %>
+        <% startDate = new Date(year,month-1,day); %>
+    <% } %>
+    <% if(requestData.has('dateEnd')){ %>
+        <% [day,month,year] = requestData.get('dateEnd').split('/'); %>
+        <% endDate = new Date(year,month-1,day); %>
+    <% } %>
+<% } %>
+
 <section id="search-tools-date-slider">
     <h4>Search Date Slider</h4>
 
@@ -16,7 +32,7 @@
                     readonly aria-label="Choose your starting day and month">
             </li>
         </ul>
-        <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
+        <input type="hidden" name="dateStart" id="start-date" value="<%= startDate.toLocaleDateString('pt-PT') %>">
         <!-- ends left calendar icon -->
 
         <!-- starts slider handles -->
@@ -25,7 +41,7 @@
 
         <!-- starts right calendar icon -->
 
-        <% let currentDate = new Date() %>
+        
         <ul id="date-container-end">
             <li class="search-calendar-year">
                 <input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input"
@@ -37,7 +53,7 @@
             </li>
             
         </ul>
-        <input type="hidden" name="dateEnd" id="end-date" value="<%= currentDate.toLocaleDateString('pt-PT') %>">
+        <input type="hidden" name="dateEnd" id="end-date" value="<%= endDate.toLocaleDateString('pt-PT') %>">
         <!-- ends right calendar icon -->
 
     </section>
