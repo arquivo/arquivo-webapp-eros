@@ -9,11 +9,11 @@
         <ul id="date-container-start">
             <li class="search-calendar-year">
                 <input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input"
-                    value="1996" readonly>
+                    value="1996" readonly aria-label="Choose your starting year">
             </li>
             <li class="search-calendar-day-month">
                 <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
-                    readonly>
+                    readonly aria-label="Choose your starting day and month">
             </li>
         </ul>
         <input type="hidden" name="dateStart" id="start-date" value="01/01/1996">
@@ -29,11 +29,11 @@
         <ul id="date-container-end">
             <li class="search-calendar-year">
                 <input type="text" id="end-year" class="call-datepicker-end-year calendar-year-input"
-                    value="<%= currentDate.getFullYear() %>" readonly>
+                    value="<%= currentDate.getFullYear() %>" readonly aria-label="Choose your ending year">
             </li>
             <li class="search-calendar-day-month">
                 <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
-                    value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly>
+                    value="<%= ('0'+currentDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(currentDate.getMonth()+1)).slice(-2)) %>" readonly aria-label="Choose your ending day and month">
             </li>
             
         </ul>
