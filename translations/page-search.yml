@@ -1,0 +1,66 @@
+queryArgument:
+  en: 'Argument'
+  pt: 'Argumento'
+queryValue:
+  en: 'Value'
+  pt: 'Valor'
+query:
+  en: Query search
+  pt: Termos de pesquisa
+from:
+  en: 'From'
+  pt: 'De'
+to:
+  en: To
+  pt: Até
+offset:
+  en: offset
+  pt: Resultados a partir de
+maxItems:
+  en: Number of results
+  pt: Número de resultados
+siteSearch:
+  en: Website
+  pt: Sítio web
+type:
+  en: Format
+  pt: Formato
+collection:
+  en: collection
+  pt: Coleção
+results:
+  en: Results
+  pt: Resultados
+year:
+  en: Year
+  pt: Ano
+month:
+  en: Month
+  pt: Mês
+day:
+  en: Day
+  pt: Dia
+timestamp:
+  en: Timestamp
+  pt: Carimbo de tempo
+originalURL:
+  en: Original URL
+  pt: URL original
+linkToArchive:
+  en: Link to archive
+  pt: Link para a versão arquivada 
+linkToScreenshot:
+  en: Link to screenshot
+  pt: Link para captura de ecrã
+linkToExtractedText:
+  en: Link to extracted text
+  pt: Link para texto extraído
+mimeType:
+  en: MIME type
+  pt: Tipo de media
+title:
+  en: Title
+  pt: Título
+snippet: 
+  en: Snippet
+  pt: Resumo

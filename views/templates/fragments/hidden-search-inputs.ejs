@@ -1,0 +1,5 @@
+<% if(typeof requestData != 'undefined'){ %>
+    <% for(let [name,value] of requestData.entries()) { %>
+        <input type="hidden" name="<%= name %>" value="<%= value %>">
+    <% } %>
+<% } %>
