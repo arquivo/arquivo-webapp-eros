@@ -6,8 +6,6 @@
 <%- include("../fragments/alert-container.ejs") -%>
 <!-- ends alerts -->
 
-<!-- starts WCAG 2.1: G1: Add a link (the first link of the page) at the top of each page to directly access the main content area -->
-<a href="#main-content" id="skip-navigation-links" class="button" title="Skip navigation links and jump to the main content">Skip links</a>
 <header>
   <!-- Include menu button -->
   <%- include("../menu/menu-button") -%>
@@ -36,7 +34,7 @@
     <h3>Search Tools</h3>
 
     <!-- starts search tools input -->
-    <form id="search-form" action="<%= searchType %>-search-results" method="GET">
+    <form id="search-form" role="form" action="<%= searchType %>-search-results" method="GET">
 
       <!-- starts search bar -->
       <%- include('../fragments/search-tools-search-bar') %>
@@ -52,19 +50,19 @@
     <!-- starts search tools buttons -->
     <section id="search-tools-buttons">
       <h4>Search Pages and Images Buttons</h4>
-      <form id="search-form-pages" class="buttons" action="pages" method="get">
+      <form id="search-form-pages" role="search for pages" class="buttons" action="pages" method="get">
         <label for="get-language-pages">Get language for pages</label>
-        <input id="get-language-pages" type="hidden" name="l" value="<%= getLanguage() %>">
+        <input id="get-language-pages" role="show language for pages" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
       </form>
-      <form id="search-form-images" class="buttons" action="images" method="get">
-        <label for="">Get language for images</label>
-        <input id="get-language-images" type="hidden" name="l" value="<%= getLanguage() %>">
+      <form id="search-form-images" role="search for images" class="buttons" action="images" method="get">
+        <label for="get-language-images">Get language for images</label>
+        <input id="get-language-images" role="show language for images" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
       </form>
-      <form id="search-form-advanced" class="buttons" action="<%= searchType %>-advanced-search" method="get">
-        <label for="id="hidden-language">Get language for advanced search</label>
-        <input id="hidden-language" type="hidden" name="l" value="<%= getLanguage() %>">
+      <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="<%= searchType %>-advanced-search" method="get">
+        <label for="hidden-language">Get language for advanced search</label>
+        <input id="hidden-language" role="insert advanced search images" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
       </form>
     </section>

@@ -63,7 +63,7 @@ a:active {
 
 /* ANCHOR LINKS for search results page: visited ********************************************************** */
 
-body#pages-search-results a.results-title:visited {
+body#pages-search-results ul > li > a.results-title:visited {
   color:darkmagenta; 
 }
 
@@ -1858,7 +1858,7 @@ section#search-tools-buttons   {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 22px auto 25px auto;
+  margin: 23px auto 25px auto;
   padding: 0;
 }
 
