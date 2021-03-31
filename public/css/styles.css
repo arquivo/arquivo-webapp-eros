@@ -2728,7 +2728,8 @@ body#arquivo-404 main a:hover {
   outline: 1px solid #ccc;
   box-shadow: 0px 2px 22px 9px rgb(0 0 0 / 12%);
   border-radius: 5px;
-  border-radius: 5px;
+  outline: none;
+
 }
 
 #preloader-container #preloader-box p {
