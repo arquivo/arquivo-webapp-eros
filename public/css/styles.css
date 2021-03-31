@@ -2466,6 +2466,7 @@ height: 0;
 }
 
 /* article ************************************************************* */
+
 article {
   justify-content: space-between;
   margin: 10px 0px 0 0;
@@ -2688,6 +2689,129 @@ body#arquivo-404 main a {
 
 body#arquivo-404 main a:hover {
   text-decoration: underline;
+}
+
+/* PRELOADER  ******************************************************************************************/
+
+#preloader-container {   
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;   
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  background-color: #000000ad;   
+}
+
+#preloader-container #preloader-box {    
+  margin: 0;
+  padding: 0;
+  height: 26%;
+  width: 20%;
+  min-width: 260px;
+  min-height: 260px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  background-color: white;
+  outline: 1px solid #ccc;
+  box-shadow: 0px 2px 22px 9px rgb(0 0 0 / 12%);
+  border-radius: 5px;
+  border-radius: 5px;
+}
+
+#preloader-container #preloader-box p {
+  position: absolute;
+  margin-top: 65px;
+  font-family: inherit;
+  padding-top: 22px;
+  border-top: 1px solid #ccc;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: small;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;      
+}
+
+.preloader,
+.preloader:before,
+.preloader:after {
+  background: #1c75c0;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 0.5em;
+  height: 2em;
+  border-radius: 10px;
+}
+
+.preloader {
+  color: #1c75c0;
+  text-indent: -9999em;
+  margin: auto;
+  position: relative;
+  font-size: 7px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  border-radius: 10px;
+  max-width: 100%;
+  margin-top: 78px;
+}
+
+.preloader:before,
+.preloader:after {
+  position: absolute;
+  top: 0;
+  content: '';
+  border-radius: 10px;
+}
+
+.preloader:before {
+  left: -1.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.preloader:after {
+left: 1.5em;
+}
+
+@-webkit-keyframes load1 {
+0%,
+80%,
+100% {
+  box-shadow: 0 0;
+  height: 4em;
+}
+40% {
+  box-shadow: 0 -2em;
+  height: 5em;
+}
+}
+@keyframes load1 {
+0%,
+80%,
+100% {
+  box-shadow: 0 0;
+  height: 4em;
+}
+40% {
+  box-shadow: 0 -2em;
+  height: 5em;
+}
 }
 
 /*********************************/

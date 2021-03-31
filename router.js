@@ -76,10 +76,15 @@ module.exports = function (app) {
     app.get('/arquivo-404', function (req, res) {
         res.render('pages/arquivo-404');
     });
-    // ends 404t
+    // ends 404
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
         res.render('fragments/' + req.params.id, { layout: false });
+    });
+
+    // starts preloader
+    app.get('/fragments/preloader', function (req, res) {
+        res.render('fragments/preloader' + req.params.id, { layout: false });
     });
 }
