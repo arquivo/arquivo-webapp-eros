@@ -1,35 +1,10 @@
 <!-- starts pages search results: create a fetch loop here -->
 <section id="pages-results" class="pages-results-cl">
-    <% if (apiData.response_items.length == 0) { %>
-        <%- include("body-not-found", {query: apiData.request_parameters.q}) -%>
-    <% } else { %>
-        
-        <h3>Pages Search Results</h3>    
-        <p id="estimated-results"><span id="estimated-results-value">About <%= (''+apiData.estimated_nr_results).replace(/\B(?=(\d{3})+(?!\d))/g,".") %></span> results from <%= apiData.request_parameters.from.slice(0,4) %> to <%= apiData.request_parameters.to.slice(0,4) %></p></li>
-
-        <% apiData.response_items.forEach((element,index) => { %>
-            <!-- starts result <%= (index+1) %> -->
-            <%- include("../fragments/page-result",{pageData: element, index:index, prevUrl: index==0? null : apiData.response_items[index-1].originalURL}) -%>
-            <!-- ends result <%= (index+1) %> -->
-
-        <% }); %>
-
-        <% if (typeof exportObject != 'undefined'){ %>
-            <!-- starts the result hidden in json format  -->
-            <% let exportJson = JSON.stringify(exportObject)
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;"); %>
-            <div style="display:none" id="options-export-json"><%- exportJson %></div> 
-            <!-- ends the results in json format -->
-        <% } %>
-
-        <!-- starts navigation tools --> 
-        <%- include("../fragments/navigation-tools") -%>            
-        <!-- ends navigation tools -->
-    
-    <% } %>
+    <section id="loading-section">
+        <form id="loading-form" action="fragments/pages-search-results">
+            <%- include("../fragments/hidden-search-inputs") -%>
+        </form>
+        <%- include("../fragments/preloader") -%>
+    </section>
 </section>
 <!-- ends pages search results -->
