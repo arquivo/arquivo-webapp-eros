@@ -1,25 +1,23 @@
-<% let currentPage=1 %>
-<% let newRequestData = new URLSearchParams({}); %>
-<% if(typeof requestData != 'undefined'){ %>
-    <% for(let [name,value] of requestData.entries()) { %>
-        <% newRequestData.set(name,value); %>
-        <% if(name == 'page') {currentPage = parseInt(value);} %>
-    <% } %>
-<% } %>
+<% let newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); %>
+<% let currentOffset= parseInt(newRequestData.get('offset') ?? 0); %>
+<% let maxItems= parseInt(newRequestData.get('maxItems') ?? config.get('text.results.per.page')); %>
+<% let currentPage= Math.ceil(currentOffset/maxItems)+1; %>
 
 <section class="navigation-tools">
     <h3>Images navigation</h3>
-    <% if (currentPage > 1) { %>
+    <% if (currentOffset > 0) { %>
     <form action="pages-search-results">
-        <% newRequestData.set('page',currentPage-1); %>
+        <% newRequestData.set('offset', Math.max(currentOffset-maxItems,0) ); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
         <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
     </form>
     <% } %>
     <p>Page <%= currentPage %></p>
+    <% if (currentOffset + maxItems < apiData.estimated_nr_results ) { %>
     <form action="pages-search-results">
-        <% newRequestData.set('page',currentPage+1); %>
+        <% newRequestData.set('offset',currentOffset+maxItems); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
         <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
     </form>
+    <% } %>
 </section>

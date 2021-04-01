@@ -1,5 +1,6 @@
 const { resolveInclude } = require('ejs');
-const express = require('express')
+const express = require('express');
+const config = require('config');
 
 var path = require('path');
 
@@ -19,6 +20,7 @@ i18n.ready.catch(err => {
 });
 
 app.use(i18n.middleware);
+app.locals.config = config;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

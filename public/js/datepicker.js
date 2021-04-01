@@ -23,7 +23,7 @@ $(function () {
 
         //converts dd/mm/yyyy into Date object
         let stringToDate = function (dateString) {
-            return new Date(dateString.split('/').reverse().join('/'))
+            return new Date(dateString.slice(0,4)+'/'+dateString.slice(4,6)+'/'+dateString.slice(6,8));
         }
 
         //Updates the sliders' positions
@@ -34,7 +34,7 @@ $(function () {
 
         //Updates the dates and the slider
         const updateDateSlider = function(newDate,type){
-            $("#" + type + "-date").val(newDate.toLocaleDateString('pt-PT'));
+            $("#" + type + "-date").val(newDate.toLocaleDateString('en-CA').replaceAll('-',''));
             $("#" + type + "-year").val(newDate.getFullYear());
             $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();
@@ -131,14 +131,11 @@ $(function () {
 
             //Update the datepickers after the user drops the slider
             stop: function (event, ui) {
-                let startDate = $('#start-date').val().split('/');
-                let endDate = $('#end-date').val().split('/');
+                let startDate = $('#start-date').val();
+                let endDate = $('#end-date').val();
 
-                startDate[2] = ui.values[0];
-                endDate[2] = ui.values[1]
-
-                $('#start-date').val(startDate.join('/'));
-                $('#end-date').val(endDate.join('/'));
+                $('#start-date').val(ui.values[0]+startDate.slice(4));
+                $('#end-date').val(ui.values[1]+endDate.slice(4));
 
             }
         });

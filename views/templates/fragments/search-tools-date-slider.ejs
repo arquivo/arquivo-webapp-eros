@@ -1,17 +1,21 @@
 <% let startDate = new Date(1996,0,1) %>
 <% let endDate = new Date() %>
-
+<% let boundDates = function(min, date, max){
+    if(date < min) {return min;}
+    if(date > max) {return max;}
+    return date;
+} %>
 <% //Get start & end dates from request parameters when available %>
 <% if(typeof requestData != 'undefined'){ %>
-    <% let year, month, day %>
-    <% if(requestData.has('dateStart')){ %>
-        <% [day,month,year] = requestData.get('dateStart').split('/'); %>
-        <% startDate = new Date(year,month-1,day); %>
+    <% if(requestData.has('from')){ %>
+        <% let from = requestData.get('from') %>
+        <% startDate = boundDates(startDate,new Date(from.slice(0,4),from.slice(4,6)-1,from.slice(6,8)),endDate); %>
     <% } %>
-    <% if(requestData.has('dateEnd')){ %>
-        <% [day,month,year] = requestData.get('dateEnd').split('/'); %>
-        <% endDate = new Date(year,month-1,day); %>
+    <% if(requestData.has('to')){ %>
+        <% let to = requestData.get('to'); %>
+        <% endDate = boundDates(startDate,new Date(to.slice(0,4),to.slice(4,6)-1,to.slice(6,8)),endDate); %>
     <% } %>
+
 <% } %>
 
 <section id="search-tools-date-slider">
@@ -25,14 +29,14 @@
         <ul id="date-container-start">
             <li class="search-calendar-year">
                 <input type="text" id="start-year" class="call-datepicker-start-year calendar-year-input"
-                    value="1996" readonly aria-label="Choose your starting year">
+                    value="<%= startDate.getFullYear() %>" readonly aria-label="Choose your starting year">
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="start-day-month" class="calendar-day-month-input" value="01 <%= t('common.shortMonths.01') %>"
-                    readonly aria-label="Choose your starting day and month">
+                <input type="text" id="start-day-month" class="calendar-day-month-input" value="<%= ('0'+startDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(startDate.getMonth()+1)).slice(-2)) %>"
+                    readonly  aria-label="Choose your starting day and month">
             </li>
         </ul>
-        <input type="hidden" name="dateStart" id="start-date" value="<%= startDate.toLocaleDateString('pt-PT') %>">
+        <input type="hidden" name="from" id="start-date" value="<%= startDate.toLocaleDateString('en-CA').replaceAll('-','') %>">
         <!-- ends left calendar icon -->
 
         <!-- starts slider handles -->
@@ -53,7 +57,7 @@
             </li>
             
         </ul>
-        <input type="hidden" name="dateEnd" id="end-date" value="<%= endDate.toLocaleDateString('pt-PT') %>">
+        <input type="hidden" name="to" id="end-date" value="<%= endDate.toLocaleDateString('en-CA').replaceAll('-','') %>">
         <!-- ends right calendar icon -->
 
     </section>
