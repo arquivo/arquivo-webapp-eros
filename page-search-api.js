@@ -2,9 +2,7 @@
 const https = require('https');
 const config = require('config');
 
-module.exports = function (req, res, callback) {
-    
-    const apiRequestData = new URLSearchParams(req.query)
+module.exports = function (apiRequestData, callback) {
     let apiReply = '';
     let apiData = {};
     const apiRequest = https.get(config.get('text.search.api') + '?' + apiRequestData.toString(),

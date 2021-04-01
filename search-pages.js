@@ -106,14 +106,16 @@ module.exports = function (req, res) {
     const suggestionRequest = require('./suggestion-api')
     const apiRequest = require('./page-search-api')
 
-    suggestionRequest(req, res, (suggestion) => {
-        apiRequest(req,res,(apiData) => {
-            res.render('fragments/pages-search-results', {
-                requestData: requestData,
-                apiData: apiData,
-                suggestion: suggestion,
-                exportObject: makeExportObject(req, res, apiRequestData, apiData)
-            });
-        })
-    });
+    suggestionRequest(apiRequestData.get('q'), apiRequestData.get('l') ?? 'pt',
+        (suggestion) => {
+            apiRequest(apiRequestData,
+                (apiData) => {
+                    res.render('fragments/pages-search-results', {
+                        requestData: requestData,
+                        apiData: apiData,
+                        suggestion: suggestion,
+                        exportObject: makeExportObject(req, res, apiRequestData, apiData)
+                    });
+                })
+        });
 }
