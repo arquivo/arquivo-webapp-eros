@@ -975,6 +975,7 @@ section#search-tools form  #date-container-start:active input[type="text"], sect
 section#search-tools form input[type="text"] {
   border: 1px solid #ccc;
   border-right: none;
+  font-family: Helvetica, Arial, sans-serif;
 } 
 section#search-tools form input[type="text"].calendar-year-input, input[type="text"].calendar-year-input {
   position: relative;
@@ -1881,6 +1882,7 @@ section#search-tools-buttons form#search-form-advanced button  {
   height: auto;
   width: auto;
   display: block;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 section.form-container {
@@ -1999,6 +2001,11 @@ form#search-form input#submit-search-input {
     form#search-form input#submit-search-input:hover {
       -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
+    }
+
+    form#search-form input#submit-search-input:focus {
+      -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
+      box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;     
     }
 
      /* Advanced search form */
@@ -2229,12 +2236,13 @@ section#pages-results ul > li > a.results-url  {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: auto;  
+  width: auto; 
+  padding: 0 0 5px 0; 
 }
 
 section#pages-results ul > li > a.results-title  {
   display: block;
-  padding: 10px 0 0 0;
+  padding: 5px 0 0 0;
   font-size: 20px;
   color: #1a0dab;     
 }
