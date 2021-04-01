@@ -5,13 +5,33 @@
     <% const year = pageData.tstamp.slice(0,4); %>
     <% const month = t('common.months.'+pageData.tstamp.slice(4,6)); %>
     <% const day = pageData.tstamp.slice(6,8); %>
-    <% const subResult = pageData.originalURL == prevUrl; %>
+    <% const dedupField = requestData.get('dedupField') ?? 'site' %>
+    <% const subResult = dedupField == 'site' && pageData.originalURL == prevUrl; %>
+    <% const query = requestData.get('q'); %>
     
-    <ul class="blockUrl<%= subResult ? ' sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
-        <li><a class="results-url" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
-        <li><a class="results-title"><%= resultTitle %></a></li>
+    <% const siteRegEx = /(^|\s)site:/; %>
+    <% const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); %>
+
+    
+    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
+        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
+        <li><a class="results-title blockUrl"><%= resultTitle %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
-        <li><a href="replay" class="results-summary"><p><%- pageData.snippet %></p></a></li>
+        <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
+        <% if (subResult && !siteRegEx.test(query) ) { %> 
+        <li>
+            <form action="pages-search-results">
+                <% const site = filteredURL.split('/')[0] %>
+                <% newRequestData.set('q',query + ' site:'+site) %>
+                <% newRequestData.set('dedupField','url') %>
+                <% const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page') %>
+                <% newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )%>
+                <% newRequestData.set('offset', 0 )%>
+                <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
+                <input type="submit" value="View more results of <%= site %>">
+            </form>
+        </li>
+        <% } %>
     </ul>
     
 <% } %>
