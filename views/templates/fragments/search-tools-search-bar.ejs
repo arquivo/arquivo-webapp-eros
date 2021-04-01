@@ -8,4 +8,5 @@
     <input id="submit-search-input" type="search" placeholder="<%= t('home.search-tools.search-hint') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="q" aria-label="<%= t('home.search-tools.search-hint') %>" value="<%= searchInput %>">
     <button id="submit-search" type="submit" value="search mobile menu button"><%= t('home.search-tools.search') %></button>
     <button id="submit-search-mobile" type="submit" class="fas fa-search" value="search mobile menu button"></button>
+    <input type="hidden" name="l" value="<%= getLanguage() %>">
 </span>

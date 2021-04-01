@@ -74,11 +74,7 @@ module.exports = function (app) {
     });
     // ends show list
 
-    // starts 404 
-    app.use(function (req, res, next) {
-        res.status(404).render('pages/arquivo-404');
-    });
-    // ends 404
+    
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
@@ -88,4 +84,10 @@ module.exports = function (app) {
             res.render('fragments/' + req.params.id, { layout: false });
         }
     });
+
+    // starts 404 
+    app.use(function (req, res, next) {
+        res.status(404).render('pages/arquivo-404');
+    });
+    // ends 404
 }
