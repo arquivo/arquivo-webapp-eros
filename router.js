@@ -9,7 +9,9 @@ module.exports = function (app) {
 
     // Pages search results
     app.get('/pages-search-results', function (req, res) {
-        searchPages(req,res);
+        res.render('pages/pages-search-results',{
+            requestData: new URLSearchParams(req.query),
+        });
     });
 
     // Images search results
@@ -80,11 +82,10 @@ module.exports = function (app) {
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
-        res.render('fragments/' + req.params.id, { layout: false });
-    });
-
-    // starts preloader
-    app.get('/fragments/preloader', function (req, res) {
-        res.render('fragments/preloader' + req.params.id, { layout: false });
+        if(req.params.id == 'pages-search-results'){
+            searchPages(req,res);
+        }  else {
+            res.render('fragments/' + req.params.id, { layout: false });
+        }
     });
 }

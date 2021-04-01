@@ -70,9 +70,8 @@ const makeExportObject = function(req,res,apiRequestData,apiReplyData){
 
     return exportObject;
 }
-
 module.exports = function (req,res) {
-    const requestData = new URL(req.url,req.protocol+'://'+req.headers.host).searchParams;
+    const requestData = new URLSearchParams(req.query);
     const defaultApiParams = {
         q: '',
         from: requestData.has('dateStart') ? requestData.get('dateStart').split('/').reverse().join('')  : '19960101',
@@ -113,6 +112,7 @@ module.exports = function (req,res) {
             '<pre>'+e.trace+'</pre>'
         );
     }
+
     try {
         
     const apiRequest = https.get(config.get('text.search.api')+'?'+apiRequestData.toString(),
@@ -123,7 +123,7 @@ module.exports = function (req,res) {
             response.on('data', (d) => {apiReply = apiReply+d.toString()});
             response.on('end', () => {
                 const apiData = JSON.parse(apiReply);
-                res.render('pages/pages-search-results',{
+                res.render('fragments/pages-search-results',{
                     requestData: requestData,
                     apiData: apiData,
                     exportObject: makeExportObject(req,res,apiRequestData,apiData)

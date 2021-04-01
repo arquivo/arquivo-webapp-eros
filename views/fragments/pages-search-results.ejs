@@ -1,0 +1,31 @@
+<% if (apiData.estimated_nr_results == 0) { %>
+    <%- include("../templates/body/body-not-found", {query: apiData.request_parameters.q}) -%>
+<% } else { %>
+    
+    <h3>Pages Search Results</h3>    
+    <p id="estimated-results"><span id="estimated-results-value">About <%= (''+apiData.estimated_nr_results).replace(/\B(?=(\d{3})+(?!\d))/g,".") %></span> results from <%= apiData.request_parameters.from.slice(0,4) %> to <%= apiData.request_parameters.to.slice(0,4) %></p></li>
+
+    <% apiData.response_items.forEach((element,index) => { %>
+        <!-- starts result <%= (index+1) %> -->
+        <%- include("../templates/fragments/page-result",{pageData: element, index:index, prevUrl: index==0? null : apiData.response_items[index-1].originalURL}) -%>
+        <!-- ends result <%= (index+1) %> -->
+
+    <% }); %>
+
+    <% if (typeof exportObject != 'undefined'){ %>
+        <!-- starts the result hidden in json format  -->
+        <% let exportJson = JSON.stringify(exportObject)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;"); %>
+        <div style="display:none" id="options-export-json"><%- exportJson %></div> 
+        <!-- ends the results in json format -->
+    <% } %>
+
+    <!-- starts navigation tools --> 
+    <%- include("../templates/fragments/navigation-tools") -%>            
+    <!-- ends navigation tools -->
+
+<% } %>
