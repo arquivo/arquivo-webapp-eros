@@ -950,7 +950,7 @@ section#search-tools #submit-search-mobile {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   width: 100%;
-  max-width: 52.8px;
+  max-width: 53.8px;
   height: 45px;
   position: absolute;
   right: 0;
@@ -1783,11 +1783,11 @@ ul#date-container-end {
 
 
 #slider-range-container {
-position: relative;
-margin: 0 auto;
-padding: 36px 0 26px 0;
-border: none;
-width: 100%;
+  position: relative;
+  margin: 0 auto;
+  padding: 38px 0 28px 0;
+  border: none;
+  width: 100%;
 }
 
   #slider-range-container span.search-calendar-day-month {
@@ -2047,6 +2047,7 @@ section#pages-results, section#images-results {
   z-index: 0;
   height: 100%;
   padding: 20px 10px;
+  width: 100%;
 }
 
 section#pages-results h3, section#images-results h3  {
@@ -2088,10 +2089,14 @@ section#not-found-container p#no-results-were-found {
     width: auto;
     max-width: 955px;
     font-size: 13px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
     padding: 15px;
     border-radius: 3px;
+}
+
+section#not-found-container ul:hover {
+ box-shadow: none ;
 }
 
 section#search-suggestion-container h3, section#search-suggestion-container h4 {
@@ -2136,7 +2141,7 @@ section#not-found-container ul li, section#search-suggestion-message ul li   {
   padding-left: 20px;
 }
 
-section#not-found-message > ul, section#search-suggestion-message > ul  {
+section#pages-results section#not-found-message > ul, section#search-suggestion-message > ul  {
   background-color: #f6f6f6;
   color: #000000;
   margin: auto;
@@ -2172,7 +2177,7 @@ section#pages-results ul {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 10px;
-  padding: 20px;
+  padding: 15px 20px 20px 20px;
   border: 1px solid #e7e7e7;
   border-radius: 3px;
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
@@ -2695,7 +2700,7 @@ body#arquivo-404 main a:hover {
 /* PRELOADER  ******************************************************************************************/
 
 #preloader-container {   
-  position: absolute;
+  position: relative;
   z-index: 2;
   margin: 0;
   padding: 0;
@@ -2708,7 +2713,7 @@ body#arquivo-404 main a:hover {
   align-items: center;
   justify-content: center;
   justify-items: center;
-  background-color: #000000ad;   
+  background-color: transparent;   
 }
 
 #preloader-container #preloader-box {    
@@ -2725,9 +2730,7 @@ body#arquivo-404 main a:hover {
   align-items: center;
   justify-content: center;
   justify-items: center;
-  background-color: white;
-  outline: 1px solid #ccc;
-  box-shadow: 0px 2px 22px 9px rgb(0 0 0 / 12%);
+  background-color: transparent;  
   border-radius: 5px;
   outline: none;
 
@@ -2737,7 +2740,7 @@ body#arquivo-404 main a:hover {
   position: absolute;
   margin-top: 65px;
   font-family: inherit;
-  padding-top: 22px;
+  padding: 20px 0;
   border-top: 1px solid #ccc;
   font-family: Arial, Helvetica, sans-serif;
   font-size: small;
