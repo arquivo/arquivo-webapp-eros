@@ -72,7 +72,7 @@ body#pages-search-results ul > li > a.results-title:visited {
 button {
   position: relative;
   z-index: 1;
-  padding: 6px 8.65px 6px 8.65px;
+  padding: 6px 8.65px 8.4px 8.65px;
   color: white;
   background-color: #1c75c0;
   border-radius: 4px;
@@ -96,11 +96,10 @@ button:active {
   cursor: pointer;
 }
 
-/* Serach button */
+/* Search button */
 button#submit-search {
   font-size: initial;
 }
-
 
 /* HEADINGS  ************************************************************* */
 
@@ -2042,6 +2041,11 @@ body#pages-search-results button#nav-options-right-button {
   display: block;
 }
 
+body#pages-search-results form#pages-search-results-list {
+  margin-top: 15px;
+  margin-bottom: 2px;
+}
+
 section#pages-results, section#images-results {
   position: relative;
   z-index: 0;
@@ -2052,8 +2056,7 @@ section#pages-results, section#images-results {
 
 section#pages-results h3, section#images-results h3  {
   visibility: hidden;
-  height: 0;
-  
+  height: 0;  
 }
 
 section#pages-results > p, section#images-results > p, section#not-found-container > p {
@@ -2081,6 +2084,12 @@ body#table-results p#estimated-results, body#list-results p#estimated-results   
 }
 
 /* Not found and search suggestion page */
+
+body#pages-search-results section#pages-results, 
+body#images-search-results section#images-results {
+  padding: 0px 10px 20px 10px; 
+}
+
 
 section#not-found-container p#no-results-were-found {
     background-color: #fbf2f2;
@@ -2112,12 +2121,10 @@ section#not-found-message ul li.list-title, section#search-suggestion-message ul
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
-  margin: auto;
+  margin: 0 auto 10px auto;
   width: auto;
   max-width: 955px;
-  font-size: 13px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  font-size: 13px;  
   padding: 15px;
   border-radius: 3px;
 }
@@ -2177,9 +2184,9 @@ section#pages-results ul {
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 10px;
-  padding: 15px 20px 20px 20px;
+  padding: 23px 20px 20px 20px;
   border: 1px solid #e7e7e7;
-  border-radius: 3px;
+  border-radius: 5px;
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;

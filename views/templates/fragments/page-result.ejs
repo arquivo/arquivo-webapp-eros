@@ -20,7 +20,7 @@
         <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
         <li>
-            <form action="pages-search-results">
+            <form id="pages-search-results-list" action="pages-search-results">
                 <% const site = filteredURL.split('/')[0] %>
                 <% newRequestData.set('q',query + ' site:'+site) %>
                 <% newRequestData.set('dedupField','url') %>
@@ -28,7 +28,7 @@
                 <% newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )%>
                 <% newRequestData.set('offset', 0 )%>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <input type="submit" value="View more results of <%= site %>">
+                <button type="submit" value="View more results of <%= site %>"> &rarr; View more results of <%= site %></button>
             </form>
         </li>
         <% } %>
