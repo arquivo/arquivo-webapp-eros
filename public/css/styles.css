@@ -2118,11 +2118,11 @@ section#search-suggestion-message p {
 }
 
 section#not-found-container, section#search-suggestion-container   {  
-  padding: 0 10px; 
+  padding: 0 0px;
   font-size: 13px;
-  color:#70757a;  
-  margin: 0 auto 100px auto;
-  width: 100%;
+  color: #70757a;
+  margin: 0 auto 50px auto;
+  max-width: 100%;
 }
 
 section#not-found-container ul li, section#search-suggestion-message ul li   {
