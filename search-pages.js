@@ -75,7 +75,7 @@ module.exports = function (req, res) {
     const defaultApiParams = {
         q: '',
         from: requestData.has('dateStart') ? requestData.get('dateStart').split('/').reverse().join('') : '19960101',
-        to: (requestData.get('dateEnd') ?? now.toLocaleDateString('en-CA')).replaceAll('-', ''),
+        to: (requestData.get('dateEnd') ?? now.toLocaleDateString('en-CA')).split('-').join(''),
         type: null,
         offset: 0,
         siteSearch: null,

@@ -21,9 +21,9 @@ $(function () {
             }
         });
 
-        //converts dd/mm/yyyy into Date object
+        //converts yyyymmdd into Date object
         let stringToDate = function (dateString) {
-            return new Date(dateString.slice(0,4)+'/'+dateString.slice(4,6)+'/'+dateString.slice(6,8));
+            return new Date(dateString.slice(0,4),dateString.slice(4,6)-1,dateString.slice(6,8));
         }
 
         //Updates the sliders' positions
@@ -34,7 +34,7 @@ $(function () {
 
         //Updates the dates and the slider
         const updateDateSlider = function(newDate,type){
-            $("#" + type + "-date").val(newDate.toLocaleDateString('en-CA').replaceAll('-',''));
+            $("#" + type + "-date").val(newDate.toLocaleDateString('en-CA').split('-').join(''));
             $("#" + type + "-year").val(newDate.getFullYear());
             $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();
@@ -62,7 +62,10 @@ $(function () {
             //Mask input
             modalInput.inputmask(inputMask);
             // default input value
-            modalInput.val($('#' + outInputId).val());
+            modalInput.val((() => {
+                const outDateString = $('#' + outInputId).val()
+                return (outDateString.slice(6,8)+'/'+outDateString.slice(4,6)+'/'+outDateString.slice(0,4))
+            })());
             // on change input
             modalInput.change(function () {
                 const dateInputValue = $(this).val();
@@ -96,11 +99,13 @@ $(function () {
                         return m === 2 ? y & 3 || !(y % 25) && y & 15 ? 28 : 29 : 30 + (m + (m >> 3) & 1);
                     }
                     const minDay = Math.min(getDaysInMonth(m, y), d);
-
+                    console.log(new Date(y, m - 1, minDay));
                     submitDate(new Date(y, m - 1, minDay));
                 },
                 onSelect: function (dateText, inst) {
-                    submitDate(stringToDate(dateText));
+                    const newDateText = dateText.split('/').reverse().join('');
+                    const newDate = stringToDate(newDateText);
+                    submitDate(newDate);
                 },
             });
 
@@ -108,7 +113,8 @@ $(function () {
             $('#modal-datepicker-confirm-button').click(function () {
                 const dateInputValue = $('#modal-datepicker-input').val();
                 if (dateInputValue.replace('_', '').length == 10) {
-                    const newDate = stringToDate(dateInputValue);
+                    const newDateText = dateInputValue.split('/').reverse().join('');
+                    const newDate = stringToDate(newDateText);
                     // update datepicker with newinput value
                     submitDate(newDate);
                 }
