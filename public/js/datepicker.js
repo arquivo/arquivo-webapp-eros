@@ -34,7 +34,7 @@ $(function () {
 
         //Updates the dates and the slider
         const updateDateSlider = function(newDate,type){
-            $("#" + type + "-date").val(newDate.toLocaleDateString('en-CA').replaceAll('-',''));
+            $("#" + type + "-date").val(newDate.toLocaleDateString('en-CA').split('-').join(''));
             $("#" + type + "-year").val(newDate.getFullYear());
             $("#" + type + "-day-month").val(newDate.getDate() + ' ' + $.datepicker.regional[lang].monthNamesShort[newDate.getMonth()]); //lang is global
             updateSlider();

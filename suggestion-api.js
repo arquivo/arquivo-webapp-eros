@@ -11,7 +11,7 @@ module.exports = function (query, lang, callback) {
     });
     https.get(config.get('query.suggestion.api') + '?' + suggestionRequestData.toString(),
         (response) => {
-            response.on('data', (d) => { suggestionReply = suggestionReply + d.toString().replaceAll("\n", "") });
+            response.on('data', (d) => { suggestionReply = suggestionReply + d.toString().split("\n").join('') });
             response.on('end', () => {
                 const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
                 if (suggestionRegex.test(suggestionReply)) {

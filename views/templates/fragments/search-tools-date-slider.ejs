@@ -36,7 +36,7 @@
                     readonly  aria-label="Choose your starting day and month">
             </li>
         </ul>
-        <input type="hidden" name="from" id="start-date" value="<%= startDate.toLocaleDateString('en-CA').replaceAll('-','') %>">
+        <input type="hidden" name="from" id="start-date" value="<%= startDate.toLocaleDateString('en-CA').split('-').join('') %>">
         <!-- ends left calendar icon -->
 
         <!-- starts slider handles -->
@@ -57,7 +57,7 @@
             </li>
             
         </ul>
-        <input type="hidden" name="to" id="end-date" value="<%= endDate.toLocaleDateString('en-CA').replaceAll('-','') %>">
+        <input type="hidden" name="to" id="end-date" value="<%= endDate.toLocaleDateString('en-CA').split('-').join('') %>">
         <!-- ends right calendar icon -->
 
     </section>
