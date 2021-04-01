@@ -1,5 +1,6 @@
 const https = require('https');
-const url = require('url');
+const config = require('config');
+
 const now = new Date();
 
 const makeExportObject = function(req,res,apiRequestData,apiReplyData){
@@ -71,15 +72,39 @@ const makeExportObject = function(req,res,apiRequestData,apiReplyData){
 }
 
 module.exports = function (req,res) {
-    const itemsPerPage = 10;
     const requestData = new URL(req.url,req.protocol+'://'+req.headers.host).searchParams;
-    const apiRequestData = new URLSearchParams({
-        q: requestData.get('q') ?? '',
+    const defaultApiParams = {
+        q: '',
         from: requestData.has('dateStart') ? requestData.get('dateStart').split('/').reverse().join('')  : '19960101',
-        to: (requestData.get('dateEnd') ?? now.toLocaleDateString('pt-PT')).split('/').reverse().join(''),
-        offset: requestData.has('page') ? Math.max(itemsPerPage * (requestData.get('page')-1),0) : 0,
-        maxItems: itemsPerPage,
-    });
+        to: (requestData.get('dateEnd') ?? now.toLocaleDateString('en-CA')).replaceAll('-',''),
+        type: null,
+        offset: 0,
+        siteSearch: null,
+        collection: null,
+        maxItems: config.get('text.results.per.page'),
+        dedupValue: null,
+        dedupField: null,
+        fields: null,
+        prettyPrint: false,
+    }
+    const apiRequestData = new URLSearchParams();
+
+    Object.keys(defaultApiParams)
+        .filter( key => defaultApiParams[key] !== null || requestData.has(key))
+        .forEach( key => apiRequestData.set(key, requestData.get(key) ?? defaultApiParams[key]));
+
+    { //putting "site:" on search query if needed and on siteSearch API param if present
+        const siteQueryRegEx = /(\s|^)site:([^\s]+)/
+        let q = apiRequestData.get('q');
+        if(apiRequestData.has('siteSearch')){
+            if(!siteQueryRegEx.test(q)){
+                apiRequestData.set('q',q+' site:'+apiRequestData.get('siteSearch'));
+            }
+        } else if(siteQueryRegEx.test(q)) {
+            apiRequestData.set('siteSearch',q.match(siteQueryRegEx)[2])
+        }
+    }
+
     let apiReply = ''
     const handleError = function(e){
         res.send(
@@ -89,7 +114,8 @@ module.exports = function (req,res) {
         );
     }
     try {
-    const apiRequest = https.get('https://arquivo.pt/pagesearch/textsearch?'+apiRequestData.toString(),
+        
+    const apiRequest = https.get(config.get('text.search.api')+'?'+apiRequestData.toString(),
     (response) => {
         if (response.statusCode != 200) {
             console.log('Invalid status code <' + response.statusCode + '>');
