@@ -75,8 +75,8 @@ module.exports = function (app) {
     // ends show list
 
     // starts 404 
-    app.get('/arquivo-404', function (req, res) {
-        res.render('pages/arquivo-404');
+    app.use(function (req, res, next) {
+        res.status(404).render('pages/arquivo-404');
     });
     // ends 404
 
