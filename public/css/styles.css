@@ -78,6 +78,7 @@ button {
   border-radius: 4px;
   border: 1px solid #1c75c0;
   outline: none;
+  font-family: inherit;
   font-size: 0.75em;
   
 }
@@ -1543,6 +1544,7 @@ padding: 0 !important;
 input[type="text"]#modal-datepicker-input {
   padding: 6px 0px;
   font-size: 1em;
+  font-family: unset;
   border-radius: 4px;
   text-align: center;
   border: 1px solid #ccc;
@@ -2681,7 +2683,7 @@ body#arquivo-404 main {
 
 body#arquivo-404 main img {
   width: 100%;
-  max-width: 247px;
+  max-width: 185px;
 }
 
 body#arquivo-404 main h3 {
