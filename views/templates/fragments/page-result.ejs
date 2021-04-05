@@ -1,32 +1,74 @@
-<% if (typeof pageData != 'undefined'){ %>
-    <% const httpRegEx = /https?:\/\/(.*?)\/?$/; %>
-    <% const filteredURL = httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL %>
-    <% const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa %>
-    <% const year = pageData.tstamp.slice(0,4); %>
-    <% const month = t('common.months.'+pageData.tstamp.slice(4,6)); %>
-    <% const day = pageData.tstamp.slice(6,8); %>
-    <% const dedupField = requestData.get('dedupField') ?? 'site' %>
-    <% const subResult = dedupField == 'site' && pageData.originalURL == prevUrl; %>
-    <% const query = requestData.get('q'); %>
-    
-    <% const siteRegEx = /(^|\s)site:/; %>
-    <% const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); %>
+<% if (typeof pageData != 'undefined'){ 
+    const httpRegEx = /https?:\/\/(.*?)\/?$/;
+    const filteredURL = httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL 
+    const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa 
+    const year = pageData.tstamp.slice(0,4); 
+    const month = t('common.months.'+pageData.tstamp.slice(4,6)); 
+    const day = pageData.tstamp.slice(6,8); 
+    const dedupField = requestData.get('dedupField') ?? 'site' 
+    const subResult = dedupField == 'site' && pageData.originalURL == prevUrl; 
+    const query = requestData.get('q'); 
 
-    
+    const siteRegEx = /(^|\s)site:/; 
+    const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); 
+    const searchTerms = query
+        // removes "site" "type" and "collection" special queries
+        .split(' ')
+        .reduce((acc,cur) => {
+            const pair = cur.split(':');
+            if(pair.length == 2 && ['site','type','collection'].includes(pair[0])){
+                return acc;
+            }
+            return acc+' '+cur;
+        },'')
+        .trim()
+        // splits individual query terms taking double quotes into account
+        .match(/\\?.|^$/g)
+        .reduce((p, c) => {
+            if(c === '"'){
+                p.quote ^= 1;
+            }else if(!p.quote && c === ' '){
+                p.a.push('');
+            }else{
+                p.a[p.a.length-1] += c.replace(/\\(.)/,"$1");
+            }
+            return  p;
+        }, {a: ['']}).a
+
+    let emphasizeText = function(textToBeEmphasized,serchTerms) {
+        let resultText = textToBeEmphasized;
+        searchTerms.forEach(function(emphasizeWord) {
+            // can not use replace text with ignore case because it will change the case of the original text
+            // this regex makes that only full words (delimited by \b) are matched with the incoming terms
+            // Removes partial matches such as "ugal" -> "Portugal"
+            var wordDelim = new RegExp('(?!<)(\\b|\\/)'+emphasizeWord.toLowerCase()+'(?!>)(\\b|\\/)')
+            const from = resultText.toLowerCase().search(wordDelim);
+            const to = from + emphasizeWord.toLowerCase().length;
+            if (from >= 0) {
+                const originalText = resultText.substring(from, to);
+                resultText = resultText.substring(0, from) + '<em>'+originalText+'</em>' + resultText.substring(to, resultText.length );
+            }
+        });
+        return resultText;
+    }
+
+    %>
     <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
-        <li><a class="results-title blockUrl"><%= resultTitle %></a></li>
+        <li><a class="results-title blockUrl"><%- emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
         <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
         <li>
             <form id="pages-search-results-list" action="page/search">
-                <% const site = filteredURL.split('/')[0] %>
-                <% newRequestData.set('q',query + ' site:'+site) %>
-                <% newRequestData.set('dedupField','url') %>
-                <% const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page') %>
-                <% newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )%>
-                <% newRequestData.set('offset', 0 )%>
+                <%
+                 const site = filteredURL.split('/')[0] 
+                 newRequestData.set('q',query + ' site:'+site) 
+                 newRequestData.set('dedupField','url') 
+                 const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page') 
+                 newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )
+                 newRequestData.set('offset', 0 )
+                %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
                 <button type="submit" value="View more results of <%= site %>"> &rarr; View more results of <%= site %></button>
             </form>
