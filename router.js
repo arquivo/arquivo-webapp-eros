@@ -8,7 +8,7 @@ module.exports = function (app) {
     });
 
     // Pages search results
-    app.get('/pages-search-results', function (req, res) {
+    app.get('/page/search', function (req, res) {
         res.render('pages/pages-search-results',{
             requestData: new URLSearchParams(req.query),
         });
@@ -17,6 +17,10 @@ module.exports = function (app) {
     // Images search results
     app.get('/images-search-results', function (req, res) {
 
+        res.render('pages/images-search-results');
+    });
+    // Images search results
+    app.get('/image/search', function (req, res) {
         res.render('pages/images-search-results');
     });
 

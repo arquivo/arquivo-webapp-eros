@@ -19,27 +19,6 @@ $(function () {
         return sdate;
     }
 
-    // Load a JavaScript file from the server using a GET HTTP request, then execute it.
-    // Also use cache it.
-    // adaptaion of cachedScript jQuery example on getScript
-    // https://api.jquery.com/jquery.getscript/
-    // let cachedScript =  function(url, callback, options) {
-
-    //     // Allow user to set any option except for dataType, cache, and url
-    //     options = $.extend( options || {}, {
-    //         dataType: "script",
-    //         cache: true,
-    //         url: url
-    //     });
-
-    //     // Use $.ajax() since it is more flexible than $.getScript
-    //     // Return the jqXHR object so we can chain callbacks
-    //     jQuery.ajax( options ).done(function( script, textStatus ) {
-    //         jQuery.globalEval(script);
-    //         callback();
-    //     });
-    // }
-
     // Export the search engine result page.
     // type: image or page
     // outputFileExtension: csv or xlsx
@@ -59,7 +38,7 @@ $(function () {
         const filename = "arquivo_pt_" + type + "_" + jsDateToTimetamp(new Date()) + "." + outputFileExtension;
         XLSX.writeFile(wb, filename);
 
-        // ARQUIVO.sendEventToAnalytics('exportSERP', type, outputFileExtension);
+        ga("send", "event", 'exportSERP', type, outputFileExtension );
     }
 
     // To be called after a search have been finished.
@@ -71,7 +50,6 @@ $(function () {
             e.preventDefault()
             if($('#options-export-json').length){
                 exportSERP('page_search', fileExtension);
-
             }
         })
     });
