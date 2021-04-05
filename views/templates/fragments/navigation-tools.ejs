@@ -9,7 +9,7 @@
     <form action="pages-search-results">
         <% newRequestData.set('offset', Math.max(currentOffset-maxItems,0) ); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
-        <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
+        <button type="submit" class="previous-page" aria-hidden="true" value="previous page" onclick="ga('send', 'event', 'Full-text search', 'Previous page', document.location.href );">&larr;</button>
     </form>
     <% } %>
     <p>Page <%= currentPage %></p>
@@ -17,7 +17,7 @@
     <form action="pages-search-results">
         <% newRequestData.set('offset',currentOffset+maxItems); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
-        <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
+        <button type="submit" class="next-page" aria-hidden="true" value="next page" onclick="ga('send', 'event', 'Full-text search', 'Next page', document.location.href );">&rarr;</button>
     </form>
     <% } %>
 </section>
