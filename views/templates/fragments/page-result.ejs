@@ -20,7 +20,7 @@
         <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
         <li>
-            <form id="pages-search-results-list" action="pages-search-results">
+            <form id="pages-search-results-list" action="page/search">
                 <% const site = filteredURL.split('/')[0] %>
                 <% newRequestData.set('q',query + ' site:'+site) %>
                 <% newRequestData.set('dedupField','url') %>
