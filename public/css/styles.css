@@ -2248,6 +2248,10 @@ section#pages-results ul > li > a.results-title  {
   color: #1a0dab;     
 }
 
+section#pages-results ul > li > a.results-title em {
+  font-weight: bold;    
+}
+
 section#pages-results ul > li > a.results-date  {
   color: #1a0dab;
   font-size: 20px; 
