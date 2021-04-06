@@ -2810,6 +2810,14 @@ body#arquivo-404 main a:hover {
 left: 1.5em;
 }
 
+/* Hide preloader form button */
+section#loading-section form#loading-form {
+  visibility: collapse;
+  height: 0;
+}
+
+/* Preloader 3 bars animation */
+
 @-webkit-keyframes load1 {
 0%,
 80%,
