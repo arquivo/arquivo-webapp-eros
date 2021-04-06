@@ -3203,3 +3203,7 @@ section#search-tools #submit-search {
     display: none;
   }
 }
+
+.mime {
+  font-size: 12px;
+}

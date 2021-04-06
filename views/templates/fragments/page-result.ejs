@@ -11,6 +11,8 @@
 
     const siteRegEx = /(^|\s)site:/; 
     const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); 
+    const mime = pageData.mimeType.split('/');
+
     const searchTerms = query
         // removes "site" "type" and "collection" special queries
         .split(' ')
@@ -55,7 +57,7 @@
     %>
     <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
-        <li><a class="results-title blockUrl"><%- emphasizeText(resultTitle,searchTerms) %></a></li>
+        <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
         <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
