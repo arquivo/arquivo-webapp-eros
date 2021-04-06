@@ -39,7 +39,7 @@
     <h3>Search Tools</h3>
 
     <!-- starts search tools input -->
-    <form id="search-form" action="<%= searchType %>-search-results" method="GET">
+    <form id="search-form" action="/<%= searchType.slice(0,-1) %>/search" method="GET">
 
       <!-- starts search bar -->
       <%- include('../fragments/search-tools-search-bar') %>
