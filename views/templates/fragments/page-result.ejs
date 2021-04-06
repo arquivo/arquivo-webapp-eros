@@ -54,11 +54,10 @@
         return resultText;
     }
 
-    const onClick = "ga('send', 'event', 'Search result', 'Page search', 'Result position', "+ index+1 +"); window.location='/replay';";
+    const onClick = "ga('send', 'event', 'Search result', 'Page search', 'Result position', "+ index+1 +"); window.location='/replay';"; //linkToArchive encriptado? ver java
     const onKeyPress = "return ((e) => { if(e.which == 32 || e.which == 13){e.preventDefault();"+onClick+"} return true;})(event)";
-    // const onKeyPress = "return ((e) => console.log(e.which))(event)";
     %>
-    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="<%- onClick %>" onkeypress="<%- onKeyPress %>"><% //linkToArchive encriptado? ver java %>
+    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="<%- onClick %>" onkeypress="<%- onKeyPress %>">
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
