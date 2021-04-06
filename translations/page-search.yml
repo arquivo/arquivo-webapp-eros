@@ -1,3 +1,12 @@
+accessibility:
+  title:
+    pt: Resultados da Pesquisa de Páginas
+    en: Page Search Results
+estimated-results:
+  pt: Cerca de ${numResults} resultados a partir de ${from} até ${to}
+  en: About ${numResults} results from ${from} until ${to} 
+
+#Traduções para exports
 queryArgument:
   en: 'Argument'
   pt: 'Argumento'

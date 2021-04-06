@@ -1,23 +1,23 @@
 <!-- starts menu left navigation -->
 <nav id="left-nav">
-<h3>Left menu navigation</h3> 
+<h3><%= t('menu.accessibility.title') %></h3> 
 <button id="left-nav-close-button" onclick="closeLeftMenuNav(); 
 "><span>&times;</span></button>
 <section>
-  <h4>Left menu navigation list</h4> 
+  <h4><%= t('menu.accessibility.main') %></h4> 
     <ul>
       <li id="menu-language"><a href="<%= t('menu.switch-language.url') %>"><span class="fas fa-globe-americas" aria-hidden="true"></span><%= t('menu.switch-language.text') %></a></li>
       <li id="menu-copy-link"><a href="#" onclick="copyURLToClipboard()"><span class="fas fa-copy" aria-hidden="true"></span><%= t('menu.copy-link.text') %></a></li>
       <li id="menu-pages"><a href="javascript:(void)" class="accordion-left-menu"><span class="fas fa-pager" aria-hidden="true"></span><%= t('menu.pages.text') %></a>
         <ul class="panel">
-          <li id="menu-pages-new-search"><a href="pages?l=<%= getLanguage() %>"><span class="fas fa-search" aria-hidden="true"></span><%= t('menu.pages.new-search.text') %></a></li>
-          <li id="menu-pages-advanced-search"><a href="pages-advanced-search?l=<%= getLanguage() %>"><span class="fas fa-search-plus" aria-hidden="true"></span><%= t('menu.pages.advanced-search.text') %></a></li>
+          <li id="menu-pages-new-search"><a href="/pages?l=<%= getLanguage() %>"><span class="fas fa-search" aria-hidden="true"></span><%= t('menu.pages.new-search.text') %></a></li>
+          <li id="menu-pages-advanced-search"><a href="/pages-advanced-search?l=<%= getLanguage() %>"><span class="fas fa-search-plus" aria-hidden="true"></span><%= t('menu.pages.advanced-search.text') %></a></li>
         </ul>
       </li>
       <li id="menu-images"><a href="javascript:(void)" class="accordion-left-menu"><span class="fas fa-images" aria-hidden="true"></span><%= t('menu.images.text') %></a>
         <ul class="panel">
-        <li id="menu-images-new-search"><a href="images?l=<%= getLanguage() %>"><span class="fas fa-search" aria-hidden="true"></span><%= t('menu.images.new-search.text') %></a></li>
-          <li id="menu-images-advanced-search"><a href="images-advanced-search?l=<%= getLanguage() %>"><span class="fas fa-search-plus" aria-hidden="true"></span><%= t('menu.images.advanced-search.text') %></a></li>
+        <li id="menu-images-new-search"><a href="/images?l=<%= getLanguage() %>"><span class="fas fa-search" aria-hidden="true"></span><%= t('menu.images.new-search.text') %></a></li>
+          <li id="menu-images-advanced-search"><a href="/images-advanced-search?l=<%= getLanguage() %>"><span class="fas fa-search-plus" aria-hidden="true"></span><%= t('menu.images.advanced-search.text') %></a></li>
         </ul>   
       </li>
       <li id="menu-about"><a href="<%= t('menu.about.url') %>"><span class="fas fa-info-circle" aria-hidden="true"></span><%= t('menu.about.text') %></a></li>  

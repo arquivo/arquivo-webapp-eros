@@ -1,4 +1,14 @@
 #translations for the left menu
+accessibility:
+  title:
+    pt: Menu de navegação esquerdo
+    en: Left menu navigation
+  main:
+    pt: Lista do menu de navegação esquerdo
+    en: Left menu navigation list
+button:
+  en: Menu
+  pt: Menu
 switch-language:
   text:
     pt: 'English'

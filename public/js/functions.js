@@ -17,7 +17,7 @@ function openOptionstMenuNav() {
   document.getElementById("options-right-nav").style.cssText = "right:0px;"; 
 }
 function closeOptionsMenuNav() {
-  document.getElementById("options-right-nav").style.cssText = "right:-200px";
+  document.getElementById("options-right-nav").style.cssText = "right:-320px";
 }
 // ends: menu opening and closing button for top nav right menu button ///////////////////////////////////
 

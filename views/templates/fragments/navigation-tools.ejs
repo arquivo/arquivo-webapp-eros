@@ -4,17 +4,17 @@
 <% let currentPage= Math.ceil(currentOffset/maxItems)+1; %>
 
 <section class="navigation-tools">
-    <h3>Images navigation</h3>
+    <h3><%= t('navigation.pagination.accessibility.title') %></h3>
     <% if (currentOffset > 0) { %>
-    <form action="page/search">
+    <form action="/page/search">
         <% newRequestData.set('offset', Math.max(currentOffset-maxItems,0) ); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
         <button type="submit" class="previous-page" aria-hidden="true" value="previous page" onclick="ga('send', 'event', 'Full-text search', 'Previous page', document.location.href );">&larr;</button>
     </form>
     <% } %>
-    <p>Page <%= currentPage %></p>
+    <p><%= t('navigation.pagination.page') %> <%= currentPage %></p>
     <% if (currentOffset + maxItems < apiData.estimated_nr_results ) { %>
-    <form action="page/search">
+    <form action="/page/search">
         <% newRequestData.set('offset',currentOffset+maxItems); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
         <button type="submit" class="next-page" aria-hidden="true" value="next page" onclick="ga('send', 'event', 'Full-text search', 'Next page', document.location.href );">&rarr;</button>
