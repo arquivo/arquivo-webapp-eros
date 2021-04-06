@@ -13,6 +13,9 @@ switch-language:
   text:
     pt: 'English'
     en: 'Português'
+  lang:
+    pt: 'en'
+    en: 'pt'
   url:
     pt: '?l=en'
     en: '?l=pt'
