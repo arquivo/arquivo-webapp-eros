@@ -155,7 +155,7 @@ $(function () {
                         {
                             mode: "datetime",
                             dateTimeFormat: "dd MMM yyyy",
-                            inputDateTimeFormat: "dd/MM/yyyy",
+                            inputDateTimeFormat: "yyyyMMdd",
                             selectedDate: selectedDate,
                             minValue: type === 'start' ? minDate : stringToDate($('#start-date').val()),
                             maxValue: type === 'end' ? maxDate : stringToDate($('#end-date').val()),
