@@ -13,9 +13,6 @@ $(function(){
     const loadingSection = $('#loading-section');
     if(loadingSection.length){
         const loadingForm = $('#loading-form');
-        
-        console.log(loadingForm.html());
-        console.log(loadingForm.serialize());
         $.ajax({
             url: document.location.origin + loadingForm.attr('action')+'?'+loadingForm.serialize(),
             success: function (data) {
