@@ -17,10 +17,18 @@ $(function(){
         console.log(loadingForm.html());
         console.log(loadingForm.serialize());
         $.ajax({
-            url: '/'+loadingForm.attr('action')+'?'+loadingForm.serialize(),
+            url: document.location.origin + loadingForm.attr('action')+'?'+loadingForm.serialize(),
             success: function (data) {
                 loadingSection.replaceWith(data);
             }
         });
     }
+    const closeAllMenus = function(){
+        closeLeftMenuNav();
+        closeOptionsMenuNav();
+        closeReplayLeftMenuNav();
+        closeReplayRightMenuNav();
+    }
+    $('body').children().not('header').on('click',() => closeAllMenus());
+    $('body').on('click',(e) => { if($(e.target).is('body')){closeAllMenus();}});
 });
