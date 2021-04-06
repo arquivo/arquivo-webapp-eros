@@ -633,8 +633,8 @@ section#alert-container p span {
 /* Options menu for both: pages and images search results */
 
 nav#options-right-nav {   
-  right: -329px;    
-  width: 320px;  
+  right: -259px;    
+  width: 250px;  
  }
 
 /* Enables options to be visible when searching for pages and images */ 
