@@ -76,9 +76,7 @@ module.exports = function (app) {
     app.get('/replay-list-results', function (req, res) {
         res.render('pages/replay-list-results');
     });
-    // ends show list
-
-    
+    // ends show list    
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
