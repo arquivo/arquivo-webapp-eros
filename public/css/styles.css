@@ -2847,6 +2847,14 @@ section#loading-section form#loading-form button#loading-results {
 }
 }
 
+/* [PDF] reference on page search results */
+.mime {
+  font-size: 10px;
+  margin-right: 5px;  
+  position: relative;
+  bottom: 2px;
+}
+
 /*********************************/
 /********* MEDIA QUERIES *********/
 /*********************************/
@@ -3206,8 +3214,4 @@ section#search-tools #submit-search {
   button#nav-options-right-button-mobile {
     display: none;
   }
-}
-
-.mime {
-  font-size: 12px;
 }
