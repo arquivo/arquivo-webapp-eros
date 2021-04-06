@@ -2811,7 +2811,7 @@ left: 1.5em;
 }
 
 /* Hide preloader form button */
-section#loading-section form#loading-form {
+section#loading-section form#loading-form button#loading-results {
   visibility: collapse;
   height: 0;
 }
