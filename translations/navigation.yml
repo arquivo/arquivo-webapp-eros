@@ -1,0 +1,15 @@
+#translations for navigation elements such as pagination
+pagination:
+  accessibility:
+    title:
+      pt: Paginação
+      en: Pagination
+  page:
+    pt: Página
+    en: Page
+  next:
+    pt: Seguinte
+    en: Next
+  previous:
+    pt: Anterior
+    en: Previous

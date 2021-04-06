@@ -1,0 +1,16 @@
+#translations for the options right menu
+accessibility:
+  title:
+    pt: Menu de opções
+    en: Options menu
+  main:
+    pt: Lista do menu de opções
+    en: Options menu list
+
+export:
+  pt: Exportar resultados (${format})
+  en: Export results (${format})
+
+button:
+  pt: Opções
+  en: Options
