@@ -55,14 +55,14 @@
     }
 
     %>
-    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='replay'"><% //linkToArchive encriptado? ver java %>
+    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="ga('send', 'event', 'Search result', 'Page search', 'Result position', <%= index+1 %>); window.location='/replay'"><% //linkToArchive encriptado? ver java %>
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
-        <li><a href="replay" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
+        <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
         <li>
-            <form id="pages-search-results-list" action="page/search">
+            <form id="pages-search-results-list" action="/page/search">
                 <%
                  const site = filteredURL.split('/')[0] 
                  newRequestData.set('q',query + ' site:'+site) 
