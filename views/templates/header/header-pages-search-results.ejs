@@ -63,7 +63,7 @@
         <input type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
       </form>
-      <form id="search-form-advanced" class="buttons" action="/<%= searchType %>-advanced-search" method="get">
+      <form id="search-form-advanced" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
         <input type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
       </form>
