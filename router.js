@@ -10,10 +10,15 @@ module.exports = function (app) {
 
     // Pages search results
     app.get('/page/search', function (req, res) {
+        const requestData = sanitizeInputs(req, res);
 
-        res.render('pages/pages-search-results',{
-            requestData: sanitizeInputs(req,res),
-        });
+        if (!requestData.has('q') || requestData.get('q') == '') {
+            res.render('pages/home');
+        } else {
+            res.render('pages/pages-search-results', {
+                requestData: requestData,
+            });
+        }
     });
 
     // Images search results
@@ -58,7 +63,7 @@ module.exports = function (app) {
         res.render('pages/replay');
     });
     // ends Replay
-    
+
 
     // starts not found page
     app.get('/not-found', function (req, res) {
@@ -71,7 +76,7 @@ module.exports = function (app) {
         res.render('pages/search-suggestion');
     });
     // ends not found page
-    
+
     // starts show table 
     app.get('/replay-table-results', function (req, res) {
         res.render('pages/replay-table-results');
@@ -86,9 +91,9 @@ module.exports = function (app) {
 
     // starts fragments
     app.get('/fragments/:id', function (req, res) {
-        if(req.params.id == 'pages-search-results'){
-            searchPages(req,res);
-        }  else {
+        if (req.params.id == 'pages-search-results') {
+            searchPages(req, res);
+        } else {
             res.render('fragments/' + req.params.id, { layout: false });
         }
     });
