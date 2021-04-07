@@ -5,7 +5,13 @@
 <form id="advanced-search-form-pages" class="advanced-search-form" action="/page/search" method="GET">
 <fieldset>
   <legend>Fill the form</legend>
-   
+  
+  <!-- Between these dates -->
+  <label><strong>Between</strong> these dates:</label>
+  <!-- starts range slider block --> 
+  <%- include('../fragments/search-tools-date-slider') %>
+  <!-- ends range slider block -->  
+
   <!-- With these words -->
    <label for="words"><strong>With</strong> these words:</label>
    <input id="words" type="text" name="words">
