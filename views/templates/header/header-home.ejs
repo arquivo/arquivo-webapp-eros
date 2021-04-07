@@ -60,7 +60,7 @@
         <input id="get-language-images" role="show language for images" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
       </form>
-      <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType %>-advanced-search" method="get">
+      <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
         <label for="hidden-language">Get language for advanced search</label>
         <input id="hidden-language" role="insert advanced search images" type="hidden" name="l" value="<%= getLanguage() %>">
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>

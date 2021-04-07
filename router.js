@@ -31,7 +31,7 @@ module.exports = function (app) {
     });
 
     // Pages advanced search
-    app.get('/pages-advanced-search', function (req, res) {
+    app.get('/page/advanced/search', function (req, res) {
 
         res.render('pages/pages-advanced-search');
     });
@@ -46,6 +46,10 @@ module.exports = function (app) {
     app.get('/images-advanced-search', function (req, res) {
         res.render('pages/images-advanced-search');
     });
+    app.get('/image/advanced/search', function (req, res) {
+        res.render('pages/images-advanced-search');
+    });
+
 
     // starts Replay
     app.get('/replay', function (req, res) {
