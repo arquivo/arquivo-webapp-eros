@@ -1,5 +1,6 @@
 const https = require('https');
 const config = require('config');
+const sanitizeInputs = require('./sanitize-search-params');
 
 const now = new Date();
 
@@ -71,11 +72,11 @@ const makeExportObject = function (req, res, apiRequestData, apiReplyData) {
     return exportObject;
 }
 module.exports = function (req, res) {
-    const requestData = new URLSearchParams(req.query);
+    const requestData = sanitizeInputs(req, res);
     const defaultApiParams = {
         q: '',
-        from: requestData.has('dateStart') ? requestData.get('dateStart').split('/').reverse().join('') : '19960101',
-        to: (requestData.get('dateEnd') ?? now.toLocaleDateString('en-CA')).split('-').join(''),
+        from: '19960101',
+        to: now.toLocaleDateString('en-CA').split('-').join(''),
         type: null,
         offset: 0,
         siteSearch: null,
@@ -88,21 +89,11 @@ module.exports = function (req, res) {
     }
     const apiRequestData = new URLSearchParams();
 
+    //Load parameters onto api request data
     Object.keys(defaultApiParams)
         .filter(key => defaultApiParams[key] !== null || requestData.has(key))
         .forEach(key => apiRequestData.set(key, requestData.get(key) ?? defaultApiParams[key]));
 
-    { //putting "site:" on search query if needed and on siteSearch API param if present
-        const siteQueryRegEx = /(\s|^)site:([^\s]+)/
-        let q = apiRequestData.get('q');
-        if (apiRequestData.has('siteSearch')) {
-            if (!siteQueryRegEx.test(q)) {
-                apiRequestData.set('q', q + ' site:' + apiRequestData.get('siteSearch'));
-            }
-        } else if (siteQueryRegEx.test(q)) {
-            apiRequestData.set('siteSearch', q.match(siteQueryRegEx)[2])
-        }
-    }
     const suggestionRequest = require('./suggestion-api')
     const apiRequest = require('./page-search-api')
 
