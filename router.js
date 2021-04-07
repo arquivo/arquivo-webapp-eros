@@ -1,4 +1,5 @@
 const searchPages = require('./search-pages.js');
+const sanitizeInputs = require('./sanitize-search-params');
 
 module.exports = function (app) {
     // Homepage 
@@ -9,8 +10,9 @@ module.exports = function (app) {
 
     // Pages search results
     app.get('/page/search', function (req, res) {
+
         res.render('pages/pages-search-results',{
-            requestData: new URLSearchParams(req.query),
+            requestData: sanitizeInputs(req,res),
         });
     });
 
