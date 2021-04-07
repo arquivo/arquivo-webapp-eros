@@ -42,7 +42,7 @@ module.exports = function (req, res) {
 
     //convert advanced search params into query terms
     if (q == '') {
-        q = requestData.get('adv_and').trim() ?? '';
+        q = requestData.get('adv_and') ?? '';
         if (requestData.has('adv_phr') && requestData.get('adv_phr').trim() != '') {
             q += ' "' + requestData.get('adv_phr').trim() + '"';
         }
