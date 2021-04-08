@@ -1,3 +1,29 @@
+<% 
+let values = {
+  adv_and: '',
+  adv_phr: '',
+  adv_not: '',
+  type: 'all',
+  siteSearch: '',
+  maxItems: '',
+}
+
+let selectTypeFor = function(type){
+  return (type == values.type) ? 'selected' : '';
+}
+let selectMaxItemsFor = function(n){
+  return (n == values.maxItems) ? 'selected' : '';
+}
+if(typeof requestData != 'undefined'){
+  Object.keys(values)
+    .filter(key => requestData.has(key))
+    .forEach(key => {
+      values[key] = requestData.get(key);
+    });
+}
+
+%> 
+
 <!-- starts pages advanced search form container -->
 <section class="form-container">
     <h3><%= t('advanced-page-search.accessibility.title') %></h3>
@@ -14,48 +40,48 @@
 
   <!-- With these words -->
    <label for="adv_and"><%- t('advanced-page-search.fieldset.with.label') %></label>
-   <input id="words" type="text" name="adv_and">
+   <input id="words" type="text" name="adv_and" value="<%= values.adv_and %>">
    <small><%- t('advanced-page-search.fieldset.with.example') %></small>
    
    <!-- With this phrase -->
    <label for="adv_phr"><%- t('advanced-page-search.fieldset.phrase.label') %></label>
-   <input id="phrase" type="text" name="adv_phr">
+   <input id="phrase" type="text" name="adv_phr" value="<%= values.adv_phr %>">
    <small><%- t('advanced-page-search.fieldset.phrase.example') %></small>
    
    <!-- Any of these words -->
    <label for="adv_not"><%- t('advanced-page-search.fieldset.without.label') %></label>
-   <input id="without" type="text" name="adv_not">
+   <input id="without" type="text" name="adv_not" value="<%= values.adv_not %>">
    <small><%- t('advanced-page-search.fieldset.without.example') %></small>   
    
    <!-- Formats -->
    <label for="format"><%- t('advanced-page-search.fieldset.format.label') %></label>
    <select id="format-type" name="format" class="">
-    <option value="all" selected><%- t('advanced-page-search.fieldset.format.option.all') %></option>
-    <option value="pdf">Adobe PDF (.pdf)</option>
-    <option value="ps">Adobe PostScript (.ps)</option>
-    <option value="html">HTML (.htm, .html)</option>
-    <option value="xls">Microsoft Excel (.xls)</option>
-    <option value="ppt">Microsoft PowerPoint (.ppt)</option>
-    <option value="doc">Microsoft Word (.doc)</option>
-    <option value="rtf">Rich Text Format (.rtf)</option>
+    <option value="all" <%= selectTypeFor('all') %>><%- t('advanced-page-search.fieldset.format.option.all') %></option>
+    <option value="pdf" <%= selectTypeFor('pdf') %>>Adobe PDF (.pdf)</option>
+    <option value="ps" <%= selectTypeFor('ps') %>>Adobe PostScript (.ps)</option>
+    <option value="html" <%= selectTypeFor('html') %>>HTML (.htm, .html)</option>
+    <option value="xls" <%= selectTypeFor('xls') %>>Microsoft Excel (.xls)</option>
+    <option value="ppt" <%= selectTypeFor('ppt') %>>Microsoft PowerPoint (.ppt)</option>
+    <option value="doc" <%= selectTypeFor('doc') %>>Microsoft Word (.doc)</option>
+    <option value="rtf" <%= selectTypeFor('rtf') %>>Rich Text Format (.rtf)</option>
    </select>  
    
    <!-- Website -->
    <label for="website"><%- t('advanced-page-search.fieldset.website.label') %></label>
-   <input id="website" type="text" name="website">
+   <input id="website" type="text" name="website" value="<%= values.siteSearch %>">
    <small><%- t('advanced-page-search.fieldset.website.example') %></small>
 
    <!-- Number of results: pages -->
    <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
    <select id="number-of-results-pages" name="maxItems" class="">
-   <option selected>10</option>
-    <option>20</option>
-    <option>30</option>
-    <option>50</option>
-    <option>100</option>
-    <option>500</option>
-    <option>1000</option>
-    <option>2000</option> 
+    <option value="10" <%= selectMaxItemsFor(10) %>>10</option>
+    <option value="20" <%= selectMaxItemsFor(20) %>>20</option>
+    <option value="30" <%= selectMaxItemsFor(30) %>>30</option>
+    <option value="50" <%= selectMaxItemsFor(50) %>>50</option>
+    <option value="100" <%= selectMaxItemsFor(100) %>>100</option>
+    <option value="500" <%= selectMaxItemsFor(500) %>>500</option>
+    <option value="1000" <%= selectMaxItemsFor(1000) %>>1000</option>
+    <option value="2000" <%= selectMaxItemsFor(2000) %>>2000</option> 
   </select> 
 
   <!-- starts advanced search navigation -->

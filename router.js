@@ -39,8 +39,9 @@ module.exports = function (app) {
 
     // Pages advanced search
     app.get('/page/advanced/search', function (req, res) {
-
-        res.render('pages/pages-advanced-search');
+        
+        const requestData = sanitizeInputs(req, res);
+        res.render('pages/pages-advanced-search',{requestData:requestData});
     });
 
     // Images: landing page
