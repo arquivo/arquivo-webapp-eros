@@ -1,36 +1,36 @@
 <!-- starts pages advanced search form container -->
 <section class="form-container">
-    <h3>Image advanced search form</h3>
+    <h3><%= t('advanced-page-search.accessibility.title') %></h3>
 <!-- starts pages advanced search -->
 <form id="advanced-search-form-pages" class="advanced-search-form" action="/page/search" method="GET">
 <fieldset>
-  <legend>Fill the form</legend>
+  <legend><%= t('advanced-page-search.accessibility.legend') %></legend>
   
   <!-- Between these dates -->
-  <label><strong>Between</strong> these dates:</label>
+  <label><%- t('advanced-page-search.fieldset.date.label') %></label>
   <!-- starts range slider block --> 
   <%- include('../fragments/search-tools-date-slider') %>
   <!-- ends range slider block -->  
 
   <!-- With these words -->
-   <label for="adv_and"><strong>With</strong> these words:</label>
+   <label for="adv_and"><%- t('advanced-page-search.fieldset.with.label') %></label>
    <input id="words" type="text" name="adv_and">
-   <small>e.g.: group draw</small>
+   <small><%- t('advanced-page-search.fieldset.with.example') %></small>
    
    <!-- With this phrase -->
-   <label for="adv_phr"><strong>With</strong> this phrase:</label>
+   <label for="adv_phr"><%- t('advanced-page-search.fieldset.phrase.label') %></label>
    <input id="phrase" type="text" name="adv_phr">
-   <small>e.g.: euro 2004</small>
+   <small><%- t('advanced-page-search.fieldset.phrase.example') %></small>
    
    <!-- Any of these words -->
-   <label for="adv_not"><strong>Without</strong> any of these words:</label>
+   <label for="adv_not"><%- t('advanced-page-search.fieldset.without.label') %></label>
    <input id="without" type="text" name="adv_not">
-   <small>e.g.: rugby</small>   
+   <small><%- t('advanced-page-search.fieldset.without.example') %></small>   
    
    <!-- Formats -->
-   <label for="format"><strong>Format:</strong></label>
+   <label for="format"><%- t('advanced-page-search.fieldset.format.label') %></label>
    <select id="format-type" name="format" class="">
-    <option value="all" selected>All formats</option>
+    <option value="all" selected><%- t('advanced-page-search.fieldset.format.option.all') %></option>
     <option value="pdf">Adobe PDF (.pdf)</option>
     <option value="ps">Adobe PostScript (.ps)</option>
     <option value="html">HTML (.htm, .html)</option>
@@ -41,13 +41,13 @@
    </select>  
    
    <!-- Website -->
-   <label for="website"><strong>Website:</strong></label>
+   <label for="website"><%- t('advanced-page-search.fieldset.website.label') %></label>
    <input id="website" type="text" name="website">
-   <small>e.g.: www.fccn.pt</small>
+   <small><%- t('advanced-page-search.fieldset.website.example') %></small>
 
    <!-- Number of results: pages -->
-   <label for="number-of-results-pages"><strong>Number of results:</strong></label>
-   <select id="number-of-results-pages" name="number-of-results-pages" class="">
+   <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
+   <select id="number-of-results-pages" name="maxItems" class="">
    <option selected>10</option>
     <option>20</option>
     <option>30</option>
