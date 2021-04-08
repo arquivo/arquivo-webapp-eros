@@ -53,6 +53,46 @@ module.exports = function (req, res) {
                 .map(t => '-' + t)
                 .join(' ')
         }
+    } else { //Convert query into advanced search terms
+        let adv_and = q;
+        const phraseRegEx = /"[^"]*"/;
+        let phrases = [];
+        while(phraseRegEx.test(adv_and)){
+            const phrase = adv_and.match(phraseRegEx)[0];
+            adv_and = adv_and.split(phrase).join('');
+            phrases.push(phrase.slice(1,-1));
+        }
+        if(phrases.length){
+            requestData.set('adv_phr',phrases.pop());
+        }
+
+        const notRegEx = /-\w+/;
+        let without = []
+        while(notRegEx.test(adv_and)){
+            const not = adv_and.match(notRegEx)[0];
+            const splitRegEx = new RegExp(not + '(\\s|$)')
+            adv_and = adv_and.split(splitRegEx).join('');
+            without.push(not.slice(1))
+        }
+        if(without.length){
+            requestData.set('adv_not',without.join(' '));
+        }
+
+        adv_and = adv_and.trim();
+
+        const specialParamsRegEx = /(?:\s|^)(?:site|type|collection):(?:[^\s]+)/
+        if(specialParamsRegEx.test(adv_and)){
+            adv_and = adv_and.split(specialParamsRegEx)
+                .map(t => t.trim())
+                .filter(t => t != "")
+                .join(' ');
+        }
+
+        if(phrases.length){
+            adv_and = adv_and + ' ' + phrases.join(' ');
+        }
+        requestData.set('adv_and',adv_and);
+
     }
 
     // remove 'all' from type 

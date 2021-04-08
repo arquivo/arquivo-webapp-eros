@@ -48,25 +48,9 @@
     <!-- ends search tools input -->
 
     <!-- starts search tools buttons -->
-    <section id="search-tools-buttons">
-      <h4>Search Pages and Images Buttons</h4>
-      <form id="search-form-pages" role="search for pages" class="buttons" action="/pages" method="get">
-        <label for="get-language-pages">Get language for pages</label>
-        <input id="get-language-pages" role="show language for pages" type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
-      </form>
-      <form id="search-form-images" role="search for images" class="buttons" action="/images" method="get">
-        <label for="get-language-images">Get language for images</label>
-        <input id="get-language-images" role="show language for images" type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
-      </form>
-      <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
-        <label for="hidden-language">Get language for advanced search</label>
-        <input id="hidden-language" role="insert advanced search images" type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
-      </form>
-    </section>
+    <%- include('../fragments/search-tools-buttons') %>
     <!-- ends search tools buttons -->
+    
   </section>
   <!-- ends search tools section -->
 </section>
