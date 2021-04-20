@@ -15,31 +15,31 @@ const makeExportObject = function (req, res, apiRequestData, apiReplyData) {
         exportObject.push(line);
         return line;
     }
-    exportSERPSaveLine(req.t('page-search.queryArgument'), req.t('page-search.queryValue'));
-    exportSERPSaveLine(req.t('page-search.query'), apiRequestData.get('q'));
-    exportSERPSaveLine(req.t('page-search.from'), apiRequestData.get('from'));
-    exportSERPSaveLine(req.t('page-search.to'), apiRequestData.get('to'));
-    exportSERPSaveLine(req.t('page-search.offset'), apiRequestData.get('offset'));
-    exportSERPSaveLine(req.t('page-search.maxItems'), apiRequestData.get('maxItems'));
-    exportSERPSaveLine(req.t('page-search.siteSearch'), apiRequestData.get('siteSearch'));
-    exportSERPSaveLine(req.t('page-search.type'), apiRequestData.get('type'));
-    exportSERPSaveLine(req.t('page-search.collection'), apiRequestData.get('collection'));
+    exportSERPSaveLine(req.t('page-search.exports.queryArgument'), req.t('page-search.exports.queryValue'));
+    exportSERPSaveLine(req.t('page-search.exports.query'), apiRequestData.get('q'));
+    exportSERPSaveLine(req.t('page-search.exports.from'), apiRequestData.get('from'));
+    exportSERPSaveLine(req.t('page-search.exports.to'), apiRequestData.get('to'));
+    exportSERPSaveLine(req.t('page-search.exports.offset'), apiRequestData.get('offset'));
+    exportSERPSaveLine(req.t('page-search.exports.maxItems'), apiRequestData.get('maxItems'));
+    exportSERPSaveLine(req.t('page-search.exports.siteSearch'), apiRequestData.get('siteSearch'));
+    exportSERPSaveLine(req.t('page-search.exports.type'), apiRequestData.get('type'));
+    exportSERPSaveLine(req.t('page-search.exports.collection'), apiRequestData.get('collection'));
     exportSERPSaveLine(); // Add an empty line after all the arguments
 
-    exportSERPSaveLine(req.t('page-search.results'));
+    exportSERPSaveLine(req.t('page-search.exports.results'));
     exportSERPSaveLine(
-        req.t('page-search.year'),
-        req.t('page-search.month'),
-        req.t('page-search.day'),
-        req.t('page-search.timestamp'),
-        req.t('page-search.originalURL'),
-        req.t('page-search.linkToArchive'),
-        req.t('page-search.linkToScreenshot'),
-        req.t('page-search.linkToExtractedText'),
-        req.t('page-search.collection'),
-        req.t('page-search.mimeType'),
-        req.t('page-search.title'),
-        req.t('page-search.snippet')
+        req.t('page-search.exports.year'),
+        req.t('page-search.exports.month'),
+        req.t('page-search.exports.day'),
+        req.t('page-search.exports.timestamp'),
+        req.t('page-search.exports.originalURL'),
+        req.t('page-search.exports.linkToArchive'),
+        req.t('page-search.exports.linkToScreenshot'),
+        req.t('page-search.exports.linkToExtractedText'),
+        req.t('page-search.exports.collection'),
+        req.t('page-search.exports.mimeType'),
+        req.t('page-search.exports.title'),
+        req.t('page-search.exports.snippet')
     );
 
 

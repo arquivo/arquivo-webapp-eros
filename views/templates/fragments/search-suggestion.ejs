@@ -8,11 +8,11 @@ if(typeof requestData != 'undefined'){
  suggestionRequestData.set('q',suggestion)
  %> 
 <section id="search-suggestion-container" class="search-suggestion-container-cl">
-    <h3><%= t('search-suggestion.accessibility.title') %></h3>    
+    <h3><%= t('page-search.search-suggestion.accessibility.title') %></h3>    
     <!-- starts suggestion message --> 
     <section id="search-suggestion-message">
-     <h4><%= t('search-suggestion.accessibility.message') %></h4> 
-     <p id="term-suggested" >&rarr; <%= t('search-suggestion.did-you-mean') %> <a href="/page/search?<%- suggestionRequestData.toString() %>"><%= suggestion %></a></p>
+     <h4><%= t('page-search.search-suggestion.accessibility.message') %></h4> 
+     <p id="term-suggested" >&rarr; <%= t('page-search.search-suggestion.did-you-mean') %> <a href="/page/search?<%- suggestionRequestData.toString() %>"><%= suggestion %></a></p>
     </section> 
     <!-- ends suggestion message -->
 
