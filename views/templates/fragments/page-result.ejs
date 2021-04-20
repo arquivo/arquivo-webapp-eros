@@ -74,7 +74,7 @@
                  newRequestData.set('offset', 0 )
                 %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <button type="submit" value="View more results of <%= site %>"> &rarr; View more results of <%= site %></button>
+                <button type="submit"> &rarr; <%= t('page-search.view-more-results',{site}) %></button>
             </form>
         </li>
         <% } %>
