@@ -3,7 +3,7 @@ $(function () {
     if ($('#search-tools-date-slider').length) {
 
         //Constants
-        const minDate = new Date(1996, 0, 1);
+        const minDate = new Date(1991, 7, 6);
         const maxDate = new Date();
         const minYear = minDate.getFullYear();
         const maxYear = maxDate.getFullYear();
