@@ -22,6 +22,32 @@ search-suggestion:
     en: 'Did you mean:'
     pt: 'Será que quis dizer:' 
 
+#traduções para not found
+not-found:
+  accessibility:
+    title:
+      en: Not found suggestions container
+      pt: Recipiente para notificação de não encontrado
+    message:
+      en: Not found suggestions message
+      pt: Mensagem de notificação de não encontrado
+  message:
+    en: 'No results were found for the query:'
+    pt: 'Não foram encontrados resultados para a sua pesquisa:'
+  suggestions:
+    title:
+      en: 'We suggest that you:'
+      pt: 'Sugerimos que:'
+    first:
+      en: Widen the time interval
+      pt: Aumente o intervalo de tempo
+    second:
+      en: Try more general words
+      pt: Pesquise outras palavras
+    third:
+      en: Try the <a href="/page/advanced/search">Advanced search</a>
+      pt: Experimente a <a href="/page/advanced/search">Pesquisa avançada</a>
+
 
 #Traduções para exports
 exports:
