@@ -51,4 +51,7 @@ fieldset:
     label:
       pt: '<strong>Número de resultados</strong>:'
       en: '<strong>Number of results</strong>:'
+  search:
+    en: Search
+    pt: Pesquisar
     
