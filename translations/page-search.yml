@@ -5,6 +5,9 @@ accessibility:
 estimated-results:
   pt: Cerca de ${numResults} resultados a partir de ${from} até ${to}
   en: About ${numResults} results from ${from} until ${to} 
+view-more-results:
+  pt: Mais resultados de ${site}
+  en: More results from ${site}
 
 #Traduções para exports
 queryArgument:
