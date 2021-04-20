@@ -101,7 +101,7 @@ module.exports = function (req, res) {
         (suggestion) => {
             apiRequest(apiRequestData,
                 (apiData) => {
-                    res.render('fragments/pages-search-results', {
+                    res.render('partials/pages-search-results', {
                         requestData: requestData,
                         apiData: apiData,
                         suggestion: suggestion,
