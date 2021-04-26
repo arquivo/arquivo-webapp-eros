@@ -547,12 +547,6 @@ li.date-selected a {
   /* To use in future versions color: #fbff85 */
 }
 
-li.date-selected a::before {
-  /* To use in future: content: "\2192";
-  margin-left: -19.5px;
-  padding-right: 5px; */
-}
-
 li.date-selected a:hover {
    color:#00324b;
 }
@@ -709,10 +703,6 @@ margin-top: 14px;
 
 body#landing-replay #replay-list, body#landing-replay span.number-of-versions {
   display: none;
-}
-
-body#landing-replay nav#replay-left-nav li.date-selected a {
- /* Use for future: color: #fbff85; */
 }
 
 body#landing-replay nav#replay-left-nav li.date-selected a:hover {
@@ -2010,10 +2000,6 @@ form#search-form input#submit-search-input {
     transition: 0.2s;
     -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 25%);
     box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 25%);
-  }
-
-  .ui-state-default, .ui-widget-content .ui-state-default {
-    
   }
 
     form#search-form input#submit-search-input:hover {
