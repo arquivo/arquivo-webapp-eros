@@ -2451,7 +2451,7 @@ section.navigation-tools button {
 } 
 
 body#pages-search-results section.navigation-tools button, body#images-search-results section.navigation-tools button {
-  padding: 5px 7px 8px 7px;
+  padding: 5px 7px;
   border-radius: 4px;
   font-size: inherit;
   z-index: 0;
