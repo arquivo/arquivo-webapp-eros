@@ -4,7 +4,7 @@
     const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa 
     const year = pageData.tstamp.slice(0,4); 
     const month = t('common.months.'+pageData.tstamp.slice(4,6)); 
-    const day = pageData.tstamp.slice(6,8); 
+    const day = parseInt(pageData.tstamp.slice(6,8)); 
     const dedupField = requestData.get('dedupField') ?? 'site' 
     const subResult = dedupField == 'site' && pageData.originalURL == prevUrl; 
     const query = requestData.get('q'); 
@@ -60,7 +60,7 @@
     <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="<%- onClick %>" onkeypress="<%- onKeyPress %>">
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
-        <li><p class="results-date"><%= day %> <%= month %>, <%= year %></p></li>
+        <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
         <% if (subResult && !siteRegEx.test(query) ) { %> 
         <li>
@@ -74,7 +74,7 @@
                  newRequestData.set('offset', 0 )
                 %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <button type="submit" value="View more results of <%= site %>"> &rarr; View more results of <%= site %></button>
+                <button type="submit"> &rarr; <%= t('page-search.view-more-results',{site}) %></button>
             </form>
         </li>
         <% } %>

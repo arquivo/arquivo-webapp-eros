@@ -1,0 +1,57 @@
+#translations for advanced search
+accessibility:
+  title:
+    pt: Formulário de pesquisa avançada de páginas
+    en: Page advanced search form
+  legend:
+    pt: Preencha o formulário
+    en: Fill the form
+fieldset:
+  date:
+    label:
+      pt: '<strong>Data</strong>:'
+      en: '<strong>Date</strong>:'
+  with:
+    label: 
+      pt: '<strong>Tenham</strong> estas palavras:'
+      en: '<strong>With</strong> these words:'
+    example:
+      pt: 'ex.: expo 98'
+      en: 'e.g.: group draw'
+  phrase:
+    label:
+      pt: '<strong>Tenham</strong> esta expressão ou frase:'
+      en: '<strong>With</strong> this phrase:'
+    example:
+      pt: 'ex.: pavilhão da utopia'
+      en: 'e.g.: euro 2004'
+  without:
+    label:
+      pt: '<strong>Não tenham</strong> estas palavras:'
+      en: '<strong>Without</strong> any of these words:'
+    example:
+      pt: 'ex.: concerto'
+      en: 'e.g.: rugby'
+  format:
+    label:
+      pt: '<strong>Formato</strong>:'
+      en: '<strong>Format</strong>:'
+    option:
+      all:
+        pt: Todos os formatos
+        en: All formats
+  website:
+    label:
+      pt: '<strong>Sítio Web</strong>:'
+      en: '<strong>Website</strong>:'
+    example:
+      pt: 'ex.: www.fccn.pt'
+      en: 'e.g.: www.fccn.pt'
+  results:
+    label:
+      pt: '<strong>Número de resultados</strong>:'
+      en: '<strong>Number of results</strong>:'
+  search:
+    en: Search
+    pt: Pesquisar
+    
