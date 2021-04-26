@@ -1,12 +1,19 @@
-<!-- starts pages search results: create a fetch loop here -->
+<% 
+let suggestionRequestData = new URLSearchParams()
+
+if(typeof requestData != 'undefined'){ 
+    suggestionRequestData = new URLSearchParams(requestData);
+ }
+ 
+ suggestionRequestData.set('q',suggestion)
+ %> 
 <section id="search-suggestion-container" class="search-suggestion-container-cl">
-    <h3>Search suggestions container</h3>    
-    <!-- starts not-found-message --> 
+    <h3><%= t('page-search.search-suggestion.accessibility.title') %></h3>    
+    <!-- starts suggestion message --> 
     <section id="search-suggestion-message">
-     <h4>Search suggestions message</h4> 
-     <p id="term-suggested" >&rarr; Did you mean: <a href="pages"><%= suggestion %></a></p>
+     <h4><%= t('page-search.search-suggestion.accessibility.message') %></h4> 
+     <p id="term-suggested" >&rarr; <%= t('page-search.search-suggestion.did-you-mean') %> <a href="/page/search?<%- suggestionRequestData.toString() %>"><%= suggestion %></a></p>
     </section> 
-    <!-- ends not-found-message -->
+    <!-- ends suggestion message -->
 
 </section>
-<!-- ends pages search results -->

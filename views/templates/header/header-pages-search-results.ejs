@@ -53,21 +53,7 @@
     <!-- ends search tools input -->
 
     <!-- starts search tools buttons -->
-    <section id="search-tools-buttons">
-      <h4>Search Pages and Images Buttons</h4>
-      <form id="search-form-pages" class="buttons" action="/pages" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
-      </form>
-      <form id="search-form-images" class="buttons" action="/images" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
-      </form>
-      <form id="search-form-advanced" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
-        <input type="hidden" name="l" value="<%= getLanguage() %>">
-        <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
-      </form>
-    </section>
+    <%- include('../fragments/search-tools-buttons') %>
     <!-- ends search tools buttons -->
   </section>
   <!-- ends search tools section -->

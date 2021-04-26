@@ -3227,3 +3227,20 @@ section#search-tools #submit-search {
     display: none;
   }
 }
+
+button.next-page {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-top: 18px;
+}
+button.previous-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: 18px;
+}
+
+#institutional img {
+  filter: grayscale(100%);
+}

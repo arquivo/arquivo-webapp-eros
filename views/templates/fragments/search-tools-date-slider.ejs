@@ -1,4 +1,4 @@
-<% let startDate = new Date(1996,0,1) %>
+<% let startDate = new Date(1991,7,6) %>
 <% let endDate = new Date() %>
 <% let boundDates = function(min, date, max){
     if(date < min) {return min;}
@@ -32,7 +32,7 @@
                     value="<%= startDate.getFullYear() %>" readonly aria-label="Choose your starting year">
             </li>
             <li class="search-calendar-day-month">
-                <input type="text" id="start-day-month" class="calendar-day-month-input" value="<%= ('0'+startDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(startDate.getMonth()+1)).slice(-2)) %>"
+                <input type="text" id="start-day-month" class="calendar-day-month-input" value="<%= startDate.getDate() %> <%= t('common.shortMonths.'+('0'+(startDate.getMonth()+1)).slice(-2)) %>"
                     readonly  aria-label="Choose your starting day and month">
             </li>
         </ul>
@@ -52,7 +52,7 @@
             </li>
             <li class="search-calendar-day-month">
                 <input type="text" id="end-day-month" class="call-datepicker calendar-day-month-input"
-                    value="<%= ('0'+endDate.getDate()).slice(-2) %> <%= t('common.shortMonths.'+('0'+(endDate.getMonth()+1)).slice(-2)) %>" readonly aria-label="Choose your ending day and month">
+                    value="<%= endDate.getDate() %> <%= t('common.shortMonths.'+('0'+(endDate.getMonth()+1)).slice(-2)) %>" readonly aria-label="Choose your ending day and month">
             </li>
             
         </ul>

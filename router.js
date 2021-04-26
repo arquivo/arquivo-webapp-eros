@@ -39,8 +39,9 @@ module.exports = function (app) {
 
     // Pages advanced search
     app.get('/page/advanced/search', function (req, res) {
-
-        res.render('pages/pages-advanced-search');
+        
+        const requestData = sanitizeInputs(req, res);
+        res.render('pages/pages-advanced-search',{requestData:requestData});
     });
 
     // Images: landing page
@@ -89,12 +90,12 @@ module.exports = function (app) {
     });
     // ends show list    
 
-    // starts fragments
-    app.get('/fragments/:id', function (req, res) {
+    // starts partials
+    app.get('/partials/:id', function (req, res) {
         if (req.params.id == 'pages-search-results') {
             searchPages(req, res);
         } else {
-            res.render('fragments/' + req.params.id, { layout: false });
+            res.render('partials/' + req.params.id, { layout: false });
         }
     });
 
