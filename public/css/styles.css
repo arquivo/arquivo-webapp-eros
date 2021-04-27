@@ -2237,6 +2237,7 @@ section#pages-results ul > li > a.results-url  {
   white-space: nowrap;
   width: auto; 
   padding: 0 0 5px 0; 
+  text-decoration: none;
 }
 
 section#pages-results ul > li > a.results-title  {
