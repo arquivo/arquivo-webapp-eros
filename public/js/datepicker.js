@@ -15,7 +15,7 @@ $(function () {
 
         //load modal datepicker template into local variable
         $.ajax({
-            url: '/fragments/modal-datepicker?l='+lang,
+            url: '/partials/modal-datepicker?l='+lang,
             success: function (data) {
                 modalDatepickerContent = data
             }
