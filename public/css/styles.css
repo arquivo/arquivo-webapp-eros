@@ -1792,6 +1792,7 @@ ul#date-container-end {
   padding: 38px 0 28px 0;
   border: none;
   width: 100%;
+  z-index: 0;
 }
 
   #slider-range-container span.search-calendar-day-month {
