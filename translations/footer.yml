@@ -23,7 +23,7 @@ about:
       en: 'Exhibitions'
     url:
       pt: 'https://arquivo.pt/expos'
-      en: 'https://arquivo.pt/exhibitions'
+      en: 'https://sobre.arquivo.pt/en/11557-2/collections/'
   press:
     text:
       pt: 'Área de imprensa'
@@ -132,7 +132,7 @@ collaborate:
       en: 'Donate historical web content'
     url:
       pt: 'https://arquivo.pt/doar'
-      en: 'https://arquivo.pt/donate'
+      en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
   rnd:
     text:
       pt: 'Investigação'
