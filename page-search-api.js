@@ -7,12 +7,12 @@ module.exports = function (apiRequestData, callback) {
     let apiData = {};
     const apiRequest = https.get(config.get('text.search.api') + '?' + apiRequestData.toString(),
         (apiRes) => {
-            apiRes.on('data', (d) => { apiReply = apiReply + d.toString() });
+            apiRes.on('data', (d) => { apiReply = apiReply + d.toString(); });
             apiRes.on('end', () => {
                 apiData = JSON.parse(apiReply);
             });
             apiRes.on('close', () => {
-                callback(JSON.parse(apiReply));
+                callback(apiData);
             });
 
         });

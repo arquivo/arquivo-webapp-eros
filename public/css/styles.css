@@ -776,6 +776,10 @@ body#list-results main  {
   border-radius: 3px;
 }
 
+body#list-results main section#loading-section{
+  filter: grayscale(1) invert(1);
+}
+
 body#table-results #replay-table-results-nav, body#list-results #replay-list-results-nav  {
   width: 100%;
 }
