@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="<%- getLanguage() %>">
+    
+    <!-- starts document <head>...</head> -->
+    <%- include("../templates/head") -%>
+    <!-- ends document <head>...</head> -->
+
+    <!-- starts document body content -->
+    <body id="list-results" class="list-results-cl">
+        
+            <!-- starts skip to main content -->
+            <%- include("../templates/fragments/skip-to-main-content") -%>
+            <!-- ends skip to main content -->
+        
+            <!-- adds headers for search engines -->
+            <%- include("../templates/header/header-search-engine") -%>
+            <!-- ends headers for search engines -->        
+        
+            <!-- starts include header table list -->     
+            <%- include("../templates/header/header-table-list-results") -%>
+            <!-- ends include header table list --> 
+            
+            <!-- starts main container--> 
+            <main id="main-content"> 
+
+                <!-- starts include body replay table list results -->     
+                <%- include("../templates/body/body-replay-table-list-results") -%>
+                <!-- ends include body replay table list results -->   
+                    
+            </main>
+            <!-- ends main container-->
+
+            <!-- starts footer -->
+            <%- include("../templates/footer") -%>
+            <!-- ends footer --> 
+
+    </body>
+    <!-- ends document body content -->
+
+</html>
