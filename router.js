@@ -1,4 +1,5 @@
 const searchPages = require('./search-pages.js');
+const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
 
 module.exports = function (app) {
@@ -11,21 +12,27 @@ module.exports = function (app) {
     // Pages search results
     app.get('/page/search', function (req, res) {
         const requestData = sanitizeInputs(req, res);
+        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
 
         if (!requestData.has('q') || requestData.get('q') == '') {
             res.render('pages/home');
+        } else if(urlPattern.test(requestData.get('q'))){
+            res.redirect('/url/search?'+requestData.toString())
         } else {
             res.render('pages/pages-search-results', {
                 requestData: requestData,
             });
         }
     });
+    app.get('/url/search', function (req, res) {
+        res.render('pages/replay-table-list-results', {requestData: sanitizeInputs(req, res) });
+    });
 
     // Images search results
     app.get('/images-search-results', function (req, res) {
 
         res.render('pages/images-search-results');
-    });
+    });// Images search results
     // Images search results
     app.get('/image/search', function (req, res) {
         res.render('pages/images-search-results');
@@ -94,6 +101,8 @@ module.exports = function (app) {
     app.get('/partials/:id', function (req, res) {
         if (req.params.id == 'pages-search-results') {
             searchPages(req, res);
+        } else if(req.params.id == 'url-search-results') {
+            searchUrl(req, res);
         } else {
             res.render('partials/' + req.params.id, { layout: false });
         }
