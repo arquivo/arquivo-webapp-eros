@@ -15,15 +15,15 @@ about:
       pt: 'Publicações'
       en: 'Publications'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/publicacoes/'
-      en: 'https://sobre.arquivo.pt/en/publications/'
-  examples:
+      pt: 'https://arquivo.pt/publica'
+      en: 'https://arquivo.pt/publications'
+  exhibitions:
     text:
-      pt: 'Exemplos de páginas preservadas'
-      en: 'Examples of preserved pages'
+      pt: 'Exposições'
+      en: 'Exhibitions'
     url:
-      pt: 'https://arquivo.pt/exemplos'
-      en: 'https://arquivo.pt/examples/'
+      pt: 'https://arquivo.pt/expos'
+      en: 'https://sobre.arquivo.pt/en/11557-2/collections/'
   press:
     text:
       pt: 'Área de imprensa'
@@ -33,15 +33,15 @@ about:
       en: 'https://arquivo.pt/press'
   source:
     text:
-      pt: 'Código-aberto & APIs'
-      en: 'Open-source and API'
+      pt: 'API & Código-aberto'
+      en: 'API & Open-source'
     url:
-      pt: 'https://github.com/arquivo/pwa-technologies/wiki'
-      en: 'https://github.com/arquivo/pwa-technologies/wiki'
+      pt: 'https://arquivo.pt/api'
+      en: 'https://arquivo.pt/api'
   terms:
     text:
-      pt: 'Termos e condições'
-      en: 'Terms and conditions'
+      pt: 'Termos e Condições'
+      en: 'Terms and Conditions'
     url:
       pt: 'https://sobre.arquivo.pt/pt/acerca/termos-e-condicoes/'
       en: 'https://sobre.arquivo.pt/en/about/terms-and-conditions/'
@@ -56,42 +56,43 @@ news:
       en: 'Subscribe mailing list'
     url:
       pt: 'https://groups.google.com/forum/#!forum/divulgarquivopt/join'
-      en: 'https://groups.google.com/forum/#!forum/arquivopt-international/join'
+      en: 'https://groups.google.com/forum/#!forum/divulgarquivopt/join'
   latest:
     text:
       pt: 'Últimas novidades'
       en: 'Latest news'
     url:
       pt: 'https://arquivo.pt/noticias'
-      en: 'https://sobre.arquivo.pt/en/news/'
+      en: 'https://arquivo.pt/news'
   twitter:
     text:
       pt: 'Twitter'
       en: 'Twitter'
     url:
-      pt: 'https://twitter.com/#!/arquivoweb_pt'
-      en: 'https://twitter.com/pt_webarchive'
+      pt: 'https://twitter.com/ArquivoWeb_PT'
+      en: 'https://twitter.com/PT_WebArchive'
   facebook:
     text:
       pt: 'Facebook'
       en: 'Facebook'
     url:
-      pt: 'https://www.facebook.com/Arquivo.pt/'
+      pt: 'https://www.facebook.com/Arquivo.pt'
       en: 'https://www.facebook.com/PortugueseWebArchive/'
-  rss:
-    text:
-      pt: 'Subscreva RSS'
-      en: 'Subscribe RSS'
-    url:
-      pt: 'https://sobre.arquivo.pt/pt/rss'
-      en: 'https://sobre.arquivo.pt/en/rss/'
   videos:
     text:
       pt: 'Vídeos'
       en: 'Videos'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/publicacoes/videos/'
-      en: 'https://sobre.arquivo.pt/en/publications/videos/'
+      pt: 'https://arquivo.pt/videos'
+      en: 'https://arquivo.pt/videos'
+  dissemination:
+    text:
+      pt: 'Material de Divulgação'
+      en: 'Dissemination material'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/imprensa/material-de-divulgacao/'
+      en: 'https://sobre.arquivo.pt/en/about/press/dissemination-materials/'
+  
 
 collaborate:
   header:
@@ -106,58 +107,66 @@ collaborate:
       en: 'https://arquivo.pt/awards'
   suggest:
     text:
-      pt: 'Sugira um site'
+      pt: 'Sugira site'
       en: 'Suggest a site'
     url:
       pt: 'https://arquivo.pt/sugerir'
       en: 'https://arquivo.pt/suggest'
-  dissemination:
+  memorial:
     text:
-      pt: 'Material de divulgação'
-      en: 'Dissemination materials'
+      pt: 'Memorial'
+      en: 'Memorial'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/imprensa/material-de-divulgacao/'
-      en: 'https://sobre.arquivo.pt/en/about/press/dissemination-materials/'
+      pt: 'https://arquivo.pt/memorial'
+      en: 'https://sobre.arquivo.pt/en/collaborate/web-memorial'
   publish:
     text:
-      pt: 'Crie sites preserváveis'
-      en: 'Publish preservable sites'
+      pt: 'Recomendações para webmasters'
+      en: 'Recommendations for publishers'
     url:
       pt: 'https://arquivo.pt/recomendacoes'
       en: 'https://arquivo.pt/recommendations'
-  supply:
+  donate:
     text:
       pt: 'Forneça conteúdos históricos'
-      en: 'Supply historical web content'
+      en: 'Donate historical web content'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/colabore/fornecimento-de-conteudos-historicos-da-web-portuguesa/'
+      pt: 'https://arquivo.pt/doar'
       en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
   rnd:
     text:
-      pt: 'Investigação e desenvolvimento'
-      en: 'Research & development'
+      pt: 'Investigação'
+      en: 'Research & Development'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/colabore/id/'
-      en: 'https://sobre.arquivo.pt/en/collaborate/rd/'
+      pt: 'https://arquivo.pt/investiga'
+      en: 'https://arquivo.pt/research'
+   
 
 help:
   header:
     pt: 'Ajuda'
     en: 'Help'
-  search: 
+  page-search: 
     text:
-      pt: 'Pesquisa'
-      en: 'Search'
+      pt: 'Pesquisa de páginas'
+      en: 'Page search'
     url:
       pt: 'https://sobre.arquivo.pt/pt/ajuda/pesquisa/'
-      en: 'https://sobre.arquivo.pt/en/help/search/'
-  advanced-search:
+      en: 'https://sobre.arquivo.pt/en/help/search-2/'
+  image-search:
     text:
-      pt: 'Pesquisa avançada'
-      en: 'Advanced search'
+      pt: 'Pesquisa de imagens'
+      en: 'Image search'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/pesquisa-avancada/'
-      en: 'https://sobre.arquivo.pt/en/help/advanced-search/'
+      pt: 'https://sobre.arquivo.pt/pt/ajuda/ajuda-acerca-da-pesquisa-de-imagens/'
+      en: 'https://sobre.arquivo.pt/en/help/help-about-image-search/'
+  crawling:
+    text:
+      pt: 'Recolha'
+      en: 'Crawling'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/ajuda/recolha-e-arquivo-de-conteudos/'
+      en: 'https://arquivo.pt/faq-crawling'
   access:
     text:
       pt: 'Acesso'
@@ -165,27 +174,13 @@ help:
     url:
       pt: 'https://sobre.arquivo.pt/pt/ajuda/acesso-a-conteudos-arquivados/'
       en: 'https://sobre.arquivo.pt/en/help/access-to-archived-contents/'
-  crawling:
-    text:
-      pt: 'Recolha'
-      en: 'Crawling and archiving'
-    url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/recolha-e-arquivo-de-conteudos/'
-      en: 'https://sobre.arquivo.pt/en/help/crawling-and-archiving-web-content/'
-  faq:
-    text:
-      pt: 'Perguntas frequentes'
-      en: 'Frequently asked questions'
-    url:
-      pt: 'https://arquivo.pt/faq'
-      en: 'https://sobre.arquivo.pt/en/help/'
   courses:
     text:
-      pt: 'Formações'
+      pt: 'Formação'
       en: 'Training courses'
     url:
       pt: 'https://arquivo.pt/forma'
-      en: 'https://sobre.arquivo.pt/en/help/training-courses-by-arquivo-pt/'
+      en: 'https://arquivo.pt/training'
   contact:
     text:
       pt: 'Contacto'
