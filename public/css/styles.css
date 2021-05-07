@@ -1841,6 +1841,15 @@ ul#date-container-end {
   z-index: 0;
 }
 
+body#pages-advanced-search #slider-range-container, body#images-advanced-search #slider-range-container {
+  position: relative;
+  margin: 0 auto 20px auto;
+  padding: 38px 0 28px 0;
+  border: none;
+  width: 100%;
+  z-index: 0;
+
+}
   #slider-range-container span.search-calendar-day-month {
     position: relative;
     z-index: 1;
@@ -1858,7 +1867,7 @@ ul#date-container-end {
 
   .ui-slider-horizontal .ui-slider-handle {
     
-    margin-left: -.4em !important;
+    margin-left: -.3em !important;
 }
 
 #slider-range {
@@ -1979,33 +1988,43 @@ section.form-container input[type="text"], section.form-container select {
  width: -moz-available;
  max-width: -webkit-fill-available; 
  transition: 0.5s;
+ border-radius: 5px;
+ border: 1px solid #ccc
+}
+
+section.form-container input[type="text"]:focus {
+ border: 1px solid #ccc;
 }
 
 section.form-container select { 
-  margin: 10px 0 15px 0;
+  margin: 10px 0 40px 0;
   width: 100%;  
   max-width: -webkit-fill-available; 
  }
+
+section.form-container select#number-of-results-pages, section.form-container select#number-of-results-images { 
+  margin-bottom: 20px;
+}
 
  section.form-container select option { 
   margin: 0px 0 0px 0;  
  }
 
 section.form-container input[type="text"]:focus, section.form-container select:focus {
-  transition: 0.5s;
- }
-
-section.form-container small {
- margin-bottom: 15px;
- font-size: smaller;
- font-style: italic;
- color: #444;
- padding: 0 10px; 
+  transition: 0.5s; border: 1px solid #ccc;
 }
 
-section.form-container small:last-child {
-margin-bottom: 40px; 
- }
+section.form-container small {
+margin-bottom: 40px;
+font-size: small;
+font-style: italic;
+color: #a7a5a5;
+padding: 0 10px; 
+}
+
+body#images-advanced-search section.form-container small.last-margin {
+ margin-bottom: 0px;
+}
 
 form {
   display: flex;
@@ -2053,6 +2072,12 @@ form#search-form input#submit-search-input {
       -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
     }
+    
+    form#advanced-search-form-pages {
+      padding-top: 20px;
+    }
+
+
 
      /* Advanced search form */
      form.advanced-search-form section.navigation-tools {      
@@ -2969,14 +2994,17 @@ section#loading-section form#loading-form button#loading-results {
   ##Screen = B/w 481px to 767px
 */
 @media (min-width: 481px) and (max-width: 767px) { 
-   
+  form#advanced-search-form-pages {
+    padding-top: 90px;
+  }
+ 
   header button#nav-menu-button-left {
     display: none;
   }
   header button#nav-menu-mobile-button-left {
     display: block;
     position: absolute;
-    left: 13px; 
+    left: 10px; 
     font-size: 1.1em;
     border-radius: 3px;   
     width: 31px;
@@ -3083,7 +3111,11 @@ nav#replay-left-nav {
   ##Screen = B/w 320px to 480px
 */
 @media (min-width: 0px) and (max-width: 480px) {
-  
+  form#advanced-search-form-pages {
+    padding-top: 90px;
+  }
+
+
   header button#nav-menu-button-left {
     display: none;
   }
@@ -3098,7 +3130,7 @@ nav#replay-left-nav {
   header button#nav-menu-mobile-button-left {
     display: block;
     position: absolute;
-    left: 13px; 
+    left: 10px; 
     font-size: 1.1em;
     border-radius: 5px;   
     width: 31px;
@@ -3106,8 +3138,6 @@ nav#replay-left-nav {
     background: none;
     border: none;
   }
-
-  
 
 body#pages-search-results button#nav-options-right-button,
 body#images-search-results button#nav-options-right-button,
@@ -3128,7 +3158,6 @@ body#landing-replay button#nav-options-right-button-mobile {
   background-color: transparent;
   border: none;
 }
-
 
 section.header-content-container {
   margin: -5px auto 0 auto;  
@@ -3176,7 +3205,10 @@ section#home-content h4, section#body-content h4  {
   ##Screen = B/w 280px to 480px
 */
 @media (min-width: 280px) and (max-width: 480px) {
-  
+  form#advanced-search-form-pages {
+    padding-top: 90px;
+  }
+
   header button#nav-menu-button-left {
     display: none;
   }
@@ -3257,7 +3289,13 @@ section#search-tools #submit-search {
 }
 
 @media (min-width: 0px) and (max-width: 279px) {
-  button#nav-options-right-button-mobile {
+
+
+  form#advanced-search-form-pages, form#advanced-search-form-images {
+      padding-top: 90px;
+    }
+    
+    button#nav-options-right-button-mobile {
     display: none;
   }
 }
@@ -3278,3 +3316,4 @@ button.previous-page {
 #institutional img {
   filter: grayscale(100%);
 }
+
