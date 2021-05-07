@@ -108,7 +108,7 @@ collaborate:
   suggest:
     text:
       pt: 'Sugira site'
-      en: 'Suggest a site'
+      en: 'Suggest a website'
     url:
       pt: 'https://arquivo.pt/sugerir'
       en: 'https://arquivo.pt/suggest'
