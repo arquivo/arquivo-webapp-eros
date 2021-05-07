@@ -633,12 +633,19 @@ section#alert-container p span {
   padding-right: 5px;
 }
 
+/* Replay right menu with a different with: 250px */
+
+body#landing-replay nav#options-right-nav {   
+  right: -259px;  
+  width: 250px; 
+}
+
 /* Options menu for both: pages and images search results */
 
 nav#options-right-nav {   
   right: -259px;    
-  width: 250px;  
- }
+  width: 200px;  
+}
 
 /* Enables options to be visible when searching for pages and images */ 
 
