@@ -2473,8 +2473,7 @@ section#images-results ul > li {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  width: 100%;
-  max-width: 93%;  
+  width: 100%;    
  }
 
  section#images-results ul li:hover a img {
@@ -2518,9 +2517,10 @@ body#pages-search-results section.navigation-tools button, body#images-search-re
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
   border-top: 1px solid #e8e8e8;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 0px;
-  padding-top: 50px;
+  padding-top: 20px;
+  height: auto;
 }
 
 body#pages-search-results section.navigation-tools {
@@ -2731,6 +2731,9 @@ footer section#institutional h4 {
 footer section#institutional img {  
   height: 45px;
   margin: 20px 5%;
+}
+footer section#institutional img {
+  filter: grayscale(100%);
 }
 
 footer section#institutional p {  
@@ -3299,21 +3302,3 @@ section#search-tools #submit-search {
     display: none;
   }
 }
-
-button.next-page {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-top: 18px;
-}
-button.previous-page {
-  position: absolute;
-  left: 0;
-  top: 0;
-  margin-top: 18px;
-}
-
-#institutional img {
-  filter: grayscale(100%);
-}
-
