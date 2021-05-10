@@ -1014,7 +1014,7 @@ section#search-tools form input[type="text"], section#search-tools-date-slider i
   border-right: none;
   font-family: Helvetica, Arial, sans-serif;
 } 
-section#search-tools-date-slider input[type="text"].calendar-year-input, input[type="text"].calendar-year-input {
+section#search-tools-date-slider input[type="text"].calendar-year-input {
   position: relative;
   z-index: 1;
   top: 1px;
@@ -1023,7 +1023,7 @@ section#search-tools-date-slider input[type="text"].calendar-year-input, input[t
   height: 39px;
   padding-bottom: 12px;
   padding-top: 2px; 
-  font-size: 17.2px;
+  font-size: 16px;
   text-align: center;
   color: white;
   background-color: transparent;
@@ -1040,7 +1040,7 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
   width: 100%;
   height: 11px;
   padding: 3px 0 0 0;  
-  font-size: 11.8px;
+  font-size: 11px;
   text-align: center;
   color: white;
   background-color: transparent;
