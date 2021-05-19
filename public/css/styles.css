@@ -770,7 +770,7 @@ nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li 
 
 /* starts Table and list menu ************************************************** */
 
-body#table-results main {
+body#table-list-results main {
   width: 100%;
   max-width: 100%;
   padding: 0px 1px 1px 1px;
@@ -781,9 +781,9 @@ body#table-results main {
   border-radius: 3px;
 }
 
-body#list-results section#list-results-container, body#table-results section#list-results-container {
+body#table-list-results section#list-results-container {
   width: 100%;
-  max-width: 100%;
+  max-width: 958px;
   padding: 20px 1px 20px 1px;
   display: flex;
   flex-direction: row;  
@@ -803,15 +803,11 @@ body#list-results main  {
   border-radius: 3px;
 }
 
-body#list-results main section#loading-section{
-  filter: grayscale(1) invert(1);
-}
-
-body#table-results #replay-table-results-nav, body#list-results #replay-list-results-nav  {
+body#table-list-results #replay-list-results-nav  {
   width: 100%;
 }
 
-body#table-results section.table-results-buttons {
+body#table-list-results section.table-results-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -823,7 +819,7 @@ body#table-results section.table-results-buttons {
   background-color: #033f72; 
 }
 
-body#list-results section.list-results-buttons {
+body#table-list-results section.list-results-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -834,8 +830,8 @@ body#list-results section.list-results-buttons {
   padding-bottom: 10px;  
 }
 
-body#table-results section.table-results-buttons button#replay-table-button,
-body#table-results section.table-results-buttons button#replay-list-button  {
+body#table-list-results section.table-results-buttons button#replay-table-button,
+body#table-list-results section.table-results-buttons button#replay-list-button  {
 
 width: 64px;
 height: 27px;
@@ -843,8 +839,8 @@ margin: 0 5px;
 
 }
 
-body#list-results section.list-results-buttons button#replay-table,
-body#list-results section.list-results-buttons button#replay-list  {
+body#table-list-results section.list-results-buttons button#replay-table,
+body#table-list-results section.list-results-buttons button#replay-list  {
 
 width: 64px;
 height: 27px;
@@ -867,15 +863,15 @@ button#next-navigation {
   margin: 0 18px;
   }
 
-body#table-results  nav#replay-table-results-nav h3, body#table-results nav#replay-table-results-nav h4, 
-body#list-results  nav#replay-list-results-nav h3, body#list-results nav#replay-list-results-nav h4 {
+body#table-list-results  nav#replay-table-results-nav h3, body#table-list-results nav#replay-table-results-nav h4, 
+body#table-list-results  nav#replay-list-results-nav h3, body#table-list-results nav#replay-list-results-nav h4 {
 visibility: collapse;
 height: 0;
 display: none;
 }
 
-body#table-results nav#replay-table-results-nav li.menu-pages-replay-date-hour a,
-body#list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour a {
+body#table-list-results nav#replay-table-results-nav li.menu-pages-replay-date-hour a,
+body#table-list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour a {
   padding: 10px 0 10px 42px;
   width: auto;
   display: block;
@@ -884,8 +880,8 @@ body#list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour a {
   border-bottom: 1px solid #cccccc47;
 }
 
-body#table-results nav#replay-table-results-nav li.menu-pages-replay-date-hour:hover a::after,
-body#list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour:hover a::after {
+body#table-list-results nav#replay-table-results-nav li.menu-pages-replay-date-hour:hover a::after,
+body#table-list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour:hover a::after {
   content: "See page \2192";
   float: right;
   margin-right: 18px;
