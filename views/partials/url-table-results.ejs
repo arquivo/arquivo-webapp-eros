@@ -84,13 +84,13 @@
                     if(row < tableData[year].length ){
                       const title = t('common.date.long',{
                         year: year,
-                        month: t('common.shortMonths.'+tableData[year][row].month),
+                        month: t('common.months.'+tableData[year][row].month),
                         day: parseInt(tableData[year][row].day),
                         hours: tableData[year][row].hours,
                         minutes: tableData[year][row].minutes
                       })
                       %> 
-                      <td class="year-month-data" headers="year-<%= year %>"> <a title="<%= title %>"><%= t('common.date.short',{
+                      <td class="year-month-data" headers="year-<%= year %>"> <a href="https://arquivo.pt/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
                         month: t('common.shortMonths.'+tableData[year][row].month),
                         day: parseInt(tableData[year][row].day)
                       }) %></a></td>
