@@ -1,0 +1,124 @@
+<!-- starts list results container -->
+<section id="list-results-container">
+  <!-- starts replay: list -->
+  <nav id="replay-list-results-nav">
+      <h3>Replay list</h3> 
+      <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
+    
+      <!-- starts list navigation buttons -->
+      <section class="list-results-buttons">
+        <h4>Replay table list menu navigation buttons</h4>      
+        
+        <form id="replay-table-button" action="/replay-table-results" method="GET">
+        <button><span class="fas fa-table" aria-hidden="true"></span> Table</button>
+        </form>
+        
+        <form id="replay-list-button" action="/replay-list-results" method="GET"></form>
+          <button id="replay-list" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
+        </form>      
+
+      </section>
+      <!-- ends list navigation buttons -->
+
+      <!-- starts list: show results as a list -->  
+      <section id="replay-menu-list">
+          <h4>Replay menu navigation list</h4> 
+            <ul>     
+              <% 
+              let returnData = {
+                  years: {},
+                  items: apiData.length
+              }
+              apiData.forEach(item => {
+                  const year = item.timestamp.slice(0, 4);
+                  const month = item.timestamp.slice(4, 6);
+                  const day = item.timestamp.slice(6, 8);
+                  const hours = item.timestamp.slice(8, 10);
+                  const minutes = item.timestamp.slice(10, 12);
+                  const seconds = item.timestamp.slice(12, 14);
+
+                  if (typeof returnData.years[year] === 'undefined') {
+                      returnData.years[year] = {
+                          months: {},
+                          items: 0
+                      };
+                  }
+                  if (typeof returnData.years[year].months[month] === 'undefined') {
+                      returnData.years[year].months[month] = []
+                  }
+
+                  returnData.years[year].months[month].push({
+                      ...item,
+                      year,
+                      month,
+                      day,
+                      hours,
+                      minutes,
+                      seconds,
+                  })
+                  returnData.years[year].items += 1;
+
+              });
+              returnData.items = Object.keys(returnData.years).reduce((accumulator, currentValue) => {
+                  return accumulator + returnData.years[currentValue].items;
+              }, 0);
+
+              apiData = returnData;
+
+              let a = true;
+              Object.keys(apiData.years).sort().forEach(year => {
+                const yearItems = apiData.years[year].items;
+                %>
+                <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-replay-list"><%= year %><span class="number-of-versions"><%= yearItems %> versions</span></a>
+                  <ul class="panel">
+                <% 
+                Object.keys(apiData.years[year].months).sort().forEach(month => {
+                  const monthItems = apiData.years[year].months[month].length;
+                  %>
+                    <li class="menu-pages-replay-month"><a href="#"><%= t('common.months.'+month) %><span class="number-of-versions"><%= monthItems %> versions</span></a></li>
+                  <% 
+                  apiData.years[year].months[month].forEach(item => {
+                  %>
+                  <li class="menu-pages-replay-date-hour"><a href="https://arquivo.pt/wayback/<%-item.timestamp+'/'+item.url %>"><%= t('common.date.long',{
+                    year: item.year,
+                    month: t('common.months.'+item.month),
+                    day: parseInt(item.day),
+                    hours: item.hours,
+                    minutes: item.minutes,
+                  })%></a></li>
+                  <% 
+                  });
+                });
+                %>
+                  </ul>
+                </li>
+                <%
+              });
+              %>       
+            </ul>
+      </section>
+      <!-- ends list: show results as a list --> 
+
+      </nav> 
+      <!-- ends replay: list -->
+    </section>
+    <!-- ends list results container -->
+
+    <!-- starts accordion for list -->  
+    <script>
+    var replayList = document.getElementsByClassName("accordion-replay-list");
+    var i;
+    
+    for (i = 0; i < replayList.length; i++) {
+      replayList[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+      });
+    }
+    </script>
+    <!-- ends accordion for list -->

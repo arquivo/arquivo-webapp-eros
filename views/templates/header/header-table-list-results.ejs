@@ -1,66 +1,58 @@
-<!-- starts alerts -->
-<%- include("../fragments/alert-container.ejs") -%>
-<!-- ends alerts -->
-
-<header>  
-  <button id="nav-menu-button-left" class="button" value="top navigation left menu button" onclick="openLeftMenuNav()">Menu</button> 
-  <button id="nav-menu-mobile-button-left" class="fas fa-bars" aria-hidden="true" value="top navigation left mobile menu button" onclick="openLeftMenuNav()"></button>
-  <button id="nav-options-right-button" class="button" value="top navigation right menu options button" onclick="openOptionstMenuNav()" style="display:none" >Options</button> 
-  <a id="logo-arquivo-link" href="/">
-    <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
-  </a>
+<% if (typeof searchType == 'undefined') { %>
+  <%  searchType = 'pages';  %>
+  <% } %>
   
-<!-- Include left and right nav -->
-<%- include("../menu/left_nav_menu") -%>
-<%- include("../menu/options_right_nav_menu") -%>
-
-<!-- starts white background top corner rounded shape -->
-<div class="background-top-curve"></div>
-<!-- ends white background top corner rounded shape -->
-</header>
+  <!-- starts alerts -->
+  <%- include("../fragments/alert-container.ejs") -%>
+  <!-- ends alerts -->
+  
+  <header>
+    <!-- Include menu button -->
+    <%- include("../menu/menu-button") -%>
+    <!-- end include menu button -->
+  
+    <!-- adds logo -->
+    <%- include("logo") -%>
+    <!-- ends logo -->
+  
+    <!-- Include left nav -->
+    <%- include("../menu/left_nav_menu") -%>
+    <!-- ends left nav -->
+  
+    <!-- starts white background top corner rounded shape -->
+    <div class="background-top-curve"></div>
+    <!-- ends white background top corner rounded shape -->
+  </header>
 <!-- starts search tools section -->
 <!-- starts modal with calendar -->
 
-<!-- starts content container -->
+<<!-- starts content container -->
 <section class="header-content-container">
-<h3>Content container</h3>  
+  <h3>Content container</h3>
 
-<section id="search-tools">
-<h3>Search Tools</h3>
-<!-- starts search tools input -->
-<form id="search-form" action="/page/search" method="GET">
-  <h4>Search input</h4>
-  <span class="search-input-button">
-  <input id="submit-search-input" type="search" placeholder="Words or URL" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()">
-  <button id="submit-search" type="submit"  aria-hidden="true" value="search mobile menu button">Search</button>
-  <button id="submit-search-mobile" type="submit" class="fas fa-search" aria-hidden="true" value="search mobile menu button"></button></span>
+  <!-- starts search tools section -->
+  <section id="search-tools">
+    <h3>Search Tools</h3>
 
-<!-- ends search tools input -->
-  
-<!-- starts range slider block --> 
-<%- include('../fragments/search-tools-date-slider') %>
-<!-- ends range slider block -->  
-</form>
-<!-- starts search tools buttons -->
-<section id="search-tools-buttons">
-  <h4>Search Pages and Images Buttons</h4>
-  <form id="search-form-pages" class="buttons" action="/pages" method="get">
-    <button type="submit" value="Pages">Pages</button>
-  </form>
-  <form id="search-form-images" class="buttons" action="/images" method="get">
-    <button type="submit" value="Images">Images</button>
-  </form>
-  <form id="search-form-advanced" class="buttons" action="/page/advanced/search" method="get">
-    <button type="submit" value="Advanced Search">Advanced Search</button>
-  </form>
-</section>
-<!-- ends search tools buttons -->
-</section>
-<!-- ends search tools section -->
+    <!-- starts search tools input -->
+    <form id="search-form" role="form" action="/<%= searchType.slice(0,-1) %>/search" method="GET">
 
-<!-- starts estimated results -->
-<p id="estimated-results" <span id="estimated-results-value">About 1.261.810.181</span> results from 1996 to 2021</p></li>
-<!-- ends estimated results -->
+      <!-- starts search bar -->
+      <%- include('../fragments/search-tools-search-bar') %>
+      <!-- ends search bar -->
 
+      <!-- starts range slider block -->
+      <%- include('../fragments/search-tools-date-slider') %>
+      <!-- ends range slider block -->
+
+    </form>
+    <!-- ends search tools input -->
+
+    <!-- starts search tools buttons -->
+    <%- include('../fragments/search-tools-buttons') %>
+    <!-- ends search tools buttons -->
+    
+  </section>
+  <!-- ends search tools section -->
 </section>
 <!-- ends content container -->

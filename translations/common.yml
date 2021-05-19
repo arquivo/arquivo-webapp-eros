@@ -110,3 +110,11 @@ shortMonths:
   '12':
     en: Dec
     pt: Dez
+
+date:
+  long:
+    en: '${day} ${month} at ${hours}:${minutes}, ${year}'
+    pt: '${day} ${month} às ${hours}:${minutes}, ${year}'
+  short:
+    en: ${day} ${month}
+    pt: ${day} ${month}

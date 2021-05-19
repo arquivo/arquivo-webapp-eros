@@ -55,8 +55,8 @@ news:
       pt: 'Subscrever lista de email'
       en: 'Subscribe mailing list'
     url:
-      pt: 'https://groups.google.com/forum/#!forum/divulgarquivopt/join'
-      en: 'https://groups.google.com/forum/#!forum/divulgarquivopt/join'
+      pt: 'https://arquivo.pt/inscrever'
+      en: 'https://arquivo.pt/subscribe'
   latest:
     text:
       pt: 'Últimas novidades'
