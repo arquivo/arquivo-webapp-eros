@@ -44,7 +44,6 @@
     <!-- ends replay: table -->
     <!-- starts table: shows results as a table -->
     <% 
-    console.log(apiData[0]);
     const [minYear,maxYear] = apiData.map(item => parseInt(item.timestamp.slice(0,4))).reduce((extremes,year) => {;
       return [Math.min(extremes[0],year),Math.max(extremes[1],year)];
     }, [new Date().getFullYear(),1991] );
