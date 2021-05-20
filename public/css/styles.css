@@ -484,11 +484,11 @@ nav#replay-left-nav li#replay-table button {
 }
 
 li.menu-pages-replay-year a {
- text-decoration: none;
- padding: 10px 20px;
- display: block;
- font-weight: bold;
- font-size: 0.9em;
+  text-decoration: none;
+  padding: 16px 20px;
+  display: block;
+  font-size: 0.9em;
+  border-top: 1px solid #ffffff2b;
 }
 
 li.menu-pages-replay-year a:hover {
@@ -499,13 +499,14 @@ li.menu-pages-replay-year a:hover {
 
 span.number-of-versions {
   padding: 5px;
-  border: 1px solid white;
-  border-radius: 1px;
+  border: 1px solid #ffffff7d;
+  border-radius: 3px;
   text-align: right;
   float: right;
-  font-size: 0.7em;
+  font-weight: normal;
+  font-size: 0.8em;
   margin-left: 10px;
-  margin-top: -3px;
+  margin-top: -4px;
 }
 
 span.number-of-versions:hover {
@@ -527,9 +528,9 @@ a:hover span.number-of-versions {
 
 li.menu-pages-replay-month a {
   padding: 10px 20 10px 30px;
-  font-weight: bold;
   font-size: 0.9em;
   border-bottom: 1px solid #cccccc47;
+  font-weight:  bold;
 }
 
 li.menu-pages-replay-month a:hover {
@@ -838,7 +839,6 @@ body#table-list-results section.list-results-buttons button#replay-table,
 body#table-list-results section.list-results-buttons button#replay-list  {
 
 width: 64px;
-height: 27px;
 margin: 0 5px;
 }
 
@@ -867,7 +867,7 @@ display: none;
 
 body#table-list-results nav#replay-table-results-nav li.menu-pages-replay-date-hour a,
 body#table-list-results nav#replay-list-results-nav li.menu-pages-replay-date-hour a {
-  padding: 10px 0 10px 42px;
+  padding: 16px 0 16px 42px;
   width: auto;
   display: block;
   text-decoration: none;
