@@ -9,7 +9,7 @@
     <!-- starts table navigation buttons -->
     <section class="table-results-buttons">
       <h4>Replay table menu navigation buttons</h4>
-      <button id="previous-navigation"></span>&larr;</button> 
+      <button id="previous-navigation" onclick="$('#tablePresentation').animate({scrollLeft: '-='+(window.innerWidth/2)}, 800, 'easeOutQuad');"></span>&larr;</button> 
       
       <%
       let tableRequestData,listRequestData
@@ -35,7 +35,7 @@
         <%- include('../templates/fragments/hidden-search-inputs',{requestData: listRequestData}) %>
         <button id="replay-list-button" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
       </form>      
-      <button id="next-navigation">&rarr;</button>
+      <button id="next-navigation" onclick="$('#tablePresentation').animate({scrollLeft: '+='+(window.innerWidth/2)}, 800, 'easeOutQuad');">&rarr;</button>
 
     </section>
     <!-- ends table navigation buttons -->
@@ -81,9 +81,10 @@
 
 
      %>   
+     <div id="tablePresentation" style="overflow-x: scroll;">
     <table id="replay-menu-table">
       <caption>Replay menu table</caption>        
-        <theader>
+        <thead>
             <tr id="display-year" class="year-table-row">
               <%
               allYears.forEach(year => {
@@ -120,6 +121,7 @@
               %>               
  </tbody>
 </table>
+</div>
 <!-- ends table: shows results as a table -->
 </section>
 <!-- ends table results container -->
