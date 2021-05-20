@@ -1,3 +1,6 @@
+
+
+
 <!-- starts list results container -->
 <section id="list-results-container">
   <!-- starts replay: list -->
@@ -7,15 +10,32 @@
     
       <!-- starts list navigation buttons -->
       <section class="list-results-buttons">
-        <h4>Replay table list menu navigation buttons</h4>      
-        
-        <form id="replay-table-button" action="/replay-table-results" method="GET">
-        <button><span class="fas fa-table" aria-hidden="true"></span> Table</button>
-        </form>
-        
-        <form id="replay-list-button" action="/replay-list-results" method="GET"></form>
-          <button id="replay-list" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
-        </form>      
+        <h4>Replay table list menu navigation buttons</h4>   
+        <%
+      let tableRequestData,listRequestData
+      if (typeof requestData == 'undefined'){
+        tableRequestData =  new URLSearchParams();
+        tableRequestData.set('viewMode','table');
+        listRequestData =  new URLSearchParams();
+        listRequestData.set('viewMode','list');
+      } else {
+        tableRequestData =  new URLSearchParams(requestData);
+        tableRequestData.set('viewMode','table');
+        listRequestData =  new URLSearchParams(requestData);
+        listRequestData.set('viewMode','list');
+      }
+      %>   
+      
+      <form id="replay-table" action="/url/search" method="GET">
+        <%- include('../templates/fragments/hidden-search-inputs',{requestData: tableRequestData}) %>
+      <button id="replay-table-button" type="submit"><span class="fas fa-table" aria-hidden="true"></span> Table</button>
+      </form>
+      
+      <form id="replay-list" action="/url/search" method="GET">
+      <%- include('../templates/fragments/hidden-search-inputs',{requestData: listRequestData}) %>
+        <button id="replay-list-button" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
+      </form>      
+      <button id="next-navigation">&rarr;</button>
 
       </section>
       <!-- ends list navigation buttons -->

@@ -11,14 +11,30 @@
       <h4>Replay table menu navigation buttons</h4>
       <button id="previous-navigation"></span>&larr;</button> 
       
-      <form id="replay-table" action="/replay-table-results" method="GET">
-      <button id="replay-table-button" type="submit"><span class="fas fa-table" aria-hidden="true"></span> Table</button>
+      <%
+      let tableRequestData,listRequestData
+      if (typeof requestData == 'undefined'){
+        tableRequestData =  new URLSearchParams();
+        tableRequestData.set('viewMode','table');
+        listRequestData =  new URLSearchParams();
+        listRequestData.set('viewMode','list');
+      } else {
+        tableRequestData =  new URLSearchParams(requestData);
+        tableRequestData.set('viewMode','table');
+        listRequestData =  new URLSearchParams(requestData);
+        listRequestData.set('viewMode','list');
+      }
+      %>   
+      
+      <form id="replay-table" action="/url/search" method="GET">
+        <%- include('../templates/fragments/hidden-search-inputs',{requestData: tableRequestData}) %>
+        <button type="submit" id="replay-table-button"><span class="fas fa-table" aria-hidden="true"></span> Table</button>
       </form>
       
-      <form id="replay-list" action="/replay-list-results" method="GET">
+      <form id="replay-list" action="/url/search" method="GET">
+        <%- include('../templates/fragments/hidden-search-inputs',{requestData: listRequestData}) %>
         <button id="replay-list-button" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
-      </form>
-
+      </form>      
       <button id="next-navigation">&rarr;</button>
 
     </section>
