@@ -209,11 +209,12 @@ table td a {
   transition: 0.2s;
   text-align: center;
   font-size: inherit;
+  text-decoration: none;
   outline: 1px solid #cccccc8a;
 }
 
-body#table-results table td a {
-  font-size: smaller; 
+body#table-list-results table td a {
+  font-size: 12px; 
 }
 
 table td a:active {
@@ -672,7 +673,7 @@ body#homepage button#nav-options-right-button  {
   font-size: 1.25em;
 }
 
-body#table-results main .painel {
+body#table-list-results main .painel {
   
  padding: 0px;
  background-color: transparent;
@@ -858,6 +859,12 @@ button#next-navigation {
   margin: 0 18px;
   }
 
+/* Hide previous and next buttons when on list versions page */
+
+.list-results-buttons button#next-navigation, .list-results-buttons button#previous-navigation {
+ display: none;
+}
+
 body#table-list-results  nav#replay-table-results-nav h3, body#table-list-results nav#replay-table-results-nav h4, 
 body#table-list-results  nav#replay-list-results-nav h3, body#table-list-results nav#replay-list-results-nav h4 {
 visibility: collapse;
@@ -929,7 +936,7 @@ section {
   overflow-y: hidden;
 }
 
-body#table-results section#table-results-container {   
+body#table-list-results section#table-results-container {   
   width: 100%;
 }
 
@@ -1643,7 +1650,7 @@ body#pages-advanced-search #modal a.close-modal,
 body#images-advanced-search #modal a.close-modal,
 body#pages-search-results #modal a.close-modal,
 body#images-search-results #modal a.close-modal,
-body#table-results #modal a.close-modal,
+body#table-list-results #modal a.close-modal,
 body#list-results #modal a.close-modal {
   display: none;
 }
@@ -2141,7 +2148,7 @@ section#pages-results > p, section#images-results > p, section#not-found-contain
   margin: 0 auto;
 }
 
-body#table-results p#estimated-results, body#list-results p#estimated-results   {
+body#table-list-results p#estimated-results, body#list-results p#estimated-results   {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
