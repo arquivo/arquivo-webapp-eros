@@ -42,7 +42,7 @@ module.exports = function (req, res) {
 
             const deltaToRemoveDuplicatedEntries = 3600;
             apiData.forEach(item => {
-                if (item.status && (item.status[0] === '4' || item.status[0] === '5')) { /*Ignore 400's and 500's*/
+                if (item.status && (item.status[0] !== '2' && item.status[0] !== '3')) { /*Ignore 400's and 500's*/
                     /*empty on purpose*/
                 } else {
                     if (previousItem != null && isRemovePreviousVersion(previousItem, item, deltaToRemoveDuplicatedEntries)) {
