@@ -10,12 +10,12 @@
 <section id="list-results-container">
   <!-- starts replay: list -->
   <nav id="replay-list-results-nav">
-      <h3>Replay list</h3> 
+      <h3><%= t('url-search.accessibility.nav.list') %></h3> 
       <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
     
       <!-- starts list navigation buttons -->
       <section class="list-results-buttons">
-        <h4>Replay table list menu navigation buttons</h4>   
+        <h4><%= t('url-search.accessibility.nav.buttons') %></h4>   
         <%- include('../templates/menu/url-nav-results', currentSelection = 'list') %>
       
       </section>
@@ -25,7 +25,7 @@
     </nav> 
       <!-- starts list: show results as a list -->  
       <section id="replay-menu-list">
-          <h4>Replay menu navigation list</h4> 
+          <h4><%= t('url-search.accessibility.replay.list') %></h4> 
             <ul>     
               <% 
               let returnData = {

@@ -1,23 +1,21 @@
 
 <section id="url-results" class="url-results-cl">
-  <h3>URL Search Results</h3>    
+  <h3><%= t('url-search.accessibility.title') %></h3>    
   <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
     numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
     from: requestData.get('from').slice(0,4),
     to: requestData.get('to').slice(0,4)
 }) %></span></p>
-  
 <!-- starts table results container -->
 <section id="table-results-container">
 <!-- starts replay: table -->
 <nav id="replay-table-results-nav">
-  
-    <h3>Replay table </h3> 
+    <h3><%= t('url-search.accessibility.nav.list') %></h3> 
     <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
    
     <!-- starts table navigation buttons -->
     <section class="table-results-buttons">
-      <h4>Replay table menu navigation buttons</h4>
+      <h4><%= t('url-search.accessibility.nav.buttons') %></h4>
       <button id="previous-navigation" onclick="$('#tablePresentation').animate({scrollLeft: '-='+(window.innerWidth/2)}, 800, 'easeOutQuad');"></span>&larr;</button> 
           
       <%- include('../templates/menu/url-nav-results', currentSelection = 'table') %>
@@ -67,7 +65,7 @@
      %>   
      <div id="tablePresentation" style="overflow-x: scroll;">
     <table id="replay-menu-table">
-      <caption>Replay menu table</caption>        
+      <caption><%= t('url-search.accessibility.replay.table') %></caption>        
         <thead>
             <tr id="display-year" class="year-table-row">
               <%

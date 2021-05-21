@@ -2,7 +2,23 @@ accessibility:
   title:
     pt: Resultados da Pesquisa de URL
     en: URL Search Results
-
+  nav:
+    table:
+      en: Navigation bar for table
+      pt: Barra de navegação para a tabela
+    list:
+      en: Navigation bar for list
+      pt: Barra de navegação para a lista
+    buttons:
+      en: Navigation bar buttons
+      pt: Botões da barra de navegação
+  replay:
+    table:
+      en: Replay table
+      pt: Tabela de replay
+    list:
+      en: Replay list
+      pt: Lista de replay
 
 nav:
   button:
