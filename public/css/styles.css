@@ -488,8 +488,9 @@ li.menu-pages-replay-year a {
   text-decoration: none;
   padding: 16px 20px;
   display: block;
-  font-size: 0.9em;
+  font-size: 0.95em;
   border-top: 1px solid #ffffff2b;
+  font-weight: bold;
 }
 
 li.menu-pages-replay-year a:hover {
@@ -529,9 +530,9 @@ a:hover span.number-of-versions {
 
 li.menu-pages-replay-month a {
   padding: 10px 20 10px 30px;
-  font-size: 0.9em;
-  border-bottom: 1px solid #cccccc47;
-  font-weight:  bold;
+  font-size: 0.9em;  
+  font-weight: bold;
+  padding-left: 40px;
 }
 
 li.menu-pages-replay-month a:hover {
@@ -539,8 +540,9 @@ li.menu-pages-replay-month a:hover {
 }
 
 li.menu-pages-replay-date-hour a {
-  padding-left:40px;
-  font-size: 0.8em;
+  padding-left: 63px;
+  font-size: 0.75em;
+  font-weight: normal;
 }
 
 li.menu-pages-replay-date-hour a:hover {
@@ -670,7 +672,7 @@ body#homepage button#nav-options-right-button  {
 .active:after {
   content: "\2212";
   float: right;
-  font-size: 1.25em;
+  font-weight: normal;
 }
 
 body#table-list-results main .painel {
@@ -782,9 +784,6 @@ body#table-list-results section#list-results-container {
   width: 100%;
   max-width: 958px;
   padding: 20px 1px 20px 1px;
-  display: flex;
-  flex-direction: row;  
-  justify-content:center;  
   background-color: #033f72; 
   border-radius: 5px;
 }
@@ -925,15 +924,15 @@ max-width: 960px;
 padding: 0 10px;
 }
 
-section.header-content-container h3 {
+section.header-content-container h3  {
   visibility: collapse;
   height: 0;
 }
 
 section {
   margin:0 auto;
-  padding: 0;  
-  /*width: 100%;*/
+  padding: 0; 
+  width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -941,6 +940,11 @@ section {
 
 body#table-list-results section#table-results-container {   
   width: 100%;
+}
+
+body#table-list-results section#url-results h3, body#table-list-results section#replay-menu-list h4 {   
+  visibility: collapse;
+  height: 0;
 }
 
 body#landing-replay {
