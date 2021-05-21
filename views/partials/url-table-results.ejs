@@ -31,11 +31,9 @@
     <!-- ends replay: table -->
     <!-- starts table: shows results as a table -->
     <% 
-    const [minYear,maxYear] = apiData.map(item => parseInt(item.timestamp.slice(0,4))).reduce((extremes,year) => {;
-      return [Math.min(extremes[0],year),Math.max(extremes[1],year)];
-    }, [new Date().getFullYear(),1991] );
-
-    const tableData = {}
+    const minYear = requestData.get('from').slice(0,4);
+    const maxYear = requestData.get('to').slice(0,4);
+    const tableData = {};
 
 
     for(let year = minYear; year <= maxYear; year++){

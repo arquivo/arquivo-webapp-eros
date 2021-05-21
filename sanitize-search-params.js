@@ -1,3 +1,4 @@
+const config = require('config');
 
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
@@ -36,6 +37,22 @@ module.exports = function (req, res) {
     transformParameterName(requestData, 'site', 'siteSearch');
     transformParameterName(requestData, 'hitsPerDup', 'dedupValue');
 
+    const defaultRequestParameters = {
+        from: config.get('search.start.date'),
+        to: (new Date()).toLocaleDateString('en-CA').split('-').join('')
+    }
+
+    Object.keys(defaultRequestParameters)
+        .filter(key => !requestData.has(key))
+        .forEach(key => requestData.set(key, defaultRequestParameters[key]));
+
+
+    if(parseInt(requestData.get('from')) < parseInt(defaultRequestParameters.from)){
+        requestData.set('from', defaultRequestParameters.from)
+    }
+    if(parseInt(requestData.get('to')) < parseInt(defaultRequestParameters.to)){
+        requestData.set('to', defaultRequestParameters.to)
+    }
 
     //handle all query inputs
     let q = requestData.get('q') ?? '';

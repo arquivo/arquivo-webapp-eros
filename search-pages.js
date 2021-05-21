@@ -11,7 +11,7 @@ module.exports = function (req, res) {
     const requestData = sanitizeInputs(req, res);
     const defaultApiParams = {
         q: '',
-        from: '19910806',
+        from: config.get('search.start.date'),
         to: now.toLocaleDateString('en-CA').split('-').join(''),
         type: null,
         offset: 0,
