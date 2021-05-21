@@ -1,0 +1,21 @@
+#translations for all headers
+alert-container:
+  accessibility:
+    title:
+      en: Notification message
+      pt: Mensagem de notificação
+  url-copied:
+    en: URL link copied
+    pt: Endereço URL copiado
+
+search-tools:
+  accessibility:
+    title:
+      en: Search Tools
+      pt: Ferramentas de Pesquisa
+
+content:
+  accessibility:
+    title:
+      en: Content container
+      pt: Recipiente de conteúdo

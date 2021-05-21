@@ -13,3 +13,8 @@ pagination:
   previous:
     pt: Anterior
     en: Previous
+
+
+skip-to-main-content:
+  en: Skip to main content
+  pt: Saltar para o conteúdo principal
