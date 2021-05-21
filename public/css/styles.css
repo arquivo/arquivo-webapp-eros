@@ -932,8 +932,8 @@ section.header-content-container h3 {
 
 section {
   margin:0 auto;
-  padding: 0;  
-  /*width: 100%;*/
+  padding: 0; 
+  width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -941,6 +941,11 @@ section {
 
 body#table-list-results section#table-results-container {   
   width: 100%;
+}
+
+body#table-list-results section#url-results h3 {   
+  visibility: collapse;
+  height: 0;
 }
 
 body#landing-replay {
