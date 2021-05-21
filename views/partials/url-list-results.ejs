@@ -1,6 +1,6 @@
 
 <section id="url-results" class="url-results-cl">
-  <h3>URL Search Results</h3>    
+  <h3><%= t('url-search.accessibility.title') %></h3>    
   <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
     numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
     from: requestData.get('from').slice(0,4),
@@ -21,6 +21,8 @@
       </section>
       <!-- ends list navigation buttons -->
 
+
+    </nav> 
       <!-- starts list: show results as a list -->  
       <section id="replay-menu-list">
           <h4>Replay menu navigation list</h4> 
@@ -101,8 +103,6 @@
             </ul>
       </section>
       <!-- ends list: show results as a list --> 
-
-      </nav> 
       <!-- ends replay: list -->
     </section>
     <!-- ends list results container -->

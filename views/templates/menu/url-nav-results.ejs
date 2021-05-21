@@ -21,11 +21,11 @@ if(typeof currentSelection !='undefined' ){
 <form id="replay-table" action="/url/search" method="GET">
   <%- include('../fragments/hidden-search-inputs',{requestData: tableRequestData}) %>
     <button id="replay-table-button" type="submit" <% if (selection=='table' ) { %> disabled<% } %>><span
-          class="fas fa-table" aria-hidden="true"></span> Table</button>
+          class="fas fa-table" aria-hidden="true"></span> <%= t('url-search.nav.button.table') %></button>
 </form>
 
 <form id="replay-list" action="/url/search" method="GET">
   <%- include('../fragments/hidden-search-inputs',{requestData: listRequestData}) %>
     <button id="replay-list-button" type="submit" <% if (selection=='list' ) { %> disabled<% } %>><span
-          class="fas fa-list" aria-hidden="true"></span> List</button>
+          class="fas fa-list" aria-hidden="true"></span> <%= t('url-search.nav.button.list') %></button>
 </form>

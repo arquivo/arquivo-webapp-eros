@@ -1,0 +1,14 @@
+accessibility:
+  title:
+    pt: Resultados da Pesquisa de URL
+    en: URL Search Results
+
+
+nav:
+  button:
+    table:
+      en: Table
+      pt: Tabela
+    list:
+      en: List
+      pt: Lista
