@@ -2,9 +2,6 @@ accessibility:
   title:
     pt: Resultados da Pesquisa de Páginas
     en: Page Search Results
-estimated-results:
-  pt: Cerca de ${numResults} resultados desde ${from} até ${to}
-  en: About ${numResults} results from ${from} to ${to} 
 view-more-results:
   pt: Mais resultados de ${site}
   en: More results from ${site}

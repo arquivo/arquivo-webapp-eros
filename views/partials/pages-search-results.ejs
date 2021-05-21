@@ -7,7 +7,7 @@
 <% } else { %>
     
     <h3><%= t('page-search.accessibility.title') %></h3>    
-    <p id="estimated-results"><span id="estimated-results-value"><%= t('page-search.estimated-results',{
+    <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
         numResults:(''+apiData.estimated_nr_results).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
         from: apiData.request_parameters.from.slice(0,4),
         to: apiData.request_parameters.to.slice(0,4)

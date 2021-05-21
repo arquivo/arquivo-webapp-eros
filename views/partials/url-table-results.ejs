@@ -1,3 +1,12 @@
+
+<section id="url-results" class="url-results-cl">
+  <h3>URL Search Results</h3>    
+  <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
+    numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
+    from: requestData.get('from').slice(0,4),
+    to: requestData.get('to').slice(0,4)
+}) %></span></p>
+  
 <!-- starts table results container -->
 <section id="table-results-container">
 <!-- starts replay: table -->
@@ -102,7 +111,7 @@
 <!-- ends table: shows results as a table -->
 </section>
 <!-- ends table results container -->
-
+</section>
 <!-- starts accordion for list -->  
 <script>
     var replayList = document.getElementsByClassName("accordion-replay-list");
