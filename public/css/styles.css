@@ -818,9 +818,10 @@ body#table-list-results section.table-results-buttons {
 
 body#table-list-results section.list-results-buttons {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   width: 100%;
+  margin-bottom: 20px;
+  flex-direction: row;
+  justify-content: center;  
   position: relative;
   z-index: 0;
 }
