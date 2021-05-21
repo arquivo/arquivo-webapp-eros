@@ -88,13 +88,14 @@
               Object.keys(apiData.years).sort().forEach(year => {
                 const yearItems = apiData.years[year].items;
                 %>
-                <li class="menu-pages-replay-year"><a href="javascript:(void)" class="accordion-replay-list"><%= year %><span class="number-of-versions"><%= yearItems %> versions</span></a>
+                <li class="menu-pages-replay-year"><a href="javascript:void(0)" class="accordion-replay-list"><%= year %><span class="number-of-versions"><%= yearItems %> versions</span></a>
                   <ul class="panel">
                 <% 
                 Object.keys(apiData.years[year].months).sort().forEach(month => {
                   const monthItems = apiData.years[year].months[month].length;
                   %>
-                    <li class="menu-pages-replay-month"><a href="#"><%= t('common.months.'+month) %><span class="number-of-versions"><%= monthItems %> versions</span></a></li>
+                    <li class="menu-pages-replay-month"><a href="javascript:void(0)" class="accordion-replay-list"><%= t('common.months.'+month) %><span class="number-of-versions"><%= monthItems %> versions</span></a>
+                    <ul class="panel">
                   <% 
                   apiData.years[year].months[month].forEach(item => {
                   %>
@@ -107,6 +108,7 @@
                   })%></a></li>
                   <% 
                   });
+                  %></ul></li><%
                 });
                 %>
                   </ul>
@@ -132,10 +134,18 @@
       replayList[i].addEventListener("click", function() {
         this.classList.toggle("active");
         var panel = this.nextElementSibling;
+        var parentPanel = this.parentElement.parentElement;
+        console.log(parentPanel);
         if (panel.style.maxHeight) {
+          if(parentPanel.classList.contains('panel')){
+            parentPanel.style.maxHeight = (parseInt(parentPanel.style.maxHeight.slice(0,-2))-parseInt(panel.style.maxHeight.slice(0,-2))) + 'px';
+          }
           panel.style.maxHeight = null;
         } else {
           panel.style.maxHeight = panel.scrollHeight + "px";
+          if(parentPanel.classList.contains('panel')){
+            parentPanel.style.maxHeight = (parseInt(parentPanel.style.maxHeight.slice(0,-2))+parseInt(panel.scrollHeight)) + 'px';
+          }
         } 
       });
     }
