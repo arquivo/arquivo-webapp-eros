@@ -279,7 +279,7 @@ h4#modal-datepicker-title {
 
 #modal-datepicker-datepicker {
   height: auto;
-  padding-bottom: 55pt;
+  padding-bottom: 48px;
 }
 
 button#modal-datepicker-confirm-button {
@@ -1609,7 +1609,8 @@ input[type="text"]#modal-datepicker-input:hover {
 input[type="text"]#modal-datepicker-input:focus {  
   background-color: rgb(239, 249, 252);
   transition: 0.5s;
-  outline: 2px solid #000;
+  border-radius: 3px;
+  border-color: black;
 }
 
 #modal-datepicker-datepicker .ui-state-default {
