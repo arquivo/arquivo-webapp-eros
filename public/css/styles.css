@@ -823,12 +823,14 @@ body#table-list-results section.list-results-buttons {
   width: 100%;
   position: relative;
   z-index: 0;
-  margin-bottom: 10px;  
-  padding-bottom: 10px;  
+}
+
+body#table-list-results section.list-results-buttons button {
+ margin: 0 5px;
 }
 
 body#table-list-results section.table-results-buttons button#replay-table-button,
-body#table-list-results section.table-results-buttons button#replay-list-button  {
+body#table-list-results section.table-results-buttons button#replay-list-button {
 
 width: 64px;
 height: 27px;
