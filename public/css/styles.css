@@ -831,11 +831,8 @@ body#table-list-results section.list-results-buttons button {
 
 body#table-list-results section.table-results-buttons button#replay-table-button,
 body#table-list-results section.table-results-buttons button#replay-list-button {
-
-width: 64px;
 height: 27px;
 margin: 0 5px;
-
 }
 
 body#table-list-results section.list-results-buttons button#replay-table,
