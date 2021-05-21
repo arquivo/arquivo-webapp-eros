@@ -10,31 +10,9 @@
     <section class="table-results-buttons">
       <h4>Replay table menu navigation buttons</h4>
       <button id="previous-navigation" onclick="$('#tablePresentation').animate({scrollLeft: '-='+(window.innerWidth/2)}, 800, 'easeOutQuad');"></span>&larr;</button> 
-      
-      <%
-      let tableRequestData,listRequestData
-      if (typeof requestData == 'undefined'){
-        tableRequestData =  new URLSearchParams();
-        tableRequestData.set('viewMode','table');
-        listRequestData =  new URLSearchParams();
-        listRequestData.set('viewMode','list');
-      } else {
-        tableRequestData =  new URLSearchParams(requestData);
-        tableRequestData.set('viewMode','table');
-        listRequestData =  new URLSearchParams(requestData);
-        listRequestData.set('viewMode','list');
-      }
-      %>   
-      
-      <form id="replay-table" action="/url/search" method="GET">
-        <%- include('../templates/fragments/hidden-search-inputs',{requestData: tableRequestData}) %>
-        <button type="submit" id="replay-table-button"><span class="fas fa-table" aria-hidden="true"></span> Table</button>
-      </form>
-      
-      <form id="replay-list" action="/url/search" method="GET">
-        <%- include('../templates/fragments/hidden-search-inputs',{requestData: listRequestData}) %>
-        <button id="replay-list-button" type="submit"><span class="fas fa-list" aria-hidden="true"></span> List</button>
-      </form>      
+          
+      <%- include('../templates/menu/url-nav-results', currentSelection = 'table') %>
+
       <button id="next-navigation" onclick="$('#tablePresentation').animate({scrollLeft: '+='+(window.innerWidth/2)}, 800, 'easeOutQuad');">&rarr;</button>
 
     </section>
