@@ -2,7 +2,7 @@ const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
 const makeExportObject = require('./export-object')    
 const suggestionRequest = require('./apis/suggestion-api')
-const apiRequest = require('./apis/page-search-api')
+const apiRequest = require('./apis/image-search-api')
 
 
 const now = new Date();
@@ -17,11 +17,13 @@ module.exports = function (req, res) {
         offset: 0,
         siteSearch: null,
         collection: null,
-        maxItems: config.get('text.results.per.page'),
+        maxItems: config.get('image.results.per.page'),
         dedupValue: null,
         dedupField: null,
         fields: null,
         prettyPrint: false,
+        size:'all',
+        safeSearch:'on',
     }
     const apiRequestData = new URLSearchParams();
 
@@ -35,11 +37,11 @@ module.exports = function (req, res) {
         (suggestion) => {
             apiRequest(apiRequestData,
                 (apiData) => {
-                    res.render('partials/pages-search-results', {
+                    res.render('partials/images-search-results', {
                         requestData: requestData,
                         apiData: apiData,
                         suggestion: suggestion,
-                        exportObject: makeExportObject(req, res, apiRequestData, apiData)
+                        // exportObject: makeExportObject(req, res, apiRequestData, apiData)
                     });
                 })
         });

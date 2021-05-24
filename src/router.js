@@ -1,4 +1,5 @@
 const searchPages = require('./search-pages.js');
+const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
 
@@ -35,7 +36,20 @@ module.exports = function (app) {
     });// Images search results
     // Images search results
     app.get('/image/search', function (req, res) {
-        res.render('pages/images-search-results');
+        const requestData = sanitizeInputs(req, res);
+        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
+
+        if (!requestData.has('q') || requestData.get('q') == '') {
+            res.render('pages/home');
+        } else {
+            if(urlPattern.test(requestData.get('q'))){
+                requestData.set('siteSearch',requestData.get('q'));
+                requestData.set('q','site:'+requestData.get('q'));
+            }
+            res.render('pages/images-search-results', {
+                requestData: requestData,
+            });
+        }
     });
 
     // Pages: landing page
@@ -101,9 +115,11 @@ module.exports = function (app) {
     app.get('/partials/:id', function (req, res) {
         if (req.params.id == 'pages-search-results') {
             searchPages(req, res);
+        } else if(req.params.id == 'images-search-results') {
+            searchImages(req, res);
         } else if(req.params.id == 'url-search-results') {
             searchUrl(req, res);
-        } else {
+        }else {
             res.render('partials/' + req.params.id, { layout: false });
         }
     });
