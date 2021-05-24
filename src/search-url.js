@@ -1,8 +1,6 @@
-// https://arquivo.pt/wayback/cdx?output=json&url=http%3A%2F%2Farquivo.pt&fields=url%2Ctimestamp%2Cstatus&filter=!~status%3A4%7C5&from=19960101&to=20210420
-// https://arquivo.pt/wayback/cdx?output=json&url=http%3A%2F%2Farquivo.pt&fields=url,timestamp,status&filter=!~status%3A4%7C5&from=19960101&to=20210420
 const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
-const apiRequest = require('./cdx-api')
+const apiRequest = require('./apis/cdx-api')
 
 
 const now = new Date();

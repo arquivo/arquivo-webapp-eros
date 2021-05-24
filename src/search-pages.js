@@ -1,8 +1,8 @@
 const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
 const makeExportObject = require('./export-object')    
-const suggestionRequest = require('./suggestion-api')
-const apiRequest = require('./page-search-api')
+const suggestionRequest = require('./apis/suggestion-api')
+const apiRequest = require('./apis/page-search-api')
 
 
 const now = new Date();
