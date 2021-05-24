@@ -1,4 +1,8 @@
 search-tools:
+  accessibility:
+    search-tools-buttons:
+      en: Search Pages and Images Buttons
+      pt: Botões para Pesquisa de Páginas e Imagens
   search-hint:
     pt: 'Palavras ou URL'
     en: 'Words or URL'
