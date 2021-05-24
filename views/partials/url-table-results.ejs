@@ -69,22 +69,19 @@
 
 
      %>   
-     <div id="tablePresentation" style="overflow-x: scroll;">
+    <div id="tablePresentation" style="overflow-x: scroll;">
     <table id="replay-menu-table">
       <caption><%= t('url-search.accessibility.replay.table') %></caption>        
         <thead>
             <tr id="display-year" class="year-table-row">
-              <%
-              allYears.forEach(year => {
-                %><th id="year-<%= year %>"class="year-table-head"><%= year %></th><%
-              });
-              %>      
+              <% allYears.forEach(year => { %>
+                <th id="year-<%= year %>"class="year-table-head"><%= year %></th>
+              <% }); %>      
             </tr>
         </thead>
         <tbody>
-            <%
-              for(let row = 0; row < maxRows; row++){
-                %><tr id="display-date-month" class="date-month-table-row"><%
+            <% for(let row = 0; row < maxRows; row++){ %>
+            <tr id="display-date-month" class="date-month-table-row"><%
                   allYears.forEach(year => {
                     if(row < tableData[year].length ){
                       const title = t('common.date.long',{
@@ -95,21 +92,19 @@
                         minutes: tableData[year][row].minutes
                       })
                       %> 
-                      <td class="year-month-data" headers="year-<%= year %>"> <a href="https://arquivo.pt/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
-                        month: t('common.shortMonths.'+tableData[year][row].month),
-                        day: parseInt(tableData[year][row].day)
-                      }) %></a></td>
-                      <%
-                    } else {
-                      %><td></td><%
-                    }
-                  });
-                  %></tr><%
-              } 
-              %>               
- </tbody>
-</table>
-</div>
+              <td class="year-month-data" headers="year-<%= year %>"> <a href="https://arquivo.pt/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
+                month: t('common.shortMonths.'+tableData[year][row].month),
+                day: parseInt(tableData[year][row].day)
+              }) %></a></td>
+                      <% } else { %>
+              <td></td>
+                      <% } %>
+                  <% }); %>
+            </tr>
+            <% } %>               
+        </tbody>
+    </table>
+    </div>
 <!-- ends table: shows results as a table -->
 </section>
 <!-- ends table results container -->
