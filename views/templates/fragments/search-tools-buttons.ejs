@@ -1,6 +1,7 @@
 <% 
-let customSearchRequestData = new URLSearchParams(requestData); 
+let customSearchRequestData = new URLSearchParams(); 
 if(typeof requestData != 'undefined'){
+    customSearchRequestData = new URLSearchParams(requestData); 
     const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/;
     if(requestData.has('q') && urlPattern.test(requestData.get('q'))){
         customSearchRequestData.set('q','site:'+requestData.get('q'));
