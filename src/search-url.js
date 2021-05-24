@@ -1,6 +1,7 @@
 const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
 const apiRequest = require('./apis/cdx-api')
+const suggestionRequest = require('./apis/suggestion-api')
 
 
 const now = new Date();
@@ -33,32 +34,36 @@ module.exports = function (req, res) {
         .forEach(key => apiRequestData.set(key, requestData.get(key) ?? defaultApiParams[key]));
 
 
-    apiRequest(apiRequestData,
-        (apiData) => {
-            let intermediateData = [];
-            let previousItem = null;
+        suggestionRequest(requestData.get('q'), apiRequestData.get('l') ?? 'pt',
+        (suggestion) => {
+            apiRequest(apiRequestData,
+                (apiData) => {
+                    let intermediateData = [];
+                    let previousItem = null;
 
-            const deltaToRemoveDuplicatedEntries = 3600;
-            apiData.forEach(item => {
-                if (item.status && (item.status[0] !== '2' && item.status[0] !== '3')) { /*Ignore 400's and 500's*/
-                    /*empty on purpose*/
-                } else {
-                    if (previousItem != null && isRemovePreviousVersion(previousItem, item, deltaToRemoveDuplicatedEntries)) {
-                        intermediateData.pop();
-                    }
-                    if (previousItem == null || !isRemoveCurrentVersion(previousItem, item, deltaToRemoveDuplicatedEntries)) {
-                        intermediateData.push(item);
-                        previousItem = item;
-                    }
-                }
-            })
+                    const deltaToRemoveDuplicatedEntries = 3600;
+                    apiData.forEach(item => {
+                        if (item.status && (item.status[0] !== '2' && item.status[0] !== '3')) { /*Ignore 400's and 500's*/
+                            /*empty on purpose*/
+                        } else {
+                            if (previousItem != null && isRemovePreviousVersion(previousItem, item, deltaToRemoveDuplicatedEntries)) {
+                                intermediateData.pop();
+                            }
+                            if (previousItem == null || !isRemoveCurrentVersion(previousItem, item, deltaToRemoveDuplicatedEntries)) {
+                                intermediateData.push(item);
+                                previousItem = item;
+                            }
+                        }
+                    })
+                    
 
-            
+                
 
-            res.render('partials/url-' + viewMode + '-results', {
-                requestData: requestData,
-                apiData: intermediateData,
-                // suggestion: suggestion,
+                res.render('partials/url-' + viewMode + '-results', {
+                    requestData: requestData,
+                    apiData: intermediateData,
+                    suggestion: suggestion,
+                });
             });
         });
 

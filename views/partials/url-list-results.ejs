@@ -1,4 +1,10 @@
+<% if (suggestion != requestData.get('q')) { %>
+  <%- include("../templates/fragments/search-suggestion") -%>
+<% } %>
 
+<% if (apiData.length == 0) { %>
+  <%- include("../templates/body/body-not-found", {query: requestData.get('q')}) -%>
+<% } else { %>
 <section id="url-results" class="url-results-cl">
   <h3><%= t('url-search.accessibility.title') %></h3>    
   <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
@@ -134,3 +140,4 @@
     }
     </script>
     <!-- ends accordion for list -->
+  <% } %>
