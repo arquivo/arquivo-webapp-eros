@@ -2892,8 +2892,8 @@ body#arquivo-404 main a:hover {
 left: 1.5em;
 }
 
-/* Hide preloader form button */
-section#loading-section form#loading-form button#loading-results {
+/* Hide preloader form button and accessibility header*/
+section#loading-section form#loading-form button#loading-results, section#loading-section h3 {
   visibility: collapse;
   height: 0;
 }
