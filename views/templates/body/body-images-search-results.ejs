@@ -1,12 +1,5 @@
-
 <section id="images-results" class="images-results-cl">
     <h3>Images Search Results</h3>
-    <section id="loading-section">
-        <form id="loading-form" action="/partials/images-search-results">
-            <%- include("../fragments/hidden-search-inputs") -%>
-                <button id="loading-results" type="submit" value="loading results" aria-hidden="true">loading
-                    results</button>
-        </form>
-        <%- include("../fragments/preloader") -%>
-    </section>
+    <%- include('../fragments/loading-section',{action:'/partials/images-search-results'}) %>
 </section>
+
