@@ -55,16 +55,11 @@ a:hover {
   color:#1c75c0;
   background-color: white;
 }
-a:active {
-  color:#033f72;
-  background-color: white;
-}
-
 
 /* ANCHOR LINKS for search results page: visited ********************************************************** */
 
 body#pages-search-results ul > li > a.results-title:visited {
-  color:darkmagenta; 
+  color:rgb(0, 139, 58); 
 }
 
 /* BUTTONS ************************************************************** */
@@ -168,8 +163,12 @@ table caption {
  visibility: collapse;
  height: 0; 
 }  
+
+thead {
+  background-color: white;
+ }
   
-thead,tbody {
+thead, tbody {
   width: 100%;
   padding: 0px;
   width: 100%;
@@ -179,27 +178,27 @@ thead,tbody {
  cursor: pointer;
 }
 
-thead {
- background-color: white;
-}
-
 th, tr, td {
 padding: 10px;
 width: auto;
 color: #00294c;
-border-bottom: 1px solid #9b9b9b;
+border-left: 0.5px solid #b3b3b34d;
 }
 
-th.year-table-head {
+/* Sticky table head */
+th.year-table-head {   
+  position: sticky;
+  top: 0;
   font-size: 0.9em;
+  background-color: white; 
+  
 }
 
 td {
   padding:0px;
   width: auto;
-  color: #00294c;
-  border-bottom: 1px solid #9b9b9b;
-  }
+  color: #00294c; 
+}
 
 table td a {
   display: block;
@@ -465,7 +464,7 @@ nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, n
   z-index: 3;
   top: 12px;
   right: 8px;
-  background-color: #224d75;
+  background-color: #033f72;
   border: none;
   outline: none;
   color: white;
@@ -486,11 +485,10 @@ nav#replay-left-nav li#replay-table button {
 
 li.menu-pages-replay-year a {
   text-decoration: none;
-  padding: 16px 20px;
+  padding: 16px 40px;
   display: block;
-  font-size: 0.95em;
+  font-size: 0.97em;
   border-top: 1px solid #ffffff2b;
-  font-weight: bold;
 }
 
 li.menu-pages-replay-year a:hover {
@@ -499,6 +497,11 @@ li.menu-pages-replay-year a:hover {
  text-decoration: none;
  }
 
+ li.menu-pages-replay-year a:active {
+  color:white;
+  background-color: #033f72;
+}
+
 span.number-of-versions {
   padding: 5px;
   border: 1px solid #ffffff7d;
@@ -506,7 +509,7 @@ span.number-of-versions {
   text-align: right;
   float: right;
   font-weight: normal;
-  font-size: 0.8em;
+  font-size: 0.75em;
   margin-left: 10px;
   margin-top: -4px;
 }
@@ -528,11 +531,19 @@ a:hover span.number-of-versions {
   border: 1px solid #00294c;
 }
 
+.menu-pages-replay-month span.number-of-versions {
+  font-size: 0.795em;
+}
+
 li.menu-pages-replay-month a {
   padding: 10px 20 10px 30px;
-  font-size: 0.9em;  
-  font-weight: bold;
-  padding-left: 40px;
+  font-size: 0.9em;   
+  padding-left: 55px;
+}
+
+li.menu-pages-replay-month a:active {
+background-color: #00294c;
+color: #fff;
 }
 
 li.menu-pages-replay-month a:hover {
@@ -540,7 +551,7 @@ li.menu-pages-replay-month a:hover {
 }
 
 li.menu-pages-replay-date-hour a {
-  padding-left: 63px;
+  padding-left: 73px;
   font-size: 0.75em;
   font-weight: normal;
 }
@@ -664,11 +675,13 @@ body#homepage button#nav-options-right-button  {
 .active, .accordion-left-menu:hover {
   background-color: transparent;
 }
+
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after {
   content: "\002B";
   float: right;
   font-size: initial;
 }
+
 .active:after {
   content: "\2212";
   float: right;
@@ -810,7 +823,7 @@ body#table-list-results section.table-results-buttons {
   width: 100%;
   position: relative;
   z-index: 0;
-  padding-top: 20px;
+  padding-top: 14px;
   padding-bottom: 20px; 
   background-color: #033f72; 
 }
@@ -935,8 +948,18 @@ section {
   overflow-y: hidden;
 }
 
+body#table-list-results section.header-content-container {   
+  position: relative;  
+}
+
 body#table-list-results section#table-results-container {   
   width: 100%;
+}
+
+body#table-list-results #tablePresentation {   
+  overflow-x: hidden;
+  overflow-y: auto;  
+  height: 49vh;
 }
 
 body#table-list-results section#url-results h3, body#table-list-results section#replay-menu-list h4 {   
@@ -1199,7 +1222,7 @@ text-decoration: none;
 }
 
 #ui-datepicker-div thead {
-  font-size:0.9em !important;
+  font-size: 0.9em !important;
 }
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
@@ -2310,7 +2333,7 @@ section#pages-results ul > li > a.results-url  {
   font-size: 14px; 
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: nowrap;  
   width: auto; 
   padding: 0 0 5px 0; 
   text-decoration: none;
@@ -2321,6 +2344,10 @@ section#pages-results ul > li > a.results-title  {
   padding: 5px 0 0 0;
   font-size: 20px;
   color: #1a0dab;     
+}
+
+section#pages-results ul > li > a.results-title:visited  {
+  color: #83077d;     
 }
 
 section#pages-results ul > li > a.results-title em {
@@ -2668,7 +2695,7 @@ footer ul {
 
 footer a {
   color: white;/*To use in future releases: #444 */
-  font-size: 0.85em;  
+  font-size: 0.8em;  
   text-decoration: none;
  }
 
@@ -2713,7 +2740,7 @@ height: 0;
 }
 
 footer section section h4 {
-  padding-bottom: 3px;
+  padding-bottom: 14px;
   font-size: 1em;
   font-weight: bold; 
   color: white/*#444*/;  
