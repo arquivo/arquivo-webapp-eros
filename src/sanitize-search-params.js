@@ -50,7 +50,7 @@ module.exports = function (req, res) {
     if(parseInt(requestData.get('from')) < parseInt(defaultRequestParameters.from)){
         requestData.set('from', defaultRequestParameters.from)
     }
-    if(parseInt(requestData.get('to')) < parseInt(defaultRequestParameters.to)){
+    if(parseInt(requestData.get('to')) > parseInt(defaultRequestParameters.to)){
         requestData.set('to', defaultRequestParameters.to)
     }
 

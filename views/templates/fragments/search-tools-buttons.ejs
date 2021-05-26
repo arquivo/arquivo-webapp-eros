@@ -1,13 +1,21 @@
+<% 
+let customSearchRequestData = new URLSearchParams(); 
+if(typeof requestData != 'undefined'){
+    customSearchRequestData = new URLSearchParams(requestData); 
+    const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/;
+    if(requestData.has('q') && urlPattern.test(requestData.get('q'))){
+        customSearchRequestData.set('q','site:'+requestData.get('q'));
+    } 
+} 
+%>
 <section id="search-tools-buttons">
-    <h4>Search Pages and Images Buttons</h4>
-    <form id="search-form-pages" role="search for pages" class="buttons" action="/pages" method="get">
-        <label for="get-language-pages">Get language for pages</label>
-        <input id="get-language-pages" role="show language for pages" type="hidden" name="l" value="<%= getLanguage() %>">
+    <h4><%= t('home.search-tools.accessibility.search-tools-buttons') %></h4>
+    <form id="search-form-pages" role="search for pages" class="buttons" action="/page/search" method="get">
+        <%- include('hidden-search-inputs', {requestData:customSearchRequestData}) %>
         <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
     </form>
-    <form id="search-form-images" role="search for images" class="buttons" action="/images" method="get">
-        <label for="get-language-images">Get language for images</label>
-        <input id="get-language-images" role="show language for images" type="hidden" name="l" value="<%= getLanguage() %>">
+    <form id="search-form-images" role="search for images" class="buttons" action="/image/search" method="get">
+        <%- include('hidden-search-inputs', {requestData:customSearchRequestData}) %>
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
     </form>
     <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">

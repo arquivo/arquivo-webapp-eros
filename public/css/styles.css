@@ -2044,9 +2044,7 @@ section.form-container input[type="text"]:focus, section.form-container select:f
 section.form-container small {
 margin-bottom: 40px;
 font-size: small;
-font-style: italic;
 color: #a7a5a5;
-padding: 0 10px; 
 }
 
 body#images-advanced-search section.form-container small.last-margin {
@@ -2919,8 +2917,8 @@ body#arquivo-404 main a:hover {
 left: 1.5em;
 }
 
-/* Hide preloader form button */
-section#loading-section form#loading-form button#loading-results {
+/* Hide preloader form button and accessibility header*/
+section#loading-section form#loading-form button#loading-results, section#loading-section h3 {
   visibility: collapse;
   height: 0;
 }

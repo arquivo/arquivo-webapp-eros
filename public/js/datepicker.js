@@ -48,6 +48,7 @@ $(function () {
             $('#modal-datepicker-title').text(translations['modal-datepicker']['header'][type][lang]);
 
             const submitDate = function (newDate) {
+
                 updateDateSlider(newDate,type)
                 $('#modal-datepicker-datepicker').datepicker('setDate', newDate);
             }
@@ -71,9 +72,10 @@ $(function () {
                 const dateInputValue = $(this).val();
                 // prevent change the date when the user didn't finish inserting a full date on keyboard
                 if (dateInputValue.replace('_', '').length == 10) {
-                    const newDate = stringToDate(dateInputValue);
+                    // convert to yyyymmdd
+                    const newDateString = dateInputValue.split('/').reverse().join('');
                     // update datepicker with newinput value
-                    submitDate(newDate);
+                    submitDate(stringToDate(newDateString));
                 }
             });
 
@@ -99,7 +101,6 @@ $(function () {
                         return m === 2 ? y & 3 || !(y % 25) && y & 15 ? 28 : 29 : 30 + (m + (m >> 3) & 1);
                     }
                     const minDay = Math.min(getDaysInMonth(m, y), d);
-                    console.log(new Date(y, m - 1, minDay));
                     submitDate(new Date(y, m - 1, minDay));
                 },
                 onSelect: function (dateText, inst) {

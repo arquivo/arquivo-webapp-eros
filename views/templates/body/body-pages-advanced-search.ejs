@@ -32,12 +32,6 @@ if(typeof requestData != 'undefined'){
 <fieldset>
   <legend><%= t('advanced-page-search.accessibility.legend') %></legend>
   
-  <!-- Between these dates -->
-  <label><%- t('advanced-page-search.fieldset.date.label') %></label>
-  <!-- starts range slider block --> 
-  <%- include('../fragments/search-tools-date-slider') %>
-  <!-- ends range slider block -->  
-
   <!-- With these words -->
    <label for="adv_and"><%- t('advanced-page-search.fieldset.with.label') %></label>
    <input id="words" type="text" name="adv_and" value="<%= values.adv_and %>">
@@ -53,6 +47,12 @@ if(typeof requestData != 'undefined'){
    <input id="without" type="text" name="adv_not" value="<%= values.adv_not %>">
    <small><%- t('advanced-page-search.fieldset.without.example') %></small>   
    
+  <!-- Between these dates -->
+  <label><%- t('advanced-page-search.fieldset.date.label') %></label>
+  <!-- starts range slider block --> 
+  <%- include('../fragments/search-tools-date-slider') %>
+  <!-- ends range slider block -->  
+
    <!-- Formats -->
    <label for="format"><%- t('advanced-page-search.fieldset.format.label') %></label>
    <select id="format-type" name="format" class="">

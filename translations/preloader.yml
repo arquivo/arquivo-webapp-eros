@@ -1,3 +1,10 @@
+accessibility:
+  title:
+    en: Loading section
+    pt: Secção para carregamento de dados
+  button:
+    en: Loading results
+    pt: Carregando resultados
 loading:
   en: Search in progress please wait...
   pt: Por favor aguarde...
