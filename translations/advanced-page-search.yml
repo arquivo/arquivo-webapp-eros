@@ -16,22 +16,22 @@ fieldset:
       pt: '<strong>Tenham</strong> estas palavras:'
       en: '<strong>With</strong> these words:'
     example:
-      pt: 'ex.: expo 98'
-      en: 'e.g.: group draw'
+      pt: 'ex. expo 98'
+      en: 'e.g. group draw'
   phrase:
     label:
       pt: '<strong>Tenham</strong> esta expressão ou frase:'
       en: '<strong>With</strong> this phrase:'
     example:
-      pt: 'ex.: pavilhão da utopia'
-      en: 'e.g.: euro 2004'
+      pt: 'ex. pavilhão da utopia'
+      en: 'e.g. euro 2004'
   without:
     label:
       pt: '<strong>Não tenham</strong> estas palavras:'
       en: '<strong>Without</strong> any of these words:'
     example:
-      pt: 'ex.: concerto'
-      en: 'e.g.: rugby'
+      pt: 'ex. concerto'
+      en: 'e.g. rugby'
   format:
     label:
       pt: '<strong>Formato</strong>:'
@@ -45,8 +45,8 @@ fieldset:
       pt: '<strong>Sítio Web</strong>:'
       en: '<strong>Website</strong>:'
     example:
-      pt: 'ex.: www.fccn.pt'
-      en: 'e.g.: www.fccn.pt'
+      pt: 'ex. www.fccn.pt'
+      en: 'e.g. www.fccn.pt'
   results:
     label:
       pt: '<strong>Número de resultados</strong>:'

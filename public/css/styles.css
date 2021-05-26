@@ -2021,9 +2021,7 @@ section.form-container input[type="text"]:focus, section.form-container select:f
 section.form-container small {
 margin-bottom: 40px;
 font-size: small;
-font-style: italic;
 color: #a7a5a5;
-padding: 0 10px; 
 }
 
 body#images-advanced-search section.form-container small.last-margin {
