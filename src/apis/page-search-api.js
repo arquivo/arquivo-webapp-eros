@@ -1,19 +1,25 @@
 
-const https = require('https');
+const ApiRequest = require('./api-request');
 const config = require('config');
 
-module.exports = function (apiRequestData, callback) {
-    let apiReply = '';
-    let apiData = {};
-    const apiRequest = https.get(config.get('text.search.api') + '?' + apiRequestData.toString(),
-        (apiRes) => {
-            apiRes.on('data', (d) => { apiReply = apiReply + d.toString(); });
-            apiRes.on('end', () => {
-                apiData = JSON.parse(apiReply);
-            });
-            apiRes.on('close', () => {
-                callback(apiData);
-            });
-
-        });
+class PageSearchApiRequest extends ApiRequest {
+    constructor() {
+        const defaultApiParams = {
+            q: '',
+            from: config.get('search.start.date'),
+            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            type: null,
+            offset: 0,
+            siteSearch: null,
+            collection: null,
+            maxItems: config.get('text.results.per.page'),
+            dedupValue: null,
+            dedupField: null,
+            fields: null,
+            prettyPrint: false,
+        }
+        super(config.get('text.search.api'),defaultApiParams);
+    }
 }
+
+module.exports = PageSearchApiRequest;
