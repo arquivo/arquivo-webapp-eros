@@ -1,7 +1,5 @@
-
 const ApiRequest = require('./api-request');
 const config = require('config');
-
 class PageSearchApiRequest extends ApiRequest {
     constructor() {
         const defaultApiParams = {

@@ -5,17 +5,17 @@ class ApiRequest {
         this.apiData = {};
         this.apiUrl = apiUrl;
         this.defaultApiParams = defaultApiParams;
-        this.dataFunction = (d) => { this.apiReply = this.apiReply + d.toString(); };
-        this.endFunction = () => { this.apiData = JSON.parse(this.apiReply); };
-        this.closeFunction = (callback) => {return () => { callback(this.apiData); }};
+        this.dataFunction = (requestData) => { return (d) => { this.apiReply = this.apiReply + d.toString(); }};
+        this.endFunction = (requestData) => { return () => { this.apiData = JSON.parse(this.apiReply); }};
+        this.closeFunction = (requestData, callback) => {return () => { callback(this.apiData); }};
     }
 
     get(requestData, callback) {
         https.get(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
             (apiRes) => {
-                apiRes.on('data', this.dataFunction);
-                apiRes.on('end', this.endFunction);
-                apiRes.on('close', this.closeFunction(callback));
+                apiRes.on('data', this.dataFunction(requestData));
+                apiRes.on('end', this.endFunction(requestData));
+                apiRes.on('close', this.closeFunction(requestData, callback));
             });
     }
 
