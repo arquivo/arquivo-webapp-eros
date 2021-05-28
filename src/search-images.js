@@ -1,5 +1,6 @@
 const sanitizeInputs = require('./sanitize-search-params');
-const suggestionRequest = require('./apis/suggestion-api')
+const suggestionRequest = require('./apis/suggestion-api');
+const makeExportObject = require('./export-image-search');
 const ImageSearchApiRequest = require('./apis/image-search-api');
 
 module.exports = function (req, res) {
@@ -15,7 +16,7 @@ module.exports = function (req, res) {
                         requestData: requestData,
                         apiData: apiData,
                         suggestion: suggestion,
-                        // exportObject: makeExportObject(req, res, apiRequestData, apiData)
+                        exportObject: makeExportObject(apiRequest.sanitizeRequestData(requestData), apiData, req.t)
                     });
                 })
         });
