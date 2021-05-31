@@ -1,9 +1,9 @@
-<% if ('suggestion' != 'suggestion') { %>
+<% if (suggestion != requestData.get('q')) { %>
     <%- include("../templates/fragments/search-suggestion") -%>
 <% } %>
 
-<% if (1 == 0) { %>
-    <%- include("../templates/body/body-not-found", {query: apiData.request_parameters.q}) -%>
+<% if (apiData.totalItems == 0) { %>
+    <%- include("../templates/body/body-not-found", {query: requestData.get('q')}) -%>
 <% } else { %>
     
     <!-- starts pages search results: create a fetch loop here -->
@@ -20,15 +20,7 @@
             <%- include("../templates/fragments/image-result", {imageData: item}) -%>
         <% }); %>
     </ul>
-    <!-- starts navigation tools --> 
-    <section class="navigation-tools">
-        <h3>Images navigation</h3>
-        <button type="submit" class="previous-page" aria-hidden="true" value="previous page">&larr;</button>
-        <p>Page 1 of 100</p>
-        <button type="submit" class="next-page" aria-hidden="true" value="next page">&rarr;</button>
-    </section>
-    <!-- ends navigation tools -->
-<!-- ends pages search results -->
+    <!-- ends pages search results -->
 
     <% if (typeof exportObject != 'undefined'){ %>
         <!-- starts the result hidden in json format  -->
@@ -43,7 +35,7 @@
     <% } %>
 
     <!-- starts navigation tools --> 
-    <%# include("../templates/fragments/navigation-tools") -%>            
+    <%- include("../templates/fragments/navigation-tools", {estimatedResults: apiData.totalItems}) -%>            
     <!-- ends navigation tools -->
 
 <% } %>

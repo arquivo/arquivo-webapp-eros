@@ -33,7 +33,7 @@
     <% } %>
 
     <!-- starts navigation tools --> 
-    <%- include("../templates/fragments/navigation-tools") -%>            
+    <%- include("../templates/fragments/navigation-tools", {estimatedResults: apiData.estimated_nr_results}) -%>            
     <!-- ends navigation tools -->
 
 <% } %>
