@@ -13,6 +13,8 @@
             &larr; <%= t('navigation.pagination.previous')%>
         </button>
     </form>
+    <% }  else { %>
+    <div class="alignment-div" style="display: flex;flex-direction: row;flex-wrap: wrap;margin: 0;padding: 0; width: 1px;"></div>
     <% } %>
     <!-- <p><%= t('navigation.pagination.page') %> <%= currentPage %></p> -->
     <% if (currentOffset + maxItems < estimatedResults ) { %>
