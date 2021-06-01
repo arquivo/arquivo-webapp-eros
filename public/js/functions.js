@@ -40,7 +40,7 @@ function openReplayRightMenuNav() {
     $("#replay-right-nav").attr('style',"right:0px;"); 
 }
 function closeReplayRightMenuNav() {
-    $("#replay-right-nav").attr('style',"right:-200px");  
+    $("#replay-right-nav").attr('style',"right:-250px");  
 }
 // ends: menu opening and closing button for replay top nav right replay menu button 
 

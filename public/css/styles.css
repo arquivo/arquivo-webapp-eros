@@ -121,7 +121,8 @@ h1, h2 {
 
 body#landing-replay p#chosen-url {
   padding: 15px 0px ;
-  font-size: 0.85em;
+  font-size: 0.8em;
+  color: white
 }
 
 body#landing-replay p#chosen-url span.icon-link {
@@ -143,15 +144,16 @@ body#landing-replay p#chosen-url a:hover {
 
 body#landing-replay nav#replay-right-nav a.link-line-height {
   display: flex;
-  padding: 11px 20px;
-  line-height: 1.4em; 
+  padding: 12px 20px;
+  line-height: 1.4em;
+  margin-bottom: -2px;
 }
 
-body#landing-replay nav#replay-right-nav a.link-line-height span {
-  position: relative;
-  top: 4px;
-  font-size: 0.8em;
+body#landing-replay span.page-date {  
+  padding-left: 18px;
+  font-size: 0.75em;
 }
+
 
 /* TABLE *************************************************************** */
 
@@ -345,7 +347,7 @@ header button#nav-menu-button-left  {
   width: 162px;
  } 
 
- /* Main ************************************************************* */
+/* Main ************************************************************* */
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */ 
 
 header .background-top-curve {
@@ -455,8 +457,8 @@ nav#replay-left-nav {
 }
 
 nav#replay-right-nav { 
-  right: -209px;     
-  width: 200px; 
+  right: -250px;     
+  width: 250px; 
 }
 
 nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
@@ -487,7 +489,7 @@ li.menu-pages-replay-year a {
   text-decoration: none;
   padding: 16px 40px;
   display: block;
-  font-size: 0.97em;
+  font-size: 0.91em;
   border-top: 1px solid #ffffff2b;
 }
 
@@ -532,7 +534,7 @@ a:hover span.number-of-versions {
 }
 
 .menu-pages-replay-month span.number-of-versions {
-  font-size: 0.795em;
+  font-size: 0.8em;
 }
 
 li.menu-pages-replay-month a {
@@ -717,7 +719,7 @@ nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav s
 }
 
 nav#left-nav section ul > li:first-child, nav#options-right-nav section ul > li:first-child, nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
-  border-top: none;    
+  border-top: none;     
 }
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
@@ -738,11 +740,17 @@ body#landing-replay nav#replay-left-nav li.date-selected a:hover {
  }
 
 nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
-    display: block;
-    text-decoration: none;
-    color: white;
-    padding: 0px 16px 0px 19px;
-    font-size: 0.8em;   
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  padding: 0px 16px 0px 19px;
+  font-size: 0.75em;  
+}
+
+nav#replay-left-nav section ul > li a { 
+  justify-content:space-between;  
 }
 
 nav#replay-left-nav section {
@@ -751,7 +759,7 @@ nav#replay-left-nav section {
 
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 8px;  
+  padding-right: 8px;    
 }
 /* ends Font Awesome icons */
 
@@ -824,7 +832,7 @@ body#table-list-results section.table-results-buttons {
   position: relative;
   z-index: 0;
   padding-top: 14px;
-  padding-bottom: 20px; 
+  padding-bottom: 14px; 
   background-color: #033f72; 
 }
 
@@ -942,7 +950,6 @@ section.header-content-container h3  {
 section {
   margin:0 auto;
   padding: 0; 
-  width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -1063,7 +1070,7 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
   top: -21px;
   left: 0.5px;
   width: 100%;
-  height: 11px;
+  height: auto;
   padding: 3px 0 0 0;  
   font-size: 11px;
   text-align: center;
@@ -2483,8 +2490,7 @@ section#images-results ul > li {
     font-size: x-small;  
     text-overflow: ellipsis;
     overflow: hidden; 
-    white-space: nowrap;
-    max-width: 177px;
+    white-space: nowrap;    
     font-size: 1em;
   }
 
