@@ -1,0 +1,103 @@
+#Traduções para exports
+queryArgument:
+  en: 'Argument'
+  pt: 'Argumento'
+queryValue:
+  en: 'Value'
+  pt: 'Valor'
+query:
+  en: Query search
+  pt: Termos de pesquisa
+from:
+  en: 'From'
+  pt: 'De'
+to:
+  en: To
+  pt: Até
+offset:
+  en: Offset
+  pt: Resultados a partir de
+maxItems:
+  en: Number of results
+  pt: Número de resultados
+siteSearch:
+  en: Website
+  pt: Sítio web
+type:
+  en: Format
+  pt: Formato
+collection:
+  en: Collection
+  pt: Coleção
+results:
+  en: Results
+  pt: Resultados
+year:
+  en: Year
+  pt: Ano
+month:
+  en: Month
+  pt: Mês
+day:
+  en: Day
+  pt: Dia
+tstamp:
+  en: Timestamp
+  pt: Carimbo de tempo
+originalURL:
+  en: Original URL
+  pt: URL original
+linkToArchive:
+  en: Link to archive
+  pt: Link para a versão arquivada 
+linkToScreenshot:
+  en: Link to screenshot
+  pt: Link para captura de ecrã
+linkToExtractedText:
+  en: Link to extracted text
+  pt: Link para texto extraído
+mimeType:
+  en: MIME type
+  pt: Tipo de media
+title:
+  en: Title
+  pt: Título
+snippet: 
+  en: Snippet
+  pt: Resumo
+imgTstamp:
+  en: Image timestamp
+  pt: Carimbo de tempo da imagem
+imgHeight:
+  en: Image height
+  pt: Altura da imagem
+imgWidth:
+  en: Image width
+  pt: Largura da imagem
+imgSrc:
+  en: Image source link
+  pt: Link original da imagem
+imgLinkToArchive:
+  en: Image link to archive
+  pt: Link da imagem arquivada
+imgMimeType:
+  en: Image MIME type
+  pt: Tipo de media da imagem
+imgAlt:
+  en: Image alt
+  pt: Texto alternativo da imagem
+imgTitle:
+  en: Image title
+  pt: Título da imagem
+pageTstamp:
+  en: Page timestamp
+  pt: Carimbo de tempo da página
+pageURL:
+  en: Page URL that references the image
+  pt: URL da página
+pageLinkToArchive:
+  en: Page link to archive
+  pt: Link da página arquivada
+pageTitle:
+  en: Page title
+  pt: Título da página

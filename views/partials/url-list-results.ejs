@@ -78,13 +78,20 @@
               Object.keys(apiData.years).sort().forEach(year => {
                 const yearItems = apiData.years[year].items;
                 %>
-                <li class="menu-pages-replay-year"><a href="javascript:void(0)" class="accordion-replay-list"><%= year %><span class="number-of-versions"><%= yearItems %> versions</span></a>
+                <li class="menu-pages-replay-year">
+                  <a href="javascript:void(0)" class="accordion-replay-list"><%= year %><span class="number-of-versions">
+                    <%= yearItems %> <%= (yearItems == 1 ? t('url-search.list.version') : t('url-search.list.versions')) %>
+                  </span></a>
                   <ul class="panel">
                 <% 
                 Object.keys(apiData.years[year].months).sort().forEach(month => {
                   const monthItems = apiData.years[year].months[month].length;
                   %>
-                    <li class="menu-pages-replay-month"><a href="javascript:void(0)" class="accordion-replay-list"><%= t('common.months.'+month) %><span class="number-of-versions"><%= monthItems %> versions</span></a>
+                    <li class="menu-pages-replay-month">
+                      <a href="javascript:void(0)" class="accordion-replay-list"><%= t('common.months.'+month) %>
+                        <span class="number-of-versions">
+                          <%= monthItems %> <%= (monthItems == 1 ? t('url-search.list.version') : t('url-search.list.versions')) %>
+                        </span></a>
                     <ul class="panel">
                   <% 
                   apiData.years[year].months[month].forEach(item => {

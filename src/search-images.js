@@ -1,47 +1,22 @@
-const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
-const makeExportObject = require('./export-object')    
-const suggestionRequest = require('./apis/suggestion-api')
-const apiRequest = require('./apis/image-search-api')
-
-
-const now = new Date();
+const suggestionRequest = require('./apis/suggestion-api');
+const makeExportObject = require('./export-image-search');
+const ImageSearchApiRequest = require('./apis/image-search-api');
 
 module.exports = function (req, res) {
+    
     const requestData = sanitizeInputs(req, res);
-    const defaultApiParams = {
-        q: '',
-        from: config.get('search.start.date'),
-        to: now.toLocaleDateString('en-CA').split('-').join(''),
-        type: null,
-        offset: 0,
-        siteSearch: null,
-        collection: null,
-        maxItems: config.get('image.results.per.page'),
-        dedupValue: null,
-        dedupField: null,
-        fields: null,
-        prettyPrint: false,
-        size:'all',
-        safeSearch:'on',
-    }
-    const apiRequestData = new URLSearchParams();
+    const apiRequest = new ImageSearchApiRequest(); 
 
-    //Load parameters onto api request data
-    Object.keys(defaultApiParams)
-        .filter(key => defaultApiParams[key] !== null || requestData.has(key))
-        .forEach(key => apiRequestData.set(key, requestData.get(key) ?? defaultApiParams[key]));
-
-
-    suggestionRequest(apiRequestData.get('q'), requestData.get('l') ?? 'pt',
+    suggestionRequest(requestData.get('q'), requestData.get('l') ?? 'pt',
         (suggestion) => {
-            apiRequest(apiRequestData,
+            apiRequest.get(requestData,
                 (apiData) => {
                     res.render('partials/images-search-results', {
                         requestData: requestData,
                         apiData: apiData,
                         suggestion: suggestion,
-                        // exportObject: makeExportObject(req, res, apiRequestData, apiData)
+                        exportObject: makeExportObject(apiRequest.sanitizeRequestData(requestData), apiData, req.t)
                     });
                 })
         });

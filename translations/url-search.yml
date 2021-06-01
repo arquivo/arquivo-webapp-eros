@@ -28,3 +28,10 @@ nav:
     list:
       en: List
       pt: Lista
+list:
+  versions:
+    en: versions
+    pt: versões
+  version:
+    en: version
+    pt: versão

@@ -193,7 +193,7 @@ th.year-table-head {
   top: 0;
   font-size: 0.9em;
   background-color: white; 
-  
+  cursor: default;
 }
 
 td {

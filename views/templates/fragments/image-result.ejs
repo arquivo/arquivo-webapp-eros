@@ -1,0 +1,14 @@
+<li>
+    <ul>
+        <li><a href="#modal-window" rel="modal:open" class="zoom-image fas fa-search-plus" aria-hidden="true"></a></li>
+        <li><a href="#modal-window" rel="modal:open" class="results-image"><img src="<%= imageData.imgLinkToArchive %>" title="<%= imageData.imgTitle && imageData.imgTitle[0] %>" alt="<%= imageData.imgAlt && imageData.imgAlt[0] %>"></a></li>
+        <li><li><a href="javascript:void(0)" class="results-url" title="<%= imageData.pageURL %>">→ <%= imageData.pageURL %></a></li>
+        <li><p class="results-date"><%= t('common.date.long',{
+            year: imageData.imgTstamp.slice(0,4),
+            month: t('common.months.'+imageData.imgTstamp.slice(4,6)),
+            day: parseInt(imageData.imgTstamp.slice(6,8)),
+            hours: imageData.imgTstamp.slice(8,10),
+            minutes: imageData.imgTstamp.slice(10,12),
+        }) %></p></li>
+    </ul>            
+</li>      

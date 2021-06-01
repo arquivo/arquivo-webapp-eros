@@ -112,12 +112,16 @@ shortMonths:
     pt: Dez
 
 date:
-  long:
-    en: '${day} ${month} at ${hours}:${minutes}, ${year}'
-    pt: '${day} ${month} às ${hours}:${minutes}, ${year}'
   short:
     en: ${day} ${month}
     pt: ${day} ${month}
+  medium:
+    en: '${day} ${month} ${year}'
+    pt: '${day} ${month} ${year}'
+  long:
+    en: '${day} ${month} ${hours}h${minutes}, ${year}'
+    pt: '${day} ${month} ${hours}h${minutes}, ${year}'
+  
     
 estimated-results:
   pt: Cerca de ${numResults} resultados desde ${from} até ${to}
