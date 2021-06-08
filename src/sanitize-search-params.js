@@ -54,6 +54,11 @@ module.exports = function (req, res) {
         requestData.set('to', defaultRequestParameters.to)
     }
 
+    //Clean empty fields
+    [...requestData.keys()]
+        .filter(key => requestData.get(key).trim() === '')
+        .forEach(key => requestData.delete(key));
+
     //handle all query inputs
     let q = requestData.get('q') ?? '';
 
@@ -119,7 +124,7 @@ module.exports = function (req, res) {
 
     // putting "site","type" and "collection" on search query if needed and on API params if present.
     ['site', 'type', 'collection'].forEach(t => {
-        const queryRegEx = new RegExp('(\\s|^)' + t + ':([^\\s]+)');
+        const queryRegEx = new RegExp('(\s|^)' + t + ':([^\s]+)');
         const requestParam = t == 'site' ? 'siteSearch' : t;
         if (requestData.has(requestParam)) {
             if (!queryRegEx.test(q)) {
