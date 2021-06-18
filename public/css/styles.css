@@ -2408,6 +2408,7 @@ section#images-results ul > li {
  align-content:flex-start;
  align-items: center;
  justify-content: center;
+ display: inline-block;
  }
 
  section#images-results ul > li button.zoom-image, section#images-results ul > li a.zoom-image  {
@@ -2452,6 +2453,11 @@ section#images-results ul > li {
   flex-grow: 1;
   justify-content: center;
   font-size: small;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
   }
 
  section#images-results ul > li > ul > li {
