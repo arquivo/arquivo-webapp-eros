@@ -2501,21 +2501,7 @@ section#images-results ul > li {
   border: none;
   }
   
-  section#images-results ul > li > ul > li {
-    /*width: 100%;  
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex-grow: 1;
-    justify-content: center;
-    font-size: 0.9em;
-    padding: 0;
-    background-color: #f5f5f5;
-    border: none;*/
-    
-  }
-
-  section#images-results ul > li > ul > li.results-url {
+ section#images-results ul > li > ul > li.results-url {
     display: flex;
     padding: 10px 0 5px 0;    
   }
