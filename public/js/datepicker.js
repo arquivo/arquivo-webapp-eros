@@ -55,7 +55,7 @@ $(function () {
 
             //Enter clicks on "ok" button
             modalInput.on('keyup', function (e) {
-                if (e.keyCode === 13) {
+                if ((e.key !== undefined && e.key === 'Enter') || (e.keyCode !== undefined && e.keyCode === 13)) {
                     $('#modal-datepicker-confirm-button').click()
                 }
             });
