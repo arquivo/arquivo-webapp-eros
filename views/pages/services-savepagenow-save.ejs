@@ -6,29 +6,40 @@
         <!-- ends document <head>...</head> -->
 
 <body style="margin: 0px; padding: 0px;">
+  
+  <link rel="stylesheet" type="text/css" href="/css/styles-save-page-now.css" media="screen">
 <!-- Overwriting pywb set_state function in order to properly update our toolbar when iframe changes-->
-  <div class="banner">
-    <div class="banner__content">
-      <div class="banner__text">
-        <a id="logo-arquivo-link" href="/">
-          <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
-       </a>
-      Save Page Now
-      <div>
-      Navegue para ir gravando as p&aacute;ginas
-      </div>
-      <div>
-      <button class="banner__close" type="button">
-        <span class="material-icons">
-          <a id="sobre-arquivo-link" href="https://preprod.sobre.arquivo.pt/pt/savepagenow/">Concluir</a>
-        </span>
-      </button>
-      </div>
-      </div>
-    </div>
+<header>  
+        
+  <!-- starts SavePageNow image -->
+  <div class="left">
+      <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow.svg" alt="save page now"><p>Record pages while surfing the web</p>
   </div>
-  <div id="wb_iframe_div" style="width:100%; height:100%;">
-    <iframe name="replay_iframe" id="replay_iframe" src="<%- 'https://dev.arquivo.pt/save/now/record/' + url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent" style="overflow:hidden;height:100%;width:100%">
+  <!-- ends SavePageNow image -->
+  
+  <!-- starts Arquivo.pt logo -->
+  <div>
+      <a id="logo-arquivo-link" href="/">
+      <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
+      </a>  
+  </div>
+  <!-- ends Arquivo.pt logo -->  
+  
+  <!-- starts recording animation -->
+  <div class="right">
+  <div  id="pulsing-section">
+      <div class="pulse"></div>
+      <p id="colorchange">Recording...</p>         
+  </div>
+  <!-- ends recording animation -->
+
+  <!-- stars save page now button --> 
+   <button id="nav-options-right-button" class="button" value="top navigation right menu options button">Stop</button>   
+  <!-- ends save page now button -->  
+ </div>
+</header>
+  <div id="wb_iframe_div" style="width:100%;height: calc(100vh - 48px); margin-top:48px;">
+    <iframe name="replay_iframe" id="replay_iframe" src="<%- 'https://dev.arquivo.pt/save/now/record/' + url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent" style="overflow:hidden;height: 100vh;width: 100%;max-width: 100%;max-height: 100%;">
     </iframe>
 
   </div>
