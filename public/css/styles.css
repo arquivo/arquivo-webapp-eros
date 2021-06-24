@@ -2442,7 +2442,8 @@ section#images-results ul > li {
  }
 
  section#images-results ul > li:hover {
-  background-color: #dddddd;
+  background-color: #ececec;
+  transition: background-color 0.5s
   }
 
  section#images-results ul > li button.zoom-image, section#images-results ul > li a.zoom-image  {
@@ -2471,14 +2472,6 @@ section#images-results ul > li {
   background-color:#026157c0;
   cursor: pointer;   
  }
-
- section#images-results ul > li:hover {  
-  background-color: #f5f5f5;
-  }
-  section#images-results ul > li > ul > li:hover {
-  border: none; 
-  background-color: #f5f5f5;  
-  }
 
  section#images-results ul > li > ul {  
   display: flex;
