@@ -34,7 +34,10 @@
   <!-- ends recording animation -->
 
   <!-- stars save page now button --> 
-   <button id="nav-options-right-button" class="button" value="top navigation right menu options button">Stop</button>   
+  <form action="/services/savepagenow">
+   <button id="nav-options-right-button" class="button" type="submit" value="top navigation right menu options button">Stop</button>
+   <input type="hidden" name="completed" value="1">   
+  </form>
   <!-- ends save page now button -->  
  </div>
 </header>

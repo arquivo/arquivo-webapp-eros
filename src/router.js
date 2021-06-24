@@ -126,13 +126,18 @@ module.exports = function (app) {
 
     // starts services
     app.get('/services/savepagenow', function (req, res) {
-        res.render('pages/services-savepagenow');
+        const requestData = new URLSearchParams(req.query);
+        res.render('pages/services-savepagenow',{
+            completed: requestData.has('completed')
+        });
     });
 
     // starts services
     app.get('/services/savepagenow/save', function (req, res) {
         const requestData = new URLSearchParams(req.query);
-        res.render('pages/services-savepagenow-save',{url: requestData.get('url')});
+        res.render('pages/services-savepagenow-save',{
+            url: requestData.get('url')
+        });
     });
 
     // starts 404 
