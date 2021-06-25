@@ -8,8 +8,9 @@ html {
 
 body {  
   font-family: Helvetica, Arial, sans-serif;  
-  -webkit-font-smoothing: subpixel-antialiased;
-  overflow-x:hidden;  
+  -webkit-font-smoothing: subpixel-antialiased;   
+  text-rendering: optimizeLegibility; 
+  overflow-x:hidden;
 }
 
 /* All content wrapper*/
@@ -2377,7 +2378,11 @@ section#pages-results ul > li > a.results-title  {
   display: block;
   padding: 5px 0;
   font-size: 20px;
-  color: #1a0dab;     
+  color: #1a0dab; 
+  line-height: normal;
+}
+
+    
 }
 
 section#pages-results ul > li > a.results-title:visited  {
@@ -2424,10 +2429,10 @@ section#images-results ul {
 
 section#images-results ul > li {
  position: relative;
- width: 12%;
- min-width: 180px;
- margin: 0 0 0 0;
- padding: 10px 10px 13px 10px;
+ width: auto;
+ width: 150px; 
+ margin: 0;
+ padding: 0px 10px 17px;
  border: 1px solid #eae9e9;
  background-color: #f5f5f5;
  display: flex;
@@ -2442,7 +2447,7 @@ section#images-results ul > li {
  }
 
  section#images-results ul > li:hover {
-  background-color: #ececec;
+  background-color: #e3e3e3;
   transition: background-color 0.5s
   }
 
@@ -2450,7 +2455,7 @@ section#images-results ul > li {
   position: absolute;
   z-index: 1;
   right: 0;
-  top: 0px;
+  top: 10px;
   padding: 5px;
   font-size: small; 
   display: none;  
@@ -2479,12 +2484,13 @@ section#images-results ul > li {
   flex-wrap: wrap;
   flex-grow: 1;
   justify-content: center;
-  font-size: small;   
+  font-size: small; 
+  background-color: transparent;
   }
 
  section#images-results ul > li > ul > li {
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -2492,23 +2498,28 @@ section#images-results ul > li {
   justify-content: center;
   font-size: 0.9em;
   padding: 0;
+  background-color: transparent;
   border: none;
   }
   
  section#images-results ul > li > ul > li.results-url {
     display: flex;
-    padding: 10px 0 5px 0;    
+    padding: 10px 0 5px 0; 
+    width: 150px;   
+  }
+
+  section#images-results a.results-url { 
+    width: 150px;   
   }
 
   section#images-results ul > li > ul > li a  {
     padding-top: 10px;
     color: teal;
-    text-decoration: none; 
-    font-size: x-small;  
+    text-decoration: none;      
     text-overflow: ellipsis;
     overflow: hidden; 
     white-space: nowrap;    
-    font-size: 1em;
+    font-size: 0.9em;    
   }
 
   section#images-results ul > li > ul > li a:hover  {
@@ -2519,14 +2530,16 @@ section#images-results ul > li {
     text-overflow: ellipsis;
     overflow: hidden;
     padding-top: 4px;
-    font-size: 11px; 
+    font-size: 0.85em;
   }
 
  section#images-results ul li a img {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  width: 100%;    
+  width: auto; 
+  max-height: 170px;
+  max-width: 100%;
  }
 
  section#images-results ul li:hover a img {
@@ -2707,7 +2720,6 @@ background-color: #033f72;
 color: #444;
 margin: 0px 0 0 0;
 padding: 50px 0 0 0;
-text-rendering: optimizeLegibility;
 }
 
 footer ul {
@@ -2763,7 +2775,7 @@ height: 0;
 
 footer section section h4 {
   padding-bottom: 14px;
-  font-size: 1em;
+  font-size: 0.95em;
   font-weight: bold; 
   color: white/*#444*/;  
 }
@@ -3161,6 +3173,7 @@ nav#replay-left-nav {
     height: 36px;
     margin: 20px 5%;
  }
+
 }
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
