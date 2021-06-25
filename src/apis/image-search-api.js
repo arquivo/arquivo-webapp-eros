@@ -15,7 +15,7 @@ class ImageSearchApiRequest extends ApiRequest {
             maxItems: config.get('image.results.per.page'),
             dedupValue: null,
             dedupField: null,
-            fields: null,
+            fields: 'imgSrc,imgMimeType,imgHeight,imgWidth,imgTstamp,imgTitle,imgAlt,imgCaption,imgLinkToArchive,pageURL,pageTstamp,pageLinkToArchive,pageTitle,collection,imgDigest,pageHost,pageImages,safe',
             prettyPrint: false,
             size:'all',
             safeSearch:'on',

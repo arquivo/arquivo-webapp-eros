@@ -15,7 +15,7 @@
     }) %></p>
 
     <!-- starts result #1 -->
-    <ul>
+    <ul id="image-cards-container">
         <% apiData.responseItems.forEach(item => { %>
             <%- include("../templates/fragments/image-result", {imageData: item}) -%>
         <% }); %>

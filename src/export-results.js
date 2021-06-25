@@ -30,7 +30,9 @@ module.exports = function (apiRequestData, apiResponseItems, translateFunction, 
     );
 
 
-    apiResponseItems.forEach(currentDocument => {
+    apiResponseItems
+        .map(d => ({...d})) //clone elements to avoid changing original data
+        .forEach(currentDocument => {
         if (typeof currentDocument === 'undefined' || !currentDocument) {
             return;
         }
