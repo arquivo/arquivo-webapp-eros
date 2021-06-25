@@ -8,8 +8,9 @@ html {
 
 body {  
   font-family: Helvetica, Arial, sans-serif;  
-  -webkit-font-smoothing: subpixel-antialiased;
-  overflow-x:hidden;  
+  -webkit-font-smoothing: subpixel-antialiased;   
+  text-rendering: optimizeLegibility; 
+  overflow-x:hidden;
 }
 
 /* All content wrapper*/
@@ -2428,9 +2429,10 @@ section#images-results ul {
 
 section#images-results ul > li {
  position: relative;
- width: 12%; 
+ width: auto;
+ width: 150px; 
  margin: 0;
- padding: 10px 10px 17px;
+ padding: 0px 10px 17px;
  border: 1px solid #eae9e9;
  background-color: #f5f5f5;
  display: flex;
@@ -2445,7 +2447,7 @@ section#images-results ul > li {
  }
 
  section#images-results ul > li:hover {
-  background-color: #e5e5e5;
+  background-color: #e3e3e3;
   transition: background-color 0.5s
   }
 
@@ -2453,7 +2455,7 @@ section#images-results ul > li {
   position: absolute;
   z-index: 1;
   right: 0;
-  top: 0px;
+  top: 10px;
   padding: 5px;
   font-size: small; 
   display: none;  
@@ -2502,18 +2504,22 @@ section#images-results ul > li {
   
  section#images-results ul > li > ul > li.results-url {
     display: flex;
-    padding: 10px 0 5px 0;    
+    padding: 10px 0 5px 0; 
+    width: 150px;   
+  }
+
+  section#images-results a.results-url { 
+    width: 150px;   
   }
 
   section#images-results ul > li > ul > li a  {
     padding-top: 10px;
     color: teal;
-    text-decoration: none; 
-    font-size: x-small;  
+    text-decoration: none;      
     text-overflow: ellipsis;
     overflow: hidden; 
     white-space: nowrap;    
-    font-size: 0.9em;
+    font-size: 0.9em;    
   }
 
   section#images-results ul > li > ul > li a:hover  {
@@ -2531,8 +2537,9 @@ section#images-results ul > li {
   box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
   cursor: pointer;
   transition: box-shadow 0.3s;
-  width: auto;  
-  max-height: 200px; 
+  width: auto; 
+  max-height: 170px;
+  max-width: 100%;
  }
 
  section#images-results ul li:hover a img {
@@ -2713,7 +2720,6 @@ background-color: #033f72;
 color: #444;
 margin: 0px 0 0 0;
 padding: 50px 0 0 0;
-text-rendering: optimizeLegibility;
 }
 
 footer ul {
@@ -3167,6 +3173,7 @@ nav#replay-left-nav {
     height: 36px;
     margin: 20px 5%;
  }
+
 }
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
