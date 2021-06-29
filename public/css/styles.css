@@ -54,7 +54,7 @@ a {
 }
 a:hover {
   color:#1c75c0;
-  background-color: white;
+  background-color: transparent;
 }
 
 /* ANCHOR LINKS for search results page: visited ********************************************************** */
@@ -1365,8 +1365,7 @@ body#images-search-results section.modal {
 
 body#images-search-results section.image-container {
   display: flex;
-  justify-content: center;
-  background-color: whitesmoke;
+  justify-content: center;  
 }
 
 section#modal-window-image-technical-details {
@@ -1382,6 +1381,10 @@ section#modal-window-image-technical-details {
   overflow-y: auto;
   text-align: left; 
   border-radius: 5px;
+}
+
+section#modal-window-image-technical-details h3 {
+  padding-top: 30px;
 }
 
 a#close-modal-tecnhical {
@@ -1431,7 +1434,7 @@ section#modal-window-image-technical-details h5 {
 
 section#modal-window-image-technical-details p  {
   display: flex;
-  font-size: smaller;
+  font-size: 0.73em;
   padding-bottom: 15px;
   flex-direction: row;
   align-items: baseline;
@@ -1442,8 +1445,8 @@ section#modal-window-image-technical-details p  {
 
 section#modal-window-image-technical-details p span  {
   position: relative;
-  top: -0.9px;
-  font-size: 0.8em;
+  top: -0.80px;
+  font-size: 0.85em;
   color: #646464;
   padding-right: 5px;
 }
@@ -1522,7 +1525,7 @@ div.jquery-modal section#replay-with-old-browser {
 
 .image-alt {
   padding-left: 5px;
-  font-size: 12px;
+  font-size: 1em;
 }
 
 section.image-details-navigation {
@@ -1578,14 +1581,15 @@ section.image-details-description p a  {
 }
 
 section.image-details-description p.image-description-date  {
-  font-size: 0.70em;
+  font-size: 0.73em;
+  color: gray;
 }
 
 section.image-details-description p.image-description-date span  {
   padding-right: 3.6px;
   font-size: 0.9em;
   position: relative;
-  top: -0.6px;
+  top: -1.33px;
 }
 
 section.image-details-description p a:hover  {
@@ -1634,7 +1638,7 @@ button.image-navigation-button span:hover {
 section.image-details-description p span { 
   position: relative;
   top: 0.175px;
-  font-size: 1em;
+  font-size: 0.8em;
   color: #777;
 }
 
@@ -1813,7 +1817,7 @@ div.jquery-modal div#modal {
   padding: 23px; 
   border-radius: 5px;
   box-shadow: 0 0 60px #000;
-  background-color: #fff;
+  background-color: #f5f5f5;
   height: auto;
 }
 
@@ -2236,6 +2240,7 @@ section#pages-results > p, section#images-results > p, section#not-found-contain
 img.image-display {
   width: auto;
   max-width: 100%;
+  border-radius: 3px;
 }
 
 body#table-list-results p#estimated-results, body#list-results p#estimated-results   {
@@ -2288,9 +2293,9 @@ section#not-found-message ul li.list-title, section#search-suggestion-message ul
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
-  margin: 0 auto 10px auto;
+  margin: 0 auto;
   width: auto;
-  max-width: 955px;
+  max-width: 930px;
   font-size: 13px;  
   padding: 15px;
   border-radius: 3px;
