@@ -186,6 +186,7 @@ padding: 10px;
 width: auto;
 color: #00294c;
 border-left: 0.5px solid #b3b3b34d;
+background-color: #f5f5f5 !important;
 }
 
 /* Sticky table head */
@@ -280,8 +281,9 @@ h4#modal-datepicker-title {
 }
 
 #modal-datepicker-datepicker {
-  height: auto;
-  padding-bottom: 48px;
+  height: auto; 
+  padding-bottom: 33px;
+  width: 220px;
 }
 
 button#modal-datepicker-confirm-button {
@@ -1238,7 +1240,7 @@ text-decoration: none;
 .ui-datepicker .ui-datepicker-header {
   position: relative;
   padding: .2em 0;
-  background-color: white !important;
+  background-color: #f5f5f5 !important;
 }
 
 /* Datepicker: !mportant styles applied to override jquery UI default CSS */
@@ -1271,7 +1273,7 @@ text-decoration: none;
 .ui-datepicker .ui-datepicker-title select, .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
   width: 45%;
   border: 1px solid #ccc;
-  font-size: 0.85em !important;
+  font-size: 0.8em !important;
   border: 1px solid #ccc !important;
   
 }
@@ -1290,7 +1292,7 @@ td a.ui-state-default {
 }
 
 .ui-datepicker table {
-  background-color: white !important;
+  background-color: #f5f5f5 !important;
   border-collapse: inherit !important;
   padding: 5px 0px 0 0px !important;
   margin: 0 !important;
@@ -1354,13 +1356,13 @@ section.modal {
   height: auto;
   max-height: auto !important;    
   box-sizing: border-box;
-  background: #fff;
+  background: #f5f5f5;
   padding: 15px 0 15px 10px !important;
   overflow: initial;
 }
 
-body#images-search-results section.modal {
-  padding: 20px 20px 40px 20px !important;
+body#images-search-results div.modal {
+  padding: 20px 20px 40px 20px;  
 }
 
 body#images-search-results section.image-container {
@@ -1377,7 +1379,7 @@ section#modal-window-image-technical-details {
   right: 0;
   height: 100%;
   padding: 0px 23px;
-  background: white;  
+  background: #f5f5f5; 
   overflow-y: auto;
   text-align: left; 
   border-radius: 5px;
@@ -1565,6 +1567,12 @@ section.image-details-description p  {
  line-height: 1.4em;
 }
 
+section.image-details-description p.image-description-name {
+  border-top: 1px solid #cccccc69;
+  margin-top: 10px;
+  padding-top: 12px;
+}
+
 section.image-details-description p.image-details-padding-right  {
   padding-right: 5px;
   display: block;
@@ -1667,7 +1675,7 @@ padding: 0 !important;
 }
 
 .ui-datepicker th {
-  font-size: 1em !important;
+  font-size: 0.9em !important;
   font-weight: 100 !important;
   color: black !important;
   border-bottom: none !important;
@@ -1675,7 +1683,7 @@ padding: 0 !important;
 
 input[type="text"]#modal-datepicker-input {
   padding: 6px 0px;
-  font-size: 1em;
+  font-size: 0.9em;
   font-family: unset;
   border-radius: 4px;
   text-align: center;
@@ -1702,7 +1710,7 @@ input[type="text"]#modal-datepicker-input:focus {
 #modal-datepicker-datepicker .ui-state-default {
   background: #1c75c0;
   font-weight: normal;
-  font-size: smaller;
+  font-size: 11px;
   color: white;
   border-radius: 2px;
   outline: none;
@@ -1818,7 +1826,12 @@ div.jquery-modal div#modal {
   box-shadow: 0 0 100px #000;
   background-color: #f5f5f5;
   height: auto;
+  width: auto;
 }
+
+body#images-search-results div#ui-datepicker-div div.jquery-modal div#modal {
+  width: 270px;
+} 
 
 #modal-datepicker-datepicker .ui-datepicker .ui-datepicker-prev span {
   display: none;
@@ -2237,9 +2250,10 @@ section#pages-results > p, section#images-results > p, section#not-found-contain
 
 /* Defines how images display on images modal */
 img.image-display {
-  width: auto;
   max-width: 100%;
+  max-height: 500px;
   border-radius: 3px;
+  height: auto;
 }
 
 body#table-list-results p#estimated-results, body#list-results p#estimated-results   {
