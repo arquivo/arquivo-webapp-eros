@@ -1366,6 +1366,7 @@ body#images-search-results section.modal {
 body#images-search-results section.image-container {
   display: flex;
   justify-content: center;
+  background-color: whitesmoke;
 }
 
 section#modal-window-image-technical-details {
@@ -1376,7 +1377,7 @@ section#modal-window-image-technical-details {
   left: 0;  
   right: 0;
   height: 100%;
-  padding: 0px 20px;
+  padding: 0px 23px;
   background: white;  
   overflow-y: auto;
   text-align: left; 
@@ -1429,22 +1430,28 @@ section#modal-window-image-technical-details h5 {
  }
 
 section#modal-window-image-technical-details p  {
+  display: flex;
   font-size: smaller;
   padding-bottom: 15px;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: left;
+  line-height: 1.4em;
+  color: gray;
 }
 
 section#modal-window-image-technical-details p span  {
   position: relative;
   top: -0.9px;
   font-size: 0.8em;
-  color: #777;
+  color: #646464;
   padding-right: 5px;
 }
 
 section#modal-window-image-technical-details p a  {
   color: #1c75c0;
   text-decoration: none;
-  padding-left: 17px;
+  padding-left: 0px;
   display: block;
   margin-top: -14px;
   line-height: normal;
@@ -1539,20 +1546,21 @@ section.image-details-description  {
   display: flex;
   flex-direction: column;
   text-align: initial;
-  margin-top: 20px;  
-  max-height: 211px;
+  margin-top: 7px;  
 }
 
 section.image-details-description h5  {
-font-weight: bold;
-padding: 20px 0;
-font-size: 0.8em;
-border-top: 1px solid #cccccc69;
+  font-weight: bold;
+  padding: 15px 0 5px;
+  font-size: 0.8em;
+  border-top: 1px solid #cccccc69;
+  margin-top: 10px;
 }
 
 section.image-details-description p  {
- padding-bottom: 10px;
+ padding: 5px 0;
  font-size: 0.75em;
+ line-height: 1.4em;
 }
 
 section.image-details-description p.image-details-padding-right  {
@@ -1626,7 +1634,7 @@ button.image-navigation-button span:hover {
 section.image-details-description p span { 
   position: relative;
   top: 0.175px;
-  font-size: 0.8em;
+  font-size: 1em;
   color: #777;
 }
 
@@ -1802,8 +1810,11 @@ body#list-results #modal a.close-modal {
 }
 
 div.jquery-modal div#modal {
-  padding: 23px !important; 
-  border-radius: 5px !important;
+  padding: 23px; 
+  border-radius: 5px;
+  box-shadow: 0 0 60px #000;
+  background-color: #fff;
+  height: auto;
 }
 
 #modal-datepicker-datepicker .ui-datepicker .ui-datepicker-prev span {
