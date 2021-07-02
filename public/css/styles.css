@@ -393,6 +393,15 @@ body#homepage main {
   margin: 0 auto 50px auto;
 }
 
+body#images-search-results section#images-results h3, body#pages-search-results section#pages-results h3  {  
+  visibility: collapse;
+  height: 0;
+}
+
+body#pages-search-results form#pages-search-results-list button {  
+  margin: 17px 0 5px 0;
+}
+
 body#images-search-results main, body#images-search-results section#images-results  {  
   max-width: 100%;
 }
@@ -2261,7 +2270,9 @@ img.image-display {
   height: auto;
 }
 
-body#table-list-results p#estimated-results, body#list-results p#estimated-results   {
+body#table-list-results p#estimated-results, body#list-results p#estimated-results,
+body#pages-search-results p#estimated-results, body#images-search-results p#estimated-results
+   {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
