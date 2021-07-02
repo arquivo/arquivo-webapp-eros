@@ -2242,6 +2242,10 @@ visibility: collapse;
 height: 0;
 }
 
+body#save-page-now h4#save-page-now-slogan {
+  padding: 11px 6px 11px 0px;  
+}
+
 section#home-content h4, section#body-content h4 {
   padding: 11px 6px 11px 14px;  
   font-weight: normal;
