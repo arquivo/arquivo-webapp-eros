@@ -80,7 +80,7 @@ header button#nav-options-right-button {
 div#wb_iframe_div {
     width: 100%;
     height: calc(100vh - 48px);
-    margin-top: 48px;
+    margin-top: 46px;
 }
 
 
@@ -157,5 +157,4 @@ div#wb_iframe_div {
     height: calc(100vh - 164px);
     margin-top: 164px;
 }
-
 }
