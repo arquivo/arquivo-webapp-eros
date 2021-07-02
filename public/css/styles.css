@@ -2211,10 +2211,11 @@ body#save-page-now form#search-form input#submit-search-input {
   background-image: none;
 }
 body#save-page-now form#search-form input#submit-search-input {    
-  padding-left: 12px;
+  padding-left: 12px;  
   background-image: none;
 }
 body#save-page-now form#search-form {
+  margin: 8px auto 0 auto;
   height: auto;
 }
 
