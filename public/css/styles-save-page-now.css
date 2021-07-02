@@ -66,7 +66,9 @@ header {
 
 header button#nav-options-right-button {
     position: relative !important;
-    display: block;    
+    display: flex;
+    justify-content: center;
+    align-items: center;    
     width: 66px;
     height: 31px;
     font-size: 0.75em;
@@ -156,5 +158,6 @@ div#wb_iframe_div {
     width: 100%;
     height: calc(100vh - 164px);
     margin-top: 164px;
+    padding: 0px !important;
 }
 }
