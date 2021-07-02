@@ -127,9 +127,7 @@ module.exports = function (app) {
     // starts services
     app.get('/services/savepagenow', function (req, res) {
         const requestData = new URLSearchParams(req.query);
-        res.render('pages/services-savepagenow',{
-            completed: requestData.has('completed')
-        });
+        res.render('pages/services-savepagenow');
     });
 
     // starts services

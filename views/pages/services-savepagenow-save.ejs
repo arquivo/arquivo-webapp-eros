@@ -13,7 +13,7 @@
         
   <!-- starts SavePageNow image -->
   <div class="left">
-      <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow.svg" alt="save page now"><p>Record pages while surfing the web</p>
+      <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow.svg" alt="save page now"><p><%= t('services-savepagenow.recorder.label') %></p>
   </div>
   <!-- ends SavePageNow image -->
   
@@ -29,13 +29,13 @@
   <div class="right">
   <div  id="pulsing-section">
       <div class="pulse"></div>
-      <p id="colorchange">Saving...</p>         
+      <p id="colorchange"><%= t('services-savepagenow.recorder.saving') %></p>         
   </div>
   <!-- ends recording animation -->
 
   <!-- stars save page now button --> 
   <form action="/services/savepagenow">
-   <button id="nav-options-right-button" class="button" type="submit" value="top navigation right menu options button">Conclude</button>
+   <button id="nav-options-right-button" class="button" type="submit" value="top navigation right menu options button"><%= t('services-savepagenow.recorder.stop') %></button>
    <input type="hidden" name="completed" value="1">   
   </form>
   <!-- ends save page now button -->  
