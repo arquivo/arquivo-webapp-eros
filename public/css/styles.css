@@ -1057,7 +1057,7 @@ section#search-tools #submit-search-mobile {
 } 
 
 /* Portuguese version search button width */
-:lang(pt) section#search-tools #submit-search { 
+:lang(pt) section#search-tools #submit-search, :lang(en) section#search-tools #submit-search { 
   max-width: 124px; 
 } 
 
