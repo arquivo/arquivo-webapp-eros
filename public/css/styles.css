@@ -2222,8 +2222,7 @@ body#save-page-now form#search-form {
 
 body#save-page-now p#save-page-url-message-error {
   padding-top: 10px;
-  font-size: 12px;
-  padding-left: 14px;
+  font-size: 12px;  
   font-style: italic;
   line-height: 1.4em;
   color: red;
@@ -2244,8 +2243,7 @@ height: 0;
 }
 
 section#home-content h4, section#body-content h4 {
-  padding: 11px 6px 11px 14px;
-  padding: 11px 6px 11px 0px;
+  padding: 11px 6px 11px 14px;  
   font-weight: normal;
   font-size: 1em;
   width: fit-content;
