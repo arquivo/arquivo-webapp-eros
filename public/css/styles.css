@@ -2199,6 +2199,37 @@ section#home-content, section#body-content  {
   justify-content: space-between;
   padding: 0 10px;
 }
+/* Save page Now input */
+
+body#save-page-now section#home-content, section#body-content {
+  justify-content: flex-start;
+  padding: 0 18px;
+}
+
+body#save-page-now form#search-form input#submit-search-input {    
+  padding-left: 12px;
+  background-image: none;
+}
+body#save-page-now form#search-form input#submit-search-input {    
+  padding-left: 12px;
+  background-image: none;
+}
+body#save-page-now form#search-form {
+  height: auto;
+}
+
+body#save-page-now p#save-page-url-message-error {
+  padding-top: 10px;
+  font-size: 12px;
+  padding-left: 14px;
+  font-style: italic;
+  color: red;
+}
+
+body#save-page-now section#search-tools { 
+    margin: 0px 0 21vh 0;
+    padding: 0px;
+}
 
 section#home-content h3, section#body-content h3 {
 visibility: collapse;
