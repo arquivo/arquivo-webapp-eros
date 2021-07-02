@@ -1,0 +1,17 @@
+recorder:
+  label:
+    en: Record pages while surfing the web
+    pt: Navegue para ir gravando as páginas
+  saving:
+    en: Saving...
+    pt: Gravando...
+  stop:
+    en: Stop
+    pt: Concluir
+  popup:
+    text:
+      en: Your browsing has been saved in Arquivo.pt.
+      pt: A sua navegação foi guardada no Arquivo.pt. 
+    button:
+      en: OK
+      pt: OK
