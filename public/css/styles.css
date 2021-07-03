@@ -461,6 +461,7 @@ body#landing-replay main#main-content iframe  {
 
 nav#replay-left-nav { 
   z-index: 1;
+  padding-top: 41px;
   top: 90px;
   left: 0px;    
   width: 200px; 
@@ -637,9 +638,14 @@ nav#left-nav h3, nav#options-right-nav h3, nav#replay-left-nav h3, nav#replay-ri
   transition: 0.5s;
 }
 
+/* Copy URL alert and others */
+section#alert-container h3 { 
+  visibility: collapse;
+  height: 0;
+}
+
 /* Copy URL tooltip */
-section#alert-container p { 
-  padding-bottom: 19px;
+section#alert-container p {   
   width: 100%;
   background-color: #011b31;
   display: flex;
@@ -694,6 +700,8 @@ body#homepage button#nav-options-right-button  {
   content: "\002B";
   float: right;
   font-size: initial;
+  position: absolute;
+  right: 15px;
 }
 
 .active:after {
@@ -1509,7 +1517,7 @@ section.modal ul.replay-options li:first-child {
 }
 
 section.modal ul.replay-options li p {
-  font-size: 0.85em;
+  font-size: 0.80em;
   line-height: normal;
 }
 
@@ -2289,7 +2297,9 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
 body#pages-search-results section#pages-results, 
 body#images-search-results section#images-results {
   padding: 0px 10px 20px 10px; 
+  width: 100%;
 }
+
 section#not-found-container p#no-results-were-found {
     background-color: #fbf2f2;
     color: #d05289;
