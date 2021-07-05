@@ -79,13 +79,11 @@ module.exports = function (app) {
         res.render('pages/images-advanced-search');
     });
 
-
     // starts Replay
     app.get('/replay', function (req, res) {
         res.render('pages/replay');
     });
     // ends Replay
-
 
     // starts not found page
     app.get('/not-found', function (req, res) {

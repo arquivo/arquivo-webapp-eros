@@ -5,9 +5,11 @@
 // starts: menu opening and closing button for top nav left menu button //////////////////////////////////
 function openLeftMenuNav() {
   $("#left-nav").attr('style',"left:0px;"); 
+  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1"); 
 }
 function closeLeftMenuNav() {
   $("#left-nav").attr('style',"left:-200px");
+  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1"); 
 }
 // ends: menu opening and closing button for top nav left menu button ////////////////////////////////////
 
@@ -15,9 +17,11 @@ function closeLeftMenuNav() {
 
 function openOptionstMenuNav() {
   $("#options-right-nav").attr('style',"right:0px;"); 
+  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1"); 
 }
 function closeOptionsMenuNav() {
   $("#options-right-nav").attr('style',"right:-250px");
+  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1"); 
 }
 // ends: menu opening and closing button for top nav right menu button ///////////////////////////////////
 
@@ -38,9 +42,11 @@ function closeReplayLeftMenuNav() {
 // starts: menu opening and closing button for top nav right replay menu button /////////////////////////////////
 function openReplayRightMenuNav() {
     $("#replay-right-nav").attr('style',"right:0px;"); 
+    $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:2 ")
 }
 function closeReplayRightMenuNav() {
     $("#replay-right-nav").attr('style',"right:-250px");  
+    $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1");
 }
 // ends: menu opening and closing button for replay top nav right replay menu button 
 
@@ -67,6 +73,7 @@ function alertsMessageIn() {
   setTimeout(alertsMessageOut, 2000); 
 }
 // alert message out
+
 function alertsMessageOut() {
   $("#alert-container").attr('style',"height:0px;opacity:0;transition:0.5s");     
 }
@@ -86,8 +93,6 @@ function closeAdvancedSearch(){
 return false;
 }
 // ends: accordion function /////////////////////////////////////////////////////////////////////////////
-
-// starts: accordion function ////////////////////////////////////////////////////////////////////////////
 
 // opens replay page on fullscreen
 function opensFullScreen() { 

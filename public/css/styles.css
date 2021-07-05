@@ -67,7 +67,7 @@ body#pages-search-results ul > li > a.results-title:visited {
 
 button {
   position: relative;
-  z-index: 1;
+  z-index: 0;
   padding: 6px 8.65px 6.5px 8.65px;
   color: white;
   background-color: #1c75c0;  
@@ -122,7 +122,7 @@ h1, h2 {
 
 body#landing-replay p#chosen-url {
   padding: 15px 0px ;
-  font-size: 0.8em;
+  font-size: 0.75em;
   color: white
 }
 
@@ -314,6 +314,11 @@ header {
   padding: 8px 0 4px 0;
   background-color:#033f72;
   text-align: center; 
+ }
+
+ /* default status for menus overlay */
+ div#menus-overlay {
+   display: none;
  }
 
  body#landing-replay header { 
@@ -697,7 +702,7 @@ body#homepage button#nav-options-right-button  {
 }
 
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after, .accordion-replay-left-menu-day:after  {
-  content: "\002B";
+  content: "\2193";
   float: right;
   font-size: initial;
   position: absolute;
@@ -705,7 +710,7 @@ body#homepage button#nav-options-right-button  {
 }
 
 .active:after {
-  content: "\2212";
+  content: "\2191";
   float: right;
   font-weight: normal;
 }
@@ -784,7 +789,7 @@ nav#replay-left-nav section ul > li a {
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-month {  
-  padding-left: 30px; 
+  padding-left: 40px; 
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-day {   
@@ -826,7 +831,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 /* nav sub-menu ******************************************************************* */
 nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a, nav#reply-left-nav section ul > li > ul > li a, nav#reply-right-nav section ul > li > ul > li a { 
   padding: 0 0 0 30px;
-  font-size: 0.85em;
+  font-size: 0.75em;
 }
 /* ends nav MENU: replay left and right ************************************************** */
 
@@ -1509,7 +1514,6 @@ section.modal ul.replay-options {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-
 }
 
 section.modal ul.replay-options li:first-child {
@@ -1517,13 +1521,14 @@ section.modal ul.replay-options li:first-child {
 }
 
 section.modal ul.replay-options li p {
+  padding-bottom: 10px;
   font-size: 0.80em;
   line-height: normal;
 }
 
 section.modal ul.replay-options li button {
   margin: 10px;
-  width: 114px;
+  width: 103px;
 }
 
 div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
@@ -1743,7 +1748,8 @@ input[type="text"]#modal-datepicker-input:focus {
   filter: invert(1);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
-  transition: 0.5s;  
+  transition: 0.5s; 
+  display: none; 
 }
 
 #modal a.close-modal:hover {
@@ -1752,6 +1758,16 @@ input[type="text"]#modal-datepicker-input:focus {
   background-size: 100%;
   filter: drop-shadow(2px 4px 6px black);
   transition: 0.5s;
+}
+
+#jquery-modal a.close-modal {
+  z-index: 3;
+  filter: invert(1);
+  background: transparent url("../img/close-modal.png") no-repeat 0 0;
+  background-size: 100%;
+  transition: 0.5s; 
+  display: block !important;
+
 }
 
 /* Remove close modal button on home page and on both images and pages landing pages */
@@ -2278,6 +2294,13 @@ img.image-display {
   height: auto;
 }
 
+section#print a.close-modal, 
+section#screenshot a.close-modal,
+section#complete-the-page a.close-modal,
+section#replay-with-old-browser a.close-modal {
+  display: none;
+}
+
 body#table-list-results p#estimated-results, body#list-results p#estimated-results,
 body#pages-search-results p#estimated-results, body#images-search-results p#estimated-results
    {
@@ -2434,7 +2457,7 @@ section#pages-results ul > li > a:hover  {
 section#pages-results ul > li > a.results-url  {
   display: block;
   color: #009688;
-  font-size: 14px; 
+  font-size: 12px; 
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;  
