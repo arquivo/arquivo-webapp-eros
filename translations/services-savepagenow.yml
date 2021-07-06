@@ -1,17 +1,23 @@
 recorder:
   label:
-    en: Record pages while surfing the web
+    en: Browse to save pages
     pt: Navegue para ir gravando as páginas
   saving:
     en: Saving...
     pt: Gravando...
   stop:
-    en: Stop
+    en: Conclude
     pt: Concluir
   popup:
+    accessibility:
+      en: 'Notification Popup'
+      pt: 'Janela de notificação'
+    slogan:
+      en: Save pages on Arquivo.pt
+      pt: Grava páginas no Arquivo.pt
     text:
-      en: Your browsing has been saved in Arquivo.pt.
-      pt: A sua navegação foi guardada no Arquivo.pt. 
+      en: Your browsing has been saved and will soon be available on Arquivo.pt.
+      pt: A sua página foi salva e ficará disponível em breve no Arquivo.pt 
     button:
       en: OK
       pt: OK

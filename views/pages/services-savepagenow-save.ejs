@@ -34,17 +34,26 @@
   <!-- ends recording animation -->
 
   <!-- stars save page now button --> 
-  <form action="/services/savepagenow">
-   <button id="nav-options-right-button" class="button" type="submit" value="top navigation right menu options button"><%= t('services-savepagenow.recorder.stop') %></button>
-   <input type="hidden" name="completed" value="1">   
-  </form>
+   <button id="nav-options-right-button" class="button" onclick="$('#modal').modal({escapeClose: false, clickClose: false, showClose: false });" value="top navigation right menu options button"><%= t('services-savepagenow.recorder.stop') %></button> 
   <!-- ends save page now button -->  
  </div>
 </header>
   <div id="iframe_div">
-    <iframe name="replay_iframe" id="replay_iframe" src="<%- 'http://dev.arquivo.pt/save/now/record/' + url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent" style="overflow:hidden;height: 100vh;width: 100%;max-width: 100%;max-height: 100%;">
+    <iframe name="replay_iframe" id="replay_iframe" src="<%- /*'http://dev.arquivo.pt/save/now/record/' + url*/ %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent" style="overflow:hidden;height: 100vh;width: 100%;max-width: 100%;max-height: 100%;">
     </iframe>
 
+  </div>
+  <div id="modal" style="display: none; padding: 25px;">
+    <section id="savepagenow-modal" style="max-width: 300px; text-align: center;">
+      <h3 style="visibility: collapse;height: 0;"><%= t('services-savepagenow.recorder.popup.accessibility') %></h3>
+      <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow" style="margin: 0;">
+      <h4 id="save-page-now-slogan" style="font-size: 0.7rem; margin-bottom: 15px;"><%= t('services-savepagenow.recorder.popup.slogan') %></h4>
+
+      <p><%= t('services-savepagenow.recorder.popup.text') %></p>
+      <form action="/services/savepagenow" style="display: block; margin-top: 15px;">
+        <button type="submit" style="padding-left: 25px; padding-right: 25px;"><%= t('services-savepagenow.recorder.popup.button') %></button>
+      </form>
+    </section>
   </div>
 </body>
 </html>
