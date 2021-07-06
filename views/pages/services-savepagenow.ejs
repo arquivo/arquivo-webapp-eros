@@ -39,20 +39,22 @@
             <!-- starts main container-->
             <main id="main-content">
                 <section id="home-content" class="home-content-cl">    
-                    <h3>Highlighted</h3>
-                    <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow-blue.svg" alt="save page now">
-                    <h4 id="save-page-now-slogan">Grava Páginas da net</h4>
+                    <h3><%= t('services-savepagenow.form.accessibility') %></h3>
+                    <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow">
+                    <h4 id="save-page-now-slogan"><%= t('services-savepagenow.form.text') %></h4>
                 
                     <section id="search-tools">
                     <form id="search-form" role="form" action="/services/savepagenow/save" method="GET">
                     <span class="search-input-button">
-                        <input id="submit-search-input" type="search" placeholder="URL" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="URL" value="">
-                        <button id="submit-search" type="submit" value="search mobile menu button">Gravar Página</button>
+                        <input id="submit-search-input" type="search" placeholder="URL" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="URL" value="<%- url %>">
+                        <button id="submit-search" type="submit" value="search mobile menu button"><%= t('services-savepagenow.form.button') %></button>
                         <button id="submit-search-mobile" type="submit" class="fas fa-search" value="search mobile menu button"></button>
                         <input type="hidden" name="l" value="<%= getLanguage() %>">
                     </span>
                 </form>
-                <p id="save-page-url-message-error">Endereço não encontrado. Por favor insira um URL válido</p>
+                <% if (typeof error != 'undefined' && error){ %>
+                <p id="save-page-url-message-error"><%= t('services-savepagenow.form.error.'+errorType) %></p>
+                <% } %>
             </section>
                 </section>
             </main>

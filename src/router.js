@@ -2,11 +2,13 @@ const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
+const fetch = require('node-fetch');
+const config = require('config');
+const { request } = require('express');
 
 module.exports = function (app) {
     // Homepage 
     app.get('/', function (req, res) {
-
         res.render('pages/home');
     });
 
@@ -125,15 +127,48 @@ module.exports = function (app) {
     // starts services
     app.get('/services/savepagenow', function (req, res) {
         const requestData = new URLSearchParams(req.query);
-        res.render('pages/services-savepagenow');
+        res.render('pages/services-savepagenow',{
+            url: '',
+            error: false
+        });
     });
 
-    // starts services
+    // savepagenow recording page
     app.get('/services/savepagenow/save', function (req, res) {
         const requestData = new URLSearchParams(req.query);
-        res.render('pages/services-savepagenow-save',{
-            url: requestData.get('url')
-        });
+        const url = requestData.get('url').trim();
+        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
+        const startsWithHttp = /^https?:\/\//
+        const renderError = function(errorType = 'default') {
+            res.render('pages/services-savepagenow', {
+                url: url,
+                error: true,
+                errorType: errorType
+            });
+        }
+        const renderOk = function() {
+            res.render('pages/services-savepagenow-save',{
+                url: config.get('services.savepagenow.url') + url
+            });
+        }
+
+        let validUrl = !!url && urlPattern.test(url);
+        if(validUrl){
+            const fetchUrl = startsWithHttp.test(url) ? url : 'https://'+url;
+            fetch(fetchUrl)
+            .then(res => {
+                if(res.ok){
+                    renderOk();
+                } else {
+                    renderError('page-down');
+                }                        
+            })
+            .catch(error =>{
+                renderError()
+                })
+        } else {
+            renderError();
+        }
     });
 
     // starts 404 

@@ -1,3 +1,20 @@
+form:
+  accessibility:
+    en: SavePageNow form page
+    pt: Página do formulário do SavePageNow
+  text:
+    en: record webpages on Arquivo.pt
+    pt: grava páginas no Arquivo.pt
+  button:
+    en: Record page
+    pt: Gravar página
+  error:
+    default:
+      en: Address not found. Please insert a valid URL. 
+      pt: Endereço não encontrado. Por favor insira um URL válido.
+    page-down:
+      en: The requested page seems to be down. Please check that the URL is valid or try again later.
+      pt: A página que pediu parece estar em baixo. Por favor confirme que o URL está correto ou tente outra vez mais tarde.
 recorder:
   label:
     en: Browse to save pages
