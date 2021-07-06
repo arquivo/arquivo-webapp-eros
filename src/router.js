@@ -124,7 +124,7 @@ module.exports = function (app) {
         }
     });
 
-    // starts services
+    // savepagenow form
     app.get('/services/savepagenow', function (req, res) {
         const requestData = new URLSearchParams(req.query);
         res.render('pages/services-savepagenow',{
@@ -134,10 +134,10 @@ module.exports = function (app) {
     });
 
     // savepagenow recording page
-    app.get('/services/savepagenow/save', function (req, res) {
-        const requestData = new URLSearchParams(req.query);
-        const url = requestData.get('url').trim();
-        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
+    app.post('/services/savepagenow', function (req, res) {
+        const requestData = new URLSearchParams(req.body);
+        const url = (requestData.get('url') ?? '').trim();
+        const urlPattern = /^((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)$/
         const startsWithHttp = /^https?:\/\//
         const renderError = function(errorType = 'default') {
             res.render('pages/services-savepagenow', {

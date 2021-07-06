@@ -8,6 +8,9 @@ form:
   button:
     en: Record page
     pt: Gravar página
+  example:
+    en: e.g. www.fccn.pt
+    pt: ex. www.fccn.pt
   error:
     default:
       en: Address not found. Please insert a valid URL. 
