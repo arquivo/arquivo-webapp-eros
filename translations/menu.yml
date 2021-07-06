@@ -54,3 +54,7 @@ about:
   url:
     pt: 'https://sobre.arquivo.pt/pt/'
     en: 'https://sobre.arquivo.pt/en/'
+savepagenow:
+  text: 
+    pt: 'Gravar páginas'
+    en: 'Record pages'
