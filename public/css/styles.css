@@ -2837,7 +2837,7 @@ footer ul {
 }
 
 footer a {
-  color: white;/*To use in future releases: #444 */
+  color: #ffffffc4; /*To use in future releases: #444 */ 
   font-size: 0.8em;  
   text-decoration: none;
  }
