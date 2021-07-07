@@ -2090,6 +2090,10 @@ section#search-tools-buttons form#search-form-advanced button  {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+:lang(en) #search-tools-buttons form#search-form-advanced button {
+  width: 124px;  
+}
+
 section.form-container {
   position: relative;
   padding: 0 10px;
