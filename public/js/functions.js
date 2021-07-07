@@ -5,11 +5,11 @@
 // starts: menu opening and closing button for top nav left menu button //////////////////////////////////
 function openLeftMenuNav() {
   $("#left-nav").attr('style',"left:0px;"); 
-  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1"); 
+  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1;transition:0.5s"); 
 }
 function closeLeftMenuNav() {
   $("#left-nav").attr('style',"left:-200px");
-  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1"); 
+  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1;transition:0.5s"); 
 }
 // ends: menu opening and closing button for top nav left menu button ////////////////////////////////////
 
@@ -17,11 +17,11 @@ function closeLeftMenuNav() {
 
 function openOptionstMenuNav() {
   $("#options-right-nav").attr('style',"right:0px;"); 
-  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1"); 
+  $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:1;transition:0.5s"); 
 }
 function closeOptionsMenuNav() {
   $("#options-right-nav").attr('style',"right:-250px");
-  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1"); 
+  $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1;transition:0.5s"); 
 }
 // ends: menu opening and closing button for top nav right menu button ///////////////////////////////////
 
@@ -32,21 +32,21 @@ function closeOptionsMenuNav() {
 
 // starts: menu opening and closing button for top nav left replay menu button //////////////////////////////////
 function openReplayLeftMenuNav() {
-  $("#replay-left-nav").attr('style',"left:0px;"); 
+  $("#replay-left-nav").attr('style',"left:0px;transition:0.5s"); 
 }
 function closeReplayLeftMenuNav() {
-  $("#replay-left-nav").attr('style',"left:-200px");
+  $("#replay-left-nav").attr('style',"left:-200px;transition:0.5s");
 }
 // ends: menu opening and closing button for top nav left replay menu button ////////////////////////////////////
 
 // starts: menu opening and closing button for top nav right replay menu button /////////////////////////////////
 function openReplayRightMenuNav() {
     $("#replay-right-nav").attr('style',"right:0px;"); 
-    $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:2 ")
+    $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:2;transition:0.5s ")
 }
 function closeReplayRightMenuNav() {
     $("#replay-right-nav").attr('style',"right:-250px");  
-    $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1");
+    $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1;transition:0.5s");
 }
 // ends: menu opening and closing button for replay top nav right replay menu button 
 

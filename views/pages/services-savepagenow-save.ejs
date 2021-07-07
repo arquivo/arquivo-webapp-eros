@@ -10,6 +10,9 @@
   <link rel="stylesheet" type="text/css" href="/css/styles-save-page-now.css" media="screen">
 <!-- Overwriting pywb set_state function in order to properly update our toolbar when iframe changes-->
 <header>  
+   <!-- starts left, right and replay menus overlay modal -->
+   <%- include("../templates/fragments/menus-overlay.ejs") -%>
+   <!-- ends left, right and replay menus overlay modal -->
         
   <!-- starts SavePageNow image -->
   <div class="left">
@@ -43,18 +46,21 @@
     </iframe>
 
   </div>
-  <div id="modal" style="display: none; padding: 25px;">
-    <section id="savepagenow-modal" style="max-width: 300px; text-align: center;">
-      <h3 style="visibility: collapse;height: 0;"><%= t('services-savepagenow.recorder.popup.accessibility') %></h3>
-      <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow" style="margin: 0;">
-      <h4 id="save-page-now-slogan" style="font-size: 0.7rem; margin-bottom: 15px;"><%= t('services-savepagenow.recorder.popup.slogan') %></h4>
+
+  <!-- stars save page now modal pop-up message -->
+  <div id="modal">
+    <section id="savepagenow-modal">
+      <h3><%= t('services-savepagenow.recorder.popup.accessibility') %></h3>
+      <img id="logo-save-page-now-modal" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow">
+      <h4 id="save-page-now-slogan"><%= t('services-savepagenow.recorder.popup.slogan') %></h4>
 
       <p><%= t('services-savepagenow.recorder.popup.text') %></p>
-      <form action="/services/savepagenow" style="display: block; margin-top: 15px;">
-        <button type="submit" style="padding-left: 25px; padding-right: 25px;"><%= t('services-savepagenow.recorder.popup.button') %></button>
+      <form action="/services/savepagenow">
+        <button type="submit"><%= t('services-savepagenow.recorder.popup.button') %></button>
         <input type="hidden" name="l" value="<%- getLanguage() %>">
       </form>
     </section>
   </div>
+ <!-- ends save page now modal pop-up message -->
 </body>
 </html>

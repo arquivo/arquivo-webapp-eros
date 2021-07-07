@@ -11,7 +11,7 @@ body#save-page-now section#home-content, section#body-content {
 }
 
 img#logo-save-page-now {
-    margin-right: 14px;
+    margin-right: 5px;
 }
 
 body#save-page-now  section#home-content h4, body#save-page-now  section#body-content h4 {
@@ -123,7 +123,7 @@ header button#nav-options-right-button {
 }
 
 .image-width {
-    width: 116px !important;
+    width: 130px;
 }
 
 div#iframe_div {
@@ -132,8 +132,51 @@ div#iframe_div {
     margin-top: 0px;
 }
 
+/* Modal: SavePageNow Notification pop-up*/
 
-.left p {font-size: 11px;color: white;padding-left: 20px;}
+section#savepagenow-modal img {
+   position: relative;
+   top: 0px;
+   width: 154px !important;
+}
+
+section#savepagenow-modal h3 {
+   visibility: collapse;
+   height: 0;
+}
+
+section#savepagenow-modal h4 {
+    font-size: 13.5px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 18px;
+}
+
+/* English version advanced search button width */
+:lang(pt) section#savepagenow-modal h4 {
+    font-size: 12.2px;
+}
+
+section#savepagenow-modal p {
+    font-size: small;
+}
+
+section#savepagenow-modal form {
+   display: flex;
+   justify-content: flex-end;
+   padding: 25px 0 0 0;
+}
+
+section#savepagenow-modal form button {
+    width: 103px;
+ }
+
+
+
+.left p {
+    font-size: 11px;
+    color: white;
+    padding-left: 20px;}
 
 @keyframes pulse {
 	0% {
@@ -178,12 +221,12 @@ div#iframe_div {
     margin-top: -25px;    
     }
 
-    #logo-arquivo {
-    width: 186px !important;    
+#logo-arquivo {
+    width: 162px !important;    
 }
 
-    #logo-save-page-now {
-    width: 179px !important;
+#logo-save-page-now {
+    width: 150px !important;
     margin-bottom: 24px;
     margin-top: -25px;
 }
