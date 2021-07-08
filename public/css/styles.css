@@ -2271,9 +2271,9 @@ body#save-page-now form#search-form {
 body#save-page-now p#save-page-url-message-error {
   padding-top: 10px;
   font-size: 12px;  
-  font-style: italic;
   line-height: 1.4em;
   color: red;
+  margin-left: 13px;
 }
 
 body#save-page-now img#logo-save-page-now {  

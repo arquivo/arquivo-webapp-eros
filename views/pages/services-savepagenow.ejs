@@ -49,7 +49,7 @@
                     <section id="search-tools">
                     <form id="search-form" role="form" action="/services/savepagenow?l=<%= getLanguage() %>" method="POST">
                     <span class="search-input-button">
-                        <input id="submit-search-input" type="search" placeholder="URL" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="URL" value="<%- url %>">
+                        <input id="submit-search-input" type="search" placeholder="<%= t('services-savepagenow.form.label') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="<%= t('services-savepagenow.form.label') %>" value="<%- url %>">
                         <button id="submit-search" type="submit" value="search mobile menu button"><%= t('services-savepagenow.form.button') %></button>
                         <button id="submit-search-mobile" type="submit" class="fas fa-search" value="search mobile menu button"></button>
                     </span>
@@ -58,7 +58,7 @@
                 <% if (typeof error != 'undefined' && error){ %>
                 <p id="save-page-url-message-error"><%= t('services-savepagenow.form.error.'+errorType) %></p>
                 <% } else { %>
-                <small style="font-size: small; color: #a7a5a5; margin-top:5px;" id="savepagenow-example"><%= t('services-savepagenow.form.example') %></small>
+                <small style="font-size: small; color: #a7a5a5; margin-top:5px; margin-left: 13px;" id="savepagenow-example"><%= t('services-savepagenow.form.example') %></small>
                 <% } %>
             </section>
                 </section>
