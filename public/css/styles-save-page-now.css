@@ -32,17 +32,9 @@ body#save-page-now form#search-form {
     height: auto;
 }
   
-body#save-page-now p#save-page-url-message-error {
-    padding-top: 10px;
-    font-size: 12px;
-    padding-left: 14px;
-    font-style: italic;
-    color: red;
-}
-  
-  body#save-page-now section#search-tools { 
-      margin: 0px 0 21vh 0;
-      padding: 0px;
+body#save-page-now section#search-tools { 
+    margin: 0px 0 21vh 0;
+    padding: 0px;
 }
 
 header {    
@@ -115,11 +107,12 @@ header button#nav-options-right-button {
     position: relative !important;
     display: flex;
     justify-content: center;
-    align-items: center;    
-    width: 66px;
+    align-items: center;
+    width: auto;
     height: 31px;
-    font-size: 0.75em;
+    font-size: 0.8em;
     border-radius: 3px;
+    padding: 12px;
 }
 
 .image-width {
