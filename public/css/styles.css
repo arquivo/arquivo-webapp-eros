@@ -2286,7 +2286,16 @@ body#save-page-now h4#save-page-now-slogan {
   padding: 11px 6px 11px 0px;  
 } 
 
-body#save-page-now small#savepagenow-example, body#save-page-now p#save-page-url-message-error {
+body#save-page-now small#savepagenow-example {
+  padding-top: 10px;
+  padding-left: 14px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4em;
+  color: rgb(141 141 141)   
+}
+
+body#save-page-now p#save-page-url-message-error { 
   padding-top: 10px;
   padding-left: 14px;
   font-size: 12px;
