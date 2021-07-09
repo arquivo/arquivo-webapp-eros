@@ -1353,6 +1353,7 @@ body#pages-advanced-search label, body#images-advanced-search label {
 
 .modal-image-details-container{
   top:0px;
+  max-width: calc(100vw - 190px);
 }
 
 section.modal a.close-modal {

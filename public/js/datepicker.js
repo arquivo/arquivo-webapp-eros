@@ -10,9 +10,7 @@ $(function () {
         const modal = $('#modal');
         const inputMask = { regex: "[0-3][0-9]\/[0-1][0-9]\/[1-2][0-9][0-9][0-9]", insertMode: false };
         var modalDatepickerContent = null;
-
-        const isMobile = function() {return( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) || (window.matchMedia("(max-width: 767px)").matches)};
-
+        
         //load modal datepicker template into local variable
         $.ajax({
             url: '/partials/modal-datepicker?l='+lang,

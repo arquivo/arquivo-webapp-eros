@@ -152,24 +152,12 @@ function closeImageDetailsModalWindowButton() {
 }
 
 function dateFromTimestamp(timestamp,format='long'){
-  // <%= t('common.date.long',{
-  //   year: item.year,
-  //   month: t('common.months.'+item.month),
-  //   day: parseInt(item.day),
-  //   hours: item.hours,
-  //   minutes: item.minutes,
-  // })%>
-  
-
   const availableFormats = ['long','medium','short'];
-    // long: '${day} ${month} ${hours}h${minutes}, ${year}',
-    // medium: '${day} ${month} ${year}',
-    // small: '${day} ${month}',
-  
-  if(! availableFormats.includes(format)){
+
+  if(!availableFormats.includes(format)){
     format = 'long';
   }
-
+  
   const year = timestamp.slice(0,4)
   const month = timestamp.slice(4,6)
   const day = timestamp.slice(6,8)
@@ -197,5 +185,10 @@ function dateFromTimestamp(timestamp,format='long'){
       return 'ERROR';
 
   }
+}
+
+
+function isMobile () {
+  return( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) || (window.matchMedia("(max-width: 767px)").matches);
 }
 
