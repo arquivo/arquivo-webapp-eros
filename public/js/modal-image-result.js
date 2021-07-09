@@ -133,7 +133,6 @@ $(function () {
     }
 
     let setupDraggableInterface = function () {
-      console.log('setup;');
       const threshold = 100;
       const target = modal;
       target.draggable({
