@@ -1351,6 +1351,10 @@ body#pages-advanced-search label, body#images-advanced-search label {
   padding: 50px !important;  
 }
 
+.modal-image-details-container{
+  top:0px;
+}
+
 section.modal a.close-modal {
   background-color: transparent !important;
   position: absolute !important;
@@ -1521,6 +1525,9 @@ section#modal-window-image-technical-details>div.raw-api-data-title>button>span{
   height: 2px;
 
 }
+section.image-details-description div.modal-image-field p>span.image-modal-content{
+  padding-left:7px;
+}
 
 body#landing-replay section.modal {
   max-width: 300px !important;
@@ -1661,7 +1668,6 @@ section.image-details-description p.image-description-date  {
 }
 
 section.image-details-description p.image-description-date span,section.image-details-description p.page-description-date span {
-  padding-right: 7px;
   font-size: 0.9em;
   position: relative;
   top: -1.33px;
