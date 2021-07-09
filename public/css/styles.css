@@ -1456,7 +1456,6 @@ section#modal-window-image-technical-details h5 {
   font-weight: bold;
   padding: 10px 0;
   font-size: 0.8em;
-  border-top: 1px solid #cccccc69;
  }
 
  section#modal-window-image-technical-details h5#image-details-anchor {
@@ -1494,8 +1493,33 @@ section#modal-window-image-technical-details p a  {
   line-height: normal;
 }
 
-section#modal-window-image-technical-details p:last-child  {  
+section#modal-window-image-technical-details div.modal-image-field {  
+  border-bottom: 1px solid #cccccc69;
+}
+section#modal-window-image-technical-details div.modal-image-field:last-child  {  
   padding-bottom: 35px;
+}
+
+section#modal-window-image-technical-details>h5{
+  padding-top:30px;
+  border-bottom: 1px solid #cccccc69;
+}
+section#modal-window-image-technical-details>div.raw-api-data-title{
+  display: flex; 
+  flex-direction: row; 
+  flex-wrap: nowrap; 
+  justify-content: space-between;
+  padding-top:30px;
+  border-bottom: 1px solid #cccccc69;
+}
+section#modal-window-image-technical-details>div.raw-api-data-title>button{
+  width: 85px;
+  height: 28.5px;
+}
+section#modal-window-image-technical-details>div.raw-api-data-title>button>span{
+  padding-right: 5px;
+  height: 2px;
+
 }
 
 body#landing-replay section.modal {
@@ -1557,9 +1581,20 @@ div.jquery-modal section#replay-with-old-browser {
   max-width: 320px;
 }
 
-.image-alt {
-  padding-left: 5px;
+.image-modal-content {
   font-size: 1em !important;
+}
+
+section#modal-window-image-technical-details .image-modal-content.resolution{
+  display: inline-block;
+}
+section#modal-window-image-technical-details .image-modal-content.width{
+  vertical-align: middle;
+  padding-right: 2px;
+}
+section#modal-window-image-technical-details .image-modal-content.height{
+  vertical-align: middle;
+  padding-right: 0;
 }
 
 section.image-details-navigation {
@@ -1625,8 +1660,8 @@ section.image-details-description p.image-description-date  {
   color: gray;
 }
 
-section.image-details-description p.image-description-date span  {
-  padding-right: 3.6px;
+section.image-details-description p.image-description-date span,section.image-details-description p.page-description-date span {
+  padding-right: 7px;
   font-size: 0.9em;
   position: relative;
   top: -1.33px;

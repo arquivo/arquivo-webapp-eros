@@ -151,3 +151,51 @@ function closeImageDetailsModalWindowButton() {
   $('#close-modal-tecnhical').attr('style',"display:none; transition:0.5s");   
 }
 
+function dateFromTimestamp(timestamp,format='long'){
+  // <%= t('common.date.long',{
+  //   year: item.year,
+  //   month: t('common.months.'+item.month),
+  //   day: parseInt(item.day),
+  //   hours: item.hours,
+  //   minutes: item.minutes,
+  // })%>
+  
+
+  const availableFormats = ['long','medium','short'];
+    // long: '${day} ${month} ${hours}h${minutes}, ${year}',
+    // medium: '${day} ${month} ${year}',
+    // small: '${day} ${month}',
+  
+  if(! availableFormats.includes(format)){
+    format = 'long';
+  }
+
+  const year = timestamp.slice(0,4)
+  const month = timestamp.slice(4,6)
+  const day = timestamp.slice(6,8)
+  const hours = timestamp.slice(8,10)
+  const minutes = timestamp.slice(10,12)
+
+  if(format == 'long' && minutes.length < 2 ){
+    format = 'medium'
+  }
+
+  let shortMonth = function(month){
+    return $.datepicker.regional[lang].monthNamesShort[parseInt(month)-1];
+  }
+  let longMonth = function(month){
+    return $.datepicker.regional[lang].monthNames[parseInt(month)-1];
+  }
+  switch (format){
+    case 'long':
+        return `${parseInt(day)} ${longMonth(month)} ${hours}h${minutes}, ${year}`;
+    case 'medium':
+      return `${parseInt(day)} ${longMonth(month)} ${year}`; 
+    case 'short':
+      return `${parseInt(day)} ${shortMonth(month)}`
+    default:
+      return 'ERROR';
+
+  }
+}
+
