@@ -1328,7 +1328,7 @@ td a.ui-state-default {
   background-color: #f5f5f5 !important;
   border-collapse: inherit !important;
   padding: 5px 0px 0 0px !important;
-  margin: 0 !important;
+  margin: 0 0 13px 0 !important;  
 }
 
 /* Search tools button labes */
@@ -1723,7 +1723,7 @@ section.image-details-description p span {
   color: #777;
 }
 
-/* Datepicker ***********************************/
+/* Datepicker and note: !important styles are being used to replace original datepicker UI styles ***********************************/
 
 #datepicker {
   display: block ruby;
@@ -1735,6 +1735,7 @@ padding: 0 !important;
 
 #modal-datepicker-datepicker .ui-datepicker {  
   width: 100% !important;  
+  background-color: #f5f5f5 !important;
 }
 
 .ui-datepicker-inline, .ui-datepicker {
@@ -2309,14 +2310,6 @@ body#save-page-now form#search-form {
   height: auto;
 }
 
-body#save-page-now p#save-page-url-message-error {
-  padding-top: 10px;
-  font-size: 12px;  
-  line-height: 1.4em;
-  color: red;
-  margin-left: 13px;
-}
-
 body#save-page-now img#logo-save-page-now {  
   margin-right: 14px;
 }
@@ -2334,6 +2327,24 @@ height: 0;
 body#save-page-now h4#save-page-now-slogan {
   padding: 11px 6px 11px 0px;  
 } 
+
+body#save-page-now small#savepagenow-example {
+  padding-top: 10px;
+  padding-left: 14px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4em;
+  color: rgb(141 141 141)   
+}
+
+body#save-page-now p#save-page-url-message-error { 
+  padding-top: 10px;
+  padding-left: 14px;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4em;
+  color: red;    
+}
 
 /* Modal save page now */
 body#save-page-now #savepagenow-modal {
