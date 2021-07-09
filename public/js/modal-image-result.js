@@ -83,20 +83,16 @@ $(function () {
     }
 
     let setupSlideOnClick = function (newSlide, direction) {
-      let buttonId, slideOutDirection, slideInDirection, mobileSlideOut, mobileSlideIn;
+      let buttonId, slideOut, slideIn;
 
       if (direction == 'previous') {
         buttonId = '#previous-image-button';
-        slideOutDirection = "right";
-        slideInDirection = "left";
-        mobileSlideOut = '100vh';
-        mobileSlideIn = '-100vh';
+        slideOut = '100vh';
+        slideIn = '-100vh';
       } else if (direction == 'next') {
         buttonId = '#next-image-button';
-        slideOutDirection = "left";
-        slideInDirection = "right";
-        mobileSlideOut = '-100vh';
-        mobileSlideIn = '100vh';
+        slideOut = '-100vh';
+        slideIn = '100vh';
       } else {
         return;
       }
@@ -108,24 +104,14 @@ $(function () {
           let newImageData = JSON.parse($(newSlide[0]).find('.image-data').first().text())
           setupModalImageDetails(newImageData, newContainer);
           modal.append(newContainer);
-          if (isMobile()) {
-            modal.animate({ left: mobileSlideOut }, 250, 'swing', function () {
-              modal.css({ left: mobileSlideIn });
-              oldContainer.remove();
-              newContainer.show();
-              setupSlideOnClick(newSlide.prev(), 'previous');
-              setupSlideOnClick(newSlide.next(), 'next');
-              modal.animate({ left: 0 }, 250)
-            });
-          } else {
-            oldContainer.hide("slide", { direction: slideOutDirection }, 250, function () {
-              newContainer.show("slide", { direction: slideInDirection }, 250, function () {
-                oldContainer.remove();
-                setupSlideOnClick(newSlide.prev(), 'previous');
-                setupSlideOnClick(newSlide.next(), 'next');
-              });
-            });
-          }
+          modal.animate({ left: slideOut }, 250, 'swing', function () {
+            modal.css({ left: slideIn });
+            oldContainer.remove();
+            newContainer.show();
+            setupSlideOnClick(newSlide.prev(), 'previous');
+            setupSlideOnClick(newSlide.next(), 'next');
+            modal.animate({ left: 0 }, 250)
+          });
         });
       } else {
         modal.find(buttonId).hide();
