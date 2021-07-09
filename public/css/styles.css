@@ -282,8 +282,9 @@ h4#modal-datepicker-title {
 
 #modal-datepicker-datepicker {
   height: auto; 
-  padding-bottom: 33px;
+  padding-bottom: 24px;
   width: 220px;
+  
 }
 
 button#modal-datepicker-confirm-button {
@@ -1406,7 +1407,7 @@ body#images-search-results div.modal {
 body#images-search-results section.image-container {
   display: flex;
   justify-content: center;
-  padding: 0px 0 25px 0;
+  padding: 0px 0 0px 0;
 }
 
 section#modal-window-image-technical-details {
@@ -1666,6 +1667,8 @@ section.image-details-description h5  {
   font-size: 0.84em;
   border-top: 1px solid #cccccc69;
   margin-top: 10px;
+  min-width: 450px;
+  width: 100%;
 }
 
 section.image-details-description p  {
