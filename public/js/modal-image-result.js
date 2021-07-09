@@ -110,6 +110,14 @@ $(function () {
             newContainer.show();
             setupSlideOnClick(newSlide.prev(), 'previous');
             setupSlideOnClick(newSlide.next(), 'next');
+            if(isMobile()){
+              modal.find('#image-details-button').click(function () {
+                modal.draggable("disable");
+              })
+              modal.find('#close-modal-tecnhical').click(function () {
+                modal.draggable("enable");
+              })
+            }
             modal.animate({ left: 0 }, 250)
           });
         });
@@ -125,6 +133,7 @@ $(function () {
     }
 
     let setupDraggableInterface = function () {
+      console.log('setup;');
       const threshold = 100;
       const target = modal;
       target.draggable({
