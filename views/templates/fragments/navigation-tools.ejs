@@ -1,6 +1,12 @@
+<% 
+let configType = 'text';
+if (typeof searchType !== 'undefined' && searchType == 'images') { 
+    configType = 'image';
+} %>
+
 <% let newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); %>
 <% let currentOffset= parseInt(newRequestData.get('offset') ?? 0); %>
-<% let maxItems= parseInt(newRequestData.get('maxItems') ?? config.get('text.results.per.page')); %>
+<% let maxItems= parseInt(newRequestData.get('maxItems') ?? config.get(configType +'.results.per.page')); %>
 <% let currentPage= Math.ceil(currentOffset/maxItems)+1; %>
 
 <section class="navigation-tools">
