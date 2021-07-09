@@ -1,7 +1,7 @@
 <section class="modal-image-details-container">
 
   <a href="javascript:void(0)" id="close-modal-tecnhical" onmousedown="closeImageDetailsModalWindow()"
-    onmouseup="closeImageDetailsModalWindowButton()">Close</a>
+    onmouseup="closeImageDetailsModalWindowButton()"><%= t('modal-image-details.buttons.close') %></a>
   <button id="previous-image-button" class="image-navigation-button"><span class="fas fa-chevron-left"
       aria-hidden="true"></span></button>
   <button id="next-image-button" class="image-navigation-button"><span class="fas fa-chevron-right"
@@ -15,27 +15,27 @@
 
   <!-- ends gradient image effect when scrolling modal: technical details: top -->
   <section class="image-details-navigation">
-    <h4>Image details navigation</h4>
+    <h4><%= t('modal-image-details.accessibility.image-details-navigation') %></h4>
     <form id="view-image-website" action="https://hotel-mix.de/hotels/portugal/lisbon">
       <button type="submit" id="image-website-url-button" class="button" value="visit image website"><span
-          class="fas fa-eye" aria-hidden="true"></span>Visit</button>
+          class="fas fa-eye" aria-hidden="true"></span><%= t('modal-image-details.buttons.visit') %></button>
     </form>
     <form id="jump-to-image-details" action="javascript:void(0)">
       <button type="submit" id="image-details-button" class="button" value="image technical details"
         onclick="openImageDetailsModalWindow()"><span class="fas fa-info-circle"
-          aria-hidden="true"></span>Details</button>
+          aria-hidden="true"></span><%= t('modal-image-details.buttons.details') %></button>
     </form>
   </section>
   <section class="image-details-description">
-    <h4>Image details description</h4>
+    <h4><%= t('modal-image-details.accessibility.image-details-description') %></h4>
 
     <!-- starts image info -->
-    <h5 class="image-description-heading">&rarr; Image</h5>
+    <h5 class="image-description-heading">&rarr; <%= t('modal-image-details.titles.image') %></h5>
     <div class="modal-image-field">
-      <p class="image-description-alt">Alternative Text:<span class="image-alt image-modal-content"> </span></p>
+      <p class="image-description-alt"><%= t('modal-image-details.labels.alt-text') %><span class="image-alt image-modal-content"> </span></p>
     </div>
     <div class="modal-image-field">
-      <p class="image-description-title">Image Title:<span class="image-title image-modal-content"> </span></p>
+      <p class="image-description-title"><%= t('modal-image-details.labels.image-title') %><span class="image-title image-modal-content"> </span></p>
     </div>
     <div class="modal-image-field">
       <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a
@@ -49,9 +49,9 @@
     <!-- ends image info-->
 
     <!--starts image page info -->
-    <h5 class="image-description-heading">&rarr; Page</h5>
+    <h5 class="image-description-heading">&rarr; <%= t('modal-image-details.titles.page') %></h5>
     <div class="modal-image-field">
-      <p class="page-description-title">Page Title:<span class="page-title image-modal-content"> </span></p>
+      <p class="page-description-title"><%= t('modal-image-details.labels.page-title') %><span class="page-title image-modal-content"> </span></p>
     </div>
     <div class="modal-image-field">
       <p class="page-description-url"><span class="fas fa-link" aria-hidden="true"></span><a
@@ -71,60 +71,60 @@
   <!-- starts Image technical details window -->
 
   <section id="modal-window-image-technical-details">
-    <h3>Image technical details</h3>
+    <h3><%= t('modal-image-details.titles.image-technical-details') %></h3>
 
-    <h5 id="page-details-anchor">&rarr; Page details</h5>
+    <h5 id="page-details-anchor">&rarr; <%= t('modal-image-details.titles.page-details') %></h5>
 
     <div class="modal-image-field">
-      <h5 class="page-description-heading">URL:</h5>
+      <h5 class="page-description-heading"><%= t('modal-image-details.labels.url') %></h5>
       <p class="page-description-url"><span class="fas fa-link" aria-hidden="true"></span><a
           class="image-details-padding-right"
           href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a>
       </p>
     </div>
     <div class="modal-image-field">
-      <h5 class="page-description-heading">Timestamp:</h5>
+      <h5 class="page-description-heading"><%= t('modal-image-details.labels.timestamp') %></h5>
       <p class="page-description-date"><span class="far fa-clock" aria-hidden="true"></span> <span
           class="timestamp image-modal-content"></span></p>
     </div>
     <div class="modal-image-field">
-      <h5 class="page-description-heading">Title:</h5>
+      <h5 class="page-description-heading"><%= t('modal-image-details.labels.title') %></h5>
       <p class="page-description-title"><span class="fas fa-file-signature" aria-hidden="true"></span><span
           class="page-title image-modal-content"> </span> </p>
     </div>
     <!--starts Image details info -->
 
-    <h5>&rarr; Image details</h5>
+    <h5>&rarr; <%= t('modal-image-details.titles.image-details') %></h5>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Source:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.source') %></h5>
       <p class="image-description-url"><span class="fas fa-link" aria-hidden="true"></span><a
           class="image-details-padding-right"
           href="https://viagemeturismo.abril.com.br/cidades/lisboa-4/">viagemeturismo.abril.com.br/cidades/lisboa-4/</a>
       </p>
     </div>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Timestamp:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.timestamp') %></h5>
       <p class="image-description-date"><span class="far fa-clock" aria-hidden="true"></span> <span
           class="timestamp image-modal-content"></span></p>
     </div>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Alt:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.alt-text') %></h5>
       <p class="image-description-alt"><span class="fas fa-file-signature" aria-hidden="true"></span> <span
           class="image-alt image-modal-content"> </span></p>
     </div>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Resolution:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.resolution') %></h5>
       <p class="image-description-resolution"><span class="fas fa-desktop"></span><span
           class="image-modal-content resolution"> <span class="width image-modal-content"></span> x <span
-            class="height image-modal-content"></span> pixels </span></span></p>
+            class="height image-modal-content"></span> <%= t('modal-image-details.pixels') %> </span></span></p>
     </div>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Mimetype:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.mimetype') %></h5>
       <p class="image-description-mimetype"><span class="fas fa-camera"></span> <span
           class="image-modal-content mimetype"></span></p>
     </div>
     <div class="modal-image-field">
-      <h5 class="image-description-heading">Safe search classification:</h5>
+      <h5 class="image-description-heading"><%= t('modal-image-details.labels.safe') %></h5>
       <p class="image-description-safesearch"><span class="fas fa-search" aria-hidden="true"></span> <span
           class="image-modal-content safesearch"></span></p>
     </div>
@@ -132,16 +132,16 @@
 
     <!--starts Collection details info -->
 
-    <h5 class="image-details-collection">&rarr; Collection</h5>
+    <h5 class="image-details-collection">&rarr; <%= t('modal-image-details.titles.collection') %></h5>
     <div class="modal-image-field">
-      <h5 class="collection-description-heading">Name:</h5>
+      <h5 class="collection-description-heading"><%= t('modal-image-details.labels.name') %></h5>
       <p class="collection-description-name"><span class="fas fa-book-open" aria-hidden="true"></span> <span
           class="image-modal-content name"></span></p>
     </div>
 
     <div class="raw-api-data-title">
-      <h5 class="image-details-raw">→ Raw API data:</h5>
-      <button id="copy-raw-api-data"><span class="fas fa-copy" aria-hidden="true"></span>Copy</button>
+      <h5 class="image-details-raw">&rarr; <%= t('modal-image-details.titles.raw-api-data') %></h5>
+      <button id="copy-raw-api-data"><span class="fas fa-copy" aria-hidden="true"></span><%= t('modal-image-details.buttons.copy') %></button>
     </div>
     <div class="modal-image-field">
       <p class="raw-api-data" style="white-space: pre-wrap; overflow-wrap: anywhere;"></p>

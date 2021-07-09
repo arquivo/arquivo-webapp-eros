@@ -1,0 +1,81 @@
+accessibility:
+  image-details-navigation:
+    en: Image details navigation
+    pt: Navegação para detalhes de imagem
+  image-details-description:
+    en: Image details description
+    pt: Descrição dos detalhes da imagem
+buttons:
+  visit:
+    en: Visit
+    pt: Visitar
+  details:
+    en: Details
+    pt: Detalhes
+  copy:
+    en: Copy
+    pt: Copiar
+  close:
+    en: Close
+    pt: Fechar
+titles:
+  image:
+    en: Image
+    pt: Imagem
+  page:
+    en: Page
+    pt: Página
+  image-technical-details:
+    en: Image Technical Details
+    pt: Detalhes Técnicos da Imagem
+  page-details:
+    en: Page Details
+    pt: Detalhes da Página
+  image-details:
+    en: Image Details
+    pt: Detalhes da Imagem
+  collection:
+    en: Collection
+    pt: Coleção
+  raw-api-data:
+    en: Raw API data
+    pt: Dados da API em Bruto
+labels:
+  alt-text:
+    en: 'Alternative Text:'
+    pt: 'Texto Alternativo:'
+  image-title:
+    en: 'Image Title:'
+    pt: 'Título da Imagem:'
+  page-title:
+    en: 'Page Title:'
+    pt: 'Título da página:'
+  url:
+    en: 'URL:'
+    pt: 'URL:'
+  timestamp:
+    en: 'Crawl Timestamp:'
+    pt: 'Carimbo de Tempo da Recolha:'
+  title:
+    en: 'Title:'
+    pt: 'Título:'
+  source:
+    en: 'Source:'
+    pt: 'Origem:'
+  resolution:
+    en: 'Resolution:'
+    pt: 'Resolução:'
+  mimetype:
+    en: 'MIME Type:'
+    pt: 'Tipo de MIME:'
+  safe:
+    en: 'Safe Search Classification:'
+    pt: 'Classificação de Pesquisa Segura:'
+  name:
+    en: 'Name:'
+    pt: 'Nome:'
+pixels:
+  en: pixels
+  pt: pixeis  
+
+
