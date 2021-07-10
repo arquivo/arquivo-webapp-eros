@@ -1530,7 +1530,7 @@ section#modal-window-image-technical-details div.modal-image-field:last-child  {
 
 section#modal-window-image-technical-details > h5{
   border-bottom: 1px solid #cccccc69;
-  padding-bottom: 5px;  
+  padding-bottom: 15px;  
 }
 section#modal-window-image-technical-details > div.raw-api-data-title{
   display: flex;
