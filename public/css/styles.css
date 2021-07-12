@@ -1329,7 +1329,7 @@ td a.ui-state-default {
   background-color: #f5f5f5 !important;
   border-collapse: inherit !important;
   padding: 5px 0px 0 0px !important;
-  margin: 0 0 13px 0 !important;  
+  margin: 0 0 23px 0 !important;  
 }
 
 /* Search tools button labes */
@@ -1939,7 +1939,7 @@ body#list-results #modal a.close-modal {
 }
 
 div.jquery-modal div#modal {
-  padding: 25px 25px 35px 25px; 
+  padding: 25px 25px 25px 25px; 
   border-radius: 5px;
   box-shadow: 0 0 100px #000;
   background-color: #f5f5f5;
