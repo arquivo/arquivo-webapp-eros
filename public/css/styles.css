@@ -282,8 +282,9 @@ h4#modal-datepicker-title {
 
 #modal-datepicker-datepicker {
   height: auto; 
-  padding-bottom: 33px;
+  padding-bottom: 24px;
   width: 220px;
+  
 }
 
 button#modal-datepicker-confirm-button {
@@ -1328,7 +1329,7 @@ td a.ui-state-default {
   background-color: #f5f5f5 !important;
   border-collapse: inherit !important;
   padding: 5px 0px 0 0px !important;
-  margin: 0 0 13px 0 !important;  
+  margin: 0 0 23px 0 !important;  
 }
 
 /* Search tools button labes */
@@ -1405,7 +1406,8 @@ body#images-search-results div.modal {
 
 body#images-search-results section.image-container {
   display: flex;
-  justify-content: center;  
+  justify-content: center;
+  padding: 0px 0 0px 0;
 }
 
 section#modal-window-image-technical-details {
@@ -1424,7 +1426,10 @@ section#modal-window-image-technical-details {
 }
 
 section#modal-window-image-technical-details h3 {
-  padding-top: 30px;
+ padding-top: 30px;
+ font-weight: initial;
+ padding-bottom: 20px;
+ font-size: 16px;
 }
 
 a#close-modal-tecnhical {
@@ -1463,17 +1468,26 @@ section#modal-window-image-technical-details h5 {
   font-size: 0.8em;
  }
 
- section#modal-window-image-technical-details h5#image-details-anchor {
+ section#modal-window-image-technical-details h5.page-description-heading,
+ section#modal-window-image-technical-details h5.image-description-heading, 
+ section#modal-window-image-technical-details h5.collection-description-heading,
+ section#modal-window-image-technical-details h5.raw-api-data-title {  
+  font-size: 12.5px;
+  font-weight: 100;
+  padding-left: 17px;
+ }
+
+ section#modal-window-image-technical-details h5 {
   font-weight: bold;
-  padding: 35px 0 15px 0;
-  font-size: 0.75em;
-  border-top: none;
+  padding: 14px 0 7px 0;
+  font-size: 0.84em;    
  }
 
 section#modal-window-image-technical-details p  {
   display: flex;
   font-size: 0.73em;
   padding-bottom: 10px;
+  padding-left: 17px;
   flex-direction: row;
   align-items: baseline;
   justify-content: left;
@@ -1491,43 +1505,60 @@ section#modal-window-image-technical-details p span  {
 
 section#modal-window-image-technical-details p a  {
   color: #1c75c0;
+  overflow: hidden;
   text-decoration: none;
   padding-left: 0px;
   display: block;
   margin-top: -14px;
-  line-height: normal;
+  line-height: 1.4em;
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
 }
 
 section#modal-window-image-technical-details div.modal-image-field {  
   border-bottom: 1px solid #cccccc69;
 }
 section#modal-window-image-technical-details div.modal-image-field:last-child  {  
-  padding-bottom: 35px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #cccccc69;
+  align-items: center;
 }
 
-section#modal-window-image-technical-details>h5{
-  padding-top:30px;
+section#modal-window-image-technical-details > h5{
   border-bottom: 1px solid #cccccc69;
+  padding-bottom: 15px;  
 }
-section#modal-window-image-technical-details>div.raw-api-data-title{
-  display: flex; 
-  flex-direction: row; 
-  flex-wrap: nowrap; 
+section#modal-window-image-technical-details > div.raw-api-data-title{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: space-between;
-  padding-top:30px;
-  border-bottom: 1px solid #cccccc69;
+  padding: 0;  
+  align-items: center;
 }
-section#modal-window-image-technical-details>div.raw-api-data-title>button{
+section#modal-window-image-technical-details > div.raw-api-data-title > button{
   width: 85px;
   min-width: 85px;
   height: 28.5px;
+  position: relative;
+  top: 14px;
 }
-section#modal-window-image-technical-details>div.raw-api-data-title>button>span{
+section#modal-window-image-technical-details > div.raw-api-data-title > button > span{
   padding-right: 5px;
   height: 2px;
-
 }
-section.image-details-description div.modal-image-field p>span.image-modal-content{
+
+section#modal-window-image-technical-details div.modal-image-field p.raw-api-data {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding-bottom: 30px; 
+}
+
+section.image-details-description div.modal-image-field p > span.image-modal-content{
   padding-left:7px;
 }
 
@@ -1632,14 +1663,16 @@ section.image-details-description  {
 
 section.image-details-description h5  {
   font-weight: bold;
-  padding: 15px 0 5px;
-  font-size: 0.75em;
+  padding: 15px 0 10px;
+  font-size: 0.84em;
   border-top: 1px solid #cccccc69;
   margin-top: 10px;
+  min-width: 450px;
+  width: 100%;
 }
 
 section.image-details-description p  {
- padding: 3px 0;
+ padding: 3px 0 0 17px;
  font-size: 0.75em;
  line-height: 1.4em;
 }
@@ -1661,7 +1694,11 @@ section.image-details-description p a  {
   padding-left: 17px;
   display: block;
   margin-top: -14px;
-  line-height: normal;
+  line-height: 1.4em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 1em;
 }
 
 section.image-details-description p.image-description-date  {
@@ -1694,7 +1731,7 @@ button#next-image-button {
 
 button.image-navigation-button { 
   width: 50px;
-  height: calc(100%);
+    height: calc(100%);
   background: transparent;
   border: none;
 } 
@@ -2360,6 +2397,8 @@ img.image-display {
   max-height: 500px;
   border-radius: 3px;
   height: auto;
+  /*-webkit-box-shadow: 0px 10px 13px -7px #000000, 5px -6px 15px -1px rgb(0 0 0 / 0%);
+    box-shadow: 0px 15px 17px -7px #00000069, 5px -6px 15px -1px rgb(0 0 0 / 0%);*/
 }
 
 section#print a.close-modal, 

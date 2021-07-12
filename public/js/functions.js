@@ -69,11 +69,10 @@ function copyURLToClipboard() {
 
 // alert message in
 function alertsMessageIn() {
-  $("#alert-container").attr('style',"top:0;height:47px;opacity:1;transition:0.3s"); 
+  $("#alert-container").attr('style',"top:0;height:49px;opacity:1;transition:0.3s"); 
   setTimeout(alertsMessageOut, 2000); 
 }
 // alert message out
-
 function alertsMessageOut() {
   $("#alert-container").attr('style',"height:0px;opacity:0;transition:0.5s");     
 }
@@ -146,7 +145,7 @@ function closeImageDetailsModalWindow() {
   $('#modal-window-image-technical-details').attr('style',"display:none; transition:0.5s");   
 }
 
-// closes image technical details window that stays on top of modal image
+// closes image technical details window button that stays on top of modal image
 function closeImageDetailsModalWindowButton() {
   $('#close-modal-tecnhical').attr('style',"display:none; transition:0.5s");   
 }
