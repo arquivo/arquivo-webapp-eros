@@ -2644,7 +2644,7 @@ section#images-results ul#image-cards-container > li {
  section#images-results ul#image-cards-container > li:hover{
   position: relative;  
   z-index: 1;   
-  width: 300px;   
+  width: 350px;   
   background-color: #e9e9e9;  
   -webkit-box-shadow: 0px 20px 10px -7px rgb(0 0 0 / 20%);
   box-shadow: 0px 20px 10px -7px rgb(0 0 0 / 20%);
