@@ -2835,9 +2835,9 @@ article {
   justify-content: space-between;
   margin: 10px 0px 0 0;
   padding: 0;  
-  background-color:#f0f0f0;
+  background-color:#fff;
   border-radius: 5px;
-  width: 49.30% /* Four column gridÇ 24.3%;*/;
+  width: 49.30% /* Four column grid 24.3%;*/;
   height: fit-content;
 }
 
