@@ -11,6 +11,7 @@ body {
   -webkit-font-smoothing: subpixel-antialiased;     
   text-rendering: optimizeLegibility; 
   overflow-x:hidden;
+  background: #f5f5f5;
 }
 
 /* All content wrapper*/
