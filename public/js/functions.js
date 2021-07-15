@@ -69,7 +69,7 @@ function copyURLToClipboard() {
 
 // alert message in
 function alertsMessageIn() {
-  $("#alert-container").attr('style',"top:0;height:49px;opacity:1;transition:0.3s"); 
+  $("#alert-container").attr('style',"top:0;height:49px;opacity:1;transition:0.3s;z-index:3"); 
   setTimeout(alertsMessageOut, 2000); 
 }
 // alert message out
