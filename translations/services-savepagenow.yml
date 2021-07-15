@@ -3,8 +3,8 @@ form:
     en: SavePageNow form page
     pt: Página do formulário do SavePageNow
   text:
-    en: record webpages on Arquivo.pt
-    pt: grava páginas no Arquivo.pt
+    en: Record webpages on Arquivo.pt
+    pt: Grava páginas no Arquivo.pt
   button:
     en: Record page
     pt: Gravar página
@@ -40,7 +40,7 @@ recorder:
       pt: Grava páginas no Arquivo.pt
     text:
       en: Your browsing has been saved and will soon be available on Arquivo.pt.
-      pt: A sua página foi salva e ficará disponível em breve no Arquivo.pt 
+      pt: A sua navegação foi salva e ficará disponível em breve no Arquivo.pt 
     button:
       en: OK
       pt: OK
