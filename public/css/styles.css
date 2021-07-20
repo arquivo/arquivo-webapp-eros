@@ -2474,6 +2474,7 @@ section#not-found-container, section#search-suggestion-container   {
   font-size: 13px;
   color: #70757a;
   margin: 0 auto 10px auto;
+  width: 100%;
   max-width: 100%;
 }
 
@@ -2488,7 +2489,7 @@ section#not-found-container ul li, section#search-suggestion-message ul li   {
   padding-left: 20px;
 }
 
-section#pages-results section#not-found-message > ul, section#search-suggestion-message > ul  {
+section#not-found-message > ul, section#search-suggestion-message > ul  {
   background-color: #f6f6f6;
   color: #000000;
   margin: auto;
