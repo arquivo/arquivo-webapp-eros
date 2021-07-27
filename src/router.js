@@ -2,6 +2,7 @@ const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
+const savePageNow = require('./services-savepagenow');
 const fetch = require('node-fetch');
 const config = require('config');
 const { request } = require('express');
@@ -83,9 +84,42 @@ module.exports = function (app) {
 
     // starts Replay
     app.get('/replay', function (req, res) {
-        res.render('pages/replay');
+        res.render('pages/replay',{requestedPage: {
+            timestamp: '20210720085022',
+            url: 'https://www.publico.pt/'
+        }});
     });
     // ends Replay
+
+
+    // starts wayback
+    app.get('/wayback/:url*', function (req, res) {
+       
+        function renderOk () {
+            res.render('pages/replay',{requestedPage: {
+                url: req.params.url + (req.params['0'] ?? ''),
+            }});
+        }
+        function redirect(newUrl){
+            res.redirect('/wayback'+newUrl.split('replay').filter((a,i) => i>0).join('replay'));
+        }
+        function renderError(){
+            res.status(404).render('pages/arquivo-404');
+        }
+        const noFrameUrl = 'https://arquivo.pt/noFrame/replay/' + req.params.url + (req.params['0'] ?? '')
+        fetch(noFrameUrl)
+            .then(res => {
+                if(res.url.replace(/^\/+|\/+$/g, '') != noFrameUrl.replace(/^\/+|\/+$/g, '')){
+                    redirect(res.url);
+                } else if (res.ok) {
+                    renderOk();
+                } else {
+                    renderError();
+                }                    
+            })
+    });
+
+
 
     // starts not found page
     app.get('/not-found', function (req, res) {
@@ -135,40 +169,7 @@ module.exports = function (app) {
 
     // savepagenow recording page
     app.post('/services/savepagenow', function (req, res) {
-        const requestData = new URLSearchParams(req.body);
-        const url = (requestData.get('url') ?? '').trim();
-        const urlPattern = /^((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)$/
-        const startsWithHttp = /^https?:\/\//
-        const renderError = function(errorType = 'default') {
-            res.render('pages/services-savepagenow', {
-                url: url,
-                error: true,
-                errorType: errorType
-            });
-        }
-        const renderOk = function() {
-            res.render('pages/services-savepagenow-save',{
-                url: config.get('services.savepagenow.url') + url
-            });
-        }
-
-        let validUrl = !!url && urlPattern.test(url);
-        if(validUrl){
-            const fetchUrl = startsWithHttp.test(url) ? url : 'https://'+url;
-            fetch(fetchUrl)
-            .then(res => {
-                if(res.ok){
-                    renderOk();
-                } else {
-                    renderError('page-down');
-                }                        
-            })
-            .catch(error =>{
-                renderError()
-                })
-        } else {
-            renderError();
-        }
+        savePageNow(req,res);
     });
 
     // starts 404 
