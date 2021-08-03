@@ -3,8 +3,8 @@ const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
 const savePageNow = require('./services-savepagenow');
+const wayback = require('./wayback');
 const fetch = require('node-fetch');
-const config = require('config');
 const { request } = require('express');
 
 module.exports = function (app) {
@@ -94,29 +94,7 @@ module.exports = function (app) {
 
     // starts wayback
     app.get('/wayback/:url*', function (req, res) {
-       
-        function renderOk () {
-            res.render('pages/replay',{requestedPage: {
-                url: req.params.url + (req.params['0'] ?? ''),
-            }});
-        }
-        function redirect(newUrl){
-            res.redirect('/wayback'+newUrl.split('replay').filter((a,i) => i>0).join('replay'));
-        }
-        function renderError(){
-            res.status(404).render('pages/arquivo-404');
-        }
-        const noFrameUrl = 'https://arquivo.pt/noFrame/replay/' + req.params.url + (req.params['0'] ?? '')
-        fetch(noFrameUrl)
-            .then(res => {
-                if(res.url.replace(/^\/+|\/+$/g, '') != noFrameUrl.replace(/^\/+|\/+$/g, '')){
-                    redirect(res.url);
-                } else if (res.ok) {
-                    renderOk();
-                } else {
-                    renderError();
-                }                    
-            })
+        wayback(req,res);
     });
 
 
