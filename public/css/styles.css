@@ -13,6 +13,7 @@ body {
   overflow-x:hidden;
 }
 
+
 /* All content wrapper*/
 #wrap-all-content {
   margin: 0 auto;
@@ -810,6 +811,25 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
 nav#replay-left-nav section {
   margin-top: 14px;
 }
+
+
+/* scrollbar styling */
+nav#replay-left-nav section::-webkit-scrollbar {
+  width: 11px;
+}
+nav#replay-left-nav section {
+  scrollbar-width: thin;
+  scrollbar-color: #1c75c0 #0b497f;
+}
+nav#replay-left-nav section::-webkit-scrollbar-track {
+  background: #0b497f;
+}
+nav#replay-left-nav section::-webkit-scrollbar-thumb {
+  background-color: #1c75c0;
+  border-radius: 0px;
+  border: 3px solid #0b497f;
+}
+
 
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 

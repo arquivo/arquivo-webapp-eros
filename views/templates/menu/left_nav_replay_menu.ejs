@@ -1,70 +1,77 @@
 <!-- starts menu left navigation -->
 <nav id="replay-left-nav">
-<h3>Replay left menu navigation</h3> 
-<!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
-<section>
-  <h4>Replay left menu navigation list</h4> 
-    <ul>
-      <!-- starts table and list: show results as a table or as a list -->      
-      <li id="replay-table"><form action="/replay-table-results" method="GET"><button type="submit"><span class="fas fa-table" aria-hidden="true"></span>Table</button></form></li>
-      <li id="replay-list"><form action="/replay-list-results" method="GET"><button type="submit"><span class="fas fa-list" aria-hidden="true"></span>List</button></form></li>
-      <!-- ends table and list: show results as a table or as a list -->    
-      <li><a href="javascript:(void)" class="accordion-replay-left-menu-year">1996<span class="number-of-versions">10 versions</span></a>
-            <ul class="">
-              <li><a href="javascript:(void)" class="accordion-replay-left-menu-month">Jan</a>
-                  <ul class="">
-                    <li class=""><a href="javascript:(void)" class="accordion-replay-left-menu-day">21</a>
-                      <ul class="">
-                        <li><a class="menu-pages-replay-date-hour" href="#">10:04</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">20:45</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">06:23</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">08:01</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">20:04</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">21:07</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">20:53</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">23:09</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">00:16</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="javascript:(void)" class="accordion-replay-left-menu-day">22</a>
-                      <ul class="">
-                        <li><a class="menu-pages-replay-date-hour" href="#">10:04</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">20:45</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">06:23</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">08:01</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">20:04</a></li>
-                        <li><a class="menu-pages-replay-date-hour" href="#">21:07</a></li>                      
-                      </ul>
-                    </li>
-              </ul>
-            </li>
-          </ul>
+  <h3>Replay left menu navigation</h3>
+  <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
+  <section style="height: calc(100vh - 146px); overflow-y: auto;">
+    <h4>Replay left menu navigation list</h4>
+    <ul class="replay-accordion show">
+      <!-- starts table and list: show results as a table or as a list -->
+      <li id="replay-table">
+        <form action="/replay-table-results" method="GET"><button type="submit"><span class="fas fa-table"
+              aria-hidden="true"></span>Table</button></form>
       </li>
-      <li><a href="javascript:(void)" class="accordion-replay-left-menu-year">1997<span class="number-of-versions">10 versions</span></a>
-        <ul class="panel">
-          <li><a href="javascript:(void)" class="accordion-replay-left-menu-month">Feb</a>
-              <ul class="">
-                <li><a href="javascript:(void)" class="accordion-replay-left-menu-day">09</a>
-                  <ul class="">
-                    <li class="menu-pages-replay-date-hour"><a href="#">15:04</a></li>
-                    <li class="menu-pages-replay-date-hour"><a href="#">16:45</a></li>
-                    <li class="menu-pages-replay-date-hour"><a href="#">17:23</a></li>
-                    <li class="menu-pages-replay-date-hour"><a href="#">20:01</a></li>
-                    <li class="date-selected menu-pages-replay-date-hour"><a href="#">21:04</a></li>
-                    <li class="menu-pages-replay-date-hour"><a href="#">23:07</a></li>
-                  </ul>
-                </li>
-          </ul>
-        </li>
-      </ul>
-  </li>
+      <li id="replay-list">
+        <form action="/replay-list-results" method="GET"><button type="submit"><span class="fas fa-list"
+              aria-hidden="true"></span>List</button></form>
+      </li>
+      <!-- ends table and list: show results as a table or as a list -->
+      <li><a href="javascript:(void)" class="accordion-header accordion-replay-left-menu-year">1996<span
+            class="number-of-versions">10 versions</span></a>
+        <ul class="replay-accordion show">
+          <li><a href="javascript:(void)" class="accordion-header accordion-replay-left-menu-month">Jan</a>
+            <ul class="replay-accordion show">
+              <li class=""><a href="javascript:(void)" class="accordion-header accordion-replay-left-menu-day">21</a>
+                <ul class="replay-accordion show">
+                  <li><a class="menu-pages-replay-date-hour" href="#">10:04</a></li>
+                  <li><a class="menu-pages-replay-date-hour" href="#">20:45</a></li>
+                  <li><a class="menu-pages-replay-date-hour" href="#">06:23</a></li>
+                </ul>
+              </li>
+              <li><a href="javascript:(void)" class="accordion-header accordion-replay-left-menu-day">22</a>
+                <ul class="replay-accordion show">
+                  <li><a class="menu-pages-replay-date-hour" href="#">10:04</a></li>
+                  <li><a class="menu-pages-replay-date-hour" href="#">20:45</a></li>
+                  <li><a class="menu-pages-replay-date-hour" href="#">06:23</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><a href="javascript:(void)" class="accordion-header  accordion-replay-left-menu-month">Feb</a>
+            <ul class="replay-accordion show">
+              <li><a href="javascript:(void)" class="accordion-header  accordion-replay-left-menu-day">09</a>
+                <ul class="replay-accordion show">
+                  <li class="menu-pages-replay-date-hour"><a href="#">15:04</a></li>
+                  <li class="date-selected menu-pages-replay-date-hour"><a href="#">21:04</a></li>
+                  <li class="menu-pages-replay-date-hour"><a href="#">23:07</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="javascript:(void)" class="accordion-header  accordion-replay-left-menu-year">1997<span
+            class="number-of-versions">10 versions</span></a>
+        <ul class="replay-accordion show">
+          <li><a href="javascript:(void)" class="accordion-header  accordion-replay-left-menu-month">Feb</a>
+            <ul class="replay-accordion show">
+              <li><a href="javascript:(void)" class="accordion-header  accordion-replay-left-menu-day">09</a>
+                <ul class="replay-accordion show">
+                  <li class="menu-pages-replay-date-hour"><a href="#">15:04</a></li>
+                  <li class="date-selected menu-pages-replay-date-hour"><a href="#">21:04</a></li>
+                  <li class="menu-pages-replay-date-hour"><a href="#">23:07</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
     </ul>
-</section>
-</nav> 
+  </section>
+</nav>
 <!-- ends left nav menu list -->
-<!-- starts accordion -->  
+<!-- starts accordion -->
 <!-- year -->
-<script>
+<!-- <script>
 var accReplayYear = document.getElementsByClassName("accordion-replay-left-menu-year");
 var i;
 
@@ -80,7 +87,7 @@ for (i = 0; i < accReplayYear.length; i++) {
   });
 }
 // month -->
-
+<!--
   var accReplayMonth = document.getElementsByClassName("accordion-replay-left-menu-month");
   var i;
   
@@ -95,14 +102,31 @@ for (i = 0; i < accReplayYear.length; i++) {
       } 
     });
   }
-  </script>
+  </script> -->
 
 <script>
-  $( function() {
-    $( "#accordion" ).accordion({
-      collapsible: true
-    });
-  } );
-  </script>
-<!-- ends accordion -->  
-<!-- ends left nav menu --> 
+  // $( function() {
+  //   $( ".replay-accordion show" ).accordion({
+  //     collapsible: true,
+  //     header: "a.accordion-header:not(.item)"
+  //   });
+  // } );
+
+  $('.accordion-header').click(function (e) {
+    e.preventDefault();
+
+    var $this = $(this);
+
+    if ($this.next().hasClass('show')) {
+      $this.next().removeClass('show');
+      $this.next().slideUp(150);
+    } else {
+      // $this.parent().parent().find('li .replay-accordion').removeClass('show');
+      // $this.parent().parent().find('li .replay-accordion').slideUp(350);
+      $this.next().toggleClass('show');
+      $this.next().slideToggle(150);
+    }
+  });
+</script>
+<!-- ends accordion -->
+<!-- ends left nav menu -->
