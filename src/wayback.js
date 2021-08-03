@@ -1,11 +1,15 @@
 
 const fetch = require('node-fetch');
-
-module.exports = function (req, res) {
-
+module.exports = function (req, res) {  
     function renderOk () {
+        const fullUrl = req.params.url + (req.params['0'] ?? '');
+        const timestamp = fullUrl.split('/')[0];
+        const url = fullUrl.split('/').filter((a,i) => i>0).join('/');
+        
         res.render('pages/replay',{requestedPage: {
-            url: req.params.url + (req.params['0'] ?? ''),
+            fullUrl: fullUrl,
+            url: url,
+            timestamp: timestamp
         }});
     }
     function redirect(newUrl){
