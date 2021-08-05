@@ -54,7 +54,7 @@
         return resultText;
     }
 
-    const onClick = "ga('send', 'event', 'Search result', 'Page search', 'Result position', "+ index+1 +"); window.location='/replay';"; //linkToArchive encriptado? ver java
+    const onClick = "ga('send', 'event', 'Search result', 'Page search', 'Result position', "+ index+1 +"); window.location='/wayback/"+pageData.tstamp+"/"+pageData.originalURL+"';"; //linkToArchive encriptado? ver java
     const onKeyPress = "return ((e) => { if(e.which == 32 || e.which == 13){e.preventDefault();"+onClick+"} return true;})(event)";
     %>
     <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="<%- onClick %>" onkeypress="<%- onKeyPress %>">
