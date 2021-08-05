@@ -4,6 +4,7 @@ const searchUrl = require('./search-url.js');
 const sanitizeInputs = require('./sanitize-search-params');
 const savePageNow = require('./services-savepagenow');
 const wayback = require('./wayback');
+const replayNav = require('./replay-nav');
 const fetch = require('node-fetch');
 const { request } = require('express');
 
@@ -131,6 +132,8 @@ module.exports = function (app) {
             searchImages(req, res);
         } else if(req.params.id == 'url-search-results') {
             searchUrl(req, res);
+        } else if(req.params.id == 'replay-nav') {
+            replayNav(req, res);
         } else {
             res.render('partials/' + req.params.id, { layout: false });
         }

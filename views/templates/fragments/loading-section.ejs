@@ -1,10 +1,19 @@
 <% if(typeof action=='undefined' ){ action="" } %>
-<section id="loading-section">
+<% if(typeof onload=='undefined' ){ onload="" }
+   else if (typeof onload=='function' ) {onload = onload.toString().replaceAll('"','&quot;'); } %>
+<section id="loading-section" myonload="<%- onload %>">
     <h3>
         <%= t('preloader.accessibility.title') %>
     </h3>
     <form id="loading-form" action="<%= action %>">
         <%- include("../fragments/hidden-search-inputs") -%>
+
+        <% if(typeof params !=='undefined' ) { 
+            Object.keys(params).forEach( name => {
+                const value = params[name];
+                %><input type="hidden" name="<%= name %>" value="<%= value %>"><%
+            }); 
+        } %>
             <button id="loading-results" type="submit" value="loading results" aria-hidden="true">
                 <%= t('preloader.accessibility.button') %>
             </button>

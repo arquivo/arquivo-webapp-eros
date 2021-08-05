@@ -96,7 +96,7 @@
                   <% 
                   apiData.years[year].months[month].forEach(item => {
                   %>
-                  <li class="menu-pages-replay-date-hour"><a href="https://arquivo.pt/wayback/<%-item.timestamp+'/'+item.url %>"><%= t('common.date.long',{
+                  <li class="menu-pages-replay-date-hour"><a href="/wayback/<%-item.timestamp+'/'+item.url %>"><%= t('common.date.long',{
                     year: item.year,
                     month: t('common.months.'+item.month),
                     day: parseInt(item.day),

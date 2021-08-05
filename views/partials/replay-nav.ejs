@@ -1,0 +1,125 @@
+
+    <!-- Hidden for future usage <button id="left-nav-close-button" onclick="closeLeftMenuNav()"><span>&times;</span></button>-->
+    <section style="height: calc(100vh - 146px); overflow-y: auto;" onload="console.log('hello');">
+      <h4>Replay left menu navigation list</h4>
+      <ul class="replay-accordion show">
+        <!-- starts table and list: show results as a table or as a list -->
+        <li id="replay-table">
+          <form action="/replay-table-results" method="GET"><button type="submit"><span class="fas fa-table"
+                aria-hidden="true"></span>Table</button></form>
+        </li>
+        <li id="replay-list">
+          <form action="/replay-list-results" method="GET"><button type="submit"><span class="fas fa-list"
+                aria-hidden="true"></span>List</button></form>
+        </li>
+        <!-- ends table and list: show results as a table or as a list -->
+        <%
+        const requestedYear = requestData.get('timestamp').slice(0, 4);
+        const requestedMonth = requestData.get('timestamp').slice(4, 6);
+        const requestedDay = requestData.get('timestamp').slice(6, 8);
+        
+        let returnData = {
+            years: {},
+            items: apiData.length
+        }
+        apiData.forEach(item => {
+            const year = item.timestamp.slice(0, 4);
+            const month = item.timestamp.slice(4, 6);
+            const day = item.timestamp.slice(6, 8);
+            const hours = item.timestamp.slice(8, 10);
+            const minutes = item.timestamp.slice(10, 12);
+            const seconds = item.timestamp.slice(12, 14);
+
+            if (typeof returnData.years[year] === 'undefined') {
+                returnData.years[year] = {
+                    months: {},
+                };
+            }
+            if (typeof returnData.years[year].months[month] === 'undefined') {
+                returnData.years[year].months[month] = {
+                    days: {},
+                };
+            }
+            
+            if (typeof returnData.years[year].months[month].days[day] === 'undefined') {
+                returnData.years[year].months[month].days[day] = []
+            }
+
+            returnData.years[year].months[month].days[day].push({
+                ...item,
+                year,
+                month,
+                day,
+                hours,
+                minutes,
+                seconds,
+            })
+
+        });
+
+        apiData = returnData;
+
+        Object.keys(apiData.years).sort().forEach(year => {
+            let yearUlClasses = "replay-accordion";
+            let yearAnchorClasses = 'accordion-header accordion-replay-left-menu-year';
+            if(year == requestedYear){
+                yearUlClasses += ' show';
+                yearAnchorClasses += ' active';
+            } else {
+                yearUlClasses += '" style="display: none;'
+            }
+          %>
+            <li><a href="javascript:(void)" class="<%- yearAnchorClasses %>"><%= year %></a>
+                <ul class="<%- yearUlClasses %>">
+          <% 
+          Object.keys(apiData.years[year].months).sort().forEach(month => {
+            let monthUlClasses = "replay-accordion";
+            let monthAnchorClasses = 'accordion-header accordion-replay-left-menu-month';
+            if(month == requestedMonth){
+                monthUlClasses += ' show';
+                monthAnchorClasses += ' active';
+            } else {
+                monthUlClasses += '" style="display: none;'
+            }
+            %>
+                <li><a href="javascript:(void)" class="<%- monthAnchorClasses %>"><%= t('common.months.'+month) %></a>
+                    <ul class="<%- monthUlClasses %>">
+            <% 
+            Object.keys(apiData.years[year].months[month].days).sort().forEach(day => {
+                let dayUlClasses = "replay-accordion";
+                let dayAnchorClasses = 'accordion-header accordion-replay-left-menu-day';
+                if(day == requestedDay){
+                    dayUlClasses += ' show';
+                    dayAnchorClasses += ' active';
+                } else {
+                    dayUlClasses += '" style="display: none;'
+                }
+                %>
+                    <li class=""><a href="javascript:(void)" class="<%- dayAnchorClasses %>"><%= parseInt(day) %></a>
+                        <ul class="<%- dayUlClasses %>">
+                <% 
+                apiData.years[year].months[month].days[day].forEach(item => {
+                
+                    let classNames = 'menu-pages-replay-date-hour';
+                    
+                    if (requestData.get('timestamp') === item.timestamp) {
+                        classNames += ' date-selected' 
+                    }
+                    const href = "/wayback/"+item.timestamp+'/'+item.url;
+                    const time = item.hours + 'h' + item.minutes;
+                    %>
+                        <li class="<%= classNames %>"><a href="<%- href %>"><%- time %></a></li>
+                    <%
+                });
+                //Close days list
+                %></ul></li><%
+            });
+            //Close months list            
+            %></ul></li><%
+          });
+        //Close years list            
+        %></ul></li><%
+        });
+        %>
+    </ul>
+    </section>

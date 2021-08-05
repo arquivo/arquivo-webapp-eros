@@ -1,5 +1,5 @@
 <!-- starts replay content -->  
-   <iframe id="replay-in-iframe" name="replay-page" title="replay page" src="/noFrame/replay/<%- requestedPage.fullUrl %>">
+   <iframe id="replay-in-iframe" name="replay-page" title="replay page" src="<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>">
        <h1>iframe content</h1>
    </iframe>
 <!-- ends replay content -->

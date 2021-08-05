@@ -92,7 +92,7 @@
                         minutes: tableData[year][row].minutes
                       })
                       %> 
-              <td class="year-month-data" headers="year-<%= year %>"> <a href="https://arquivo.pt/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
+              <td class="year-month-data" headers="year-<%= year %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
                 month: t('common.shortMonths.'+tableData[year][row].month),
                 day: parseInt(tableData[year][row].day)
               }) %></a></td>

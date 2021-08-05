@@ -478,7 +478,7 @@ nav#replay-left-nav {
   top: 90px;
   left: 0px;    
   width: 200px; 
-  overflow: auto;
+  overflow: hidden;
   border-top: 1px solid #cccccc47;
 }
 
@@ -713,7 +713,7 @@ body#homepage button#nav-options-right-button  {
   content: "\2193";
   float: right;
   font-size: initial;
-  position: absolute;
+  position: relative;
   right: 15px;
 }
 

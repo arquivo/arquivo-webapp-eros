@@ -113,8 +113,24 @@
 
 <!-- starts white background top corner rounded shape -->
 
+<%
+  const year = requestedPage.timestamp.slice(0, 4);
+  const month = requestedPage.timestamp.slice(4, 6);
+  const day = requestedPage.timestamp.slice(6, 8);
+  const hours = requestedPage.timestamp.slice(8, 10);
+  const minutes = requestedPage.timestamp.slice(10, 12);
+  const seconds = requestedPage.timestamp.slice(12, 14);
+  const date = t('common.date.long',{
+    year: year,
+    month: t('common.months.'+month),
+    day: parseInt(day),
+    hours: hours,
+    minutes: minutes
+  });
+%>
+
 <!-- starts shows url link of page selected and timestamp -->
-<p id="chosen-url"><a class="chosen-url-cl" target="_blank" href="https://hotel-mix.de/" title="https://hotel-mix.de/"><span class="icon-link fas fa-link" aria-hidden="true"></span>hotel-mix.de</a> - 15 Oct <span id="chosen-timestamp">15:53 2018</span></p>
+<p id="chosen-url"><a class="chosen-url-cl" target="_blank" href="<%- requestedPage.url %>"><span class="icon-link fas fa-link" aria-hidden="true"></span><%- requestedPage.url %></a> - <%- date %></p>
 <!-- ends shows url link of page selected and timestamp -->
 
 </header>

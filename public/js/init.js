@@ -12,11 +12,16 @@ $(function(){
     //load ajax content:
     const loadingSection = $('#loading-section');
     if(loadingSection.length){
+        let afterReplace = () => {}
+        if(!!loadingSection.attr('myonload')){
+            afterReplace = (new Function('return '+loadingSection.attr('myonload')))();
+        }
         const loadingForm = $('#loading-form');
         $.ajax({
             url: document.location.origin + loadingForm.attr('action')+'?'+loadingForm.serialize(),
             success: function (data) {
                 loadingSection.replaceWith(data);
+                afterReplace();
             }
         });
     }
