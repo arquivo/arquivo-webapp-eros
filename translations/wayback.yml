@@ -1,0 +1,89 @@
+popups:
+  buttons:
+    ok:
+      en: OK
+      pt: OK
+    cancel:
+      en: Cancel
+      pt: Cancelar
+  technical-details:
+    accessibility:
+      en: 'Page details'
+      pt: 'Detalhes da página'
+    title:
+      en: 'Technical details:'
+      pt: 'Detalhes Técnicos:'
+    description:
+      en: '(field description)'
+      pt: '(descrição dos campos)'
+  screenshot:
+    accessibility:
+      en: Take screenshot
+      pt: Captura de ecrã
+    confirmation:
+      en: 'Take a screenshot of this page?'
+      pt: 'Guardar esta página como imagem?'
+  print:
+    accessibility:
+      en: Print page
+      pt: Imprimir página
+    confirmation:
+      en: 'Print this page?'
+      pt: 'Imprimir esta página?'
+  complete-the-page:
+    accessibility: 
+      en: Complete the page
+      pt: completar a página
+    confirmation:
+      en: We will try to complete the page with resources from other web archives
+      pt: Vamos tentar completar a página com recursos externos
+  fullscreen-mode:
+    accessibility:
+      en: Open page in fullscreen
+      pt: Abrir a página em ecrã inteiro
+  replay-with-old-browser:
+    accessibility:
+      en: Open the page with an old browser
+      pt: Abrir a página num browser antigo
+    confirmation:
+      en: You are leaving Arquivo.pt to oldweb.today
+      pt: Vai sair do Arquivo.pt para o oldweb.today
+options-menu:
+  accessibility:
+    en: Right menu navigation
+    pt: Navegação no menu direito
+  accessibility-list:
+    en: Right menu navigation list
+    pt: Lista do menu de navegação direito
+  list-versions:
+    en: List versions
+    pt: Listar versões
+  technical-details:
+    en: Technical details
+    pt: Detalhes técnicos
+  screenshot:
+    en: Screenshot
+    pt: Guardar
+  print:
+    en: Print
+    pt: Imprimir
+  complete-page:
+    en: Complete the page
+    pt: Completar a página
+  fullscreen:
+    en: Fullscreen
+    pt: Ecrã inteiro
+  replay-with-old-browser:
+    en: Replay with old browser
+    pt: Ver com browser antigo
+nav-menu:
+  accessibility:
+    en: Replay left menu navigation list
+    pt: Menu de navegação esquerdo
+  table:
+    en: Table
+    pt: Tabela
+  list:
+    en: List
+    pt: Lista
+

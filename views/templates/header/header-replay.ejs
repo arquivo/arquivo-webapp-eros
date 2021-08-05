@@ -5,9 +5,9 @@
 
 <!-- starts image modal when user clicks to see image its details -->
 <section id="technical-details" class="modal">
-  <h3>Page details</h3>
+  <h3><%= t('wayback.popups.technical-details.accessibility') %></h3>
   <ul>
-    <li><strong class="strong-bold">Technical details: </strong><a href="https://github.com/arquivo/pwa-technologies/wiki/Arquivo.pt-API#response-fields">(field description)</a></li>
+    <li><strong class="strong-bold"><%= t('wayback.popups.technical-details.title') %></strong><a href="https://github.com/arquivo/pwa-technologies/wiki/Arquivo.pt-API#response-fields"><%= t('wayback.popups.technical-details.description') %></a></li>
     <%
       const urlPattern = /^((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)$/;
       Object.keys(apiData).forEach(key => {
@@ -27,22 +27,22 @@
 
 <!-- starts take screenshot -->
 <section id="screenshot" class="modal">
-  <h3>Take screenshot</h3>
+  <h3><%= t('wayback.popups.screenshot.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fas fa-camera" aria-hidden="true"></span> Take a screenshot of this page?</p></li>
-    <li><button class="confirm">OK</button></li>
-    <li><button class="cancel">Cancel</button></li>    
+    <li><p><span class="fas fa-camera" aria-hidden="true"></span><%= t('wayback.popups.screenshot.confirmation') %></p></li>
+    <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
+    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
 <!-- ends take screenshot -->  
 </section>
 
 <!-- starts print page -->
 <section id="print" class="modal">
-  <h3>Print page</h3>
+  <h3><%= t('wayback.popups.print.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fas fa-print" aria-hidden="true"></span> Print this page?</p></li>
-    <li><button class="confirm">OK</button></li>
-    <li><button class="cancel">Cancel</button></li>    
+    <li><p><span class="fas fa-print" aria-hidden="true"></span> <%= t('wayback.popups.print.confirmation') %></p></li>
+    <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
+    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
 <!-- ends print page -->  
 </section>
@@ -50,29 +50,29 @@
 
 <!-- starts complete page -->
 <section id="complete-the-page" class="modal">
-  <h3>Complete the page</h3>
+  <h3><%= t('wayback.popups.complete-the-page.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fas fa-laptop-medical" aria-hidden="true"></span> We will try to complete the page with resources from other web archives</p></li>
-    <li><button class="confirm">OK</button></li>
-    <li><button class="cancel">Cancel</button></li>    
+    <li><p><span class="fas fa-laptop-medical" aria-hidden="true"></span><%= t('wayback.popups.complete-the-page.confirmation') %></p></li>
+    <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
+    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
 </section>
 <!-- ends complete -->  
 
 <!-- starts open replay page in fullscreen -->
 <section id="fullscreen-mode" class="modal">
-  <h3>Open page in fullscreen</h3>
+  <h3><%= t('wayback.popups.fullscreen-mode.accessibility') %></h3>
   <button onclick="closesFullScreen()"><span class="fas fa-compress-arrows-alt" aria-hidden="true"></span> Exit fullscreen</button>  
 </section>
 <!-- ends open replay page in fullscreen -->  
 
 <!-- starts replay with old browser -->
 <section id="replay-with-old-browser" class="modal">
-  <h3>Complete the page</h3>
+  <h3><%= t('wayback.popups.replay-with-old-browser.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fab fa-internet-explorer" aria-hidden="true"></span> You are leaving Arquivo.pt to oldweb.today</a></p></li>
-    <li><button class="confirm">OK</button></li>
-    <li><button class="cancel">Cancel</button></li>    
+    <li><p><span class="fab fa-internet-explorer" aria-hidden="true"></span> <%= t('wayback.popups.replay-with-old-browser.confirmation') %></a></p></li>
+    <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
+    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
 </section>
 <!-- ends replay with old browser -->  
