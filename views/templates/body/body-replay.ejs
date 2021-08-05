@@ -61,12 +61,14 @@
         });
 
         $('#complete-the-page button.confirm').click(() => {
-            window.location = '/services/patching?url=<%- requestedPage.url %>&timestamp=<%- requestedPage.timestamp %>'
+            window.open('/services/complete-page?url=<%- requestedPage.url %>&timestamp=<%- requestedPage.timestamp %>','_blank');
+            $.modal.close();
         });
 
 
         $('#replay-with-old-browser button.confirm').click(() => {
-            window.location = 'http://oldweb.today/firefox/<%- requestedPage.timestamp %>/<%- requestedPage.url %>'
+            window.open('http://oldweb.today/firefox/<%- requestedPage.timestamp %>/<%- requestedPage.url %>');
+            $.modal.close();
         });
     });
 </script>
