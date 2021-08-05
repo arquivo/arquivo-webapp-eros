@@ -15,21 +15,4 @@
     }}) %>
 </nav>
 
-<script>
-
-  $('#replay-left-nav').on('click', '.accordion-header', function (e) {
-    e.preventDefault();
-    var $this = $(this);
-    if ($this.next().hasClass('show')) {
-      $this.removeClass('active');
-      $this.next().removeClass('show');
-      $this.next().slideUp(150);
-    } else {
-      $this.toggleClass('active');
-      $this.next().toggleClass('show');
-      $this.next().slideToggle(150);
-    }
-  });
-</script>
-<!-- ends accordion -->
 <!-- ends left nav menu -->

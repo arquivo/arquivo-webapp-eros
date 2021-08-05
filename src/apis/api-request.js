@@ -35,6 +35,7 @@ class ApiRequest {
         Object.keys(this.defaultApiParams)
             .filter(key => this.defaultApiParams[key] !== null || requestData.has(key))
             .forEach(key => apiRequestData.set(key, requestData.get(key) ?? this.defaultApiParams[key]));
+            
         return apiRequestData;
     }
 }

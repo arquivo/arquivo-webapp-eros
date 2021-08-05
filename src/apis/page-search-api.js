@@ -3,7 +3,7 @@ const config = require('config');
 class PageSearchApiRequest extends ApiRequest {
     constructor() {
         const defaultApiParams = {
-            q: '',
+            q: null,
             from: config.get('search.start.date'),
             to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
             type: null,
@@ -15,7 +15,9 @@ class PageSearchApiRequest extends ApiRequest {
             dedupField: null,
             fields: null,
             prettyPrint: false,
+            metadata: null,
         }
+        
         super(config.get('text.search.api'),defaultApiParams);
     }
 }

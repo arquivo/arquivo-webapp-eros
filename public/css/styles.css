@@ -3591,3 +3591,18 @@ section#search-tools #submit-search {
     display: none;
   }
 }
+
+/* set up printing on replay */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #divPrintMe, #sdivPrintMe * {
+    visibility: visible;
+  }
+  #divPrintMe {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

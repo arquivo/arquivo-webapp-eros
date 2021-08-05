@@ -25,12 +25,4 @@ $(function(){
             }
         });
     }
-    const closeAllMenus = function(){
-        closeLeftMenuNav();
-        closeOptionsMenuNav();
-        closeReplayLeftMenuNav();
-        closeReplayRightMenuNav();
-    }
-    $('body').children().not('header').on('click',() => closeAllMenus());
-    $('body').on('click',(e) => { if($(e.target).is('body')){closeAllMenus();}});
 });
