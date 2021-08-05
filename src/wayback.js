@@ -20,7 +20,6 @@ module.exports = function (req, res) {
 
             apiRequest.get(apiRequestData,
                 (apiData) => {
-                    console.log(apiData.response_items[0]);
                     res.render('pages/replay', {
                         requestData: new URLSearchParams({ l: req.getLanguage() }),
                         apiData: apiData.response_items[0],

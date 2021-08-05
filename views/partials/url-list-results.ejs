@@ -131,7 +131,6 @@
         this.classList.toggle("active");
         var panel = this.nextElementSibling;
         var parentPanel = this.parentElement.parentElement;
-        console.log(parentPanel);
         if (panel.style.maxHeight) {
           if(parentPanel.classList.contains('panel')){
             parentPanel.style.maxHeight = (parseInt(parentPanel.style.maxHeight.slice(0,-2))-parseInt(panel.style.maxHeight.slice(0,-2))) + 'px';
