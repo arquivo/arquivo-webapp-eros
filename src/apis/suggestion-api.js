@@ -1,4 +1,5 @@
 const https = require('https');
+const http = require('http');
 const config = require('config');
 
 module.exports = function (query, lang, callback) {
@@ -9,7 +10,9 @@ module.exports = function (query, lang, callback) {
         query: query,
         l: lang,
     });
-    https.get(config.get('query.suggestion.api') + '?' + suggestionRequestData.toString(),
+    const suggestionUrl = config.get('query.suggestion.api')
+    const get = suggestionUrl.startsWith('https') ? https.get : http.get;
+    get(suggestionUrl + '?' + suggestionRequestData.toString(),
         (response) => {
             response.on('data', (d) => { suggestionReply = suggestionReply + d.toString().split("\n").join('') });
             response.on('end', () => {
