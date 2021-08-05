@@ -1,0 +1,13 @@
+logo:
+  src:
+    en: /img/CompletePage-white.svg
+    pt: /img/CompletePage-white.svg
+  alt:
+    en: complete page
+    pt: completar página
+label:
+  en: Complete page with external services
+  pt: Complete a página com recursos externos
+completing:
+  en: Completing...
+  pt: A completar...

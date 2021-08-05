@@ -16,7 +16,7 @@
     
     <!-- starts CompletePage logo -->
     <div class="left">
-        <img id="logo-complete-page" class="image-width" src="/img/CompletePage-white.svg" alt="complete page"><p>Complete page with external services</p>
+        <img id="logo-complete-page" class="image-width" src="<%= t('services-complete-page.logo.src') %>" alt="<%= t('services-complete-page.logo.alt') %>"><p><%= t('services-complete-page.label') %></p>
     </div>
     <!-- ends CompletePage logo -->
     
@@ -32,7 +32,7 @@
     <div class="right">
     <div  id="pulsing-section">
         <div class="pulse"></div>
-        <p id="colorchange">Completing...</p>         
+        <p id="colorchange"><%= t('services-complete-page.completing') %></p>         
     </div>
     <!-- ends completing animation -->
 
