@@ -150,11 +150,7 @@ module.exports = function (app) {
 
     // savepagenow recording page
     app.post('/services/savepagenow', function (req, res) {
-        const requestData = new URLSearchParams(req.query);
-        res.render('pages/services-savepagenow',{
-            url: '',
-            error: false
-        });
+        savePageNow(req,res);
     });
 
     // patching 
