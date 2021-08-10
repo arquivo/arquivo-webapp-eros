@@ -3,10 +3,17 @@ const config = require('config');
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
 module.exports = function (req, res) {
+    function sanitizeUrl(url){
+        let res = url.replace(/^\/+|\/+$/g, '');
+        while(res.includes('//')){
+            res.replace('//','/');
+        }
+        return res;
+    }
     function renderOk(fullUrl) {
 
         //rewrite user URL if needed
-        if (fullUrl.replace(/^\/+|\/+$/g, '') != (req.params.url + (req.params['0'] ?? '')).replace(/^\/+|\/+$/g, '')) {
+        if (sanitizeUrl(fullUrl) != sanitizeUrl(req.params.url + (req.params['0'] ?? ''))) {
             res.redirect('/wayback/' + fullUrl);
         } else {
             const timestamp = fullUrl.split('/')[0];
@@ -40,7 +47,7 @@ module.exports = function (req, res) {
         fetch(url)
             .then(res => {
                 const newUrl = res.url.split('replay/').filter((a, i) => i > 0).join('replay/');
-                if (res.url.replace(/^\/+|\/+$/g, '') != url.replace(/^\/+|\/+$/g, '')) {
+                if (sanitizeUrl(res.url) != sanitizeUrl(url)) {
                     const fullUrl = config.get('noFrame.replay.url') + '/' + newUrl;
                     testUrl(fullUrl);
                 } else if (res.ok) {
