@@ -20,9 +20,10 @@ module.exports = function (req, res) {
 
             apiRequest.get(apiRequestData,
                 (apiData) => {
+                    const data = apiData.response_items ? apiData.response_items[0] : {};
                     res.render('pages/replay', {
                         requestData: new URLSearchParams({ l: req.getLanguage() }),
-                        apiData: apiData.response_items[0],
+                        apiData: data,
                         requestedPage: {
                             fullUrl: fullUrl,
                             url: url,
@@ -38,7 +39,7 @@ module.exports = function (req, res) {
     function testUrl(url) {
         fetch(url)
             .then(res => {
-                const newUrl = res.url.split('replay/').filter((a, i) => i > 0).join('replay');
+                const newUrl = res.url.split('replay/').filter((a, i) => i > 0).join('replay/');
                 if (res.url.replace(/^\/+|\/+$/g, '') != url.replace(/^\/+|\/+$/g, '')) {
                     const fullUrl = config.get('noFrame.replay.url') + '/' + newUrl;
                     testUrl(fullUrl);
