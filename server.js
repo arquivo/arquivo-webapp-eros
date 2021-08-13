@@ -20,7 +20,7 @@ i18n.ready.catch(err => {
   console.error('Failed loading translations', err);
 });
 
-app.use(morgan('combined'))
+//app.use(morgan('combined'))
 
 app.use(i18n.middleware);
 app.locals.config = config;

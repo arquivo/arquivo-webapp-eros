@@ -490,8 +490,8 @@ nav#replay-right-nav {
 nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
   position: absolute;
   z-index: 3;
-  top: 12px;
-  right: 8px;
+  top: 9px;
+  right: 9px;
   background-color: #033f72;
   border: none;
   outline: none;
@@ -598,15 +598,11 @@ li.date-selected a:hover {
    color:#00324b;
 }
 
-nav#replay-right-nav button, nav#options-right-nav button {
-  left: 7px;
-}
-
 nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-left-nav li#replay-table button:hover, nav#replay-right-nav button:hover {
-    background-color: white;
+    /*background-color: white;*/
     border: none;
     outline: none;
-    color: #033f72;
+    color: white/*#033f72*/;
     }
     nav#left-nav button:active, nav#options-right-nav button:active, nav#replay-left-nav li#replay-table button:active, nav#replay-right-nav button:active {
       background-color: #033f72;
@@ -616,7 +612,7 @@ nav#left-nav button:hover, nav#options-right-nav button:hover, nav#replay-left-n
 }  
 
 nav#left-nav button span, nav#options-right-nav button span, nav#replay-right-nav button  {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: lighter;  
 }
 
@@ -710,17 +706,22 @@ body#homepage button#nav-options-right-button  {
 }
 
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after, .accordion-replay-left-menu-day:after  {
-  content: "\2193";
+  content: "\f0ab";
+  font-family: FontAwesome; 
   float: right;
-  font-size: initial;
-  position: relative;
-  right: 15px;
+  font-size: 1.1em;
+  position: absolute;
+  right: 16px; 
+  font-weight: normal;
 }
 
 .active:after {
-  content: "\2191";
+  content: "\f0aa";
+  font-family: FontAwesome;
+  font-size: 1.1em;
+  position: absolute;
   float: right;
-  font-weight: normal;
+  font-weight: normal;  
 }
 
 body#table-list-results main .painel {
@@ -751,7 +752,7 @@ nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav s
   text-align: left;  
 }
 
-nav#left-nav section ul > li:first-child, nav#options-right-nav section ul > li:first-child, nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
+nav#left-nav section ul > li:first-child, nav#left-nav section ul > li#menu-images-advanced-search, nav#options-right-nav section ul > li:first-child, nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
   border-top: none;     
 }
 
@@ -778,7 +779,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   align-items: center;
   text-decoration: none;
   color: white;
-  padding: 0px 16px 0px 19px;
+  padding: 2px 16px;
   font-size: 0.75em;  
 }
 
@@ -788,7 +789,7 @@ nav#left-nav section ul > li a {
   align-items: center;
   text-decoration: none;
   color: white;
-  padding: 0px 16px 0px 19px;
+  padding: 2px 16px;
   font-size: 0.75em;  
 }
 
@@ -859,7 +860,13 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a, nav#reply-left-nav section ul > li > ul > li a, nav#reply-right-nav section ul > li > ul > li a { 
   padding: 0 0 0 30px;
   font-size: 0.75em;
+  border-top: 1px solid #e3e3e32e;
 }
+
+nav#left-nav section ul > li > ul > li#menu-pages-advanced-search {
+  display: none;
+}
+
 /* ends nav MENU: replay left and right ************************************************** */
 
 /* starts Table and list menu ************************************************** */
@@ -2399,6 +2406,12 @@ body#save-page-now p#save-page-url-message-error {
   color: red;    
 }
 
+/* Hides "Copy link" when in SavePageNow mode */
+
+body#save-page-now li#menu-copy-link { 
+display: none;   
+}
+
 /* Modal save page now */
 body#save-page-now #savepagenow-modal {
   max-width: 300px; 
@@ -3082,7 +3095,7 @@ body#arquivo-404 main a:hover {
   position: relative;
   z-index: 2;
   margin: 0;
-  padding: 0;
+  padding: 0 0 50px 0;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -3117,10 +3130,9 @@ body#arquivo-404 main a:hover {
 
 #preloader-container #preloader-box p {
   position: absolute;
-  margin-top: 65px;
+  margin-top: 100px;
   font-family: inherit;
-  padding: 20px 0;
-  border-top: 1px solid #ccc;
+  padding: 20px 0; 
   font-family: Arial, Helvetica, sans-serif;
   font-size: small;
   text-align: center;
@@ -3128,49 +3140,205 @@ body#arquivo-404 main a:hover {
   text-overflow: ellipsis;      
 }
 
-.preloader,
-.preloader:before,
-.preloader:after {
-  background: #1c75c0;
-  -webkit-animation: load1 1s infinite ease-in-out;
-  animation: load1 1s infinite ease-in-out;
-  width: 0.5em;
-  height: 2em;
-  border-radius: 10px;
-}
+/* starts Preloader animation */
 
 .preloader {
-  color: #1c75c0;
-  text-indent: -9999em;
-  margin: auto;
   position: relative;
-  font-size: 7px;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-  border-radius: 10px;
-  max-width: 100%;
-  margin-top: 78px;
+  width: 70px;
+  height: 70px;
 }
 
-.preloader:before,
-.preloader:after {
+.preloader div {
+  -webkit-transform-origin: 32px 32px;
+  -ms-transform-origin: 32px 32px;
+  transform-origin: 32px 32px;
+  -webkit-animation: 1.2s opaque ease-in-out infinite both;
+  animation: 1.2s opaque ease-in-out infinite both;
+}
+
+.preloader div::after {
+  content: "";
+  display: block;
   position: absolute;
   top: 0;
-  content: '';
+  left: 30px;
+  width: 5px;
+  height: 18px;
   border-radius: 10px;
+  background-color: #033f72;
 }
 
-.preloader:before {
-  left: -1.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
+.preloader div:nth-child(1) {
+  -webkit-transform: rotate(0);
+  -ms-transform: rotate(0);
+  transform: rotate(0);
+}
+.preloader div:nth-child(2) {
+  -webkit-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg);
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+.preloader div:nth-child(3) {
+  -webkit-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg);
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.preloader div:nth-child(4) {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+.preloader div:nth-child(5) {
+  -webkit-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.preloader div:nth-child(6) {
+  -webkit-transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg);
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+}
+.preloader div:nth-child(7) {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+  -webkit-animation-delay: 0.6s;
+  animation-delay: 0.6s;
+}
+.preloader div:nth-child(8) {
+  -webkit-transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg);
+  -webkit-animation-delay: 0.7s;
+  animation-delay: 0.7s;
+}
+.preloader div:nth-child(9) {
+  -webkit-transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg);
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
+}
+.preloader div:nth-child(10) {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+  -webkit-animation-delay: 0.9s;
+  animation-delay: 0.9s;
+}
+.preloader div:nth-child(11) {
+  -webkit-transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg);
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}
+.preloader div:nth-child(12) {
+  -webkit-transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg);
+  -webkit-animation-delay: 1.1s;
+  animation-delay: 1.1s;
+}
+.preloader div:nth-child(13) {
+  -webkit-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+  -webkit-animation-delay: 1.2s;
+  animation-delay: 1.2s;
+}
+@-webkit-keyframes opaque {
+  0% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0.1;
+  }
 }
 
-.preloader:after {
-left: 1.5em;
+@keyframes opaque {
+  0% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
+@-webkit-keyframes mesh {
+  0% {
+    -webkit-transform-origin: 50% -100%;
+    transform-origin: 50% -100%;
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  50% {
+    -webkit-transform-origin: 50% -100%;
+    transform-origin: 50% -100%;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  50.1% {
+    -webkit-transform-origin: 50% 200%;
+    transform-origin: 50% 200%;
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform-origin: 50% 200%;
+    transform-origin: 50% 200%;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mesh {
+  0% {
+    -webkit-transform-origin: 50% -100%;
+    transform-origin: 50% -100%;
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  50% {
+    -webkit-transform-origin: 50% -100%;
+    transform-origin: 50% -100%;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+  50.1% {
+    -webkit-transform-origin: 50% 200%;
+    transform-origin: 50% 200%;
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform-origin: 50% 200%;
+    transform-origin: 50% 200%;
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 /* Hide preloader form button and accessibility header*/

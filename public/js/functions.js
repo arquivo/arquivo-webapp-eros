@@ -136,8 +136,7 @@ function showsSearchBoxShadow() {
 // shows image technical details window that stays on top of modal image
 function openImageDetailsModalWindow() {
   $('#modal-window-image-technical-details').attr('style',"display: block;transition:0.5s");
-  $('#close-modal-tecnhical').attr('style',"display:block; transition:0.5s"); 
- 
+  $('#close-modal-tecnhical').attr('style',"display:block; transition:0.5s");  
 }
 
 // closes image technical details window that stays on top of modal image
@@ -185,7 +184,6 @@ function dateFromTimestamp(timestamp,format='long'){
 
   }
 }
-
 
 function isMobile () {
   return( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) || (window.matchMedia("(max-width: 767px)").matches);
