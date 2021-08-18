@@ -6,7 +6,7 @@ module.exports = function (req, res) {
     function sanitizeUrl(url){
         let res = url.replace(/^\/+|\/+$/g, '');
         while(res.includes('//')){
-            res.replace('//','/');
+            res = res.replace('//','/');
         }
         return res;
     }
