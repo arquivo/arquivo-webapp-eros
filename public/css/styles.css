@@ -853,10 +853,11 @@ nav#replay-left-nav section ul > li.menu-pages-replay-month a {
 }
 
 nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
-  padding-left: 39px;
+  padding-left: 80px;
 }
 
 /* nav sub-menu ******************************************************************* */
+
 nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li > ul > li a, nav#reply-left-nav section ul > li > ul > li a, nav#reply-right-nav section ul > li > ul > li a { 
   padding: 0 0 0 30px;
   font-size: 0.75em;
