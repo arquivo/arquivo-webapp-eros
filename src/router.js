@@ -5,7 +5,6 @@ const sanitizeInputs = require('./sanitize-search-params');
 const savePageNow = require('./services-savepagenow');
 const wayback = require('./wayback');
 const replayNav = require('./replay-nav');
-const fetch = require('node-fetch');
 const { request } = require('express');
 
 module.exports = function (app) {

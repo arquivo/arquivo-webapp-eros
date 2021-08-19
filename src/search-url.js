@@ -2,7 +2,7 @@ const config = require('config');
 const sanitizeInputs = require('./sanitize-search-params');
 const CDXSearchApiRequest = require('./apis/cdx-api')
 const cdxFilter = require('./filter-cdx')
-const suggestionRequest = require('./apis/suggestion-api')
+const SuggestionApi = require('./apis/suggestion-api')
 
 module.exports = function (req, res) {
     const requestData = sanitizeInputs(req, res);
@@ -17,8 +17,9 @@ module.exports = function (req, res) {
         requestData.set('viewMode', viewModeDefault);
     }
     const apiRequest = new CDXSearchApiRequest();
+    const suggestionRequest = new SuggestionApi();
 
-    suggestionRequest(requestData.get('q'), requestData.get('l') ?? 'pt',
+    suggestionRequest.getSuggestion(requestData.get('q'), requestData.get('l') ?? 'pt',
         (suggestion) => {
             apiRequest.get(requestData,
                 (apiData) => {

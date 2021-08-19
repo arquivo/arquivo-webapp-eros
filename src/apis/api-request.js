@@ -1,14 +1,16 @@
 const https = require('https');
 const http = require('http');
 class ApiRequest {
-    constructor(apiUrl, defaultApiParams = {}) {
+    constructor(apiUrl, defaultApiParams = {}, defaultApiReply = {}) {
         this.apiReply = '';
-        this.apiData = {};
+        this.apiData = defaultApiReply;
         this.apiUrl = apiUrl;
         this.defaultApiParams = defaultApiParams;
+        this.defaultApiReply = defaultApiReply;
         this.dataFunction = (requestData) => { return (d) => { this.apiReply = this.apiReply + d.toString(); } };
         this.endFunction = (requestData) => { return () => { this.apiData = JSON.parse(this.apiReply); } };
         this.closeFunction = (requestData, callback) => { return () => { callback(this.apiData); } };
+        this.errorFunction = (requestData, callback) => { return (e) => { console.error(e); callback(this.defaultApiReply); } };
     }
 
     get(requestData, callback) {
@@ -18,13 +20,21 @@ class ApiRequest {
         } else {
             get = http.get;
         }
-        get(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
+        try {
+            const apiReq = get(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
             (apiRes) => {
                 apiRes.on('data', this.dataFunction(requestData));
                 apiRes.on('end', this.endFunction(requestData));
                 apiRes.on('close', this.closeFunction(requestData, callback));
-                apiRes.on('error', (e) => console.error(e));
-            });
+                apiRes.on('error', this.errorFunction(requestData, callback));
+            })
+            apiReq.end();
+            apiReq.on('error', this.errorFunction(requestData, callback));
+
+        } catch (e) {
+            this.errorFunction(requestData,callback)(e);
+        }
+        
 
     }
 

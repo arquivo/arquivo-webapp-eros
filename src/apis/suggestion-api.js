@@ -1,31 +1,32 @@
-const https = require('https');
-const http = require('http');
+const ApiRequest = require('./api-request')
 const config = require('config');
 
-module.exports = function (query, lang, callback) {
-    let suggestionReply = '';
-    let suggestion = query;
+class SuggestionApiRequest extends ApiRequest {
+    constructor() {
+        const defaultApiParams = {
+            query: '',
+            l: 'pt',
+        }
+        const defaultApiReply = '';
 
-    const suggestionRequestData = new URLSearchParams({
-        query: query,
-        l: lang,
-    });
-    const suggestionUrl = config.get('query.suggestion.api')
-    const get = suggestionUrl.startsWith('https') ? https.get : http.get;
-    get(suggestionUrl + '?' + suggestionRequestData.toString(),
-        (response) => {
-            response.on('data', (d) => { suggestionReply = suggestionReply + d.toString().split("\n").join('') });
-            response.on('end', () => {
-                const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
-                if (suggestionRegex.test(suggestionReply)) {
-                    suggestion = suggestionReply.match(suggestionRegex)[1];
-                }
-            });
-            response.on('close', () => {
-                callback(suggestion);
-            })
+        super(config.get('query.suggestion.api'),defaultApiParams,'');
+        this.dataFunction = (requestData) => { return (d) => { this.apiReply = this.apiReply + d.toString().split("\n").join(''); } };
+        this.endFunction = (requestData) => { return () => { 
+            const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
+            if (suggestionRegex.test(this.apiReply)) {
+                this.apiData = this.apiReply.match(suggestionRegex)[1];
+            }
+        } };
+    }
 
+    getSuggestion (query, lang, callback) {
+        const requestData = new URLSearchParams({
+            query: query,
+            l: lang,
         });
-    // suggestionRequest.on('error',(e) => handleError(e));
-
+        this.get(requestData,callback);
+    }
 }
+
+
+module.exports = SuggestionApiRequest;

@@ -55,7 +55,11 @@ module.exports = function (req, res) {
                 } else {
                     renderError();
                 }
-            })
+            }).
+            catch(error => {
+                console.error(error);
+                renderError();
+            });
     }
 
     const noFrameUrl = config.get('noFrame.replay.url') + '/' + req.params.url + (req.params['0'] ?? '')
