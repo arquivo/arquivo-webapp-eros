@@ -765,8 +765,8 @@ nav#left-nav section ul, nav#options-right-nav section ul, nav#replay-left-nav s
   text-align: left;  
 }
 
-nav#left-nav section ul > li:first-child, nav#left-nav section ul > li#menu-images-advanced-search, nav#options-right-nav section ul > li:first-child, nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
-  border-top: none;     
+nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul > li:first-child { 
+  border-top: 1px solid #e3e3e32e;     
 }
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
