@@ -790,7 +790,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   display: block;
   text-decoration: none;
   color: white;
-  padding: 2px 16px;
+  padding: 0px 16px;
   font-size: 0.75em;  
 }
 
