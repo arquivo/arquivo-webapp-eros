@@ -713,8 +713,12 @@ body#homepage button#nav-options-right-button  {
   position: relative;
   right: 0; 
   font-weight: normal;
-  opacity: 0.7;
+  opacity: 0.6;
   
+}
+
+ul.replay-accordion li:nth-child(3) {
+  border-top: none;
 }
 
 .active:after {
