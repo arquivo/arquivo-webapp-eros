@@ -713,6 +713,7 @@ body#homepage button#nav-options-right-button  {
   position: relative;
   right: 0; 
   font-weight: normal;
+  opacity: 0.7;
   
 }
 
@@ -724,6 +725,16 @@ body#homepage button#nav-options-right-button  {
   right: 0;
   float: right;
   font-weight: normal;  
+}
+
+ul li a:hover:after {
+  color: rgba(3,63,114,1);
+  opacity: 1;
+}
+
+ul li a:active:after { 
+  color: rgb(255, 255, 255);
+  opacity: 1;
 }
 
 body#table-list-results main .painel {
@@ -776,7 +787,7 @@ body#landing-replay nav#replay-left-nav li.date-selected a:hover {
  }
 
 nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
-  display: inline-block;
+  display: block;
   text-decoration: none;
   color: white;
   padding: 2px 16px;
