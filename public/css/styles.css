@@ -709,17 +709,19 @@ body#homepage button#nav-options-right-button  {
   content: "\f0ab";
   font-family: FontAwesome; 
   float: right;
-  font-size: 1.1em;
-  position: absolute;
-  right: 16px; 
+  font-size: 0.9em;
+  position: relative;
+  right: 0; 
   font-weight: normal;
+  
 }
 
 .active:after {
   content: "\f0aa";
   font-family: FontAwesome;
-  font-size: 1.1em;
-  position: absolute;
+  font-size: 0.9em;
+  position: relative;
+  right: 0;
   float: right;
   font-weight: normal;  
 }
@@ -774,9 +776,7 @@ body#landing-replay nav#replay-left-nav li.date-selected a:hover {
  }
 
 nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#replay-left-nav section ul > li a, nav#replay-right-nav section ul > li a { 
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: inline-block;
   text-decoration: none;
   color: white;
   padding: 2px 16px;
@@ -784,9 +784,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
 }
 
 nav#left-nav section ul > li a { 
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display: block;
   text-decoration: none;
   color: white;
   padding: 2px 16px;
