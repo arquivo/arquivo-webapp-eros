@@ -718,7 +718,7 @@ body#homepage button#nav-options-right-button  {
 }
 
 ul.replay-accordion li:nth-child(3) {
-  border-top: none;
+  border-top: none !important;
 }
 
 .active:after {
