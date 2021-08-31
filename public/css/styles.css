@@ -769,6 +769,15 @@ nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul
   border-top: 1px solid #e3e3e32e;     
 }
 
+nav#replay-right-nav section ul > li:first-child { 
+  border-top: 1px solid #e3e3e32e;
+  display: block;     
+}
+
+nav#replay-right-nav section ul > li:first-child:hover { 
+  background-color: white;    
+}
+
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
   border-top: 1px solid #e3e3e32e;  
   display: block;  
@@ -791,7 +800,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   text-decoration: none;
   color: white;
   padding: 0px 16px;
-  font-size: 0.7em;  
+  font-size: 0.75em;  
 }
 
 nav#left-nav section ul > li a { 
