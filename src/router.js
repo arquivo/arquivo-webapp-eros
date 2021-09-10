@@ -142,7 +142,7 @@ module.exports = function (app) {
     app.get('/services/savepagenow', function (req, res) {
         const requestData = new URLSearchParams(req.query);
         res.render('pages/services-savepagenow',{
-            url: '',
+            url: (requestData.get('url') ?? '').trim(),
             error: false
         });
     });
