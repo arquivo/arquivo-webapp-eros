@@ -1,3 +1,4 @@
+const backendRoutes = require('./backend-routes');
 const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
@@ -8,6 +9,9 @@ const replayNav = require('./replay-nav');
 const { request } = require('express');
 
 module.exports = function (app) {
+    //Backend routes
+    backendRoutes(app);
+
     // Homepage 
     app.get('/', function (req, res) {
         res.render('pages/home');
