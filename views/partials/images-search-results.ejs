@@ -1,11 +1,17 @@
-<% if (suggestion != requestData.get('q')) { %>
-    <%- include("../templates/fragments/search-suggestion") -%>
-<% } %>
+
 
 <% if (apiData.totalItems == 0) { %>
-    <%- include("../templates/body/body-not-found", {query: requestData.get('q')}) -%>
+    <%- include("../templates/body/body-not-found", {
+    query: requestData.get('q'), 
+    suggestion: suggestion,
+    searchType: 'image-search',
+  }) -%>
 <% } else { %>
-    
+
+    <% if (suggestion != requestData.get('q')) { %>
+        <%- include("../templates/fragments/search-suggestion") -%>
+    <% } %>
+
     <!-- starts pages search results: create a fetch loop here -->
 
     <p id="estimated-results"><%= t('common.estimated-results',{

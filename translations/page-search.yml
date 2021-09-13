@@ -35,12 +35,33 @@ not-found:
     title:
       en: 'We suggest that you:'
       pt: 'Sugerimos que:'
-    first:
-      en: Widen the time interval
-      pt: Aumente o intervalo de tempo
-    second:
-      en: Try more general words
-      pt: Pesquise outras palavras
-    third:
-      en: Try the <a href="/page/advanced/search">Advanced search</a>
-      pt: Experimente a <a href="/page/advanced/search">Pesquisa avançada</a>
+    page-search:
+      first:
+        en: Widen the time interval
+        pt: Aumente o intervalo de tempo
+      second:
+        en: Try more general words
+        pt: Pesquise outras palavras
+      third:
+        en: Try the <a href="/page/advanced/search">Advanced search</a>
+        pt: Experimente a <a href="/page/advanced/search">Pesquisa avançada</a>
+    image-search:
+      first:
+        en: Widen the time interval
+        pt: Aumente o intervalo de tempo
+      second:
+        en: Try more general words
+        pt: Pesquise outras palavras
+      third:
+        en: Try the <a href="/image/advanced/search">Advanced search</a>
+        pt: Experimente a <a href="/image/advanced/search">Pesquisa avançada</a>
+    url-search:
+      first:
+        en: Verify the URL
+        pt: Verifique o URL
+      second:
+        en: <a href="//arquivo.pt/sugerir">Suggest</a> the site to be archived
+        pt: <a href="//arquivo.pt/sugerir">Sugira</a> a página para que seja arquivada
+      third:
+        en: <a href="//timetravel.mementoweb.org/">Search other web archives</a>
+        pt: <a href="//timetravel.mementoweb.org/">Pesquise outros arquivos web</a>

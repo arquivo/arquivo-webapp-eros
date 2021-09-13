@@ -1,18 +1,23 @@
 <% if (typeof query == 'undefined') { query = ''} %>
+<% if (typeof suggestion == 'undefined') { suggestion = queryM } %>
+<% if (typeof searchType == 'undefined') { searchType = 'page-search'; } %>
 
 <!-- starts pages search results: create a fetch loop here -->
 <section id="not-found-container" class="not-found-container-cl">
     <h3><%= t('page-search.not-found.accessibility.title') %></h3>    
-    
+
     <!-- starts not-found-message --> 
     <section id="not-found-message">
      <h4><%= t('page-search.not-found.accessibility.message') %></h4> 
      <p id="no-results-were-found" >&rarr; <%= t('page-search.not-found.message') %> <span class="bold-text"><%= query %></span></p>
+     <% if (suggestion != query) { %>
+        <%- include("../fragments/search-suggestion") -%>
+     <% } %>
      <ul>
         <li class="list-title">&rarr; <%= t('page-search.not-found.suggestions.title') %></li>
-        <li class="fix-padding"><%= t('page-search.not-found.suggestions.first') %></li>
-        <li><%= t('page-search.not-found.suggestions.second') %></li>
-        <li><%- t('page-search.not-found.suggestions.third') %></li>
+        <li class="fix-padding"><%- t('page-search.not-found.suggestions.'+searchType+'.first') %></li>
+        <li><%- t('page-search.not-found.suggestions.'+searchType+'.second') %></li>
+        <li><%- t('page-search.not-found.suggestions.'+searchType+'.third') %></li>
     </ul>
     </section> 
     <!-- ends not-found-message -->  

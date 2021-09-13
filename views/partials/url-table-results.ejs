@@ -1,10 +1,15 @@
-<% if (suggestion != requestData.get('q')) { %>
-  <%- include("../templates/fragments/search-suggestion") -%>
-<% } %>
+
 
 <% if (apiData.length == 0) { %>
-  <%- include("../templates/body/body-not-found", {query: requestData.get('q')}) -%>
+  <%- include("../templates/body/body-not-found", {
+    query: requestData.get('q'), 
+    suggestion: suggestion,
+    searchType: 'url-search',
+  }) -%>
 <% } else { %>
+  <% if (suggestion != requestData.get('q')) { %>
+    <%- include("../templates/fragments/search-suggestion") -%>
+  <% } %>
 <section id="url-results" class="url-results-cl">
   <h3><%= t('url-search.accessibility.title') %></h3>    
   <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{

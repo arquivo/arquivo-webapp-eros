@@ -2556,6 +2556,10 @@ section#not-found-message > ul, section#search-suggestion-message > ul  {
   display: list-item;
 }
 
+section#not-found-container section#search-suggestion-container {
+  margin-top: 10px;
+}
+
 section#not-found-message > ul li.fix-padding, section#search-suggestion-message > ul li.fix-padding   {
   padding-top: 10px; 
 }
