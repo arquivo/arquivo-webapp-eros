@@ -19,7 +19,13 @@ class CDXSearchApiRequest extends ApiRequest {
                 this.apiReply = this.apiReply + d.toString();
                 let endIndex = this.apiReply.indexOf('}') + 1;
                 while (endIndex > 0) {
-                    this.apiData.push(JSON.parse(this.apiReply.slice(0, endIndex)))
+                    let currentJson = this.apiReply.slice(0, endIndex);
+                    try {
+                        let currentData = JSON.parse(currentJson);
+                        this.apiData.push(currentData);
+                    } catch {
+
+                    }
                     this.apiReply = this.apiReply.slice(endIndex + 1)
                     endIndex = this.apiReply.indexOf('}') + 1;
                 }

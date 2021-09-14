@@ -15,5 +15,8 @@ module.exports = function (app) {
         app.get(route+'/:url*',function(req, res) {
             res.redirect(transformUrl(req));
         })
+        app.get(route,function(req, res) {
+            res.redirect(transformUrl(req));
+        })
     })
 }
