@@ -3,73 +3,17 @@
     src="<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>">
     <h1>iframe content</h1>
 </iframe>
+<script src="/js/replay.js"></script>
 <script>
-    $(function () {
-        $('#replay-left-nav').on('click', '.accordion-header', function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            if ($this.next().hasClass('show')) {
-                $this.removeClass('active');
-                $this.next().removeClass('show');
-                $this.next().slideUp(150);
-            } else {
-                $this.toggleClass('active');
-                $this.next().toggleClass('show');
-                $this.next().slideToggle(150);
-            }
-        });
-
-        $('button.cancel').click((e) => {
-            e.preventDefault();
-            $.modal.close();
-        });
-
-        $('#screenshot button.confirm').click(() => {
-            var requestURL = "<%- config.get('screenshot.url') %>?url=<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>&download=true&width=" + window.screen.width + "&height=" + window.screen.height;
-            $.modal.close();
-            window.open(requestURL, "_blank");
-        })
-
-        $('#print button.confirm').click(() => {
-            var requestURL = "<%- config.get('screenshot.url') %>?url=<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>&download=false";
-
-            let divPrintMe = document.getElementById("divPrintMe");
-            let imgElem = document.getElementById("imgToPrint");
-
-            if (imgElem == null) {
-                imgElem = document.createElement('img');
-                imgElem.setAttribute("id", "imgToPrint");
-                imgElem.setAttribute("width", "600px");
-                imgElem.style.display = 'inherited';
-                divPrintMe.appendChild(imgElem);
-            }
-
-            $.modal.close();
-            $('#loading-screen').modal({ escapeClose: false, clickClose: false, showClose: false });
-            imgElem.addEventListener('load', function () {
-                $.modal.close();
-                let printContents = document.getElementById("divPrintMe").innerHTML;
-                let originalContents = document.body.innerHTML;
-
-                document.body.innerHTML = printContents;
-
-                window.print();
-
-                document.body.innerHTML = originalContents;
-            });
-            imgElem.src = requestURL;
-        });
-
-        $('#complete-the-page button.confirm').click(() => {
-            window.open('/services/complete-page?url=<%- requestedPage.url %>&timestamp=<%- requestedPage.timestamp %>','_blank');
-            $.modal.close();
-        });
-
-
-        $('#replay-with-old-browser button.confirm').click(() => {
-            window.open('http://oldweb.today/firefox/<%- requestedPage.timestamp %>/<%- requestedPage.url %>');
-            $.modal.close();
-        });
+    const arquivoReplay = new ArquivoReplay({
+        "noFrame.replay.url": "<%- config.get('noFrame.replay.url') %>",
+        "requestedPage.fullUrl": "<%- requestedPage.fullUrl %>",
+        "screenshot.url": "<%- config.get('screenshot.url') %>",
+        "requestedPage.url": "<%- requestedPage.url %>",
+        "requestedPage.timestamp": "<%- requestedPage.timestamp %>",
+        "preservedByArquivo": "<%= t('wayback.title.preserved-by-arquivo'); %>",
+        "loader.html": `<%- include('../fragments/preloader'); %>`,
     });
+
 </script>
 <!-- ends replay content -->

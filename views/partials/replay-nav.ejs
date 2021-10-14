@@ -108,7 +108,7 @@
                     const href = "/wayback/"+item.timestamp+'/'+item.url;
                     const time = item.hours + 'h' + item.minutes;
                     %>
-                        <li class="<%= classNames %>"><a href="<%- href %>"><%- time %></a></li>
+                        <li class="<%= classNames %>"><a href="<%- href %>" replay-url="<%= item.url %>" replay-timestamp="<%= item.timestamp %>"><%- time %></a></li>
                     <%
                 });
                 //Close days list

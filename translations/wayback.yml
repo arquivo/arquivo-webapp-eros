@@ -86,4 +86,7 @@ nav-menu:
   list:
     en: List
     pt: Lista
-
+title:
+  preserved-by-arquivo:
+    en: preserved by Arquivo.pt
+    pt: preservada pelo Arquivo.pt
