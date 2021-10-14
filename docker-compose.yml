@@ -10,3 +10,4 @@ services:
       volumes:
         - ./:/home/node/app
       command: sh -c 'echo "10.0.23.61      arquivo.pt" >> /etc/hosts; npm start'
+      restart: on-failure
