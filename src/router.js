@@ -86,46 +86,10 @@ module.exports = function (app) {
         res.render('pages/images-advanced-search');
     });
 
-    // starts Replay
-    app.get('/replay', function (req, res) {
-        res.render('pages/replay',{requestedPage: {
-            timestamp: '20210720085022',
-            url: 'https://www.publico.pt/'
-        }});
-    });
-    // ends Replay
-
-
     // starts wayback
     app.get('/wayback/:url*', function (req, res) {
         wayback(req,res);
     });
-
-
-
-    // starts not found page
-    app.get('/not-found', function (req, res) {
-        res.render('pages/not-found');
-    });
-    // ends not found page
-
-    // starts not found page
-    app.get('/search-suggestion', function (req, res) {
-        res.render('pages/search-suggestion');
-    });
-    // ends not found page
-
-    // starts show table 
-    app.get('/replay-table-results', function (req, res) {
-        res.render('pages/replay-table-results');
-    });
-    // ends show table
-
-    // starts show list 
-    app.get('/replay-list-results', function (req, res) {
-        res.render('pages/replay-list-results');
-    });
-    // ends show list    
 
     // starts partials
     app.get('/partials/:id', function (req, res) {

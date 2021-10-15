@@ -13,9 +13,6 @@ class ArquivoReplay {
 
     setConfig(key, value) {
         this.configs[key] = value;
-        if(key == 'requestedPage.fullUrl'){
-            window.history.pushState({},"", '/wayback/'+value);
-        }
     }
 
     init() {
@@ -37,10 +34,8 @@ class ArquivoReplay {
         $('#replay-left-nav').on('click', 'li.menu-pages-replay-date-hour', function (e) {
             e.preventDefault();
             const timestamp = $(this).find('a').attr('replay-timestamp');
-            replay.setConfig('requestedPage.timestamp', timestamp);
-            replay.setConfig('requestedPage.fullUrl', timestamp + '/' + replay.getConfig('requestedPage.url'));
-            replay.updateTimestamp();
-            $('#replay-in-iframe').attr('src',replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl'))
+            replay.setUrlAndTimestamp(replay.getConfig('requestedPage.url'),timestamp);
+            replay.refreshIframe();
 
         });
 
@@ -95,6 +90,43 @@ class ArquivoReplay {
             window.open('http://oldweb.today/firefox/' + replay.getConfig('requestedPage.timestamp') + '/' + replay.getConfig('requestedPage.url'));
             $.modal.close();
         });
+
+        window.onpopstate = function(e){
+            if(e.state && e.state.url && e.state.timestamp){
+                replay.setUrlAndTimestamp(e.state.url,e.state.timestamp,false);
+                replay.refreshIframe();
+            }
+        };
+    }
+
+    setUrlAndTimestamp(url,timestamp,addToHistory = true){
+        const replay = this;
+        if((timestamp + '/' + url).replace(/\/+$/g, '') != replay.getConfig('requestedPage.fullUrl').replace(/\/+$/g, '')){
+            replay.setConfig('requestedPage.timestamp', timestamp);
+            replay.setConfig('requestedPage.fullUrl', timestamp + '/' + url);
+
+            if(addToHistory && window.history && window.history.pushState){
+                if(
+                    window.history.state && window.history.state.url && window.history.state.timestamp && 
+                    window.history.state.url.replace(/\/+$/g, '') == url.replace(/\/+$/g, '') && window.history.state.timestamp == timestamp
+                ) {
+                } else {
+                    window.history.pushState(
+                        { url: url, timestamp: timestamp },
+                        document.title, 
+                        '/wayback/'+ timestamp + '/' + url
+                    );
+                }
+            }
+
+            if (url != replay.getConfig('requestedPage.url')) {
+                replay.setConfig('requestedPage.url', url);
+                replay.updateFrame();
+            } else {
+                replay.updateTimestamp();
+            }
+        }
+        
     }
 
     pywbCommunication() {
@@ -105,24 +137,12 @@ class ArquivoReplay {
         window[eventMethod](messageEvent, (e) => {
             const key = e.message ? "message" : "data";
             if (e[key] && e[key].wb_type) {
+                
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
-
-                if (
-                    ['load', 'replace-url', 'unload'].includes(e[key].wb_type)
-                    && (e[key].ts != replay.getConfig('requestedPage.timestamp') || e[key].url != replay.getConfig('requestedPage.url'))
-                ) {
-                    if (e[key].url != replay.getConfig('requestedPage.url')) {
-                        replay.setConfig('requestedPage.timestamp', e[key].ts);
-                        replay.setConfig('requestedPage.url', e[key].url);
-                        replay.setConfig('requestedPage.fullUrl', e[key].ts + '/' + e[key].url);
-                        replay.updateFrame();
-                    } else {
-                        replay.setConfig('requestedPage.timestamp', e[key].ts);
-                        replay.setConfig('requestedPage.fullUrl', e[key].ts + '/' + e[key].url);
-                        replay.updateTimestamp();
-                    }
+                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
+                    replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
                 }
             }
         }, true);
@@ -179,11 +199,22 @@ class ArquivoReplay {
             })
         }
         if(rescroll){
-            const scrollTarget = target.scrollParent();
-            const height = scrollTarget.height();
-            const targetHeight = target.height();
-            const offset = target.offset().top;
-            scrollTarget[0].scrollTop = offset - height / 2 - targetHeight;
+            const target = $('.date-selected').first();
+            if(target.length){
+                const scrollTarget = target.scrollParent();
+                const height = scrollTarget.height();
+                const targetHeight = target.height();
+                const offset = target.offset().top;
+                scrollTarget[0].scrollTop = offset - height / 2 - targetHeight;
+            }
         }
+    }
+
+    refreshIframe(){
+        const replay = this;
+        let iframe = document.getElementById('replay-in-iframe');
+        let frame = iframe.cloneNode();
+        frame.src = replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl');
+        iframe.parentNode.replaceChild(frame, iframe);
     }
 }

@@ -5,8 +5,11 @@
       <ul class="replay-accordion show">
         <!-- starts table and list: show results as a table or as a list -->
         <li id="replay-table">
-          <form action="/replay-table-results" method="GET"><button type="submit"><span class="fas fa-table"
-                aria-hidden="true"></span><%= t('wayback.nav-menu.table'); %></button></form>
+          <form action="/url/search" method="GET"><button type="submit"><span class="fas fa-table"
+                aria-hidden="true"></span><%= t('wayback.nav-menu.table'); %></button>
+                <input type="hidden" name="q" value="<%= requestData.get('url') %>">
+                <input type="hidden" name="viewMode" value="table">
+          </form>
         </li>
         <li id="replay-list">
           <form action="/replay-list-results" method="GET"><button type="submit"><span class="fas fa-list"
