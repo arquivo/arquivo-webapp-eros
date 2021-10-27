@@ -47,7 +47,7 @@ module.exports = function (app) {
         const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
 
         if (!requestData.has('q') || requestData.get('q') == '') {
-            res.render('pages/home');
+            res.render('pages/home',{searchType:'images'});
         } else {
             if(urlPattern.test(requestData.get('q'))){
                 requestData.set('siteSearch',requestData.get('q'));

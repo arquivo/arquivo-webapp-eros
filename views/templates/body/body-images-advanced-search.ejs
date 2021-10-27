@@ -1,55 +1,82 @@
+<% 
+let values = {
+  adv_and: '',
+  adv_phr: '',
+  adv_not: '',
+  type: 'all',
+  size: 'all',
+  safeSearch: 'on',
+  siteSearch: '',
+}
+
+let selectFor = function(key,value){
+  return (value == values[key]) ? 'selected' : '';
+}
+if(typeof requestData != 'undefined'){
+  Object.keys(values)
+    .filter(key => requestData.has(key))
+    .forEach(key => {
+      values[key] = requestData.get(key);
+    });
+}
+
+%> 
+
 <!-- starts image advanced search form container -->
 <section class="form-container">
-    <h3>Image advanced search form</h3>
+    <h3><%= t('advanced-image-search.accessibility.title') %></h3>
 <!-- starts pages advanced search -->
-<form id="advanced-search-form-images" class="advanced-search-form" action="images-search-results" method="GET">
+<form id="advanced-search-form-images" class="advanced-search-form" action="/image/search" method="GET">
 <fieldset>
-  <legend>Fill the form</legend> 
+  <legend><%= t('advanced-image-search.accessibility.legend') %></legend> 
    <!-- With these words -->
-   <label for="words"><strong>Related</strong> to these Words:</label>
-   <input id="words" type="text" name="words">
-   <small>e.g.: group draw</small>
+   <label for="adv_and"><%- t('advanced-image-search.fieldset.with.label') %></label>
+   <input type="text" name="adv_and" value=<%= values.adv_and %>>
+   <small><%= t('advanced-image-search.fieldset.with.example') %></small>
    <!-- With this phrase -->
-   <label for="words"><strong>Related</strong> to this expression or sentence:</label>
-   <input id="words" type="text" name="words">
-   <small>e.g.: euro 2004</small>
+   <label for="adv_phr"><%- t('advanced-image-search.fieldset.phrase.label') %></label>
+   <input type="text" name="adv_phr" value=<%= values.adv_phr %>>
+   <small><%= t('advanced-image-search.fieldset.phrase.example') %></small>
    <!-- Any of these words -->
-   <label for="words"><strong>Not releated</strong> to this expression or sentence:</label>
-   <input id="words" type="text" name="words">
-   <small>e.g.: rugby</small>   
+   <label for="adv_not"><%- t('advanced-image-search.fieldset.without.label') %></label>
+   <input type="text" name="adv_not" value=<%= values.adv_not %>>
+   <small><%= t('advanced-image-search.fieldset.without.example') %></small>   
+   <!-- Between these dates -->
+  <label><%- t('advanced-image-search.fieldset.date.label') %></label> 
+  <%- include('../fragments/search-tools-date-slider') %>
    <!-- Formats -->
-   <label for="format-type"><strong>Images</strong> with the format:</label>
-   <select id="format-type" name="format-type" class="">
-    <option value="all">All formats</option>
-    <option value="jpg">Joint Photographic Experts Group (.jpg)</option>
-    <option value="png">Portable Network Graphics (.png)</option>
-    <option value="gif">Graphics Interchange Format (.gif)</option>
-    <option value="bmp">Bitmap Image File (.bmp)</option>
-    <option value="webp">WEBP (.webp)</option>
+   <label for="type"><%- t('advanced-image-search.fieldset.format.label') %></label>
+   <select id="format-type" name="type" class="">
+    <option value="all" <%= selectFor('type','all') %>><%= t('advanced-image-search.fieldset.format.option.all') %></option>
+    <option value="jpg" <%= selectFor('type','jpg') %>>Joint Photographic Experts Group (.jpg)</option>
+    <option value="png" <%= selectFor('type','png') %>>Portable Network Graphics (.png)</option>
+    <option value="gif" <%= selectFor('type','gif') %>>Graphics Interchange Format (.gif)</option>
+    <option value="bmp" <%= selectFor('type','bmp') %>>Bitmap Image File (.bmp)</option>
+    <option value="webp" <%= selectFor('type','webp') %>>WEBP (.webp)</option>
    </select>  
    <!-- words -->
-   <label for="image-size"><strong>Size:</strong></label>
-    <select id="image-size" name="image-size" class="">
-     <option value="all" selected>All formats</option>
-     <option value="small">Small</option>
-     <option value="medium">Medium</option>
-     <option value="large">Large</option>
+   <label for="size"><%- t('advanced-image-search.fieldset.size.label') %></label>
+    <select id="image-size" name="size" class="">
+     <option value="all" <%= selectFor('size','all') %>><%= t('advanced-image-search.fieldset.size.option.all') %></option>
+     <option value="sm" <%= selectFor('size','sm') %>><%= t('advanced-image-search.fieldset.size.option.small') %></option>
+     <option value="md" <%= selectFor('size','md') %>><%= t('advanced-image-search.fieldset.size.option.medium') %></option>
+     <option value="lg" <%= selectFor('size','lg') %>><%= t('advanced-image-search.fieldset.size.option.large') %></option>
     </select>  
    <!-- words -->
-   <label for="safe-search"><strong>Safe search:</strong></label>
-   <select id="safe-search" name="safe-search" class="">
-    <option value="show-all">All</option>
-    <option value="remove-explicit">Remove explicit</option>
+   <label for="safeSearch"><%- t('advanced-image-search.fieldset.safeSearch.label') %></label>
+   <select id="safeSearch" name="safeSearch" class="">
+    <option value="on" <%= selectFor('safeSearch','on') %>><%= t('advanced-image-search.fieldset.safeSearch.option.remove-explicit') %></option>
+    <option value="off" <%= selectFor('safeSearch','off') %>><%= t('advanced-image-search.fieldset.safeSearch.option.all') %></option>
    </select>  
 
-   <label for="website"><strong>Website:</strong></label>
-   <input id="website" type="text" name="website">
-   <small class="last-margin">e.g.: www.fccn.pt</small> 
+   <label for="siteSearch"><%- t('advanced-image-search.fieldset.website.label') %></label>
+   <input id="website" type="text" name="siteSearch" value=<%= values.siteSearch %>>
+   <small class="last-margin"><%= t('advanced-image-search.fieldset.website.example') %></small> 
     
   <!-- starts advanced search navigation -->
   <section class="navigation-tools">
     <h3>Pages advanced search navigation</h3> 
-    <button type="submit" class="search-form-advanced-button" value="Advanced Search">Search &rarr;</button>
+    <button type="submit" class="search-form-advanced-button" value="Advanced Search"><%= t('advanced-image-search.fieldset.search') %> &rarr;</button>
   </section> 
   <!-- ends advanced search navigation -->
 </fieldset>      

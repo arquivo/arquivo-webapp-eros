@@ -1,0 +1,81 @@
+#translations for advanced search
+accessibility:
+  title:
+    pt: Formulário de pesquisa avançada de imagens
+    en: Image advanced search form
+  legend:
+    pt: Preencha o formulário
+    en: Fill the form
+fieldset:
+  date:
+    label:
+      pt: '<strong>Data</strong>:'
+      en: '<strong>Date</strong>:'
+  with:
+    label: 
+      pt: '<strong>Relacionadas</strong> com estas palavras:'
+      en: '<strong>Related</strong> to these Words:'
+    example:
+      pt: 'ex. expo 98'
+      en: 'e.g. group draw'
+  phrase:
+    label:
+      pt: '<strong>Relacionadas</strong> com esta expressão ou frase:'
+      en: '<strong>Related</strong> to this expression or sentence:'
+    example:
+      pt: 'ex. pavilhão da utopia'
+      en: 'e.g. euro 2004'
+  without:
+    label:
+      pt: '<strong>Não relacionadas</strong> com estas palavras:'
+      en: '<strong>Not releated</strong> to this expression or sentence:'
+    example:
+      pt: 'ex. concerto'
+      en: 'e.g. rugby'
+  format:
+    label:
+      pt: '<strong>Imagens</strong> com o formato:'
+      en: '<strong>Images</strong> with the format:'
+    option:
+      all:
+        pt: Todos os formatos
+        en: All formats
+  size:
+    label:
+      pt: '<strong>Imagens</strong>:'
+      en: '<strong>Images</strong>:'
+    option:
+      all:
+        pt: Mostrar todas
+        en: Show all
+      small:
+        pt: Pequenas
+        en: Small
+      medium:
+        pt: Médias
+        en: Medium
+      large:
+        pt: Grandes
+        en: Large
+  safeSearch:
+    label:
+      pt: '<strong>Pesquisa segura:</strong>'
+      en: '<strong>Safe search:</strong>'
+    option:
+      remove-explicit:
+        pt: Excluir impróprias
+        en: Remove explicit
+      all:
+        pt: Mostrar todas
+        en: Show all
+  website:
+    label:
+      pt: '<strong>Sítio Web</strong>:'
+      en: '<strong>Website</strong>:'
+    example:
+      pt: 'ex. www.fccn.pt'
+      en: 'e.g. www.fccn.pt'
+  search:
+    en: Search
+    pt: Pesquisar
+    
