@@ -117,7 +117,12 @@ module.exports = function (app) {
 
     // savepagenow recording page
     app.post('/services/savepagenow', function (req, res) {
-        savePageNow(req,res);
+        const requestData = new URLSearchParams(req.query);
+        if(!requestData.has('logging')){
+            savePageNow(req,res);
+        } else {
+            res.end();
+        }
     });
 
     // patching 

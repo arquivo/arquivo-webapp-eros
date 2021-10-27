@@ -14,11 +14,13 @@ module.exports = function (req, res) {
             error: true,
             errorType: errorType
         });
+        fetch(config.get('backend.url')+'/services/savepagenow?url='+encodeURIComponent(url)+'&success=false&logging=true',{method: 'POST'});
     }
     const renderOk = function () {
         res.render('pages/services-savepagenow-save', {
             url: config.get('services.savepagenow.url') + url
         });
+        fetch(config.get('backend.url')+'/services/savepagenow?url='+encodeURIComponent(url)+'&success=true&logging=true',{method: 'POST'});
     }
 
     let validUrl = !!url && urlPattern.test(url);
