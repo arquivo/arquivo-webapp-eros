@@ -87,7 +87,7 @@ class ArquivoReplay {
 
 
         $('#replay-with-old-browser button.confirm').click(() => {
-            window.open('http://oldweb.today/firefox/' + replay.getConfig('requestedPage.timestamp') + '/' + replay.getConfig('requestedPage.url'));
+            window.open( replay.getConfig('oldweb.today.fullUrl') + '#' + replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl'));
             $.modal.close();
         });
 
