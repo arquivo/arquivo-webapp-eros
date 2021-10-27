@@ -1,5 +1,5 @@
-<% if (typeof query == 'undefined') { query = ''} %>
-<% if (typeof suggestion == 'undefined') { suggestion = queryM } %>
+<% if (typeof query == 'undefined') { query = ''; } %>
+<% if (typeof suggestion == 'undefined') { suggestion = query; } %>
 <% if (typeof searchType == 'undefined') { searchType = 'page-search'; } %>
 
 <!-- starts pages search results: create a fetch loop here -->
@@ -18,6 +18,9 @@
         <li class="fix-padding"><%- t('page-search.not-found.suggestions.'+searchType+'.first') %></li>
         <li><%- t('page-search.not-found.suggestions.'+searchType+'.second') %></li>
         <li><%- t('page-search.not-found.suggestions.'+searchType+'.third') %></li>
+        <% if (searchType == 'url-search') { %> 
+        <li><%- t('page-search.not-found.suggestions.url-search.fourth',{url:query}) %></li>
+        <% } %>
     </ul>
     </section> 
     <!-- ends not-found-message -->  

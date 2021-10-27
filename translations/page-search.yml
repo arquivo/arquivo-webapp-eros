@@ -65,3 +65,6 @@ not-found:
       third:
         en: <a href="//timetravel.mementoweb.org/">Search other web archives</a>
         pt: <a href="//timetravel.mementoweb.org/">Pesquise outros arquivos web</a>
+      fourth:
+        en: Try using <a href="/services/savepagenow?url=${url}">SavePageNow</a> to record the missing webpage 
+        pt: Use o <a href="/services/savepagenow?url=${url}">SavePageNow</a> para gravar a página em falta
