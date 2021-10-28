@@ -7,11 +7,13 @@
     //center on selected date on load
     onload: () => {
       const target = $('.date-selected');
-      const scrollTarget = target.scrollParent();
-      const height = scrollTarget.height(); 
-      const targetHeight = target.height();
-      const offset = target.offset().top;
-      scrollTarget[0].scrollTop = offset - height/2 - targetHeight;
+      if(target.length){
+        const scrollTarget = target.scrollParent();
+        const height = scrollTarget.height(); 
+        const targetHeight = target.height();
+        const offset = target.offset().top;
+        scrollTarget[0].scrollTop = offset - height/2 - targetHeight;
+      }
     }}) %>
 </nav>
 

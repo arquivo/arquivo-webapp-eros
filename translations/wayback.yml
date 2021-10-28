@@ -43,11 +43,18 @@ popups:
       pt: Abrir a página em ecrã inteiro
   replay-with-old-browser:
     accessibility:
-      en: Open the page with an old browser
-      pt: Abrir a página num browser antigo
+      en: Open page in fullscreen
+      pt: Abrir a página em ecrã inteiro
     confirmation:
       en: You are leaving Arquivo.pt to oldweb.today
       pt: Vai sair do Arquivo.pt para o oldweb.today
+  search-other-archives:
+    accessibility:
+      en: Browse other web archives
+      pt: Pesquisar noutros arquivos da web
+    confirmation:
+      en: You are leaving Arquivo.pt to web.archive.org
+      pt: Vai sair do Arquivo.pt para o web.archive.org
 options-menu:
   accessibility:
     en: Right menu navigation
@@ -90,3 +97,10 @@ title:
   preserved-by-arquivo:
     en: preserved by Arquivo.pt
     pt: preservada pelo Arquivo.pt
+not-found:
+  accessibility:
+    en: The requested page is not on our achive
+    pt: Esta página não se encontra no nosso arquivo 
+  search:
+    en: Search other archives
+    pt: Pesquisar noutros arquivos

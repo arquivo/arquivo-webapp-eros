@@ -1,0 +1,18 @@
+<section id="replay-not-found" style="display: none; margin-top:120px; text-align: center;">
+    <a href="/"><img src="https://preprod.arquivo.pt/wayback/static/img/logo.svg" width="250"></a>
+    <h2 class="notArchived"><%= t('wayback.not-found.accessibility') %></h2>
+    <a href="#search-other-archives" rel="modal:open"><button id="otherArchives" class="button">
+        <%= t('wayback.not-found.search') %>
+    </button></a>
+</section>
+
+<!-- starts confirm popup -->
+<section id="search-other-archives" class="modal">
+    <h3><%= t('wayback.popups.search-other-archives.accessibility') %></h3>
+    <ul class="replay-options">
+        <li><p><%= t('wayback.popups.search-other-archives.confirmation') %></p></li>
+        <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
+        <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>
+    </ul>
+</section>
+<!-- ends confirm popup -->

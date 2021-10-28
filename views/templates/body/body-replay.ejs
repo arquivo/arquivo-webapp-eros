@@ -2,6 +2,9 @@
 <iframe id="replay-in-iframe" name="replay-page" title="replay page"
     src="<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>">
 </iframe>
+<!-- starts not found -->
+<%- include('../fragments/replay-not-found'); %>
+<!-- ends not found -->
 <script src="/js/replay.js"></script>
 <script>
     const arquivoReplay = new ArquivoReplay({

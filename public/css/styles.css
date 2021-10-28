@@ -2460,7 +2460,8 @@ img.image-display {
 section#print a.close-modal, 
 section#screenshot a.close-modal,
 section#complete-the-page a.close-modal,
-section#replay-with-old-browser a.close-modal {
+section#replay-with-old-browser a.close-modal,
+section#search-other-archives a.close-modal {
   display: none;
 }
 

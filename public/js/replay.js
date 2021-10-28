@@ -85,9 +85,13 @@ class ArquivoReplay {
             $.modal.close();
         });
 
-
         $('#replay-with-old-browser button.confirm').click(() => {
             window.open( replay.getConfig('oldweb.today.fullUrl') + '#' + replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl'));
+            $.modal.close();
+        });
+
+        $('#search-other-archives button.confirm').click(() => {        
+            window.open( 'https://web.archive.org/web/' + replay.getConfig('requestedPage.fullUrl'));
             $.modal.close();
         });
 
@@ -143,6 +147,10 @@ class ArquivoReplay {
                 }
                 if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
                     replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
+                }
+                if ( e[key].wb_type == 'not-found' ) {
+                    $('#replay-in-iframe').hide();
+                    $('#replay-not-found').show();
                 }
             }
         }, true);
