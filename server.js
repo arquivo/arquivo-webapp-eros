@@ -40,3 +40,5 @@ require('./src/router')(app);
 // Open browser port: ${port} 
 //////////////////////////////////////////////////////////////////////////////
 app.listen(port, () => console.log(`MasterEJS app Started on port ${port}!`));
+
+module.exports=app;
