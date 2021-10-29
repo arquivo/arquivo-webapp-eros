@@ -10,7 +10,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
     "properties": "^1.2.1",
-    "simplepicker": "^2.0.3",
+    "simplepicker": "^2.0.0",
     "start": "^5.1.0"
   },
   "scripts": {
