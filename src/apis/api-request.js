@@ -8,7 +8,7 @@ class ApiRequest {
         this.defaultApiParams = defaultApiParams;
         this.defaultApiReply = defaultApiReply;
         this.dataFunction = (requestData) => { return (d) => { this.apiReply = this.apiReply + d.toString(); } };
-        this.endFunction = (requestData) => { return () => { this.apiData = JSON.parse(this.apiReply); } };
+        this.endFunction = (requestData) => { return () => { try { this.apiData = JSON.parse(this.apiReply) } catch (e) { this.apiData = this.defaultApiReply }; } };
         this.closeFunction = (requestData, callback) => { return () => { callback(this.apiData); } };
         this.errorFunction = (requestData, callback) => { return (e) => { console.error(e); callback(this.defaultApiReply); } };
     }
