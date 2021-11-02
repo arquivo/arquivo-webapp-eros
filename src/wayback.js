@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
 module.exports = function (req, res) {
     function sanitizeUrl(url){
-        let res = url.replace(/^\/+|\/+$/g, '');
+        let res = url.replace(/(^\/+)|(\/+$)/g, '');
         while(res.includes('//')){
             res = res.replace('//','/');
         }

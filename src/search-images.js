@@ -1,4 +1,4 @@
-const sanitizeInputs = require('./sanitize-search-params');
+const sanitizeInputs = require('./utils/sanitize-search-params');
 const SuggestionApi = require('./apis/suggestion-api');
 const ImageSearchApiRequest = require('./apis/image-search-api');
 const makeExportObject = require('./export-image-search');

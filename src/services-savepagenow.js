@@ -1,11 +1,11 @@
 
 const fetch = require('node-fetch');
 const config = require('config');
+const isValidUrl =  require('./utils/is-valid-url');
 
 module.exports = function (req, res) {
     const requestData = new URLSearchParams(req.body);
     const url = (requestData.get('url') ?? '').trim();
-    const urlPattern = /^((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)$/
     const startsWithHttp = /^https?:\/\//
 
     // Logging info:
@@ -29,8 +29,7 @@ module.exports = function (req, res) {
         +'&user-agent='+encodeURIComponent(userAgent)+'&ip='+encodeURIComponent(userIp),{method: 'POST'});
     }
 
-    let validUrl = !!url && urlPattern.test(url);
-    if (validUrl) {
+    if (isValidUrl(url)) {
         const fetchUrl = startsWithHttp.test(url) ? url : 'https://' + url;
         fetch(fetchUrl)
             .then(res => {

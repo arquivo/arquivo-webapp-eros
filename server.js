@@ -33,6 +33,14 @@ app.use(express.static('./public'));
 // starts website Routes ////////////////////////////////////////////////////////////////////////////////
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+
+
+// Use utils
+const utils = require('./src/utils/utils-middleware');
+app.use(utils.middleware);
+app.locals.utils = utils.api;
+
 require('./src/router')(app);
 
 // ends website Routes ///////////////////////////////////////////////////////

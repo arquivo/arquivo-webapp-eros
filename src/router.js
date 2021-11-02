@@ -2,13 +2,13 @@ const backendRoutes = require('./backend-routes');
 const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
-const sanitizeInputs = require('./sanitize-search-params');
 const savePageNow = require('./services-savepagenow');
 const wayback = require('./wayback');
 const replayNav = require('./replay-nav');
 const { request } = require('express');
 
 module.exports = function (app) {
+
     //Backend routes
     backendRoutes(app);
 
@@ -19,12 +19,11 @@ module.exports = function (app) {
 
     // Pages search results
     app.get('/page/search', function (req, res) {
-        const requestData = sanitizeInputs(req, res);
-        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
+        const requestData = req.utils.sanitizeInputs(req, res);
 
         if (!requestData.has('q') || requestData.get('q') == '') {
             res.render('pages/home');
-        } else if(urlPattern.test(requestData.get('q'))){
+        } else if(req.utils.isValidUrl(requestData.get('q'))){
             res.redirect('/url/search?'+requestData.toString())
         } else {
             res.render('pages/pages-search-results', {
@@ -33,7 +32,7 @@ module.exports = function (app) {
         }
     });
     app.get('/url/search', function (req, res) {
-        res.render('pages/replay-table-list-results', {requestData: sanitizeInputs(req, res) });
+        res.render('pages/replay-table-list-results', {requestData: req.utils.sanitizeInputs(req, res) });
     });
 
     // Images search results
@@ -43,13 +42,11 @@ module.exports = function (app) {
     });// Images search results
     // Images search results
     app.get('/image/search', function (req, res) {
-        const requestData = sanitizeInputs(req, res);
-        const urlPattern = /^\s*((https?:\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)*\/?)\s*$/
-
+        const requestData = req.utils.sanitizeInputs(req, res);
         if (!requestData.has('q') || requestData.get('q') == '') {
             res.render('pages/home',{searchType:'images'});
         } else {
-            if(urlPattern.test(requestData.get('q'))){
+            if(req.utils.isValidUrl(requestData.get('q'))){
                 requestData.set('siteSearch',requestData.get('q'));
                 requestData.set('q','site:'+requestData.get('q'));
             }
@@ -67,9 +64,7 @@ module.exports = function (app) {
 
     // Pages advanced search
     app.get('/page/advanced/search', function (req, res) {
-        
-        const requestData = sanitizeInputs(req, res);
-        res.render('pages/pages-advanced-search',{requestData:requestData});
+        res.render('pages/pages-advanced-search',{requestData:req.utils.sanitizeInputs(req, res)});
     });
 
     // Images: landing page
