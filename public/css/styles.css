@@ -175,7 +175,6 @@ thead {
 thead, tbody {
   width: 100%;
   padding: 0px;
-  width: 100%;
   overflow: hidden;
   color: #00294c; 
  font-weight:500;
@@ -707,7 +706,7 @@ body#homepage button#nav-options-right-button  {
 
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after, .accordion-replay-left-menu-day:after  {
   content: "\f0ab";
-  font-family: FontAwesome; 
+  font-family: FontAwesome, sans-serif; 
   float: right;
   font-size: 0.9em;
   position: relative;
@@ -719,7 +718,7 @@ body#homepage button#nav-options-right-button  {
 
 .active:after {
   content: "\f0aa";
-  font-family: FontAwesome;
+  font-family: FontAwesome, sans-serif;
   font-size: 0.9em;
   position: relative;
   right: 0;
@@ -846,8 +845,6 @@ nav#replay-left-nav section::-webkit-scrollbar-track {
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
   background-color: #00324B;
   border-radius: 0px;
-  border: 3px solid #0b497f;;
-  border-radius: 0px;
   border: 3px solid #0b497f;
 }
 
@@ -945,7 +942,6 @@ body#table-list-results section.list-results-buttons {
   margin-bottom: 20px;
   flex-direction: row;
   justify-content: center;  
-  position: relative; 
   z-index: 1;
   position: sticky;
   top: 0;
@@ -1043,7 +1039,6 @@ margin: auto;
 /* Header container wrap */
 section.header-content-container {
 margin: 65px auto 0 auto;
-padding: 0;
 max-width: 960px;
 padding: 0 10px;
 }
@@ -1194,7 +1189,6 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
   border: none;
   border-top: 1px solid #ffffff6b;
   outline: none;
-  text-align: center;
   right: 0;
 }
 
@@ -1220,8 +1214,8 @@ section#search-tools-date-slider #date-container-start, section#search-tools-dat
   font-size: 13.5px;
   font-weight: normal;
   color: white;
-  background-color: #1c75c0;      
   background: transparent url(../img/calendar.svg) no-repeat center;
+  background-color: #1c75c0;      
   background-size: 100%;
   border: 0; 
 }
@@ -1428,8 +1422,6 @@ section.modal {
   box-sizing: border-box;
   width: auto;
   max-width: 600px !important;
-  background: #ebebeb;
-  padding: 15px 30px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -o-border-radius: 8px;
@@ -1443,7 +1435,6 @@ section.modal {
   text-align: center;
   height: auto;
   max-height: auto !important;    
-  box-sizing: border-box;
   background: #f5f5f5;
   padding: 15px 0 15px 10px !important;
   overflow: initial;
@@ -1490,8 +1481,6 @@ a#close-modal-tecnhical {
   width: 30px;
   height: 30px;
   text-indent: -9999px;
-  background-size: contain;  
-  background-position: center center;
   filter: invert(1);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
@@ -1499,7 +1488,6 @@ a#close-modal-tecnhical {
 }
 
 a#close-modal-tecnhical:hover {
-  filter: invert(0);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
   filter: drop-shadow(2px 4px 6px black);
@@ -1868,7 +1856,6 @@ input[type="text"]#modal-datepicker-input:focus {
   font-weight: normal;
   font-size: 11px;
   color: white;
-  border-radius: 2px;
   outline: none;
   border: 1px solid #1c75c0 !important;
   margin-top: 0px;
@@ -1887,7 +1874,6 @@ input[type="text"]#modal-datepicker-input:focus {
 }
 
 #modal a.close-modal:hover {
-  filter: invert(0);
   background: transparent url("../img/close-modal.png") no-repeat 0 0;
   background-size: 100%;
   filter: drop-shadow(2px 4px 6px black);
@@ -1933,7 +1919,6 @@ body#list-results #modal a.close-modal {
 
 :lang(pt) ap-theme-ios .ap-header__title {
   color: #070707;
-  font-size: 1.2em;
   margin-left: -15px;
   text-align: center;
   font-size: 13px !important;
@@ -2022,7 +2007,6 @@ body#images-search-results div#ui-datepicker-div div.jquery-modal div#modal {
 
 #modal-datepicker-datepicker select.ui-datepicker-month, #modal-datepicker-datepicker select.ui-datepicker-year {
   border: 1px solid #ccc !important;  
-  border: 1px solid #ccc !important;
   border-radius: 4px;
   transition: 0.1s;
   padding: 5px;
@@ -2125,7 +2109,6 @@ body#pages-advanced-search #slider-range-container, body#images-advanced-search 
     color: white;
     width: 100%;
     width: 43px;
-    font-size: 11px;
     margin-top: 20px;
     top: 17px;
     left: 5px;
@@ -2246,7 +2229,6 @@ section.form-container label strong{
 }
 
 section.form-container label {
-  padding-left: 22px;
   background: transparent url(../img/advanced-arrow.svg) no-repeat center left;
   width: auto;
   padding-left: 22px;
