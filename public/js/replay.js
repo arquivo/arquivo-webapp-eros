@@ -1,7 +1,7 @@
 class ArquivoReplay {
     constructor(configs) {
         this.configs = configs;
-        this.pywbCommunication()
+        this.initCommunication()
         $(() => {
             this.init();
         })
@@ -133,7 +133,7 @@ class ArquivoReplay {
         
     }
 
-    pywbCommunication() {
+    initCommunication() {
         const replay = this;
         const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
         const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
@@ -151,6 +151,18 @@ class ArquivoReplay {
                 if ( e[key].wb_type == 'not-found' ) {
                     $('#replay-in-iframe').hide();
                     $('#replay-not-found').show();
+                }
+            }
+            if(e[key] && e[key].arquivo_type && e[key].message){
+                if(e[key].arquivo_type == 'section-loaded' && e[key].message == 'date'){
+                    const target = $('.date-selected');
+                    if(target.length){
+                        const scrollTarget = target.scrollParent();
+                        const height = scrollTarget.height(); 
+                        const targetHeight = target.height();
+                        const offset = target.offset().top;
+                        scrollTarget[0].scrollTop = offset - height/2 - targetHeight;
+                    }
                 }
             }
         }, true);

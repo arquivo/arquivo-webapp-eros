@@ -13,8 +13,14 @@ $(function(){
     const loadingSection = $('#loading-section');
     if(loadingSection.length){
         let afterReplace = () => {}
-        if(!!loadingSection.attr('myonload')){
-            afterReplace = (new Function('return '+loadingSection.attr('myonload')))();
+        if(!!loadingSection.attr('onloadmessage')){
+            const message = loadingSection.attr('onloadmessage');
+            afterReplace = () => {
+                window.postMessage({
+                    'arquivo_type': 'section-loaded',
+                    message: message
+                });
+            };
         }
         const loadingForm = $('#loading-form');
         $.ajax({

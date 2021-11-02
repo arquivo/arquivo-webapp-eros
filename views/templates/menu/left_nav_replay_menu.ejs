@@ -2,19 +2,11 @@
 <nav id="replay-left-nav">
   <h3>Replay left menu navigation</h3>
   <%- include('../fragments/loading-section',{
-    action:'/partials/replay-nav', 
-    params:requestedPage,
-    //center on selected date on load
-    onload: () => {
-      const target = $('.date-selected');
-      if(target.length){
-        const scrollTarget = target.scrollParent();
-        const height = scrollTarget.height(); 
-        const targetHeight = target.height();
-        const offset = target.offset().top;
-        scrollTarget[0].scrollTop = offset - height/2 - targetHeight;
-      }
-    }}) %>
+      action:'/partials/replay-nav', 
+      params:requestedPage,
+      //center on selected date on load
+      onloadmessage: 'date'
+    }) %>
 </nav>
 
 <!-- ends left nav menu -->

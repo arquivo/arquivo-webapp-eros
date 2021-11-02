@@ -1,7 +1,7 @@
 <% if(typeof action=='undefined' ){ action="" } %>
-<% if(typeof onload=='undefined' ){ onload="" }
-   else if (typeof onload=='function' ) {onload = onload.toString().replaceAll('"','&quot;'); } %>
-<section id="loading-section" myonload="<%- onload %>">
+<% if(typeof onloadmessage=='undefined' ){ onloadmessage="" }
+   else if (typeof onloadmessage=='object' ) { onloadmessage = JSON.stringify(onloadmessage); } %>
+<section id="loading-section" onloadmessage="<%= onloadmessage %>">
     <h3>
         <%= t('preloader.accessibility.title') %>
     </h3>
