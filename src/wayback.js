@@ -43,13 +43,13 @@ module.exports = function (req, res) {
     function renderError() {
         res.status(404).render('pages/arquivo-404');
     }
-    const splitToken = config.get('noFrame.replay.url').split('/').pop() + '/'; //'noFrame/' ou 'replay/' 
+    const splitToken = config.get('pywb.url').split('/').pop() + '/'; //'noFrame/' ou 'replay/' 
     function testUrl(url) {
         fetch(url)
             .then(res => {
                 const newUrl = res.url.split(splitToken).filter((a, i) => i > 0).join(splitToken);
                 if (sanitizeUrl(res.url) != sanitizeUrl(url)) {
-                    const fullUrl = config.get('noFrame.replay.url') + '/' + newUrl;
+                    const fullUrl = config.get('pywb.url') + '/' + newUrl;
                     testUrl(fullUrl);
                 } else if (res.ok) {
                     renderOk(newUrl);
@@ -63,6 +63,6 @@ module.exports = function (req, res) {
             });
     }
 
-    const noFrameUrl = config.get('noFrame.replay.url') + '/' + req.params.url + (req.params['0'] ?? '')
+    const noFrameUrl = config.get('pywb.url') + '/' + req.params.url + (req.params['0'] ?? '')
     testUrl(noFrameUrl);
 }

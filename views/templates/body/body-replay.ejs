@@ -1,6 +1,6 @@
 <!-- starts replay content -->
 <iframe id="replay-in-iframe" name="replay-page" title="replay page"
-    src="<%- config.get('noFrame.replay.url') + '/' +requestedPage.fullUrl %>">
+    src="<%- config.get('pywb.url') + '/' +requestedPage.fullUrl %>">
 </iframe>
 <!-- starts not found -->
 <%- include('../fragments/replay-not-found'); %>
@@ -8,7 +8,7 @@
 <script src="/js/replay.js"></script>
 <script>
     const arquivoReplay = new ArquivoReplay({
-        "noFrame.replay.url": "<%- config.get('noFrame.replay.url') %>",
+        "pywb.url": "<%- config.get('pywb.url') %>",
         "requestedPage.fullUrl": "<%- requestedPage.fullUrl %>",
         "screenshot.url": "<%- config.get('screenshot.url') %>",
         "requestedPage.url": "<%- requestedPage.url %>",

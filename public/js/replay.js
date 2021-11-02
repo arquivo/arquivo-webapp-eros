@@ -45,13 +45,13 @@ class ArquivoReplay {
         });
 
         $('#screenshot button.confirm').click(() => {
-            var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=true&width=" + window.screen.width + "&height=" + window.screen.height;
+            var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=true&width=" + window.screen.width + "&height=" + window.screen.height;
             $.modal.close();
             window.open(requestURL, "_blank");
         })
 
         $('#print button.confirm').click(() => {
-            var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=false";
+            var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=false";
 
             let divPrintMe = document.getElementById("divPrintMe");
             let imgElem = document.getElementById("imgToPrint");
@@ -86,7 +86,7 @@ class ArquivoReplay {
         });
 
         $('#replay-with-old-browser button.confirm').click(() => {
-            window.open( replay.getConfig('oldweb.today.fullUrl') + '#' + replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl'));
+            window.open( replay.getConfig('oldweb.today.fullUrl') + '#' + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl'));
             $.modal.close();
         });
 
@@ -176,9 +176,9 @@ class ArquivoReplay {
 
         $('#menuUrl').text(url);
         $('#menuTs').text(dateFromTimestamp(timestamp));
-        $('#menuFullScreen').attr('href', replay.getConfig('noFrame.replay.url') + '/' + fullUrl);
+        $('#menuFullScreen').attr('href', replay.getConfig('pywb.url') + '/' + fullUrl);
         $('#chosen-url-a').text(url);
-        $('#chosen-url-a').attr('href', replay.getConfig('noFrame.replay.url') + '/' + fullUrl);
+        $('#chosen-url-a').attr('href', replay.getConfig('pywb.url') + '/' + fullUrl);
         $('#chosen-url-date').text(dateFromTimestamp(timestamp));
         $('#menuListVersions').attr('href', '/page/search?q=' + url);
         const h3 = '<h3>' + $('#replay-left-nav > h3').html() + '</h3>';
@@ -199,8 +199,8 @@ class ArquivoReplay {
         const fullUrl = replay.getConfig('requestedPage.fullUrl');
 
         $('#menuTs').text(dateFromTimestamp(timestamp));
-        $('#menuFullScreen').attr('href', replay.getConfig('noFrame.replay.url') + '/' + fullUrl);
-        $('#chosen-url-a').attr('href', replay.getConfig('noFrame.replay.url') + '/' + fullUrl);
+        $('#menuFullScreen').attr('href', replay.getConfig('pywb.url') + '/' + fullUrl);
+        $('#chosen-url-a').attr('href', replay.getConfig('pywb.url') + '/' + fullUrl);
         $('#chosen-url-date').text(dateFromTimestamp(timestamp));
         replay.updateSelection();
     }
@@ -234,7 +234,7 @@ class ArquivoReplay {
         const replay = this;
         let iframe = document.getElementById('replay-in-iframe');
         let frame = iframe.cloneNode();
-        frame.src = replay.getConfig('noFrame.replay.url') + '/' + replay.getConfig('requestedPage.fullUrl');
+        frame.src = replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl');
         iframe.parentNode.replaceChild(frame, iframe);
     }
 }
