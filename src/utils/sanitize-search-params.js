@@ -1,4 +1,5 @@
 const config = require('config');
+const { request } = require('express');
 
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
@@ -46,7 +47,11 @@ module.exports = function (req, res) {
         .filter(key => !requestData.has(key))
         .forEach(key => requestData.set(key, defaultRequestParameters[key]));
 
-
+    //remove redundant language information
+    if(requestData.has('l') && requestData.get('l') == req.getLanguage()){
+        requestData.delete('l');
+    }
+    
     if(parseInt(requestData.get('from')) < parseInt(defaultRequestParameters.from)){
         requestData.set('from', defaultRequestParameters.from)
     }

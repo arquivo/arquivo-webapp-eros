@@ -1,11 +1,9 @@
 const { resolveInclude } = require('ejs');
 const express = require('express');
 const config = require('config');
-const cookieParser = require("cookie-parser");
 const session = require('express-session');
 
-var path = require('path');
-var morgan = require('morgan')
+const path = require('path');
 
 const app = express();
 const port = 3000;
@@ -29,11 +27,13 @@ app.use(session({
     cookie: { maxAge: config.get('session.length') },
     resave: false 
 }));
+app.use((req,res,next) => {
+  res.locals.session = req.session;
+  next();
+})
 
-// cookie parser middleware
-app.use(cookieParser());
-
-//app.use(morgan('combined'))
+// const morgan = require('morgan')
+// app.use(morgan('combined'))
 
 app.use(i18n.middleware);
 app.locals.config = config;
