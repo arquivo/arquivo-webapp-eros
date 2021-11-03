@@ -1,9 +1,11 @@
 {
   "dependencies": {
     "config": "^3.3.6",
+    "cookie-parser": "^1.4.5",
     "datetime-periods": "^1.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "express-session": "^1.17.2",
     "i18n-node-yaml": "^1.0.4",
     "js-datepicker": "^5.18.0",
     "lightpick": "^1.6.2",

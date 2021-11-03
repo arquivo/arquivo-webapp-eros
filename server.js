@@ -1,6 +1,8 @@
 const { resolveInclude } = require('ejs');
 const express = require('express');
 const config = require('config');
+const cookieParser = require("cookie-parser");
+const session = require('express-session');
 
 var path = require('path');
 var morgan = require('morgan')
@@ -20,6 +22,17 @@ i18n.ready.catch(err => {
   console.error('Failed loading translations', err);
 });
 
+// use session middleware
+app.use(session({
+    secret: config.get('session.secret'),
+    saveUninitialized:true,
+    cookie: { maxAge: config.get('session.length') },
+    resave: false 
+}));
+
+// cookie parser middleware
+app.use(cookieParser());
+
 //app.use(morgan('combined'))
 
 app.use(i18n.middleware);
@@ -38,8 +51,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 // Use utils
 const utils = require('./src/utils/utils-middleware');
-app.use(utils.middleware);
-app.locals.utils = utils.api;
+app.use(utils);
 
 require('./src/router')(app);
 
