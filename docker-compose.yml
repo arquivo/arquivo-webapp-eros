@@ -3,11 +3,10 @@ services:
     node:
       image: "node:15.8.0-alpine3.10"
       working_dir: /home/node/app
-      ports:
-          - 3000:3000
       environment:
         - NODE_ENV=production
       volumes:
         - ./:/home/node/app
-      command: sh -c 'echo "10.0.23.61      arquivo.pt" >> /etc/hosts; npm start'
+      command: sh -c 'npm start'
+      network_mode: host
       restart: on-failure
