@@ -1398,20 +1398,6 @@ body#pages-advanced-search label, body#images-advanced-search label {
   max-width: calc(100vw - 150px);
 }
 
-section.modal a.close-modal {
-  background-color: transparent !important;
-  position: absolute !important;
-  z-index: 3 !important;
-  filter: invert(1);
-  transition: 0.5s;
-}
-
-section.modal a.close-modal:hover {
-  /*filter:invert(1);*/
-  filter: drop-shadow(2px 4px 6px black);
-  transition: 0.5s;
-}
-
 section.modal {
   display: none;
   vertical-align: middle;
@@ -1862,43 +1848,10 @@ input[type="text"]#modal-datepicker-input:focus {
   border-radius: 4px;
 }
 
-#modal a.close-modal {
-  z-index: 3;
-  filter: invert(1);
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  transition: 0.5s; 
-  display: none; 
-}
-
-#modal a.close-modal:hover {
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  filter: drop-shadow(2px 4px 6px black);
-  transition: 0.5s;
-}
-
-#jquery-modal a.close-modal {
-  z-index: 3;
-  filter: invert(1);
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  transition: 0.5s; 
-  display: block !important;
-
-}
-
 /* Remove close modal button on home page and on both images and pages landing pages */
 
-body#homepage #modal a.close-modal,
-body#landing-pages #modal a.close-modal,
-body#landing-images #modal a.close-modal,
-body#pages-advanced-search #modal a.close-modal,
-body#images-advanced-search #modal a.close-modal,
-body#pages-search-results #modal a.close-modal,
-body#table-list-results #modal a.close-modal,
-body#list-results #modal a.close-modal {
-  display: none;
+a.close-modal {
+  display: none !important; 
 }
 
 .ui-state-hover {
@@ -2434,14 +2387,6 @@ img.image-display {
   height: auto;
   /*-webkit-box-shadow: 0px 10px 13px -7px #000000, 5px -6px 15px -1px rgb(0 0 0 / 0%);
     box-shadow: 0px 15px 17px -7px #00000069, 5px -6px 15px -1px rgb(0 0 0 / 0%);*/
-}
-
-section#print a.close-modal, 
-section#screenshot a.close-modal,
-section#complete-the-page a.close-modal,
-section#replay-with-old-browser a.close-modal,
-section#search-other-archives a.close-modal {
-  display: none;
 }
 
 body#table-list-results p#estimated-results, body#list-results p#estimated-results,

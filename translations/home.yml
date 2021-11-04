@@ -15,9 +15,15 @@ search-tools:
   images: 
     pt: 'Imagens'
     en: 'Images'
+  narrative:
+    pt: 'Narrativa'
+    en: 'Narrative'
   advanced-search:
     pt: 'Pesquisa avançada'
     en: 'Advanced search'
+  narrative-popup:
+    pt: Vai sair do Arquivo.pt para o ContaMeHistorias.pt
+    en: You are leaving Arquivo.pt to ContaMeHistorias.pt
 
 arquivo-pt-award:
   header:

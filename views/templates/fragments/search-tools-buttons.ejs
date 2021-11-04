@@ -1,10 +1,15 @@
 <% 
 let customSearchRequestData = new URLSearchParams(); 
+let narrativeRequestData = new URLSearchParams();
+narrativeRequestData.set('lang',getLanguage()); 
 if(typeof requestData != 'undefined'){
     customSearchRequestData = new URLSearchParams(requestData); 
     if(requestData.has('q') && utils.isValidUrl(requestData.get('q'))){
         customSearchRequestData.set('q','site:'+requestData.get('q'));
     } 
+    if(requestData.has('q')){
+        narrativeRequestData.set('query',requestData.get('q'));
+    }
 } 
 %>
 <section id="search-tools-buttons">
@@ -17,8 +22,24 @@ if(typeof requestData != 'undefined'){
         <%- include('hidden-search-inputs', {requestData:customSearchRequestData}) %>
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
     </form>
+    <a href="#confirm-narrative" rel="modal:open"><button class="buttons"><%= t('home.search-tools.narrative') %></button></a>
     <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
         <%- include('hidden-search-inputs') %>
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
     </form>
+</section>
+<section id="confirm-narrative" class="modal" style="display: none;">
+    <h3>Janela de confirmação</h3>
+    <ul class="replay-options">
+        <li>
+            <p><%= t('home.search-tools.narrative-popup') %></p>
+        </li>
+        
+        <li><form id="search-form-narrative" role="search for narratives" class="buttons" action="http://contamehistorias.pt/arquivopt/search?query=&lang=en" method="get">
+            <%- include('hidden-search-inputs', {requestData:narrativeRequestData}) %>
+            <button type="submit" value="Images"><%= t('wayback.popups.buttons.ok') %></button>
+        </form></li>
+        <li><a href="#" rel="modal:close"><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></a></li>
+    </ul>
+    <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 </section>
