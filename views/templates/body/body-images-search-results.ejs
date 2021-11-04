@@ -1,4 +1,7 @@
 <section id="images-results" class="images-results-cl">
     <h3>Images Search Results</h3>
-    <%- include('../fragments/loading-section',{action:'/partials/images-search-results'}) %>
+    <%- include('../fragments/loading-section',{
+        action:'/partials/images-search-results',
+        onloadmessage: 'search-results'
+    }) %>
 </section>

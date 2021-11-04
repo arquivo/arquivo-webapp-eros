@@ -4,6 +4,7 @@ const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const savePageNow = require('./services-savepagenow');
 const wayback = require('./wayback');
+const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
 const { request } = require('express');
 
@@ -35,11 +36,6 @@ module.exports = function (app) {
         res.render('pages/replay-table-list-results', {requestData: req.utils.sanitizeInputs(req, res) });
     });
 
-    // Images search results
-    app.get('/images-search-results', function (req, res) {
-
-        res.render('pages/images-search-results');
-    });// Images search results
     // Images search results
     app.get('/image/search', function (req, res) {
         const requestData = req.utils.sanitizeInputs(req, res);
@@ -85,6 +81,11 @@ module.exports = function (app) {
     app.get('/wayback/:url*', function (req, res) {
         wayback(req,res);
     });
+    // page/view for tracking purposes
+    app.get(['/page/view/:url*','/image/view/:url*'], function (req, res) {
+        tracking(req,res);
+    });
+
 
     // starts partials
     app.get('/partials/:id', function (req, res) {

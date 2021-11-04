@@ -53,11 +53,8 @@
         });
         return resultText;
     }
-
-    const onClick = "ga('send', 'event', 'Search result', 'Page search', 'Result position', "+ (index+1) +"); window.location='/wayback/"+pageData.tstamp+"/"+pageData.originalURL+"';"; //linkToArchive encriptado? ver java
-    const onKeyPress = "return ((e) => { if(e.which == 32 || e.which == 13){e.preventDefault();"+onClick+"} return true;})(event)";
     %>
-    <ul class="<%= subResult ? 'sub-results' : ''%>" onclick="<%- onClick %>" onkeypress="<%- onKeyPress %>">
+    <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>

@@ -22,8 +22,8 @@
 
     <!-- starts result #1 -->
     <ul id="image-cards-container">
-        <% apiData.responseItems.forEach(item => { %>
-            <%- include("../templates/fragments/image-result", {imageData: item}) -%>
+        <% apiData.responseItems.forEach((item,i) => { %>
+            <%- include("../templates/fragments/image-result", {imageData: {...item, index:(i+1)}}) -%>
         <% }); %>
     </ul>
     <!-- ends pages search results -->
