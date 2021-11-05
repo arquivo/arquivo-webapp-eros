@@ -37,7 +37,19 @@ app.use(cookies());
 // const morgan = require('morgan')
 // app.use(morgan('combined'))
 
-app.use(i18n.middleware);
+app.use((req,res,next) => {
+  // clear language headers to prevent auto-detect browser language
+  let oldLanguage = '';
+  if(req.headers && req.headers['accept-language']){
+    oldLanguage = req.headers['accept-language'];
+    req.headers['accept-language'] = null;
+  }
+  i18n.middleware(req,res,() => {});
+  if(req.headers && req.headers['accept-language'] === null){
+    req.headers['accept-language'] = oldLanguage;
+  }
+  next();
+});
 app.locals.config = config;
 
 // view engine setup
