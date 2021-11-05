@@ -1,3 +1,5 @@
+const logger = require('./logger')('Tracking');
+
 module.exports = function (req, res) {
 
     const splitPath = (req.params.url + (req.params['0'] ?? '')).split('/');
@@ -11,7 +13,7 @@ module.exports = function (req, res) {
     const archivedUrl = splitPath.filter((x,i) => {return i>1;}).join('/');
 
     const logString = `'${ipAddress}'\t"${userAgent}"\t'${requestUrl}'\t'${trackingID}'\t'${sessionID}'\t'${timestamp}'\t'${archivedUrl}'`;
-    // console.log(logString); <-- Replace this with logging!
+    logger.info(logString);
 
     res.redirect('/wayback/'+timestamp+'/'+archivedUrl);
 }

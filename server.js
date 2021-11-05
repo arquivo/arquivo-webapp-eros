@@ -4,6 +4,8 @@ const config = require('config');
 const session = require('express-session');
 const cookies = require("cookie-parser");
 const path = require('path');
+const router = require('./src/router');
+const trafficLogger = require('./src/logger/traffic-logger');
 
 const app = express();
 const port = 3000;
@@ -67,8 +69,9 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 const utils = require('./src/utils/utils-middleware');
 app.use(utils);
 
-require('./src/router')(app);
+app.use(trafficLogger);
 
+app.use(router);
 // ends website Routes ///////////////////////////////////////////////////////
 
 // Open browser port: ${port} 
