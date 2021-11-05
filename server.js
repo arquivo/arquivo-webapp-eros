@@ -2,7 +2,7 @@ const { resolveInclude } = require('ejs');
 const express = require('express');
 const config = require('config');
 const session = require('express-session');
-
+const cookies = require("cookie-parser");
 const path = require('path');
 
 const app = express();
@@ -31,6 +31,8 @@ app.use((req,res,next) => {
   res.locals.session = req.session;
   next();
 })
+
+app.use(cookies());
 
 // const morgan = require('morgan')
 // app.use(morgan('combined'))
