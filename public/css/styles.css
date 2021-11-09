@@ -851,7 +851,7 @@ nav#replay-left-nav section::-webkit-scrollbar-thumb {
 
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 8px;    
+  padding-right: 5px;    
 }
 /* ends Font Awesome icons */
 
