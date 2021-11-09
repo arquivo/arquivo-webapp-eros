@@ -55,7 +55,7 @@
     }
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
-        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
+        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
@@ -71,7 +71,7 @@
                  newRequestData.set('offset', 0 )
                 %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <button type="submit"> &rarr; <%= t('page-search.view-more-results',{site}) %></button>
+                <button type="submit"> <%= t('page-search.view-more-results',{site}) %></button>
             </form>
         </li>
         <% } %>
