@@ -6,6 +6,7 @@ const savePageNow = require('./services-savepagenow');
 const wayback = require('./wayback');
 const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
+const replayTechnicalDetails = require('./replay-technical-details');
 const express = require('express');
 const router = express.Router();
 
@@ -96,6 +97,8 @@ router.get('/partials/:id', function (req, res) {
         searchUrl(req, res);
     } else if (req.params.id == 'replay-nav') {
         replayNav(req, res);
+    } else if (req.params.id == 'replay-technical-details') {
+        replayTechnicalDetails(req, res);
     } else {
         res.render('partials/' + req.params.id, { layout: false });
     }

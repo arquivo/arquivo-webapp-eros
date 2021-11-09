@@ -2,12 +2,14 @@
 <iframe id="replay-in-iframe" name="replay-page" title="replay page"
     src="<%- config.get('pywb.url') + '/' +requestedPage.fullUrl %>">
 </iframe>
+
 <!-- starts not found -->
 <%- include('../fragments/replay-not-found'); %>
 <!-- ends not found -->
 <script src="/js/replay.js"></script>
 <script>
     const arquivoReplay = new ArquivoReplay({
+        "language": "<%= getLanguage() %>",
         "pywb.url": "<%- config.get('pywb.url') %>",
         "requestedPage.fullUrl": "<%- requestedPage.fullUrl %>",
         "screenshot.url": "<%- config.get('screenshot.url') %>",

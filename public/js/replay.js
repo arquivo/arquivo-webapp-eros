@@ -15,8 +15,22 @@ class ArquivoReplay {
         this.configs[key] = value;
     }
 
+    sendToAnalytics(category,action,label) {
+        const replay = this;
+        if(!!ga){
+            ga("send", "event", category, action, label || 'arquivo.pt/' + replay.getConfig('requestedPage.fullUrl'));
+        }
+    }
+
     init() {
         const replay = this;
+
+        $('button.cancel').click((e) => {
+            e.preventDefault();
+            $.modal.close();
+        });
+
+        // Date selection menu
         $('#replay-left-nav').on('click', '.accordion-header', function (e) {
             e.preventDefault();
             let $this = $(this);
@@ -39,18 +53,38 @@ class ArquivoReplay {
 
         });
 
-        $('button.cancel').click((e) => {
+        // Right menu
+        $('#menuListVersions').click((e) => {
             e.preventDefault();
-            $.modal.close();
-        });
+            replay.sendToAnalytics('ReplayBarFunctions', 'ListVersionsClick');
+            window.location = this.href;
+        }) 
+
+        $('#menuTechnicalDetails').click((e) => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'MoreInformationMenuClick');
+        })
+
+        $('#menuScreenshot').click((e) => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuClick');
+        })
 
         $('#screenshot button.confirm').click(() => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuConfirm');
             var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=true&width=" + window.screen.width + "&height=" + window.screen.height;
             $.modal.close();
             window.open(requestURL, "_blank");
+        });
+        $('#screenshot button.cancel').click(() => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuCancel');
+        });
+
+        $('#menuPrint').click((e) => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuClick');
         })
 
         $('#print button.confirm').click(() => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuConfirm');
+
             var requestURL = replay.getConfig('screenshot.url') + "?url=" + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl') + "&download=false";
 
             let divPrintMe = document.getElementById("divPrintMe");
@@ -79,16 +113,78 @@ class ArquivoReplay {
             });
             imgElem.src = requestURL;
         });
+        $('#print button.cancel').click(() => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuCancel');
+        });
+
+        $('#menuCompleteThePage').click((e) => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'Complete Page');
+        })
 
         $('#complete-the-page button.confirm').click(() => {
+            replay.sendToAnalytics('Complete Page', 'Clicked complete page and confirmed');
             window.open('/services/complete-page?url=' + replay.getConfig('requestedPage.url') + '&timestamp=' + replay.getConfig('requestedPage.timestamp'), '_blank');
             $.modal.close();
         });
+        $('#complete-the-page button.cancel').click(() => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuCancel');
+        });
+
+        $('#menuFullScreen').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'ExpandClick');
+            window.location = this.href;
+        }) 
+
+        $('#menuReplayWithOldBrowser').click((e) => {
+            replay.sendToAnalytics('ReplayBarFunctions', 'Replay with old browser');
+        })
 
         $('#replay-with-old-browser button.confirm').click(() => {
+            replay.sendToAnalytics('Replay with old browser', 'Clicked replay with old browser and confirmed');
             window.open( replay.getConfig('oldweb.today.fullUrl') + '#' + replay.getConfig('pywb.url') + '/' + replay.getConfig('requestedPage.fullUrl'));
             $.modal.close();
         });
+
+
+        //Left menu events
+        $('#menu-language a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'ChangeLanguageTo'+(replay.getConfig('language') == 'pt' ? 'EN' : 'PT')+'Click');
+            window.location = this.href;
+        })
+        $('#menu-pages-new-search a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'NewSearchClick');
+            window.location = this.href;
+        })
+        $('#menu-pages-advanced-search a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'AdvancedSearchClick');
+            window.location = this.href;
+        })
+        $('#menu-images-new-search a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'NewImageSearchClick');
+            window.location = this.href;
+        })
+        $('#menu-images-advanced-search a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'AdvancedImageSearchClick');
+            window.location = this.href;
+        })
+        $('#menu-savepagenow a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'SavePageNowClick');
+            window.location = this.href;
+        })
+        $('#menu-about a').click((e) => {
+            e.preventDefault();
+            replay.sendToAnalytics('ReplayBarFunctions', 'AboutClick');
+            window.location = this.href;
+        })
+
+
 
         $('#search-other-archives button.confirm').click(() => {        
             window.open( 'https://web.archive.org/web/' + replay.getConfig('requestedPage.fullUrl'));
@@ -129,8 +225,26 @@ class ArquivoReplay {
             } else {
                 replay.updateTimestamp();
             }
+
+            replay.updateMetadata();
         }
         
+    }
+
+    updateMetadata() {
+        const replay = this;
+        $('#technical-details').html(replay.getConfig('loader.html'));
+        const url = replay.getConfig('requestedPage.url');
+        const timestamp = replay.getConfig('requestedPage.timestamp');
+        const fullUrl = replay.getConfig('requestedPage.fullUrl');
+        $.ajax({
+            url: '/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp),
+            success: (data, textStatus, jqXHR) => {
+                if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
+                    $('#technical-details').replaceWith(data); 
+                }
+            }
+        });
     }
 
     initCommunication() {
@@ -141,12 +255,12 @@ class ArquivoReplay {
         window[eventMethod](messageEvent, (e) => {
             const key = e.message ? "message" : "data";
             if (e[key] && e[key].wb_type) {
-                
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
                 if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
                     replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
+                    ga('send', 'pageview');
                 }
                 if ( e[key].wb_type == 'not-found' ) {
                     $('#replay-in-iframe').hide();

@@ -4,24 +4,7 @@
 <!-- ends alerts -->
 
 <!-- starts image modal when user clicks to see image its details -->
-<section id="technical-details" class="modal">
-  <h3><%= t('wayback.popups.technical-details.accessibility') %></h3>
-  <ul>
-    <li><strong class="strong-bold"><%= t('wayback.popups.technical-details.title') %></strong><a href="https://github.com/arquivo/pwa-technologies/wiki/Arquivo.pt-API#response-fields"><%= t('wayback.popups.technical-details.description') %></a></li>
-    <% if(apiData) { %>
-    <%   Object.keys(apiData).forEach(key => { %>
-    <%     const value = apiData[key]; %>
-    <%     if(key == 'collection'){ %>
-             <li><strong>&rarr; <%= key %>:</strong><a href="https://arquivo.pt/colecoes"><%= value %></a></li>
-    <%      } else if(!utils.isValidUrl(value) || key == 'fileName'){ %>
-             <li><strong>&rarr; <%= key %>:</strong><%= value %></li>
-    <%      } else { %>
-             <li><strong>&rarr; <%= key %>:</strong><a href="<%= value %>"><%= value %></a></li>
-    <%      } %>
-    <%   }); %>
-    <% } %>
-  </ul>
-</section>
+<%- include('../../partials/replay-technical-details.ejs') %>
 <!-- ends image modal when user clicks to see image and its details -->
 
 <!-- starts take screenshot -->
