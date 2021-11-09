@@ -1,9 +1,11 @@
 const { resolveInclude } = require('ejs');
 const express = require('express');
 const config = require('config');
-
-var path = require('path');
-var morgan = require('morgan')
+const session = require('express-session');
+const cookies = require("cookie-parser");
+const path = require('path');
+const router = require('./src/router');
+const trafficLogger = require('./src/logger/traffic-logger');
 
 const app = express();
 const port = 3000;
@@ -20,9 +22,36 @@ i18n.ready.catch(err => {
   console.error('Failed loading translations', err);
 });
 
-//app.use(morgan('combined'))
+// use session middleware
+app.use(session({
+    secret: config.get('session.secret'),
+    saveUninitialized:true,
+    cookie: { maxAge: config.get('session.length') },
+    resave: false 
+}));
+app.use((req,res,next) => {
+  res.locals.session = req.session;
+  next();
+})
 
-app.use(i18n.middleware);
+app.use(cookies());
+
+// const morgan = require('morgan')
+// app.use(morgan('combined'))
+
+app.use((req,res,next) => {
+  // clear language headers to prevent auto-detect browser language
+  let oldLanguage = '';
+  if(req.headers && req.headers['accept-language']){
+    oldLanguage = req.headers['accept-language'];
+    req.headers['accept-language'] = null;
+  }
+  i18n.middleware(req,res,() => {});
+  if(req.headers && req.headers['accept-language'] === null){
+    req.headers['accept-language'] = oldLanguage;
+  }
+  next();
+});
 app.locals.config = config;
 
 // view engine setup
@@ -38,11 +67,11 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 // Use utils
 const utils = require('./src/utils/utils-middleware');
-app.use(utils.middleware);
-app.locals.utils = utils.api;
+app.use(utils);
 
-require('./src/router')(app);
+app.use(trafficLogger);
 
+app.use(router);
 // ends website Routes ///////////////////////////////////////////////////////
 
 // Open browser port: ${port} 

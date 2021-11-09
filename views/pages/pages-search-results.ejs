@@ -1,9 +1,19 @@
 <!doctype html>
 <html lang="<%- getLanguage() %>">
 
+    <head>
     <!-- starts global document: <head>...</head> -->
     <%- include("../templates/head") -%>
     <!-- ends global document: <head>...</head> -->
+
+    <!-- starts logic for exporting -->
+    <script src="/js/exports.js"></script>
+    <!-- ends logic for exporting -->
+
+    <!-- starts logic for search results -->
+    <script src="/js/search-results.js"></script>
+    <!-- ends logic for search results -->
+    </head>
 
     <!-- starts document body content -->
     <body id="pages-search-results" class="pages-search-results-cl">  
