@@ -45,7 +45,7 @@ $(() => {
     }
 
     const updateSearchResults = function(){
-        var client_id = getClientId(20);
+        var client_id = getClientId();
         var search_id = generateId(20);
         var trackingId = client_id + '_' + search_id;
 
