@@ -882,10 +882,6 @@ nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li 
   border-top: 1px solid #e3e3e32e;
 }
 
-nav#left-nav section ul > li > ul > li#menu-pages-advanced-search {
-  display: none;
-}
-
 /* ends nav MENU: replay left and right ************************************************** */
 
 /* starts Table and list menu ************************************************** */
