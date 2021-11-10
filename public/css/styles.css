@@ -2181,9 +2181,7 @@ section.form-container label strong{
 }
 
 section.form-container label {
-  background: transparent url(../img/advanced-arrow.svg) no-repeat center left;
   width: auto;
-  padding-left: 22px;
   max-width: 100%;
   font-size: 0.9em;  
 }
