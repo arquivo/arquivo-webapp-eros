@@ -256,17 +256,12 @@ section#technical-details ul li strong {
 }
 
 div.jquery-modal section#technical-details ul li a {
-  display: inline-block;
-  position: relative;
-  top: 5px;
-  margin-top: 2px;
+  margin-top: 2 px;
   width: auto;
   max-width: calc(100% - 150px);
-  overflow: hidden; 
-  white-space: nowrap; 
-  text-decoration: none;  
-  text-overflow: ellipsis; 
-  color:#1c75c0;  
+  text-decoration: none;
+  color: #1c75c0;
+  white-space: normal;
 }
 
 .strong-bold {
@@ -1401,7 +1396,6 @@ section.modal {
   z-index: 2;
   box-sizing: border-box;
   width: auto;
-  max-width: 600px !important;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -o-border-radius: 8px;
@@ -1580,12 +1574,16 @@ section.image-details-description div.modal-image-field p > span.image-modal-con
 }
 
 body#landing-replay section.modal {
-  max-width: 300px !important;
+  max-width: 100% !important;
 } 
 
 body#landing-replay section#technical-details {
-  width: auto;
-  max-width: 718px !important;
+  width: 100%;
+  max-width: 100% !important;
+  padding: 20px 0px 35px 20px !important;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
   padding: 20px 0px 35px 20px !important;
 } 
 
