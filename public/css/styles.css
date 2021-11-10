@@ -298,7 +298,16 @@ p#modal-datepicker-input-p {
   letter-spacing: 1px;
  }
 
- 
+ .modal button.close{
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  color: #1c75c0;
+  font-size: 1rem;
+ }
 /* header */
 
 header {
