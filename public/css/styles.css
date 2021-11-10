@@ -1627,11 +1627,10 @@ section.modal ul.replay-options li p {
 
 section.modal ul.replay-options li button {
   margin: 10px;
-  width: 103px;
+  width: 100px;
 }
 
 div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
-  width: 100%;
   max-width: 300px;
 }
 
@@ -1641,7 +1640,6 @@ body#landing-replay section#fullscreen-mode {
 }
 
 div.jquery-modal section#replay-with-old-browser {
-  width: 100%;
   max-width: 320px;
 }
 
