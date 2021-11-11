@@ -36,7 +36,7 @@ if(typeof requestData != 'undefined'){
             <p><%= t('home.search-tools.narrative-popup') %></p>
         </li>
         
-        <li><form id="search-form-narrative" role="search for narratives" class="buttons" action="http://contamehistorias.pt/arquivopt/search?query=&lang=en" method="get">
+        <li><form id="search-form-narrative" role="search for narratives" class="buttons" action="<%- config.get('contame.historias.url') %>" method="get">
             <%- include('hidden-search-inputs', {requestData:narrativeRequestData}) %>
             <button type="submit"><%= t('wayback.popups.buttons.ok') %></button>
         </form></li>
