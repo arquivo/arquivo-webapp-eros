@@ -784,7 +784,7 @@ nav#replay-right-nav section ul > li:first-child {
   display: block;
   padding-left: 15px;
   font-size: 0.75em;
-  line-height: 0.8em;
+  line-height: 1em;
   padding-top: 15px;
   padding-bottom: 15px;
   /* Cancel selection of text */
@@ -883,10 +883,9 @@ nav#replay-left-nav section::-webkit-scrollbar-thumb {
   border: 3px solid #0b497f;
 }
 
-
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 16px;    
+  padding-right: 12.5px;    
 }
 /* ends Font Awesome icons */
 
@@ -911,12 +910,30 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 
 /* Aligning right menu titles */
 
+#menuPrint span {
+  padding-right: 14px !important;
+}
+
 #menuCompleteThePage span {  
-  padding-right: 12px !important;
+  padding-right: 11.5px !important;
+}
+
+#menuScreenshot span {
+  padding-right: 12.5px !important;
+}
+
+#menuFullScreen span {  
+  padding-right: 15.5px !important;
+  padding-left: 1px;
+}
+
+#menuReplayWithOldBrowser span {  
+  padding-right: 15px !important;
+  padding-left: 0.5px;
 }
 
 .fa-laptop-medical::before {  
-  left: -1.7px;
+  left: -1.4px;
   position: relative;
 }
 
@@ -1688,7 +1705,7 @@ div.jquery-modal section#replay-with-old-browser {
 }
 
 .image-modal-content {
-  font-size: 0.97em !important;
+  font-size: 1em !important;
 }
 
 section#modal-window-image-technical-details .image-modal-content.resolution{
@@ -2717,7 +2734,8 @@ section#images-results ul#image-cards-container > li {
   justify-content: center;
   font-size: small; 
   background-color: transparent;
-  }
+  max-width: 100%;
+ }
 
  section#images-results ul > li > ul > li {
   width: 100%;
