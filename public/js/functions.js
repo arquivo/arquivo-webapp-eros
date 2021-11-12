@@ -45,7 +45,7 @@ function openReplayRightMenuNav() {
     $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:2;transition:0.5s ")
 }
 function closeReplayRightMenuNav() {
-    $("#replay-right-nav").attr('style',"right:-250px");  
+    $("#replay-right-nav").attr('style',"right:-250px");     
     $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1;transition:0.5s");
 }
 // ends: menu opening and closing button for replay top nav right replay menu button 

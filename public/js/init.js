@@ -3,7 +3,7 @@ $(function(){
     //make sure we have a modal div
     let modal = $('#modal');
     if(!modal.length){
-        $('body').append('<div id="modal"></div>');
+        $('body').append('<div id="modal" onclick="closeReplayRightMenuNav()"></div>');
     }
 
     //disable links inside elements with "blockUrl" class

@@ -255,7 +255,9 @@
 .fa-bookmark:before {
     content: "\f02e"}
 .fa-print:before {
-    content: "\f02f"}
+    content: "\f02f";
+    padding-right: 5px !important;
+}
 .fa-camera:before {
     content: "\f030"}
 .fa-font:before {
