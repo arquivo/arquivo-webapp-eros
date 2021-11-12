@@ -30,6 +30,17 @@ arquivo-pt-award:
     pt: 'Prémio Arquivo.pt 2021'
     en: 'Arquivo.pt Award 2021'
 
+the-past-web:
+  header:
+    pt: Novidade!
+    en: New!
+  img:
+    pt: /img/the-past-web-pt.jpg
+    en: /img/the-past-web-en.jpg
+  url:
+    pt: https://arquivo.pt/livro
+    en: https://arquivo.pt/book
+
 what-is-arquivo-pt:
   header:
     pt: 'O que é o Arquivo.pt?'

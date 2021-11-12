@@ -20,7 +20,7 @@
 <section>
   <h4><%= t('wayback.options-menu.accessibility-list'); %></h4>
     <ul>      
-      <li id="menuUrl" class="link-line-height"><span><%- requestedPage.url %></span><br><span id="menuTs" class="page-date"><%- date %></span></li>
+      <li><span id="menuUrl" class="link-line-height"><%- requestedPage.url %></span><br><span id="menuTs" class="page-date"><%- date %></span></li>
       <li><a id="menuListVersions" href="/page/search?q=<%- requestedPage.url %>"><span class="fas fa-list" aria-hidden="true"></span><%= t('wayback.options-menu.list-versions'); %></a></li>
       <li><a id="menuTechnicalDetails" href="#technical-details" rel="modal:open"><span class="fas fa-info-circle" aria-hidden="true"></span><%= t('wayback.options-menu.technical-details'); %></a></li>
       <li><a id="menuScreenshot" href="#screenshot" rel="modal:open""><span class="fas fa-camera" aria-hidden="true"></span><%= t('wayback.options-menu.screenshot'); %></a></li>
