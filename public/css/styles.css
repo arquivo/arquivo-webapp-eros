@@ -1651,7 +1651,7 @@ section.image-details-description div.modal-image-field p > span.image-modal-con
 }
 
 body#landing-replay section.modal {
-  max-width: 100% !important;
+  width: 100%;
 } 
 
 body#landing-replay section#technical-details {
@@ -1699,7 +1699,7 @@ section.modal ul.replay-options li button {
 }
 
 div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
-  max-width: 300px;
+  max-width: 280px;
 }
 
 body#landing-replay section#fullscreen-mode {
@@ -1708,7 +1708,16 @@ body#landing-replay section#fullscreen-mode {
 }
 
 div.jquery-modal section#replay-with-old-browser {
-  max-width: 320px;
+  max-width: 300px;
+}
+
+div.jquery-modal section#replay-with-old-browser li#netscape-icon {
+  background: url(../img/old-browser-icon-black.svg) no-repeat 11px 1px;
+  background-size: 14px;
+  padding-bottom: 0;
+  padding-left: 18px;
+  padding-top: 1.5px;
+  padding-right: 0px;
 }
 
 .image-modal-content {
