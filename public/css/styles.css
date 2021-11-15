@@ -2701,6 +2701,8 @@ section#pages-results ul > li > a.results-title  {
   font-size: 20px;
   color: #1a0dab; 
   line-height: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 section#pages-results ul > li > a.results-title:visited  {
