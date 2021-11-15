@@ -1635,6 +1635,7 @@ section#modal-window-image-technical-details > div.raw-api-data-title{
   flex-wrap: nowrap;
   justify-content: space-between;
   padding: 0;  
+  padding-top: 15px;
   align-items: center;
 }
 section#modal-window-image-technical-details > div.raw-api-data-title > button{
@@ -1799,19 +1800,9 @@ section.image-details-description p.image-details-padding-right  {
 section.image-details-description p a  {
   color: #1c75c0;
   text-decoration: none;
-  padding-left: 17px;
-  display: block;
-  margin-top: -17px;
+  padding-left: 5px;
   line-height: 1.4em;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 1em;
-}
-
-section.image-details-description p.image-description-date  {
-  font-size: 0.73em;
-  color: gray;
+  word-break: break-word;
 }
 
 section.image-details-description p.image-description-date span,section.image-details-description p.page-description-date span {
@@ -1824,6 +1815,12 @@ section.image-details-description p a:hover  {
   color: #1c75c0;
   text-decoration: underline;
 }
+
+section.image-details-description .image-original-address,
+section.image-details-description .page-original-address {
+  word-break: break-all;
+}
+
 
 section#replay-not-found {
   display: flex;  

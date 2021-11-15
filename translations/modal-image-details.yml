@@ -54,8 +54,8 @@ labels:
     en: 'URL:'
     pt: 'URL:'
   timestamp:
-    en: 'Crawl Timestamp:'
-    pt: 'Carimbo de Tempo da Recolha:'
+    en: 'Capture Date:'
+    pt: 'Data de Captura:'
   title:
     en: 'Title:'
     pt: 'Título:'
@@ -74,6 +74,12 @@ labels:
   name:
     en: 'Name:'
     pt: 'Nome:'
+  page-original-address:
+    en: 'Original Page Address:'
+    pt: 'Endereço da Página:'
+  image-original-address:
+    en: 'Original Image Address:'
+    pt: 'Endereço da Imagem:'
 pixels:
   en: pixels
   pt: pixeis  
