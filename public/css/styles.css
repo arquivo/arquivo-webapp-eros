@@ -864,7 +864,7 @@ nav#replay-left-nav section ul > li a {
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-month {  
-  padding-left: 30px;  
+  padding-left: 23px;  
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-day {   
@@ -918,7 +918,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-month a {
 }
 
 nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
-  padding-left: 43px;
+  padding-left: 31px;
   border-bottom: 1px solid #e3e3e32e;
 }
 
