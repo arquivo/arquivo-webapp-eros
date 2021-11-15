@@ -864,7 +864,7 @@ nav#replay-left-nav section ul > li a {
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-month {  
-  padding-left: 40px;  
+  padding-left: 30px;  
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-day {   
@@ -918,7 +918,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-month a {
 }
 
 nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
-  padding-left: 80px;
+  padding-left: 33px;
   border-bottom: 1px solid #e3e3e32e;
 }
 
@@ -2493,14 +2493,14 @@ body#save-page-now .save-page-now-icon {
   justify-content: flex-start;
   align-items: center;
   padding-right: 8px;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 #savepagenow-modal span {  
   display: flex;
   justify-content: flex-start; 
   padding-right: 8px;
-  font-size: 17.5px;
+  font-size: 16px;
   width: 19px; 
   float: left;
   align-items: center;
@@ -2863,7 +2863,7 @@ section#images-results ul#image-cards-container > li {
   cursor: pointer;
   transition: box-shadow 0.3s;
   width: auto; 
-  max-height: 170px;
+  max-height: 100px;
   max-width: 100%;
  }
 
