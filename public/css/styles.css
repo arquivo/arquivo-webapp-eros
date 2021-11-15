@@ -468,7 +468,7 @@ nav#left-nav, nav#replay-left-nav {
 }
 
 nav#replay-right-nav  {
-  padding: 53.5px 0px 46.5px 0; 
+  padding: 0px 0px 46.5px 0; 
 }
 
 body#landing-replay main#main-content {
@@ -513,7 +513,7 @@ nav#replay-right-nav {
 
 nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   top: 9px;
   right: 9px;
   background-color: #033f72;
@@ -794,13 +794,14 @@ nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul
 }
 
 nav#replay-right-nav section ul > li:first-child { 
-  border-top: 1px solid #e3e3e32e;
+  border-top: 0px solid #e3e3e32e;
   display: block;
   padding-left: 15px;
   font-size: 0.75em;
   line-height: 1em;
   padding-top: 15px;
   padding-bottom: 15px;
+  padding-right: 20px;
   /* Cancel selection of text */
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -811,19 +812,11 @@ nav#replay-right-nav section ul > li:first-child {
 }
 
 nav#replay-right-nav section ul > li:first-child span:first-child {     
-  width: 215px;
-  display: block; 
-  width: 95%;
+  width: 92%;
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-
-nav#replay-right-nav section ul > li:first-child:hover { 
-   
-  background-color: white;
-  color: #033f72; 
 }
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
