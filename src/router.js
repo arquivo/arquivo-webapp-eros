@@ -70,11 +70,8 @@ router.get('/images', function (req, res) {
 });
 
 // Images: advanced search
-router.get('/images-advanced-search', function (req, res) {
-    res.render('pages/images-advanced-search');
-});
 router.get('/image/advanced/search', function (req, res) {
-    res.render('pages/images-advanced-search');
+    res.render('pages/images-advanced-search',{ requestData: req.utils.sanitizeInputs(req, res) });
 });
 
 // starts wayback
