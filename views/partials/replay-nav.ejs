@@ -39,16 +39,10 @@
                 };
             }
             if (typeof returnData.years[year].months[month] === 'undefined') {
-                returnData.years[year].months[month] = {
-                    days: {},
-                };
-            }
-            
-            if (typeof returnData.years[year].months[month].days[day] === 'undefined') {
-                returnData.years[year].months[month].days[day] = []
+                returnData.years[year].months[month] = []
             }
 
-            returnData.years[year].months[month].days[day].push({
+            returnData.years[year].months[month].push({
                 ...item,
                 year,
                 month,
@@ -88,20 +82,7 @@
                 <li><a href="javascript:(void)" class="<%- monthAnchorClasses %>"><%= t('common.months.'+month) %></a>
                     <ul class="<%- monthUlClasses %>">
             <% 
-            Object.keys(apiData.years[year].months[month].days).sort().forEach(day => {
-                let dayUlClasses = "replay-accordion";
-                let dayAnchorClasses = 'accordion-header accordion-replay-left-menu-day';
-                if(day == requestedDay){
-                    dayUlClasses += ' show';
-                    dayAnchorClasses += ' active';
-                } else {
-                    dayUlClasses += '" style="display: none;'
-                }
-                %>
-                    <li class=""><a href="javascript:(void)" class="<%- dayAnchorClasses %>"><%= parseInt(day) %></a>
-                        <ul class="<%- dayUlClasses %>">
-                <% 
-                apiData.years[year].months[month].days[day].forEach(item => {
+            apiData.years[year].months[month].forEach(item => {
                 
                     let classNames = 'menu-pages-replay-date-hour';
                     
@@ -111,11 +92,15 @@
                     const href = "/wayback/"+item.timestamp+'/'+item.url;
                     const time = item.hours + 'h' + item.minutes;
                     %>
-                        <li class="<%= classNames %>"><a href="<%- href %>" replay-url="<%= item.url %>" replay-timestamp="<%= item.timestamp %>"><%- time %></a></li>
-                    <%
-                });
-                //Close days list
-                %></ul></li><%
+                        <li class="<%= classNames %>"><a href="<%- href %>" replay-url="<%= item.url %>" replay-timestamp="<%= item.timestamp %>">
+                            <%= t('common.date.long',{
+                                year: item.year,
+                                month: t('common.months.'+item.month),
+                                day: parseInt(item.day),
+                                hours: item.hours,
+                                minutes: item.minutes,                  
+                            })%>
+                        </a></li><%
             });
             //Close months list            
             %></ul></li><%

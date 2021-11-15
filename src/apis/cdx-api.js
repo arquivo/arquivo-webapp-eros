@@ -38,6 +38,9 @@ class CDXSearchApiRequest extends ApiRequest {
         if (apiRequestData.has('q')) {
             apiRequestData.set('url', apiRequestData.get('q'));
         }
+        if (apiRequestData.has('url')){
+            apiRequestData.set('url', encodeURIComponent(apiRequestData.get('url')));
+        }
         return super.sanitizeRequestData(apiRequestData);
     }
 }
