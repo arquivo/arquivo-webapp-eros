@@ -944,7 +944,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 #menuReplayWithOldBrowser {  
   padding-left: 44px !important;
   padding-right: 25px;  
-  background: url(../img/old-browser-icon.svg) no-repeat 16.4px 13.5px;
+  background: url(../img/old-browser-icon.svg) no-repeat 15.7px 13.5px;
   background-size: 13px;  
 }
 
@@ -2493,14 +2493,23 @@ body#save-page-now .save-page-now-icon {
   justify-content: flex-start;
   align-items: center;
   padding-right: 8px;
-  font-size: 19px;
+  font-size: 18px;
+}
+
+body#save-page-now-landing .left .save-page-now-icon {  
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-right: 8px;
+  font-size: 14px;
+  color: white;
 }
 
 #savepagenow-modal span {  
   display: flex;
   justify-content: flex-start; 
-  padding-right: 8px;
-  font-size: 16px;
+  padding-right: 5px;
+  font-size: 14px;
   width: 19px; 
   float: left;
   align-items: center;
