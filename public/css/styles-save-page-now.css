@@ -152,7 +152,16 @@ section#savepagenow-modal h4 {
 
 section#savepagenow-modal p {
     font-size: small;
+    line-height: normal;
 }
+
+div#modal span.savepagenow-modal {  
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 20px;
+  }
 
 section#savepagenow-modal form {
    display: flex;
