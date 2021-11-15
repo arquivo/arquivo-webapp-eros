@@ -2508,7 +2508,7 @@ body#save-page-now-landing .left .save-page-now-icon {
 #savepagenow-modal span {  
   display: flex;
   justify-content: flex-start; 
-  padding-right: 5px;
+  padding-right: 4px;
   font-size: 14px;
   width: 19px; 
   float: left;
