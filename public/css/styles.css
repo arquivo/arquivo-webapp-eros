@@ -812,9 +812,7 @@ nav#replay-right-nav section ul > li:first-child {
 }
 
 nav#replay-right-nav section ul > li:first-child span:first-child {     
-  width: 215px;
-  display: block; 
-  width: 95%;
+  width: 92%;
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
