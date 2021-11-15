@@ -1221,15 +1221,28 @@ section#search-tools #submit-search-mobile {
   outline: 10px;     
 } 
 
-section#search-tools-date-slider #date-container-start:hover input[type="text"], section#search-tools-date-slider #date-container-end:hover input[type="text"] {
+section#search-tools-date-slider #date-container-start:hover input[type="text"],
+section#search-tools-date-slider #date-container-end:hover input[type="text"] {
   color:#1c75c0;     
 } 
-section#search-tools-date-slider #date-container-start:active input[type="text"], section#search-tools-date-slider #date-container-end:active input[type="text"] {
+
+body#pages-advanced-search section#search-tools-date-slider #date-container-start:hover input[type="text"],
+body#pages-advanced-search section#search-tools-date-slider #date-container-end:hover input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-start:hover input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-end:hover input[type="text"] {
+  color:#1c75c0;     
+} 
+
+section#search-tools-date-slider #date-container-start:active input[type="text"], 
+section#search-tools-date-slider #date-container-end:active input[type="text"],
+body#pages-advanced-search section#search-tools-date-slider #date-container-start:active input[type="text"], 
+body#pages-advanced-search section#search-tools-date-slider #date-container-end:active input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-start:active input[type="text"], 
+body#images-advanced-search section#search-tools-date-slider #date-container-end:active input[type="text"] {
   color:white;     
 }   
 
 /*  starts Range Slider ********************************************************************** */
-
 
 /* Calendar buttons input values: year, day and month */
 
@@ -1256,7 +1269,8 @@ section#search-tools-date-slider input[type="text"].calendar-year-input {
   outline: none; 
 }
 
-section#search-tools-date-slider input[type="text"].calendar-day-month-input, input[type="text"].calendar-day-month-input {
+section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+input[type="text"].calendar-day-month-input {
   position: absolute;
   z-index: 0;
   top: 38px;
@@ -1275,7 +1289,54 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
   margin: 0 auto;
 }
 
-section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover, section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover {
+
+body#pages-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+body#images-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input {
+  position: absolute;
+  z-index: 0;
+  top: 38px;
+  left: 0.5px;
+  width: 37px;
+  height: auto;
+  padding: 3px 0 0 0;  
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #ffffff6b;
+  outline: none;
+  right: 0;
+  margin: 0 auto;
+  border-radius: inherit;
+}
+
+body#pages-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+body#images-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input
+ {
+  position: absolute;
+  z-index: 0;
+  top: 38px;
+  left: 0.5px;
+  width: 37px;
+  height: auto;
+  padding: 3px 0 0 0;  
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #ffffff6b;
+  outline: none;
+  right: 0;
+  margin: 0 auto;
+  border-radius: inherit;
+}
+
+section#search-tools-date-slider #date-container-end, 
+#date-container-end:hover input[type="text"].calendar-day-month-input:hover, 
+section#search-tools-date-slider #date-container-end, 
+#date-container-end:hover input[type="text"].calendar-day-month-input:hover {
   border-top: 1px solid #033f72;
   position: relative;
   z-index: 1;
@@ -1283,7 +1344,10 @@ section#search-tools-date-slider #date-container-end, #date-container-end:hover 
 
 /* Left and right calendar icon */
 
-section#search-tools-date-slider #date-container-start, section#search-tools-date-slider #date-container-end, #date-container-start, #date-container-end {
+section#search-tools-date-slider #date-container-start, 
+section#search-tools-date-slider #date-container-end, 
+#date-container-start, 
+#date-container-end {
   position: absolute;   
   margin: 0;
   width: 40px;
@@ -1314,11 +1378,13 @@ section#search-tools-date-slider #date-container-end, #date-container-end   {
   cursor: pointer;
 }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-year, section#search-tools-date-slider #date-container-end li.search-calendar-year {
+section#search-tools-date-slider #date-container-start li.search-calendar-year,
+section#search-tools-date-slider #date-container-end li.search-calendar-year {
   margin-top: 2.05px;
 }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end li.search-calendar-year input[type="button"] {
+section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"],
+section#search-tools-date-slider #date-container-end li.search-calendar-year input[type="button"] {
     padding: 6.9px 0 0.3px 0;
     margin: 0;
     margin-top: 0.5px;
@@ -1340,33 +1406,41 @@ section.form-container section#search-tools-date-slider input[type="text"]{
     transition: none;
 }
 
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-day-month,
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-month
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-month
 {
 text-align: center;
 cursor: pointer;
 color: #1c75c0;
 }
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:hover li.search-calendar-year input[type="button"]
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-year input[type="button"],
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-year input[type="button"]
 {
 color: #1c75c0;
 }
 
-section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month,
-section#search-tools-date-slider #date-container-start:active li.search-calendar-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-month,
-section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="button"]
+section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month, 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="button"], 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="button"]
 {
 color: white;
 }
 
-section#search-tools-date-slider #date-container-start li, section#search-tools-date-slider #date-container-end li {
+section#search-tools-date-slider #date-container-start li, 
+section#search-tools-date-slider #date-container-end li {
   font-size:10px;
   text-align: center;
   cursor: pointer;  
   display: block;
   }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-month, section#search-tools-date-slider #date-container-end li.search-calendar-month {
+section#search-tools-date-slider #date-container-start li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end li.search-calendar-month {
   position: relative;
   left: -0.3px;
   width: 12px;
@@ -1376,12 +1450,14 @@ section#search-tools-date-slider #date-container-start li.search-calendar-month,
 
 }
 
-section#search-tools-date-slider #date-container-start:hover, section#search-tools-date-slider #date-container-end:hover {     
+section#search-tools-date-slider #date-container-start:hover, 
+section#search-tools-date-slider #date-container-end:hover {     
   background: transparent url(../img/calendar.svg) no-repeat 0px -124px;
   background-size: 100%;  
 }
 
-section#search-tools-date-slider #date-container-start:active, section#search-tools-date-slider #date-container-end:active {     
+section#search-tools-date-slider #date-container-start:active, 
+section#search-tools-date-slider #date-container-end:active {     
   background: transparent url(../img/calendar.svg) no-repeat 0px 0px ;
   background-size: 100%;
  
@@ -1422,13 +1498,16 @@ text-decoration: none;
   font-size: 0.9em !important;
 }
 
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, 
+.ui-widget-header .ui-state-highlight {
   /*border: 1px solid #ffffff !important;*/
   /*background: #c9e9fa !important;*/
   color: #3f3f3f !important;
 }
 
-.ui-datepicker .ui-datepicker-title select, .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+.ui-datepicker .ui-datepicker-title select, 
+.ui-datepicker select.ui-datepicker-month, 
+.ui-datepicker select.ui-datepicker-year {
   width: 45%;
   font-size: 0.8em !important;
   border: 1px solid #ccc !important;
