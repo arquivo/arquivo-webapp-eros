@@ -1276,7 +1276,7 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
 }
 
 section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover, section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover {
-  border-top: 1px solid hsl(212, 96%, 19%);
+  border-top: 1px solid #033f72;
   position: relative;
   z-index: 1;
 }
@@ -1378,8 +1378,7 @@ section#search-tools-date-slider #date-container-start li.search-calendar-month,
 
 section#search-tools-date-slider #date-container-start:hover, section#search-tools-date-slider #date-container-end:hover {     
   background: transparent url(../img/calendar.svg) no-repeat 0px -124px;
-  background-size: 100%;
-  
+  background-size: 100%;  
 }
 
 section#search-tools-date-slider #date-container-start:active, section#search-tools-date-slider #date-container-end:active {     
@@ -2257,6 +2256,7 @@ section#search-tools-buttons form#search-form-advanced {
 section#search-tools-buttons form#search-form-advanced button  {
   position: absolute; 
   right:0;  
+  padding:6px 8.65px 7px 8.65px;
   height: auto;
   width: auto;
   display: block;
