@@ -121,18 +121,26 @@ collaborate:
       en: 'https://sobre.arquivo.pt/en/collaborate/web-memorial'
   publish:
     text:
-      pt: 'Recomendações para webmasters'
-      en: 'Recommendations for publishers'
+      pt: 'Recomendações'
+      en: 'Recommendations'
     url:
       pt: 'https://arquivo.pt/recomenda'
       en: 'https://arquivo.pt/recommendations'
-  donate:
+  donate: # <-- No longer used!
     text:
       pt: 'Forneça conteúdos históricos'
       en: 'Donate historical web content'
     url:
       pt: 'https://arquivo.pt/doar'
       en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
+  savepagenow:
+    text:
+      pt: Grave uma página
+      en: Record a webpage
+    url:
+      pt: /services/savepagenow?l=pt
+      en: /services/savepagenow?l=en
+      
   rnd:
     text:
       pt: 'Investigação'
