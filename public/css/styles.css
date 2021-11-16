@@ -2325,7 +2325,6 @@ section#search-tools-buttons form#search-form-advanced {
 section#search-tools-buttons form#search-form-advanced button  {
   position: absolute; 
   right:0;  
-  padding:6px 8.65px 7px 8.65px;
   height: auto;
   width: auto;
   display: block;
@@ -2976,7 +2975,7 @@ section.navigation-tools p {
 section.navigation-tools button {
   padding: 6px 7px 7px 7px;
   border-radius: 4px;
-  font-size: inherit;
+  font-size: 0.85em;
   z-index: 0;
 } 
 
