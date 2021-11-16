@@ -734,25 +734,29 @@ body#homepage button#nav-options-right-button  {
 }
 
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after, .accordion-replay-left-menu-day:after  {
-  content: "\f0ab";
-  font-family: FontAwesome, sans-serif; 
+  content: url(../img/button-a-down.svg);
   float: right;
   font-size: 0.9em;
   position: relative;
   right: 0; 
   font-weight: normal;
-  opacity: 0.6;
-  
+  top: -1px;
 }
 
+#replay-left-nav .accordion-left-menu:after, 
+#replay-left-nav .accordion-replay-left-menu-year:after, 
+#replay-left-nav .accordion-replay-left-menu-month:after, 
+#replay-left-nav .accordion-replay-left-menu-day:after  {
+  top: 5px;
+}
 .active:after {
-  content: "\f0aa";
-  font-family: FontAwesome, sans-serif;
+  content: url(../img/button-a-up.svg);
+  float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0;
-  float: right;
-  font-weight: normal;  
+  right: 0; 
+  font-weight: normal;
+  top: -1px;
 }
 
 ul li a:hover:after {
@@ -889,7 +893,7 @@ nav#replay-left-nav section::-webkit-scrollbar-track {
   background: #0b497f;
 }
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
-  background-color: #00324B;
+  background-color: #1c75c0;
   border-radius: 0px;
   border: 3px solid #0b497f;
 }
