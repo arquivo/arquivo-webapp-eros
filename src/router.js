@@ -75,6 +75,18 @@ router.get('/image/advanced/search', function (req, res) {
 });
 
 // starts wayback
+router.get('/wayback/[*]/:url*', function (req, res) {
+    const requestUrl = req.params.url + (req.params['0'] ?? '');
+    const requestData = new URLSearchParams({q:requestUrl});
+    if (req.utils.isValidUrl(requestUrl)) {
+        res.redirect('/url/search?' + requestData.toString())
+    } else {
+        res.render('pages/pages-search-results', {
+            requestData: requestData,
+        });
+    }
+
+});
 router.get('/wayback/:url*', function (req, res) {
     wayback(req, res);
 });
