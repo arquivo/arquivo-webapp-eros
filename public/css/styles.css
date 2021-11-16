@@ -876,26 +876,36 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
   padding-left: 80px; 
 }
 
-nav#replay-left-nav section {
+nav#replay-left-nav section::-webkit-scrollbar {
   margin-top: 14px;
+  scrollbar-color: #0b497f rgb(0, 0, 0);
+  scrollbar-width: 14px;
+  
+  border-radius: 10px;
+  border: 2px solid #01060a; 
 }
 
 
 /* scrollbar styling */
-nav#replay-left-nav section::-webkit-scrollbar {
-  width: 11px;
+
+nav#replay-left-nav section::-webkit-scrollbar{
+  width: 14px; 
+  
 }
-nav#replay-left-nav section {
-  scrollbar-width: thin;
-  scrollbar-color: #1c75c0 #0b497f;
+nav#replay-left-nav section::-webkit-scrollbar {
+  width: 10px; 
+  scrollbar-width: auto;
+  scrollbar-color: #0b497f;
 }
 nav#replay-left-nav section::-webkit-scrollbar-track {
-  background: #0b497f;
+  background: #000000;
+  border-radius: 10px;
 }
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
   background-color: #1c75c0;
-  border-radius: 0px;
-  border: 3px solid #0b497f;
+  border-radius: 10px;
+  border: 2px solid #01060a;  
+  
 }
 
 /* starts Font Awesome icons */
@@ -2841,7 +2851,7 @@ section#images-results ul#image-cards-container > li {
  position: relative;
  width: 150px; 
  margin: 0 1px 2px 1px;
- padding: 0px 10px 17px;
+ padding: 7px 10px 15px;
  background-color: #f5f5f5;
  flex-direction: row;
  flex-wrap: wrap;
@@ -3876,7 +3886,7 @@ section#home-content h4, section#body-content h4  {
 /* Galaxy Fold
   ##Screen = B/w 280px to 653px
 */
-@media (min-width: 280px) and (max-height: 653px) {
+@media (width: 280px) and (height: 653px) {
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
