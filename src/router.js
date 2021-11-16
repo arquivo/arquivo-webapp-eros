@@ -55,7 +55,7 @@ router.get('/image/search', function (req, res) {
 // Pages: landing page
 router.get('/pages', function (req, res) {
 
-    res.render('pages/pages');
+    res.render('pages/home',{searchType: 'pages'});
 });
 
 // Pages advanced search
@@ -66,7 +66,7 @@ router.get('/page/advanced/search', function (req, res) {
 // Images: landing page
 router.get('/images', function (req, res) {
 
-    res.render('pages/images');
+    res.render('pages/home',{searchType: 'images'});
 });
 
 // Images: advanced search
