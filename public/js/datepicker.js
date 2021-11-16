@@ -178,6 +178,7 @@ $(function () {
                     setupModalDatepicker(type);
                     modal.modal();
                     $('#modal-datepicker-input').select();
+                    $('#modal-datepicker-input')[0].setSelectionRange(0, 0);
                 }
             });
         });

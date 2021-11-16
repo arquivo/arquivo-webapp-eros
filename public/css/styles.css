@@ -1634,22 +1634,8 @@ a#close-modal-tecnhical {
   display: none;  
   position: absolute;
   z-index: 4;
-  top: -12.5px;
-  right: -12.5px;
-  width: 30px;
-  height: 30px;
-  text-indent: -9999px;
-  filter: invert(1);
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  transition: 0.5s;   
-}
-
-a#close-modal-tecnhical:hover {
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  filter: drop-shadow(2px 4px 6px black);
-  transition: 0.5s;
+  top: 0;
+  right: 5px;
 }
 
 section#modal-window-image-technical-details h4 {
@@ -1714,7 +1700,7 @@ section#modal-window-image-technical-details div.modal-image-field {
   border-bottom: 1px solid #cccccc69;
 }
 section#modal-window-image-technical-details div.modal-image-field:last-child  {  
-  display: flex;
+  display: block;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;

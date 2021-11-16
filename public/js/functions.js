@@ -142,12 +142,9 @@ function openImageDetailsModalWindow() {
 // closes image technical details window that stays on top of modal image
 function closeImageDetailsModalWindow() {
   $('#modal-window-image-technical-details').attr('style',"display:none; transition:0.5s");   
-}
-
-// closes image technical details window button that stays on top of modal image
-function closeImageDetailsModalWindowButton() {
   $('#close-modal-tecnhical').attr('style',"display:none; transition:0.5s");   
 }
+
 
 function dateFromTimestamp(timestamp,format='long'){
   const availableFormats = ['long','medium','short'];
