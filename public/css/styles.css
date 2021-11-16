@@ -2120,7 +2120,7 @@ div.jquery-modal div#modal {
   box-shadow: 0 0 100px #000;
   background-color: #f5f5f5;  
   height: auto;
-  max-height: 100vh;
+  max-height: 90vh;
   width: auto;    
 }
 
@@ -2616,7 +2616,7 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-top: 15px;
+  padding-top: 0px;
   padding-bottom: 10px;  
   font-size: 13px;
   color:#70757a;
@@ -3870,9 +3870,9 @@ section#home-content h4, section#body-content h4  {
 }
 
 /* Galaxy Fold
-  ##Screen = B/w 280px to 480px
+  ##Screen = B/w 280px to 653px
 */
-@media (min-width: 280px) and (max-width: 480px) {
+@media (min-width: 280px) and (max-height: 653px) {
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
@@ -3892,7 +3892,7 @@ section#home-content h4, section#body-content h4  {
 body#landing-replay section#replay-not-found h2 {
     visibility:visible !important;
     height: 50px !important;
-  }
+}
 
   header button#nav-menu-mobile-button-left {
     display: block;
@@ -3959,23 +3959,85 @@ section#search-tools #submit-search {
       height: 36px;
       margin: 20px 5%;
   }
+
+  button {  
+    padding: 6px 5.1px 6.5px 5.1px !important;
+    font-size: 0.5855em !important;
+}
+
 }
 
 @media (min-width: 0px) and (max-width: 279px) {
-
-
   form#advanced-search-form-pages, form#advanced-search-form-images {
       padding-top: 90px;
-    }
-    
-    button#nav-options-right-button-mobile {
+  }
+  button#nav-options-right-button-mobile {
     display: none;
   }
 }
 
+@media (min-width: 0px) and (max-width: 415px) {
+/* Extend to 100% width left and right navigation buttons from both image and pages results navigation pages */
+  section#images-results ul li a img {
+    box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    width: auto;
+    max-height: 250px;
+    max-width: 100%;  
+  }
 
+  body#images-search-results section.navigation-tools, body#pages-search-results section.navigation-tools {
+  justify-content: center;
+  margin-top: 0px;
+  padding-top: 20px;
+  height: auto;
+  max-width: 960px;
+  width: 100%;
+  display: flex;  
+  flex-direction: column;
+  }  
 
+  section.navigation-tools form, section.navigation-tools form button {
+    width: 100%;
+  }
+  section.navigation-tools form button {
+    margin-bottom: 5px !important;
+  }
 
+ section#pages-results, section#images-results {
+    padding-bottom: 0px !important;
+    margin-bottom: -25px !important;
+  }  
+  button {  
+    font-size: 0.625em;   
+  }
+    p#estimated-results {   
+      padding-top: 0px !important;
+      font-size: 11px !important;  
+  }
+  #slider-range-container {  
+    padding: 38px 5px 28px 0 !important;    
+  }
+  .ui-slider .ui-slider-handle { 
+    top: -0.63em !important;
+    width: 0.8em !important;
+    height: 0.85em!important;
+    background-color: #1c75c0 !important;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 415px) {
+  button {  
+    font-size: 0.628em;   
+  }
+}  
+
+@media (min-width: 344px) and (max-width: 415px) {
+  button {  
+    font-size: 0.7em;   
+  }
+}
 
 
 /* set up printing on replay */
