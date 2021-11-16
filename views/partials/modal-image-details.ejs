@@ -1,7 +1,7 @@
 <section class="modal-image-details-container">
-
-  <a href="javascript:void(0)" id="close-modal-tecnhical" onmousedown="closeImageDetailsModalWindow()"
-    onmouseup="closeImageDetailsModalWindowButton()"><%= t('modal-image-details.buttons.close') %></a>
+  
+  <a href="javascript:void(0)" rel="modal:close"><button class="close cancel"><i class="fa fa-close"></i></button></a>
+  <a href="javascript:void(0)" id="close-modal-tecnhical" onclick="closeImageDetailsModalWindow()"><button class="close cancel"><i class="fa fa-close"></i></button></a>
   <button id="previous-image-button" class="image-navigation-button"><span class="fas fa-chevron-left"
       aria-hidden="true"></span></button>
   <button id="next-image-button" class="image-navigation-button"><span class="fas fa-chevron-right"
@@ -73,7 +73,9 @@
     </div>
     <div class="modal-image-field">
       <p class="raw-api-data"></p>
+      <button id="" onclick="closeImageDetailsModalWindow()"><i class="fas fa-close"></i><%= t('modal-image-details.buttons.close') %></button>
     </div>
+    
   </section>
 
 </section>
