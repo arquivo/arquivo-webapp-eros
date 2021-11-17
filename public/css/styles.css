@@ -1756,6 +1756,7 @@ section#modal-window-image-technical-details div.modal-image-field p.raw-api-dat
 
 section.image-details-description div.modal-image-field p > span.image-modal-content{
   padding-left:7px;
+  padding-right:10px;
 }
 
 body#landing-replay section.modal {
@@ -2360,9 +2361,12 @@ section#search-tools-buttons form#search-form-advanced button  {
 
 section.form-container {
   position: relative;
+  margin-top: 40px;
   padding: 0 10px;
   width: 100%; 
 }
+
+
 
 /* Advanced Search forms: pages and images */
 
@@ -3186,7 +3190,7 @@ footer a:active {
 
 footer section {
   padding: 0;
-  margin: 0 auto;  
+  margin: 0 18px;  
 }
 
 footer section#important-info {
@@ -3197,7 +3201,7 @@ footer section#important-info {
   width: 100%; 
   max-width: 960px;
   margin: 0 auto; 
-  padding: 0 10px; 
+  padding: 0 18px; 
 }
 
 footer section#important-info a:hover {
@@ -3889,7 +3893,7 @@ section#home-content h4, section#body-content h4  {
 
   footer section section {
     width: 100%;
-    padding: 12px;
+    padding: 12px 8px;
     }
 
   footer section section h4 {
@@ -3900,7 +3904,7 @@ section#home-content h4, section#body-content h4  {
       height: 36px;
       margin: 20px 5%;
   }
-  section#search-tools span {
+  section#search-tools span.button-title {
     display: none;
 }
 }
