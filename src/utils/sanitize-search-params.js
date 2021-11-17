@@ -5,7 +5,6 @@ const { request } = require('express');
 // (for compatibility with old arquivo searches)
 
 module.exports = function (req, res) {
-
     const requestData = new URLSearchParams(req.query);
 
     /**
@@ -69,6 +68,7 @@ module.exports = function (req, res) {
 
     //convert advanced search params into query terms
     if (q != '') { //Convert query into advanced search terms
+        
         let adv_and = q;
 
         //Handling exact phrases (between double quotes)
@@ -84,7 +84,7 @@ module.exports = function (req, res) {
         }
 
         //Handling excluding terms (with preceding '-')
-        const notRegEx = /-\w+/;
+        const notRegEx = /-[^\s]+/;
         let without = []
         while(notRegEx.test(adv_and)){
             const not = adv_and.match(notRegEx)[0];
@@ -143,6 +143,5 @@ module.exports = function (req, res) {
         [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
     ]
     requestData.set('q', fullquery.filter(t => t!='').join(' '));
-
     return requestData;
 }
