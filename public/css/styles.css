@@ -439,7 +439,7 @@ body#images-search-results section#images-results h3, body#pages-search-results 
   height: 0;
 }
 
-body#pages-search-results form#pages-search-results-list button {  
+body#pages-search-results form.pages-search-results-list button {  
   margin: 17px 0 5px 0;
 }
 

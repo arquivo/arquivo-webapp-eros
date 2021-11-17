@@ -78,7 +78,7 @@
     <table id="replay-menu-table">
       <caption><%= t('url-search.accessibility.replay.table') %></caption>        
         <thead>
-            <tr id="display-year" class="year-table-row">
+            <tr class="year-table-row">
               <% allYears.forEach(year => { %>
                 <th id="year-<%= year %>"class="year-table-head"><%= year %></th>
               <% }); %>      
@@ -86,7 +86,7 @@
         </thead>
         <tbody>
             <% for(let row = 0; row < maxRows; row++){ %>
-            <tr id="display-date-month" class="date-month-table-row"><%
+            <tr class="date-month-table-row"><%
                   allYears.forEach(year => {
                     if(row < tableData[year].length ){
                       const title = t('common.date.long',{
@@ -97,7 +97,7 @@
                         minutes: tableData[year][row].minutes
                       })
                       %> 
-              <td class="year-month-data" headers="year-<%= year %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
+              <td class="year-month-data" headers="year-<%= year %>" id="table-cell-<%- tableData[year][row].timestamp %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
                 month: t('common.shortMonths.'+tableData[year][row].month),
                 day: parseInt(tableData[year][row].day)
               }) %></a></td>
