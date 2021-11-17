@@ -435,7 +435,7 @@ body#homepage main {
 }
 
 body#images-search-results section#images-results h3, body#pages-search-results section#pages-results h3  {  
-  visibility: collapse;
+  visibility: hidden;
   height: 0;
 }
 
@@ -1599,7 +1599,12 @@ section.modal {
 
 
 body#images-search-results div.modal {
-  padding: 20px 20px 40px 20px;  
+  padding: 20px 20px 40px 20px;   
+}
+
+body#images-search-results #confirm-narrative-modal {
+  width: 100%;
+  max-width: 320px;  
 }
 
 body#images-search-results section.image-container {
@@ -1851,7 +1856,7 @@ section.image-details-description  {
   display: flex;
   flex-direction: column;
   text-align: initial;
-  margin-top: 2px; 
+  margin-top: 8px; 
   height: 149px;
   overflow: auto;
   overflow-x: none;
@@ -1860,7 +1865,7 @@ section.image-details-description  {
 
 section.image-details-description h5  {
   font-weight: bold;
-  padding: 11px 0 2px;
+  padding: 13px 0 2px;
   font-size: 0.75em;
   border-top: 1px solid #cccccc69;
   margin-top: 10px;
