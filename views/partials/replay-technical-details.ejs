@@ -7,11 +7,11 @@
       <%   Object.keys(apiData).forEach(key => { %>
       <%     const value = apiData[key]; %>
       <%     if(key == 'collection'){ %>
-               <li><strong><%= key %>:</strong><a href="https://arquivo.pt/colecoes"><%= value %></a></li>
+               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><a href="https://arquivo.pt/colecoes"><%= value %></a></li>
       <%      } else if(!utils.isValidUrl(value) || key == 'fileName'){ %>
-               <li><strong><%= key %>:</strong><%= value %></li>
+               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><%= value %></li>
       <%      } else { %>
-               <li><strong><%= key %>:</strong><a href="<%= value %>"><%= value %></a></li>
+               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><a href="<%= value %>"><%= value %></a></li>
       <%      } %>
       <%   }); %>
       <% } %>
