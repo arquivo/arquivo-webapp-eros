@@ -45,7 +45,7 @@ function openReplayRightMenuNav() {
     $(".blocker-menus").attr('style',"display:block;position: fixed; z-index:2;transition:0.5s ")
 }
 function closeReplayRightMenuNav() {
-    $("#replay-right-nav").attr('style',"right:-250px");  
+    $("#replay-right-nav").attr('style',"right:-250px");     
     $(".blocker-menus").attr('style',"display:none;position: fixed; z-index:1;transition:0.5s");
 }
 // ends: menu opening and closing button for replay top nav right replay menu button 
@@ -142,12 +142,9 @@ function openImageDetailsModalWindow() {
 // closes image technical details window that stays on top of modal image
 function closeImageDetailsModalWindow() {
   $('#modal-window-image-technical-details').attr('style',"display:none; transition:0.5s");   
-}
-
-// closes image technical details window button that stays on top of modal image
-function closeImageDetailsModalWindowButton() {
   $('#close-modal-tecnhical').attr('style',"display:none; transition:0.5s");   
 }
+
 
 function dateFromTimestamp(timestamp,format='long'){
   const availableFormats = ['long','medium','short'];

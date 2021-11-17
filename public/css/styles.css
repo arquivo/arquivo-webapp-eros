@@ -73,7 +73,7 @@ button {
   color: white;
   background-color: #1c75c0;  
   font-family: inherit;
-  font-size: 0.75em;
+  font-size: 0.7em;
   border-radius: 4px;
   border: 1px solid #1c75c0;
   outline: none;
@@ -122,10 +122,25 @@ h1, h2 {
 /* HEADER  */
 
 body#landing-replay p#chosen-url {
-  padding: 15px 0px ;
+  margin: 0 auto;
+  padding: 0 0 5px 0;
   font-size: 0.75em;
-  color: white
+  line-height: 1.8em;
+  color: white;
+  /* Make paragraph not selectable */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currentlysupported by Chrome, Opera and Firefox */
+  width: 80%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;  
 }
+
 
 body#landing-replay p#chosen-url span.icon-link {
   position: relative;
@@ -152,8 +167,7 @@ body#landing-replay nav#replay-right-nav a.link-line-height {
 }
 
 body#landing-replay span.page-date {  
-  padding-left: 18px;
-  font-size: 0.75em;
+  padding-left: 0px;  
 }
 
 
@@ -227,6 +241,10 @@ table td a:active {
 
 /* MODAL *************************************************************/
 
+section#technical-details  {
+  padding: 20px 0px 35px 20px;
+}
+
 section#technical-details ul {
   overflow-x: hidden;
   overflow-y: auto;
@@ -241,6 +259,10 @@ section#technical-details ul li {
   text-align: left;
   line-height: 1.4em;
   font-size: 0.85em;
+  width: 100%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: nowrap;
   border-bottom: 1px solid #cccccc73;
 }
@@ -256,17 +278,15 @@ section#technical-details ul li strong {
 }
 
 div.jquery-modal section#technical-details ul li a {
-  display: inline-block;
-  position: relative;
-  top: 5px;
-  margin-top: 2px;
-  width: auto;
-  max-width: calc(100% - 150px);
-  overflow: hidden; 
-  white-space: nowrap; 
-  text-decoration: none;  
-  text-overflow: ellipsis; 
-  color:#1c75c0;  
+  max-width: 600px;
+  text-decoration: none;
+  color: #1c75c0;
+  white-space: normal;
+  width: 100%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;  
 }
 
 .strong-bold {
@@ -303,7 +323,16 @@ p#modal-datepicker-input-p {
   letter-spacing: 1px;
  }
 
- 
+ .modal button.close{
+  display: block;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  color: #1c75c0;
+  font-size: 1rem;
+ }
 /* header */
 
 header {
@@ -325,7 +354,7 @@ header {
    z-index: 99999;
    width: 100%;
    height: 100%;
-   background-color: rgba(0,0,0,0.6);
+   background-color: rgba(0,0,0,0.75);
  }
 
  body#landing-replay header { 
@@ -355,7 +384,7 @@ header button#nav-menu-button-left  {
   width: 66px;
   height: 31px;
   font-size: 0.75em;
-  border-radius: 3px;     
+  border-radius: 5px;     
  }
 
  header img {
@@ -406,7 +435,7 @@ body#homepage main {
 }
 
 body#images-search-results section#images-results h3, body#pages-search-results section#pages-results h3  {  
-  visibility: collapse;
+  visibility: hidden;
   height: 0;
 }
 
@@ -443,7 +472,7 @@ nav#left-nav, nav#replay-left-nav {
 }
 
 nav#replay-right-nav  {
-  padding: 53.5px 0px 46.5px 0; 
+  padding: 0px 0px 46.5px 0; 
 }
 
 body#landing-replay main#main-content {
@@ -466,15 +495,15 @@ body#landing-replay header .background-top-curve {
 
 body#landing-replay main#main-content iframe  {
   padding: 0;
-  margin: 91px 0 0 0;
+  margin: 96px 0 0 0;
   max-width: 100%;
   width: inherit; 
 }
 
 nav#replay-left-nav { 
   z-index: 1;
-  padding-top: 41px;
-  top: 89px;
+  padding-top: 49px;
+  top: 95px;
   left: 0px;    
   width: 200px; 
   overflow: hidden;
@@ -488,7 +517,7 @@ nav#replay-right-nav {
 
 nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, nav#replay-right-nav button {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   top: 9px;
   right: 9px;
   background-color: #033f72;
@@ -501,7 +530,7 @@ nav#left-nav button, nav#options-right-nav button, nav#replay-left-nav button, n
 nav#replay-left-nav li#replay-table button { 
   background-color: #1c75c0;
   left: 10px;
-  width: 71px;
+  width: 78px;
   height: 31px;
   font-size: 0.75em;
   border-radius: 3px;
@@ -705,25 +734,29 @@ body#homepage button#nav-options-right-button  {
 }
 
 .accordion-left-menu:after, .accordion-replay-left-menu-year:after, .accordion-replay-left-menu-month:after, .accordion-replay-left-menu-day:after  {
-  content: "\f0ab";
-  font-family: FontAwesome, sans-serif; 
+  content: url(../img/button-a-down.svg);
   float: right;
   font-size: 0.9em;
   position: relative;
   right: 0; 
   font-weight: normal;
-  opacity: 0.6;
-  
+  top: 4px;
 }
 
+#replay-left-nav .accordion-left-menu:after, 
+#replay-left-nav .accordion-replay-left-menu-year:after, 
+#replay-left-nav .accordion-replay-left-menu-month:after, 
+#replay-left-nav .accordion-replay-left-menu-day:after  {
+  top: 5px;
+}
 .active:after {
-  content: "\f0aa";
-  font-family: FontAwesome, sans-serif;
+  content: url(../img/button-a-up.svg);
+  float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0;
-  float: right;
-  font-weight: normal;  
+  right: 0; 
+  font-weight: normal;
+  top: 4px;
 }
 
 ul li a:hover:after {
@@ -769,12 +802,29 @@ nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul
 }
 
 nav#replay-right-nav section ul > li:first-child { 
-  border-top: 1px solid #e3e3e32e;
-  display: block;     
+  border-top: 0px solid #e3e3e32e;
+  display: block;
+  padding-left: 15px;
+  font-size: 0.75em;
+  line-height: 1em;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 20px;
+  /* Cancel selection of text */
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 }
 
-nav#replay-right-nav section ul > li:first-child:hover { 
-  background-color: white;    
+nav#replay-right-nav section ul > li:first-child span:first-child {     
+  width: 92%;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 nav#left-nav section ul > li, nav#options-right-nav section ul > li, nav#replay-left-nav section ul > li, nav#replay-right-nav section ul > li { 
@@ -798,7 +848,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   display: block;
   text-decoration: none;
   color: white;
-  padding: 0px 16px;
+  padding: 0px 15.5px;
   font-size: 0.75em;  
 }
 
@@ -815,7 +865,7 @@ nav#replay-left-nav section ul > li a {
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-month {  
-  padding-left: 40px;  
+  padding-left: 23px;  
 }
 
 nav#replay-left-nav section a.accordion-replay-left-menu-day {   
@@ -826,32 +876,41 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
   padding-left: 80px; 
 }
 
-nav#replay-left-nav section {
+nav#replay-left-nav section::-webkit-scrollbar {
   margin-top: 14px;
+  scrollbar-color: #0b497f rgb(0, 0, 0);
+  scrollbar-width: 14px;
+  
+  border-radius: 10px;
+  border: 2px solid #01060a; 
 }
 
 
 /* scrollbar styling */
-nav#replay-left-nav section::-webkit-scrollbar {
-  width: 11px;
+
+nav#replay-left-nav section::-webkit-scrollbar{
+  width: 14px; 
+  
 }
-nav#replay-left-nav section {
-  scrollbar-width: thin;
-  scrollbar-color: #1c75c0 #0b497f;
+nav#replay-left-nav section::-webkit-scrollbar {
+  width: 10px; 
+  scrollbar-width: auto;
+  scrollbar-color: #0b497f;
 }
 nav#replay-left-nav section::-webkit-scrollbar-track {
-  background: #0b497f;
+  background: #000000;
+  border-radius: 10px;
 }
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
-  background-color: #00324B;
-  border-radius: 0px;
-  border: 3px solid #0b497f;
+  background-color: #1c75c0;
+  border-radius: 10px;
+  border: 2px solid #01060a;  
+  
 }
-
 
 /* starts Font Awesome icons */
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 8px;    
+  padding-right: 12.5px;    
 }
 /* ends Font Awesome icons */
 
@@ -870,9 +929,48 @@ nav#replay-left-nav section ul > li.menu-pages-replay-month a {
 }
 
 nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
-  padding-left: 80px;
+  padding-left: 33px;
   border-bottom: 1px solid #e3e3e32e;
+  font-size: 11px;
 }
+
+/* Aligning right menu titles */
+
+#menuPrint span {
+  padding-right: 14px !important;
+}
+
+#menuCompleteThePage span {  
+  padding-right: 11.5px !important;
+}
+
+#menuScreenshot span {
+  padding-right: 13px !important;
+}
+
+#menuFullScreen span {  
+  padding-right: 15.5px !important;
+  padding-left: 1px;
+}
+
+#menuReplayWithOldBrowser {  
+  padding-left: 44px !important;
+  padding-right: 25px;  
+  background: url(../img/old-browser-icon.svg) no-repeat 15.7px 13.5px;
+  background-size: 13px;  
+}
+
+#menuReplayWithOldBrowser:hover {     
+  background: url(../img/old-browser-icon-blue.svg) no-repeat 16.4px 13.6px;
+  background-size: 13px;  
+}
+
+.fa-laptop-medical::before {  
+  left: -1.4px;
+  position: relative;
+}
+
+
 
 /* nav sub-menu ******************************************************************* */
 
@@ -880,10 +978,6 @@ nav#left-nav section ul > li > ul > li a, nav#options-right-nav section ul > li 
   padding: 0 0 0 30px;
   font-size: 0.75em;
   border-top: 1px solid #e3e3e32e;
-}
-
-nav#left-nav section ul > li > ul > li#menu-pages-advanced-search {
-  display: none;
 }
 
 /* ends nav MENU: replay left and right ************************************************** */
@@ -1139,15 +1233,28 @@ section#search-tools #submit-search-mobile {
   outline: 10px;     
 } 
 
-section#search-tools-date-slider #date-container-start:hover input[type="text"], section#search-tools-date-slider #date-container-end:hover input[type="text"] {
+section#search-tools-date-slider #date-container-start:hover input[type="text"],
+section#search-tools-date-slider #date-container-end:hover input[type="text"] {
   color:#1c75c0;     
 } 
-section#search-tools-date-slider #date-container-start:active input[type="text"], section#search-tools-date-slider #date-container-end:active input[type="text"] {
+
+body#pages-advanced-search section#search-tools-date-slider #date-container-start:hover input[type="text"],
+body#pages-advanced-search section#search-tools-date-slider #date-container-end:hover input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-start:hover input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-end:hover input[type="text"] {
+  color:#1c75c0;     
+} 
+
+section#search-tools-date-slider #date-container-start:active input[type="text"], 
+section#search-tools-date-slider #date-container-end:active input[type="text"],
+body#pages-advanced-search section#search-tools-date-slider #date-container-start:active input[type="text"], 
+body#pages-advanced-search section#search-tools-date-slider #date-container-end:active input[type="text"],
+body#images-advanced-search section#search-tools-date-slider #date-container-start:active input[type="text"], 
+body#images-advanced-search section#search-tools-date-slider #date-container-end:active input[type="text"] {
   color:white;     
 }   
 
 /*  starts Range Slider ********************************************************************** */
-
 
 /* Calendar buttons input values: year, day and month */
 
@@ -1159,7 +1266,7 @@ section#search-tools form input[type="text"], section#search-tools-date-slider i
 section#search-tools-date-slider input[type="text"].calendar-year-input {
   position: relative;
   z-index: 1;
-  top: 1px;
+  top: 0px;
   left: -4px;
   max-width: 45px;
   height: 39px;
@@ -1174,12 +1281,13 @@ section#search-tools-date-slider input[type="text"].calendar-year-input {
   outline: none; 
 }
 
-section#search-tools-date-slider input[type="text"].calendar-day-month-input, input[type="text"].calendar-day-month-input {
-  position: relative;
+section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+input[type="text"].calendar-day-month-input {
+  position: absolute;
   z-index: 0;
-  top: -21px;
+  top: 38px;
   left: 0.5px;
-  width: 100%;
+  width: 37px;
   height: auto;
   padding: 3px 0 0 0;  
   font-size: 11px;
@@ -1190,17 +1298,68 @@ section#search-tools-date-slider input[type="text"].calendar-day-month-input, in
   border-top: 1px solid #ffffff6b;
   outline: none;
   right: 0;
+  margin: 0 auto;
 }
 
-section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover, section#search-tools-date-slider #date-container-end, #date-container-end:hover input[type="text"].calendar-day-month-input:hover {
-  border-top: 1px solid hsl(212, 96%, 19%);
+
+body#pages-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+body#images-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input {
+  position: absolute;
+  z-index: 0;
+  top: 38px;
+  left: 0.5px;
+  width: 37px;
+  height: auto;
+  padding: 3px 0 0 0;  
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #ffffff6b;
+  outline: none;
+  right: 0;
+  margin: 0 auto;
+  border-radius: inherit;
+}
+
+body#pages-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input,
+body#images-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input
+ {
+  position: absolute;
+  z-index: 0;
+  top: 38px;
+  left: 0.5px;
+  width: 37px;
+  height: auto;
+  padding: 3px 0 0 0;  
+  font-size: 11px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #ffffff6b;
+  outline: none;
+  right: 0;
+  margin: 0 auto;
+  border-radius: inherit;
+}
+
+section#search-tools-date-slider #date-container-end, 
+#date-container-end:hover input[type="text"].calendar-day-month-input:hover, 
+section#search-tools-date-slider #date-container-end, 
+#date-container-end:hover input[type="text"].calendar-day-month-input:hover {
+  border-top: 1px solid #033f72;
   position: relative;
   z-index: 1;
 }
 
 /* Left and right calendar icon */
 
-section#search-tools-date-slider #date-container-start, section#search-tools-date-slider #date-container-end, #date-container-start, #date-container-end {
+section#search-tools-date-slider #date-container-start, 
+section#search-tools-date-slider #date-container-end, 
+#date-container-start, 
+#date-container-end {
   position: absolute;   
   margin: 0;
   width: 40px;
@@ -1231,11 +1390,13 @@ section#search-tools-date-slider #date-container-end, #date-container-end   {
   cursor: pointer;
 }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-year, section#search-tools-date-slider #date-container-end li.search-calendar-year {
+section#search-tools-date-slider #date-container-start li.search-calendar-year,
+section#search-tools-date-slider #date-container-end li.search-calendar-year {
   margin-top: 2.05px;
 }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end li.search-calendar-year input[type="button"] {
+section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"],
+section#search-tools-date-slider #date-container-end li.search-calendar-year input[type="button"] {
     padding: 6.9px 0 0.3px 0;
     margin: 0;
     margin-top: 0.5px;
@@ -1257,33 +1418,41 @@ section.form-container section#search-tools-date-slider input[type="text"]{
     transition: none;
 }
 
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-day-month,
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-month, section#search-tools-date-slider #date-container-end:hover li.search-calendar-month
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-month
 {
 text-align: center;
 cursor: pointer;
 color: #1c75c0;
 }
-section#search-tools-date-slider #date-container-start:hover li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:hover li.search-calendar-year input[type="button"]
+section#search-tools-date-slider #date-container-start:hover li.search-calendar-year input[type="button"],
+section#search-tools-date-slider #date-container-end:hover li.search-calendar-year input[type="button"]
 {
 color: #1c75c0;
 }
 
-section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month,
-section#search-tools-date-slider #date-container-start:active li.search-calendar-month, section#search-tools-date-slider #date-container-end:active li.search-calendar-month,
-section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="button"], section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="button"]
+section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month, 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-month,
+section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="button"], 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="button"]
 {
 color: white;
 }
 
-section#search-tools-date-slider #date-container-start li, section#search-tools-date-slider #date-container-end li {
+section#search-tools-date-slider #date-container-start li, 
+section#search-tools-date-slider #date-container-end li {
   font-size:10px;
   text-align: center;
   cursor: pointer;  
   display: block;
   }
 
-section#search-tools-date-slider #date-container-start li.search-calendar-month, section#search-tools-date-slider #date-container-end li.search-calendar-month {
+section#search-tools-date-slider #date-container-start li.search-calendar-month, 
+section#search-tools-date-slider #date-container-end li.search-calendar-month {
   position: relative;
   left: -0.3px;
   width: 12px;
@@ -1293,13 +1462,14 @@ section#search-tools-date-slider #date-container-start li.search-calendar-month,
 
 }
 
-section#search-tools-date-slider #date-container-start:hover, section#search-tools-date-slider #date-container-end:hover {     
+section#search-tools-date-slider #date-container-start:hover, 
+section#search-tools-date-slider #date-container-end:hover {     
   background: transparent url(../img/calendar.svg) no-repeat 0px -124px;
-  background-size: 100%;
-  
+  background-size: 100%;  
 }
 
-section#search-tools-date-slider #date-container-start:active, section#search-tools-date-slider #date-container-end:active {     
+section#search-tools-date-slider #date-container-start:active, 
+section#search-tools-date-slider #date-container-end:active {     
   background: transparent url(../img/calendar.svg) no-repeat 0px 0px ;
   background-size: 100%;
  
@@ -1340,13 +1510,16 @@ text-decoration: none;
   font-size: 0.9em !important;
 }
 
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, 
+.ui-widget-header .ui-state-highlight {
   /*border: 1px solid #ffffff !important;*/
   /*background: #c9e9fa !important;*/
   color: #3f3f3f !important;
 }
 
-.ui-datepicker .ui-datepicker-title select, .ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+.ui-datepicker .ui-datepicker-title select, 
+.ui-datepicker select.ui-datepicker-month, 
+.ui-datepicker select.ui-datepicker-year {
   width: 45%;
   font-size: 0.8em !important;
   border: 1px solid #ccc !important;
@@ -1405,7 +1578,6 @@ section.modal {
   z-index: 2;
   box-sizing: border-box;
   width: auto;
-  max-width: 600px !important;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -o-border-radius: 8px;
@@ -1424,8 +1596,15 @@ section.modal {
   overflow: initial;
 }
 
+
+
 body#images-search-results div.modal {
-  padding: 20px 20px 40px 20px;  
+  padding: 20px 20px 40px 20px;   
+}
+
+body#images-search-results #confirm-narrative-modal {
+  width: 100%;
+  max-width: 320px;  
 }
 
 body#images-search-results section.image-container {
@@ -1460,22 +1639,8 @@ a#close-modal-tecnhical {
   display: none;  
   position: absolute;
   z-index: 4;
-  top: -12.5px;
-  right: -12.5px;
-  width: 30px;
-  height: 30px;
-  text-indent: -9999px;
-  filter: invert(1);
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  transition: 0.5s;   
-}
-
-a#close-modal-tecnhical:hover {
-  background: transparent url("../img/close-modal.png") no-repeat 0 0;
-  background-size: 100%;
-  filter: drop-shadow(2px 4px 6px black);
-  transition: 0.5s;
+  top: 0;
+  right: 5px;
 }
 
 section#modal-window-image-technical-details h4 {
@@ -1495,7 +1660,7 @@ section#modal-window-image-technical-details h5 {
  section#modal-window-image-technical-details h5.raw-api-data-title {  
   font-size: 12.5px;
   font-weight: 100;
-  padding-left: 17px;
+  padding-left: 0px;
  }
 
  section#modal-window-image-technical-details h5 {
@@ -1508,7 +1673,7 @@ section#modal-window-image-technical-details p  {
   display: flex;
   font-size: 0.73em;
   padding-bottom: 10px;
-  padding-left: 17px;
+  padding-left: 0px;
   flex-direction: row;
   align-items: baseline;
   justify-content: left;
@@ -1540,7 +1705,7 @@ section#modal-window-image-technical-details div.modal-image-field {
   border-bottom: 1px solid #cccccc69;
 }
 section#modal-window-image-technical-details div.modal-image-field:last-child  {  
-  display: flex;
+  display: block;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -1559,6 +1724,7 @@ section#modal-window-image-technical-details > div.raw-api-data-title{
   flex-wrap: nowrap;
   justify-content: space-between;
   padding: 0;  
+  padding-top: 15px;
   align-items: center;
 }
 section#modal-window-image-technical-details > div.raw-api-data-title > button{
@@ -1584,13 +1750,17 @@ section.image-details-description div.modal-image-field p > span.image-modal-con
 }
 
 body#landing-replay section.modal {
-  max-width: 300px !important;
+  width: 100%;
+  max-width: 300px;
 } 
 
 body#landing-replay section#technical-details {
-  width: auto;
-  max-width: 718px !important;
-  padding: 20px 0px 35px 20px !important;
+  width: 100%;
+  max-width: 600px;  
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
+  padding: 20px 0px 35px 20px;
 } 
 
 section.modal h3 {
@@ -1624,12 +1794,11 @@ section.modal ul.replay-options li p {
 
 section.modal ul.replay-options li button {
   margin: 10px;
-  width: 103px;
+  width: 100px;
 }
 
 div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
-  width: 100%;
-  max-width: 300px;
+  max-width: 280px;
 }
 
 body#landing-replay section#fullscreen-mode {
@@ -1638,8 +1807,16 @@ body#landing-replay section#fullscreen-mode {
 }
 
 div.jquery-modal section#replay-with-old-browser {
-  width: 100%;
-  max-width: 320px;
+  max-width: 300px;
+}
+
+div.jquery-modal section#replay-with-old-browser li#netscape-icon {
+  background: url(../img/old-browser-icon-black.svg) no-repeat 11px 1px;
+  background-size: 14px;
+  padding-bottom: 0;
+  padding-left: 18px;
+  padding-top: 1.5px;
+  padding-right: 0px;
 }
 
 .image-modal-content {
@@ -1679,13 +1856,17 @@ section.image-details-description  {
   display: flex;
   flex-direction: column;
   text-align: initial;
-  margin-top: 7px;  
+  margin-top: 8px; 
+  height: 149px;
+  overflow: auto;
+  overflow-x: none;
+  overflow-x: hidden; 
 }
 
 section.image-details-description h5  {
   font-weight: bold;
-  padding: 15px 0 10px;
-  font-size: 0.84em;
+  padding: 13px 0 2px;
+  font-size: 0.75em;
   border-top: 1px solid #cccccc69;
   margin-top: 10px;
   min-width: 450px;
@@ -1693,8 +1874,8 @@ section.image-details-description h5  {
 }
 
 section.image-details-description p  {
- padding: 3px 0 0 17px;
- font-size: 0.75em;
+ padding: 3px 0 0 0px;
+ font-size: 0.72em;
  line-height: 1.4em;
 }
 
@@ -1712,19 +1893,9 @@ section.image-details-description p.image-details-padding-right  {
 section.image-details-description p a  {
   color: #1c75c0;
   text-decoration: none;
-  padding-left: 17px;
-  display: block;
-  margin-top: -14px;
+  padding-left: 5px;
   line-height: 1.4em;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 1em;
-}
-
-section.image-details-description p.image-description-date  {
-  font-size: 0.73em;
-  color: gray;
+  word-break: break-word;
 }
 
 section.image-details-description p.image-description-date span,section.image-details-description p.page-description-date span {
@@ -1736,6 +1907,32 @@ section.image-details-description p.image-description-date span,section.image-de
 section.image-details-description p a:hover  {
   color: #1c75c0;
   text-decoration: underline;
+}
+
+section.image-details-description .image-original-address,
+section.image-details-description .page-original-address {
+  word-break: break-all;
+}
+
+
+section#replay-not-found {
+  display: flex;  
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+section#replay-not-found a {
+  width: 100%;
+  max-width: 162px;
+  height: auto;
+  width: auto;
+  color: #000;
+}
+
+section#replay-not-found a img {
+  width: 100%;
+  max-width: 162px;
 }
 
 button#previous-image-button {
@@ -1929,7 +2126,7 @@ div.jquery-modal div#modal {
   box-shadow: 0 0 100px #000;
   background-color: #f5f5f5;  
   height: auto;
-  max-height: 100vh;
+  max-height: 90vh;
   width: auto;    
 }
 
@@ -2180,9 +2377,7 @@ section.form-container label strong{
 }
 
 section.form-container label {
-  background: transparent url(../img/advanced-arrow.svg) no-repeat center left;
   width: auto;
-  padding-left: 22px;
   max-width: 100%;
   font-size: 0.9em;  
 }
@@ -2205,7 +2400,8 @@ section.form-container input[type="text"]:focus {
 section.form-container select { 
   margin: 10px 0 40px 0;
   width: 100%;  
-  max-width: -webkit-fill-available; 
+  height: 38px;
+  max-width: -webkit-fill-available;   
  }
 
 section.form-container select#number-of-results-pages, section.form-container select#number-of-results-images { 
@@ -2258,8 +2454,8 @@ form#search-form input#submit-search-input {
     height: 45px;
     display: flex;
     flex-direction: row;
-    background: #ffffff url(../img/magnifier.svg) no-repeat 16px 15px;    
-    padding-top: 2px;
+    background: #ffffff url(../img/magnifier.svg) no-repeat 16px 14px;    
+    padding-top: 0px;
     padding-left: 42px;
     padding-right: 13px;    
     border: 1px solid #ccc;
@@ -2372,6 +2568,36 @@ body#save-page-now #savepagenow-modal {
   text-align: center;
 }
 
+/* Landing page: SavePageNow icon */
+
+body#save-page-now .save-page-now-icon {  
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-right: 8px;
+  font-size: 18px;
+}
+
+body#save-page-now-landing .left .save-page-now-icon {  
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-right: 8px;
+  font-size: 14px;
+  color: white;
+}
+
+#savepagenow-modal span {  
+  display: flex;
+  justify-content: flex-start; 
+  padding-right: 4px;
+  font-size: 14px;
+  width: 19px; 
+  float: left;
+  align-items: center;
+  height: 23px;
+}
+
 section#home-content h4, section#body-content h4 {
   padding: 11px 6px 11px 14px;  
   font-weight: normal;
@@ -2385,6 +2611,7 @@ img.image-display {
   max-height: 500px;
   border-radius: 3px;
   height: auto;
+  cursor: pointer;
   /*-webkit-box-shadow: 0px 10px 13px -7px #000000, 5px -6px 15px -1px rgb(0 0 0 / 0%);
     box-shadow: 0px 15px 17px -7px #00000069, 5px -6px 15px -1px rgb(0 0 0 / 0%);*/
 }
@@ -2395,9 +2622,9 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-top: 15px;
+  padding-top: 0px;
   padding-bottom: 10px;  
-  font-size: 13px;
+  font-size: 12px;
   color:#70757a;
   max-width: 960px;
   margin: 0 auto;
@@ -2473,6 +2700,7 @@ section#not-found-message > ul, section#search-suggestion-message > ul  {
   background-color: #f6f6f6;
   color: #000000;
   margin: auto;
+  margin-bottom: 150px;
   width: auto;    
   font-size: 13px;
   margin-top: 10px;  
@@ -2565,6 +2793,8 @@ section#pages-results ul > li > a.results-title  {
   font-size: 20px;
   color: #1a0dab; 
   line-height: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 section#pages-results ul > li > a.results-title:visited  {
@@ -2612,18 +2842,21 @@ section#images-results ul {
 section#images-results ul#image-cards-container > li {
  position: relative;
  width: 150px; 
- margin: 0;
- padding: 0px 10px 17px;
+ margin: 0 1px 2px 1px;
+ padding: 7px 10px 15px;
  background-color: #f5f5f5;
  flex-direction: row;
  flex-wrap: wrap;
  flex-grow: 1; 
  justify-items: center;
- align-content:flex-start;
+ align-content:space-evenly;
  align-items: center;
  justify-content: center;
- display: inline-block;
+ display: grid;
  transition: 0.3s;
+
+ grid-auto-columns: auto;
+
  }
 
  section#images-results ul#image-cards-container > li:hover{
@@ -2650,7 +2883,7 @@ section#images-results ul#image-cards-container > li {
  }
 
   section#images-results ul > li:hover button.zoom-image, section#images-results ul > li:hover a.zoom-image {
-  display: block; 
+  display: none; 
   color:white; 
   background-color:#009687c5;
   transition: 0.5s;
@@ -2660,6 +2893,7 @@ section#images-results ul#image-cards-container > li {
   color:white; 
   background-color:#026157c0;
   cursor: pointer;   
+  display: none;
  }
 
  section#images-results ul > li > ul {  
@@ -2670,7 +2904,8 @@ section#images-results ul#image-cards-container > li {
   justify-content: center;
   font-size: small; 
   background-color: transparent;
-  }
+  max-width: 100%;
+ }
 
  section#images-results ul > li > ul > li {
   width: 100%;
@@ -2703,7 +2938,7 @@ section#images-results ul#image-cards-container > li {
     text-overflow: ellipsis;
     overflow: hidden; 
     white-space: nowrap;    
-    font-size: 0.9em;    
+    font-size: 0.95em;    
   }
 
   section#images-results ul > li > ul > li a:hover  {
@@ -2722,8 +2957,8 @@ section#images-results ul#image-cards-container > li {
   cursor: pointer;
   transition: box-shadow 0.3s;
   width: auto; 
-  max-height: 170px;
-  /*max-width: 100%;*/
+  max-height: 100px;
+  max-width: 100%;
  }
 
  section#images-results ul li:hover a img {
@@ -2754,23 +2989,32 @@ section.navigation-tools p {
 section.navigation-tools button {
   padding: 6px 7px 7px 7px;
   border-radius: 4px;
-  font-size: inherit;
+  font-size: 0.85em;
   z-index: 0;
 } 
 
 body#pages-search-results section.navigation-tools button, body#images-search-results section.navigation-tools button {
+  margin: 0 10px;
   padding: 6px 8.65px 6.5px 8.65px;
   border-radius: 4px;
-  font-size: inherit;
-  z-index: 0;
+  font-size: 0.8em;
+  z-index: 0;  
 }
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
   border-top: 1px solid #e8e8e8;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 0px;
-  padding-top: 20px;
+  padding-top: 60px;
   height: auto;
+  max-width: 960px;
+  width: 100%;  
+  display: flex;
+  justify-content: space-between;
+}
+
+body#pages-search-results section.navigation-tools button, body#images-search-results section.navigation-tools button {
+margin: 0;
 }
 
 body#pages-search-results section.navigation-tools {
@@ -2813,6 +3057,11 @@ height: 0;
 }
 
 /* article ************************************************************* */
+
+/* News banner width */
+body#homepage #home-content article#news {
+  width: 100%;
+}
 
 article {
   justify-content: space-between;
@@ -3046,7 +3295,7 @@ body#arquivo-404 main a:hover {
   z-index: 2;
   margin: 0;
   padding: 0 0 50px 0;
-  height: 100%;
+  height: fit-content;
   width: 100%;
   overflow: hidden;
   display: flex;   
@@ -3116,6 +3365,22 @@ body#arquivo-404 main a:hover {
   border-radius: 10px;
   background-color: #033f72;
 }
+
+/* starts Replay left bar preloader */
+
+body#landing-replay .preloader div::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 5px;
+  height: 18px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+/* ends Replay left bar preloader */
 
 .preloader div:nth-child(1) {
   -webkit-transform: rotate(0);
@@ -3583,7 +3848,7 @@ section#search-tools #submit-search-mobile {
 
 
 section#home-content h4, section#body-content h4  {  
-  padding: 11px 6px 11px 0px;
+  padding: 11px 6px 11px 11px;
   font-size: 0.95em;
   width: fit-content;
 }
@@ -3611,9 +3876,9 @@ section#home-content h4, section#body-content h4  {
 }
 
 /* Galaxy Fold
-  ##Screen = B/w 280px to 480px
+  ##Screen = B/w 280px to 653px
 */
-@media (min-width: 280px) and (max-width: 480px) {
+@media (width: 280px) and (height: 653px) {
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
@@ -3628,6 +3893,11 @@ section#home-content h4, section#body-content h4  {
     width: 100%;
     max-width: 100%;
     padding-left: 0;
+}
+
+body#landing-replay section#replay-not-found h2 {
+    visibility:visible !important;
+    height: 50px !important;
 }
 
   header button#nav-menu-mobile-button-left {
@@ -3684,7 +3954,7 @@ section#search-tools #submit-search {
 
   footer section section {
     width: 100%;
-    padding: 12px;
+    padding: 12px 8px;
     }
 
   footer section section h4 {
@@ -3695,19 +3965,86 @@ section#search-tools #submit-search {
       height: 36px;
       margin: 20px 5%;
   }
+
+  button {  
+    padding: 6px 5.1px 6.5px 5.1px !important;
+    font-size: 0.5855em !important;
+}
+
 }
 
 @media (min-width: 0px) and (max-width: 279px) {
-
-
   form#advanced-search-form-pages, form#advanced-search-form-images {
       padding-top: 90px;
-    }
-    
-    button#nav-options-right-button-mobile {
+  }
+  button#nav-options-right-button-mobile {
     display: none;
   }
 }
+
+@media (min-width: 0px) and (max-width: 415px) {
+/* Extend to 100% width left and right navigation buttons from both image and pages results navigation pages */
+  section#images-results ul li a img {
+    box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    width: auto;
+    max-height: 250px;
+    max-width: 100%;  
+  }
+
+  body#images-search-results section.navigation-tools, body#pages-search-results section.navigation-tools {
+  justify-content: center;
+  margin-top: 0px;
+  padding-top: 20px;
+  height: auto;
+  max-width: 960px;
+  width: 100%;
+  display: flex;  
+  flex-direction: column;
+  }  
+
+  section.navigation-tools form, section.navigation-tools form button {
+    width: 100%;
+  }
+  section.navigation-tools form button {
+    margin-bottom: 5px !important;
+  }
+
+ section#pages-results, section#images-results {
+    padding-bottom: 0px !important;
+    margin-bottom: -25px !important;
+  }  
+  button {  
+    font-size: 0.625em;   
+  }
+    p#estimated-results {   
+      padding-top: 0px !important;
+      font-size: 11px !important;  
+  }
+  #slider-range-container {  
+    padding: 38px 5px 28px 0 !important;    
+  }
+  .ui-slider .ui-slider-handle { 
+    top: -0.63em !important;
+    width: 0.8em !important;
+    height: 0.85em!important;
+    background-color: #1c75c0 !important;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 415px) {
+  button {  
+    font-size: 0.628em;   
+  }
+}  
+
+@media (min-width: 344px) and (max-width: 415px) {
+  button {  
+    font-size: 0.7em;   
+  }
+}
+
 
 /* set up printing on replay */
 @media print {

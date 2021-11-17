@@ -152,7 +152,16 @@ section#savepagenow-modal h4 {
 
 section#savepagenow-modal p {
     font-size: small;
+    line-height: normal;
 }
+
+div#modal span.savepagenow-modal {  
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 20px;
+  }
 
 section#savepagenow-modal form {
    display: flex;
@@ -212,7 +221,7 @@ section#savepagenow-modal form button {
     position: relative;  
     left:0;  
     margin-top: -25px;    
-    }
+}
 
 #logo-arquivo {
     width: 162px !important;    
@@ -242,5 +251,4 @@ div#iframe_div {
     height: calc(100vh - 118px);
     margin-top: 118px; 
 }
-
 }

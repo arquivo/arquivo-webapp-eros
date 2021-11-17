@@ -5,7 +5,6 @@ const { request } = require('express');
 // (for compatibility with old arquivo searches)
 
 module.exports = function (req, res) {
-
     const requestData = new URLSearchParams(req.query);
 
     /**
@@ -68,20 +67,11 @@ module.exports = function (req, res) {
     let q = requestData.get('q') ?? '';
 
     //convert advanced search params into query terms
-    if (q == '') {
-        q = requestData.get('adv_and') ?? '';
-        if (requestData.has('adv_phr') && requestData.get('adv_phr').trim() != '') {
-            q += ' "' + requestData.get('adv_phr').trim() + '"';
-        }
-        if (requestData.has('adv_not')) {
-            q += ' ' + requestData.get('adv_not')
-                .split(/\s+/)
-                .filter(t => t !== '')
-                .map(t => '-' + t)
-                .join(' ')
-        }
-    } else { //Convert query into advanced search terms
+    if (q != '') { //Convert query into advanced search terms
+        
         let adv_and = q;
+
+        //Handling exact phrases (between double quotes)
         const phraseRegEx = /"[^"]*"/;
         let phrases = [];
         while(phraseRegEx.test(adv_and)){
@@ -93,13 +83,12 @@ module.exports = function (req, res) {
             requestData.set('adv_phr',phrases.pop());
         }
 
-        const notRegEx = /-\w+/;
+        //Handling excluding terms (with preceding '-')
+        const notRegEx = /(^|\s)-[^\s]+/g;
         let without = []
-        while(notRegEx.test(adv_and)){
-            const not = adv_and.match(notRegEx)[0];
-            const splitRegEx = new RegExp(not + '(\\s|$)')
-            adv_and = adv_and.split(splitRegEx).join('');
-            without.push(not.slice(1))
+        if(notRegEx.test(adv_and)){
+            without = adv_and.match(notRegEx).map(t => t.trim()).map(t => t.slice(1));
+            adv_and = adv_and.split(notRegEx).map(t => t.trim()).filter(t => t!='').join(' ');
         }
         if(without.length){
             requestData.set('adv_not',without.join(' '));
@@ -107,16 +96,30 @@ module.exports = function (req, res) {
 
         adv_and = adv_and.trim();
 
-        const specialParamsRegEx = /(?:\s|^)(?:site|type|collection):(?:[^\s]+)/
+        //Handling special terms (type, site and collection)
+        const specialParamsRegEx = /(?:\s|^)(?:site|type|collection|safe|size):(?:[^\s]+)/
         if(specialParamsRegEx.test(adv_and)){
+
+            // putting "site","type" and "collection" on API params if needed.
+            ['site', 'type', 'collection','safe','size'].forEach(t => {
+                const regexString = '(\\s|^)' + t + ':([^\\s]+)';
+                const queryRegEx = new RegExp(regexString);
+                const requestParam = ['site','safe'].includes(t) ? t+'Search' : t;
+                if (!requestData.has(requestParam) && queryRegEx.test(adv_and)) {
+                    requestData.set(requestParam, adv_and.match(queryRegEx)[2])
+                }
+            })
+
+            // removing special terms from advanced search input
             adv_and = adv_and.split(specialParamsRegEx)
                 .map(t => t.trim())
                 .filter(t => t != "")
                 .join(' ');
         }
 
+        // adding leftover phrases to advanced search input
         if(phrases.length){
-            adv_and = adv_and + ' ' + phrases.join(' ');
+            adv_and = (adv_and + ' ' + phrases.map(p => '"'+p+'"').join(' ')).trim();
         }
         requestData.set('adv_and',adv_and);
 
@@ -127,21 +130,16 @@ module.exports = function (req, res) {
         requestData.delete('type');
     }
 
-    // putting "site","type" and "collection" on search query if needed and on API params if present.
-    ['site', 'type', 'collection'].forEach(t => {
-        const queryRegEx = new RegExp('(\s|^)' + t + ':([^\s]+)');
-        const requestParam = t == 'site' ? 'siteSearch' : t;
-        if (requestData.has(requestParam)) {
-            if (!queryRegEx.test(q)) {
-                q = q + ' ' + t + ':' + requestData.get(requestParam);
-            }
-        } else if (queryRegEx.test(q)) {
-            requestData.set(requestParam, q.match(queryRegEx)[2])
-        }
-
-    })
-
-    requestData.set('q', q.trim());
-
+    fullquery=[
+         requestData.get('adv_and') ?? '',
+        [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
+        (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),
+        [requestData.get('siteSearch') ?? '']        .filter(t => t != '').map(t => `site:${t}`).join(''),
+        [requestData.get('size') ?? '']              .filter(t => t != '').map(t => `size:${t}`).join(''),
+        [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
+        [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
+        [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
+    ]
+    requestData.set('q', fullquery.filter(t => t!='').join(' '));
     return requestData;
 }

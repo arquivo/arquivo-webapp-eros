@@ -2,11 +2,11 @@
 <section id="home-content" class="home-content-cl">    
   <h3>Highlighted</h3>
     <!-- starts Arquivo.pt Ward section -->
-    <article id="arquivo-pt-award" role="contentinfo" aria-label="information about arquivo.pt award"> 
-        <h4><%= t('home.arquivo-pt-award.header') %></h4>
+    <article id="news" role="contentinfo" aria-label="information about arquivo.pt award" class="main"> 
+        <h4><%= t('home.the-past-web.header') %></h4>
        <picture>
             <source media="(min-width:320px) and (max-width:550px)" srcset="/img/homepage-premio-card-mobile-en.jpg" title="Click here to know more about this award">
-            <img src="/img/homepage-premio-card-<%= getLanguage() %>.jpg" alt="Click here to know more about this award" title="Click here to know more about this award">
+            <a href="<%- t('home.the-past-web.url') %>"><img src="<%- t('home.the-past-web.img') %>" alt="Click here to know more about this" title="Click here to know more about this"></a>
        </picture>       
     </article> 
     <!-- ends Arquivo.pt Ward section --> 

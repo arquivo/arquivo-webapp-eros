@@ -12,19 +12,16 @@ if(typeof requestData != 'undefined'){
 %>
 <section id="search-tools-buttons">
     <h4><%= t('home.search-tools.accessibility.search-tools-buttons') %></h4>
-    <form id="search-form-pages" role="search for pages" class="buttons" action="/page/search" method="get">
-        <%- include('hidden-search-inputs', {requestData:customSearchRequestData}) %>
+    <form id="search-form-pages" role="search for pages" class="search-type buttons" action="/page/search" method="get">
         <button type="submit" value="Pages"><%= t('home.search-tools.pages') %></button>
     </form>
-    <form id="search-form-images" role="search for images" class="buttons" action="/image/search" method="get">
-        <%- include('hidden-search-inputs', {requestData:customSearchRequestData}) %>
+    <form id="search-form-images" role="search for images" class="search-type buttons" action="/image/search" method="get">
         <button type="submit" value="Images"><%= t('home.search-tools.images') %></button>
     </form>
 <% if(config.get('webapp.showContameHistoriasButton')) { %>
     <button id="search-tools-narrative-button" class="buttons"><%= t('home.search-tools.narrative') %></button>
 <% } %>
-    <form id="search-form-advanced" role="advanced search for pages" class="buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
-        <%- include('hidden-search-inputs') %>
+    <form id="search-form-advanced" role="advanced search for pages" class="search-type buttons" action="/<%= searchType.slice(0,-1) %>/advanced/search" method="get">
         <button type="submit" value="Advanced Search"><%= t('home.search-tools.advanced-search') %></button>
     </form>
 </section>
@@ -36,7 +33,7 @@ if(typeof requestData != 'undefined'){
             <p><%= t('home.search-tools.narrative-popup') %></p>
         </li>
         
-        <li><form id="search-form-narrative" role="search for narratives" class="buttons" action="http://contamehistorias.pt/arquivopt/search?query=&lang=en" method="get">
+        <li><form id="search-form-narrative" role="search for narratives" class="buttons" action="<%- config.get('contame.historias.search.url') %>" method="get">
             <%- include('hidden-search-inputs', {requestData:narrativeRequestData}) %>
             <button type="submit"><%= t('wayback.popups.buttons.ok') %></button>
         </form></li>
@@ -49,8 +46,33 @@ if(typeof requestData != 'undefined'){
             ga('send', 'event', 'contameHistorias', 'Pressed', $('#submit-search-input').val() || '<empty>');
             $('#confirm-narrative-modal').modal();
         });
-        $('#search-form-narrative').submit(function () {
+        $('#search-form-narrative').submit(function (e) {
+            if($('#search-form-narrative input[name=query]').val() == ''){
+                $('#search-form-narrative input[name=query]').remove();
+                $('#search-form-narrative').attr('action',"<%- config.get('contame.historias.url') %>");
+            }
             ga('send', 'event', 'contameHistorias', 'Searched', $('#submit-search-input').val() || '<empty>');
+            return true;
+        });
+
+        $('form.search-type').submit(function (e) {
+            $(e.target).find('input').remove();
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'q',
+                value: $('#submit-search-input').val()
+            }).appendTo(e.target);
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'from',
+                value: $('#start-date').val()
+            }).appendTo(e.target);
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'to',
+                value: $('#end-date').val()
+            }).appendTo(e.target);
+            // ga('send', 'event', 'contameHistorias', 'Searched', $('#submit-search-input').val() || '<empty>');
             return true;
         });
     </script>

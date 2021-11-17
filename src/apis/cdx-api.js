@@ -24,7 +24,7 @@ class CDXSearchApiRequest extends ApiRequest {
                         let currentData = JSON.parse(currentJson);
                         this.apiData.push(currentData);
                     } catch {
-
+                        this.logger.error('Failed to parse following JSON object: '+currentJson);
                     }
                     this.apiReply = this.apiReply.slice(endIndex + 1)
                     endIndex = this.apiReply.indexOf('}') + 1;
@@ -35,6 +35,7 @@ class CDXSearchApiRequest extends ApiRequest {
     }
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
+        
         if (apiRequestData.has('q')) {
             apiRequestData.set('url', apiRequestData.get('q'));
         }

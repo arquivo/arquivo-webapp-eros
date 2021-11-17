@@ -1,5 +1,6 @@
 const https = require('https');
 const http = require('http');
+const logger = require('../logger');
 class ApiRequest {
     constructor(apiUrl, defaultApiParams = {}, defaultApiReply = {}) {
         this.apiReply = '';
@@ -8,9 +9,10 @@ class ApiRequest {
         this.defaultApiParams = defaultApiParams;
         this.defaultApiReply = defaultApiReply;
         this.dataFunction = (requestData) => { return (d) => { this.apiReply = this.apiReply + d.toString(); } };
-        this.endFunction = (requestData) => { return () => { try { this.apiData = JSON.parse(this.apiReply) } catch (e) { this.apiData = this.defaultApiReply }; } };
+        this.endFunction = (requestData) => { return () => { try { this.apiData = JSON.parse(this.apiReply) } catch (e) { this.logger.error(e); this.apiData = this.defaultApiReply }; } };
         this.closeFunction = (requestData, callback) => { return () => { callback(this.apiData); } };
-        this.errorFunction = (requestData, callback) => { return (e) => { console.error(e); callback(this.defaultApiReply); } };
+        this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(e); callback(this.defaultApiReply); } };
+        this.logger = logger('ApiRequest');
     }
 
     get(requestData, callback) {
@@ -21,6 +23,7 @@ class ApiRequest {
             get = http.get;
         }
         try {
+            this.logger.info(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString())
             const apiReq = get(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
             (apiRes) => {
                 apiRes.on('data', this.dataFunction(requestData));

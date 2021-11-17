@@ -30,13 +30,24 @@ arquivo-pt-award:
     pt: 'Prémio Arquivo.pt 2021'
     en: 'Arquivo.pt Award 2021'
 
+the-past-web:
+  header:
+    pt: Novidade!
+    en: New!
+  img:
+    pt: /img/the-past-web-pt.jpg
+    en: /img/the-past-web-en.jpg
+  url:
+    pt: https://arquivo.pt/livro
+    en: https://arquivo.pt/book
+
 what-is-arquivo-pt:
   header:
     pt: 'O que é o Arquivo.pt?'
     en: 'What is Arquivo.pt?'
   video-url:
-    pt: 'https://www.youtube.com/embed/2HEudlXPV4o?controls=0'
-    en: 'https://www.youtube.com/embed/dqG0VILi3gs?controls=0'
+    pt: 'https://www.youtube.com/embed/EnSys0HDnCc?controls=0'
+    en: 'https://www.youtube.com/embed/uuEiTiilyX0?controls=0'
 
 testimonials:
   header:

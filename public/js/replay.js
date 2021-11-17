@@ -57,7 +57,7 @@ class ArquivoReplay {
         $('#menuListVersions').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'ListVersionsClick');
-            window.location = this.href;
+            window.location = e.target.href;
         }) 
 
         $('#menuTechnicalDetails').click((e) => {
@@ -133,7 +133,7 @@ class ArquivoReplay {
         $('#menuFullScreen').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'ExpandClick');
-            window.location = this.href;
+            window.location = e.target.href;
         }) 
 
         $('#menuReplayWithOldBrowser').click((e) => {
@@ -151,37 +151,37 @@ class ArquivoReplay {
         $('#menu-language a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'ChangeLanguageTo'+(replay.getConfig('language') == 'pt' ? 'EN' : 'PT')+'Click');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-pages-new-search a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'NewSearchClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-pages-advanced-search a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'AdvancedSearchClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-images-new-search a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'NewImageSearchClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-images-advanced-search a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'AdvancedImageSearchClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-savepagenow a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'SavePageNowClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
         $('#menu-about a').click((e) => {
             e.preventDefault();
             replay.sendToAnalytics('ReplayBarFunctions', 'AboutClick');
-            window.location = this.href;
+            window.location = e.target.href;
         })
 
 

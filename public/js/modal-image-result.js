@@ -56,14 +56,14 @@ $(function () {
 
       setModalText('.image-alt', 'imgAlt');
       setModalText('.image-title', 'imgTitle');
-      setModalText('.image-description-url a', 'imgSrc');
-      setModalAttr('.image-description-url a', 'imgSrc', 'href');
+      setModalAttr('a.image-title', 'imgLinkToArchive', 'href');
+      setModalText('.image-original-address', 'imgSrc');
       setModalText('.image-description-date .date', 'imgTstamp', (ts) => dateFromTimestamp(ts));
       setModalText('.image-description-date .timestamp', 'imgTstamp');
 
       setModalText('.page-title', 'pageTitle');
-      setModalText('.page-description-url a', 'pageURL');
-      setModalAttr('.page-description-url a', 'pageURL', 'href');
+      setModalAttr('a.page-title', 'pageLinkToArchive', 'href');
+      setModalText('.page-original-address', 'pageURL');
       setModalText('.page-description-date .date', 'pageTstamp', (ts) => dateFromTimestamp(ts));
       setModalText('.page-description-date .timestamp', 'pageTstamp');
 

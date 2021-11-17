@@ -55,7 +55,7 @@ router.get('/image/search', function (req, res) {
 // Pages: landing page
 router.get('/pages', function (req, res) {
 
-    res.render('pages/pages');
+    res.render('pages/home',{searchType: 'pages'});
 });
 
 // Pages advanced search
@@ -66,18 +66,27 @@ router.get('/page/advanced/search', function (req, res) {
 // Images: landing page
 router.get('/images', function (req, res) {
 
-    res.render('pages/images');
+    res.render('pages/home',{searchType: 'images'});
 });
 
 // Images: advanced search
-router.get('/images-advanced-search', function (req, res) {
-    res.render('pages/images-advanced-search');
-});
 router.get('/image/advanced/search', function (req, res) {
-    res.render('pages/images-advanced-search');
+    res.render('pages/images-advanced-search',{ requestData: req.utils.sanitizeInputs(req, res) });
 });
 
 // starts wayback
+router.get('/wayback/[*]/:url*', function (req, res) {
+    const requestUrl = req.params.url + (req.params['0'] ?? '');
+    const requestData = new URLSearchParams({q:requestUrl});
+    if (req.utils.isValidUrl(requestUrl)) {
+        res.redirect('/url/search?' + requestData.toString())
+    } else {
+        res.render('pages/pages-search-results', {
+            requestData: requestData,
+        });
+    }
+
+});
 router.get('/wayback/:url*', function (req, res) {
     wayback(req, res);
 });

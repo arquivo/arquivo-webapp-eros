@@ -37,15 +37,15 @@
             return  p;
         }, {a: ['']}).a
 
-    let emphasizeText = function(textToBeEmphasized,serchTerms) {
+    let emphasizeText = function(textToBeEmphasized,searchTerms) {
         let resultText = textToBeEmphasized;
         searchTerms.forEach(function(emphasizeWord) {
             // can not use replace text with ignore case because it will change the case of the original text
             // this regex makes that only full words (delimited by \b) are matched with the incoming terms
             // Removes partial matches such as "ugal" -> "Portugal"
-            var wordDelim = new RegExp('(?!<)(\\b|\\/)'+emphasizeWord.toLowerCase()+'(?!>)(\\b|\\/)')
-            const from = resultText.toLowerCase().search(wordDelim);
-            const to = from + emphasizeWord.toLowerCase().length;
+            var wordDelim = new RegExp('(?!<)(\\b)'+emphasizeWord.toLowerCase()+'(?!>)(\\b)')
+            let from = resultText.toLowerCase().search(wordDelim);
+            let to = from + emphasizeWord.toLowerCase().length;
             if (from >= 0) {
                 const originalText = resultText.substring(from, to);
                 resultText = resultText.substring(0, from) + '<em>'+originalText+'</em>' + resultText.substring(to, resultText.length );
@@ -55,7 +55,7 @@
     }
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
-        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%- subResult? '&rarrhk;' : '&rarr;' %> <%= filteredURL %></a></li>
+        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
@@ -71,7 +71,7 @@
                  newRequestData.set('offset', 0 )
                 %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <button type="submit"> &rarr; <%= t('page-search.view-more-results',{site}) %></button>
+                <button type="submit"> <%= t('page-search.view-more-results',{site}) %></button>
             </form>
         </li>
         <% } %>

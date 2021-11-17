@@ -11,7 +11,7 @@
 <section id="screenshot" class="modal">
   <h3><%= t('wayback.popups.screenshot.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fas fa-camera" aria-hidden="true"></span><%= t('wayback.popups.screenshot.confirmation') %></p></li>
+    <li><p><span class="fas fa-camera" aria-hidden="true" style="padding-right: 5px"></span><%= t('wayback.popups.screenshot.confirmation') %></p></li>
     <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
     <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
@@ -34,7 +34,7 @@
 <section id="complete-the-page" class="modal">
   <h3><%= t('wayback.popups.complete-the-page.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fas fa-laptop-medical" aria-hidden="true"></span><%= t('wayback.popups.complete-the-page.confirmation') %></p></li>
+    <li><p><span class="fas fa-laptop-medical" aria-hidden="true" style="padding-right:5px;"></span><%= t('wayback.popups.complete-the-page.confirmation') %></p></li>
     <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
     <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
@@ -52,7 +52,7 @@
 <section id="replay-with-old-browser" class="modal">
   <h3><%= t('wayback.popups.replay-with-old-browser.accessibility') %></h3>
   <ul class="replay-options">
-    <li><p><span class="fab fa-internet-explorer ie" aria-hidden="true"></span> <%= t('wayback.popups.replay-with-old-browser.confirmation') %></a></p></li>
+    <li id="netscape-icon"><p><%= t('wayback.popups.replay-with-old-browser.confirmation') %></a></p></li>
     <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
     <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
   </ul>
@@ -111,7 +111,7 @@
 %>
 
 <!-- starts shows url link of page selected and timestamp -->
-<p id="chosen-url"><a id="chosen-url-a" class="chosen-url-cl" target="_blank" href="<%- requestedPage.url %>"><span class="icon-link fas fa-link" aria-hidden="true"></span><%- requestedPage.url %></a> - <span id="chosen-url-date"><%- date %></span></p>
+<p id="chosen-url" class="chosen-url-cl"><a id="chosen-url-a" class="chosen-url-cl" target="_blank" href="<%- requestedPage.url %>"><%= requestedPage.url %></a> <br> <span id="chosen-url-date"><%- date %></span></p>
 <!-- ends shows url link of page selected and timestamp -->
 
 </header>
