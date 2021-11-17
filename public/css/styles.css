@@ -1270,7 +1270,7 @@ body#images-advanced-search section#search-tools-date-slider #date-container-end
 section#search-tools form input[type="text"], section#search-tools-date-slider input[type="text"] {
   border: 1px solid #ccc;
   border-right: none;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
 } 
 section#search-tools-date-slider input[type="text"].calendar-year-input {
   position: relative;
