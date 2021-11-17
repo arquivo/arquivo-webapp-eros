@@ -89,7 +89,6 @@ module.exports = function (req, res) {
         if(notRegEx.test(adv_and)){
             without = adv_and.match(notRegEx).map(t => t.trim()).map(t => t.slice(1));
             adv_and = adv_and.split(notRegEx).map(t => t.trim()).filter(t => t!='').join(' ');
-            without.push(not.slice(1))
         }
         if(without.length){
             requestData.set('adv_not',without.join(' '));
