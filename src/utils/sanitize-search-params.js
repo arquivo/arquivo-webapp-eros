@@ -84,12 +84,11 @@ module.exports = function (req, res) {
         }
 
         //Handling excluding terms (with preceding '-')
-        const notRegEx = /-[^\s]+/;
+        const notRegEx = /(^|\s)-[^\s]+/g;
         let without = []
-        while(notRegEx.test(adv_and)){
-            const not = adv_and.match(notRegEx)[0];
-            const splitRegEx = new RegExp(not + '(\\s|$)')
-            adv_and = adv_and.split(splitRegEx).join('');
+        if(notRegEx.test(adv_and)){
+            without = adv_and.match(notRegEx).map(t => t.trim()).map(t => t.slice(1));
+            adv_and = adv_and.split(notRegEx).map(t => t.trim()).filter(t => t!='').join(' ');
             without.push(not.slice(1))
         }
         if(without.length){
