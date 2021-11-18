@@ -399,8 +399,8 @@ header .background-top-curve {
   margin: 0;
   height: 4px;
   background-color: white;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 /* "hidden" white rectangle with both left and right bottom corners curved, above footer */ 
@@ -1938,11 +1938,10 @@ section#replay-not-found {
   text-align: center;
 }
 
-section#replay-not-found a {
-  max-width: 162px;
+section#replay-not-found a {  
   height: auto;
-  width: auto;
-  color: #000;
+  width: 100%;
+  color: #000; 
 }
 
 section#replay-not-found a img {
