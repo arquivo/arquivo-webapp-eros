@@ -73,7 +73,7 @@ button {
   color: white;
   background-color: #1c75c0;  
   font-family: inherit;
-  font-size: 0.7em;
+  font-size: 0.71em;
   border-radius: 4px;
   border: 1px solid #1c75c0;
   outline: none;
@@ -427,7 +427,7 @@ footer .background-bottom-curve {
   max-width: 980px;
   height: auto; 
   padding:0px;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 150px auto;
 }
 
 body#homepage main {
@@ -439,7 +439,7 @@ body#images-search-results section#images-results h3, body#pages-search-results 
   height: 0;
 }
 
-body#pages-search-results form#pages-search-results-list button {  
+body#pages-search-results form.pages-search-results-list button {  
   margin: 17px 0 5px 0;
 }
 
@@ -485,8 +485,7 @@ body#landing-replay main#main-content {
   width: 100%;
   max-width: calc(100% - 200px);
   padding: 0 0 0 200px;
-  margin: 0;
-  outline: 1px solid rgb(9, 105, 13);
+  margin: 0;  
 }
 
 body#landing-replay header .background-top-curve {
@@ -856,7 +855,7 @@ nav#left-nav section ul > li a {
   display: block;
   text-decoration: none;
   color: white;
-  padding: 2px 16px;
+  padding: 2px 12px 2px 16px;
   font-size: 0.75em;  
 }
 
@@ -1064,7 +1063,7 @@ button#previous-navigation {
  left: 0;
  width: auto;
  height: auto;
- margin: 0 18px;
+ margin: 0 10px;
   }
   
 button#next-navigation {
@@ -1072,7 +1071,7 @@ button#next-navigation {
   right: 0;
   width: auto;
   height: auto;
-  margin: 0 18px;
+  margin: 0 10px;
   }
 
 /* Hide previous and next buttons when on list versions page */
@@ -1205,8 +1204,18 @@ section#search-tools #submit-search {
   width: 100%;
   max-width: 113px;
   height: 45px;
+  display: block;
   position: absolute;
   right: 0;
+} 
+
+.button-title {
+  font-family: Arial, sans-serif, Helvetica;
+  font-weight: normal;
+}
+
+.fas, .fa-search::before {
+display: none;
 } 
 
 /* Datepicker portuguese mobile version */
@@ -1225,7 +1234,7 @@ section#search-tools #submit-search-mobile {
 
 /* Portuguese version search button width */
 :lang(pt) section#search-tools #submit-search, :lang(en) section#search-tools #submit-search { 
-  max-width: 124px; 
+  max-width: 116.5px; 
 } 
 
 /* English version advanced search button width */
@@ -1261,7 +1270,7 @@ body#images-advanced-search section#search-tools-date-slider #date-container-end
 section#search-tools form input[type="text"], section#search-tools-date-slider input[type="text"] {
   border: 1px solid #ccc;
   border-right: none;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
 } 
 section#search-tools-date-slider input[type="text"].calendar-year-input {
   position: relative;
@@ -1747,6 +1756,7 @@ section#modal-window-image-technical-details div.modal-image-field p.raw-api-dat
 
 section.image-details-description div.modal-image-field p > span.image-modal-content{
   padding-left:7px;
+  padding-right:10px;
 }
 
 body#landing-replay section.modal {
@@ -1857,9 +1867,9 @@ section.image-details-description  {
   flex-direction: column;
   text-align: initial;
   margin-top: 8px; 
-  height: 149px;
-  overflow: auto;
-  overflow-x: none;
+  height: 100%;
+  max-height: 117px;
+  overflow: auto;  
   overflow-x: hidden; 
 }
 
@@ -2351,9 +2361,12 @@ section#search-tools-buttons form#search-form-advanced button  {
 
 section.form-container {
   position: relative;
+  margin-top: 40px;
   padding: 0 10px;
   width: 100%; 
 }
+
+
 
 /* Advanced Search forms: pages and images */
 
@@ -2379,7 +2392,7 @@ section.form-container label strong{
 section.form-container label {
   width: auto;
   max-width: 100%;
-  font-size: 0.9em;  
+  font-size: 0.905em;  
 }
 
 section.form-container input[type="text"], section.form-container select {
@@ -2390,7 +2403,8 @@ section.form-container input[type="text"], section.form-container select {
  max-width: -webkit-fill-available; 
  transition: 0.5s;
  border-radius: 5px;
- border: 1px solid #ccc
+ border: 1px solid #ccc;
+ font-size: 14px;
 }
 
 section.form-container input[type="text"]:focus {
@@ -2400,7 +2414,7 @@ section.form-container input[type="text"]:focus {
 section.form-container select { 
   margin: 10px 0 40px 0;
   width: 100%;  
-  height: 38px;
+  height: 40px;
   max-width: -webkit-fill-available;   
  }
 
@@ -3176,7 +3190,7 @@ footer a:active {
 
 footer section {
   padding: 0;
-  margin: 0 auto;  
+  margin: 0 18px;  
 }
 
 footer section#important-info {
@@ -3187,7 +3201,7 @@ footer section#important-info {
   width: 100%; 
   max-width: 960px;
   margin: 0 auto; 
-  padding: 0 10px; 
+  padding: 0 18px; 
 }
 
 footer section#important-info a:hover {
@@ -3660,10 +3674,16 @@ section#loading-section form#loading-form button#loading-results, section#loadin
 }
 }
 /* 
-  ##Device = Low Resolution Tablets, Mobiles (Landscape)
-  ##Screen = B/w 481px to 767px
+  ##Device = Tablets and Mobiles 
+  
 */
-@media (min-width: 481px) and (max-width: 767px) { 
+@media (min-width: 0px) and (max-width: 767px) { 
+  
+  body#landing-replay main#main-content {   
+    padding: 0;
+    margin: 0;  
+  }
+  
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
@@ -3727,15 +3747,22 @@ section#search-tools {
 }
 
 section#search-tools #submit-search {
-  display: none; 
+  line-height: 0;
+  width: 53px;
  }
 
-section#search-tools #submit-search-mobile {
-  display: block; 
+ /* Hides both search terms for: PT and EN, and shows magnifier on mobile version */
+ section#search-tools #submit-search span {
+  display: none;  
  }
+
+ .fas, .fa-search::before {
+  display: block;
+  font-size: 14px;
+  }
 
  section#home-content h4, section#body-content h4 {  
-  font-size: 0.95em;
+  font-size: 0.9em;
   width: fit-content;
 }
 
@@ -3839,13 +3866,23 @@ section#search-tools {
 }
 
 section#search-tools #submit-search {
-  display: none; 
+  text-indent: -9999px;
+  line-height: 0;
+  width: 53px; 
+  
  }
 
-section#search-tools #submit-search-mobile {
- display: block; 
+ .fas, .fa-search::before {
+  display: block;
+  font-size: 17px;
 }
 
+ section#search-tools #submit-search {
+  text-indent: 0px;
+  line-height: 0;
+  width: 53px; 
+  
+ }
 
 section#home-content h4, section#body-content h4  {  
   padding: 11px 6px 11px 11px;
@@ -3862,7 +3899,7 @@ section#home-content h4, section#body-content h4  {
 
   footer section section {
     width: 100%;
-    padding: 12px;
+    padding: 12px 8px;
     }
 
   footer section section h4 {
@@ -3873,6 +3910,9 @@ section#home-content h4, section#body-content h4  {
       height: 36px;
       margin: 20px 5%;
   }
+  section#search-tools span.button-title {
+    display: none;
+}
 }
 
 /* Galaxy Fold

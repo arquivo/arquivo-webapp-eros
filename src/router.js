@@ -91,8 +91,11 @@ router.get('/wayback/:url*', function (req, res) {
     wayback(req, res);
 });
 // page/view for tracking purposes
-router.get(['/page/view/:url*', '/image/view/:url*'], function (req, res) {
-    tracking(req, res);
+router.get('/page/view/:url*', function (req, res) {
+    tracking(req, res,'PageView');
+});
+router.get('/image/view/:url*', function (req, res) {
+    tracking(req, res,'ImageView');
 });
 
 

@@ -16,6 +16,7 @@ class PageSearchApiRequest extends ApiRequest {
             fields: null,
             prettyPrint: false,
             metadata: null,
+            trackingId: null,
         }
         
         super(config.get('text.search.api'),defaultApiParams);

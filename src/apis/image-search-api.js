@@ -19,6 +19,7 @@ class ImageSearchApiRequest extends ApiRequest {
             prettyPrint: false,
             size:'all',
             safeSearch:'on',
+            trackingId: null,
         }
         super(config.get('image.search.api'),defaultApiParams);
     }

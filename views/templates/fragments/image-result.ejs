@@ -1,4 +1,5 @@
-<li class="image-card" id="image-card-<%- imageData.index %>"> 
+<li class="image-card" id="image-card-<%- imageData.index %>" data-index="<%- imageData.index %>" data-tstamp="<%= imageData.imgTstamp %>" data-url="<%= imageData.imgSrc %>"> 
+    <form style="display: none;" id="search-result-form-<%= imageData.index %>" action="/image/view/<%- requestData.get('trackingId') %>_<%= imageData.index %>/<%= imageData.imgTstamp %>/<%= imageData.imgSrc %>"></form>
     <ul>
         <li><a href="#modal" rel="modal:open" class="zoom-image fas fa-search-plus" aria-hidden="true"></a></li>
         <li><a href="#modal" rel="modal:open" class="results-image"><img src="<%= imageData.imgLinkToArchive %>" title="<%= imageData.imgTitle && imageData.imgTitle[0] %>" alt="<%= imageData.imgAlt && imageData.imgAlt[0] %>"></a></li>
