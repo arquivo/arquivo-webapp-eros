@@ -3012,6 +3012,10 @@ section.navigation-tools p {
   padding: 0 25px;
 } 
 
+main {
+  min-height: calc(100vh - 768px);
+}
+
 section.navigation-tools button {
   padding: 6px 7px 7px 7px;
   border-radius: 4px;
@@ -3028,7 +3032,7 @@ body#pages-search-results section.navigation-tools button, body#images-search-re
 }
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
-  border-top: 1px solid #e8e8e8;
+  border-top: 0px solid #e8e8e8;
   margin-top: 0px;
   padding-top: 20px;
   height: auto;
