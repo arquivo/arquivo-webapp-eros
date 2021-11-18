@@ -19,7 +19,7 @@ const i18n = require('i18n-node-yaml')({
 });
 
 i18n.ready.catch(err => {
-  console.error('Failed loading translations', err);
+  require('./src/logger')('Server').error('Failed loading translations', err);
 });
 
 // use session middleware
@@ -41,14 +41,23 @@ app.use(cookies());
 
 app.use((req,res,next) => {
   // clear language headers to prevent auto-detect browser language
-  let oldLanguage = '';
+  let requestLanguage = '';
   if(req.headers && req.headers['accept-language']){
-    oldLanguage = req.headers['accept-language'];
+    requestLanguage = req.headers['accept-language'];
     req.headers['accept-language'] = null;
+  }
+  let oldL = null;
+  if(req.url.startsWith('/wayback') && !!req.query  && !!req.query.l){
+    oldL = req.query.l;
+    const locale = (req.cookies ? req.cookies.i18n : null) || 'pt_PT';
+    req.query.l = locale.split('_').shift();
   }
   i18n.middleware(req,res,() => {});
   if(req.headers && req.headers['accept-language'] === null){
-    req.headers['accept-language'] = oldLanguage;
+    req.headers['accept-language'] = requestLanguage;
+  }
+  if(!!oldL){
+    req.query.l = oldL;
   }
   next();
 });
@@ -70,6 +79,11 @@ const utils = require('./src/utils/utils-middleware');
 app.use(utils);
 
 app.use(trafficLogger);
+
+app.use((req,res,next) => {
+  res.locals.originalUrl = req.url;
+  next();
+})
 
 app.use(router);
 // ends website Routes ///////////////////////////////////////////////////////
