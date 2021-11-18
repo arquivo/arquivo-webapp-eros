@@ -280,7 +280,6 @@ div.jquery-modal section#technical-details ul li a {
   max-width: 600px;
   text-decoration: none;
   color: #1c75c0;
-  white-space: normal;
   width: 100%;
   display: block;
   text-overflow: ellipsis;
@@ -1940,7 +1939,6 @@ section#replay-not-found {
 }
 
 section#replay-not-found a {
-  width: 100%;
   max-width: 162px;
   height: auto;
   width: auto;
@@ -3032,7 +3030,6 @@ body#pages-search-results section.navigation-tools button, body#images-search-re
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
   border-top: 1px solid #e8e8e8;
-  justify-content: center;
   margin-top: 0px;
   padding-top: 20px;
   height: auto;

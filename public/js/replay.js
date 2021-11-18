@@ -25,7 +25,7 @@ class ArquivoReplay {
     init() {
         const replay = this;
 
-        $('button.cancel').click((e) => {
+        $('.modal').on('click','button.cancel',(e) => {
             e.preventDefault();
             $.modal.close();
         });
@@ -243,6 +243,10 @@ class ArquivoReplay {
                 if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
                     $('#technical-details').replaceWith(data); 
                 }
+                $('.modal').off('click').on('click','button.cancel',(e) => {
+                    e.preventDefault();
+                    $.modal.close();
+                });
             }
         });
     }
