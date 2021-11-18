@@ -3674,10 +3674,16 @@ section#loading-section form#loading-form button#loading-results, section#loadin
 }
 }
 /* 
-  ##Device = Low Resolution Tablets, Mobiles (Landscape)
-  ##Screen = B/w 481px to 767px
+  ##Device = Tablets and Mobiles 
+  
 */
-@media (min-width: 481px) and (max-width: 767px) { 
+@media (min-width: 0px) and (max-width: 767px) { 
+  
+  body#landing-replay main#main-content {   
+    padding: 0;
+    margin: 0;  
+  }
+  
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
