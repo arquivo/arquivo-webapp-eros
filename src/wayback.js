@@ -2,6 +2,7 @@
 const config = require('config');
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
+const logger = require('./logger')('Wayback');
 module.exports = function (req, res) {
     function sanitizeUrl(url){
         let res = url.replace(/(^\/+)|(\/+$)/g, '');
@@ -11,9 +12,8 @@ module.exports = function (req, res) {
         return res;
     }
     function renderOk(fullUrl) {
-
         //rewrite user URL if needed
-        if (sanitizeUrl(fullUrl) != sanitizeUrl(req.params.url + (req.params['0'] ?? ''))) {
+        if (sanitizeUrl(fullUrl) != sanitizeUrl(req.url.slice('/wayback'.length))) {
             res.redirect('/wayback/' + fullUrl);
         } else {
             const timestamp = fullUrl.split('/')[0];
@@ -54,15 +54,17 @@ module.exports = function (req, res) {
                 } else if (res.ok) {
                     renderOk(newUrl);
                 } else {
+                    logger.error('Something went wrong while trying to fetch the following URL: '+url);
                     renderError();
                 }
             }).
             catch(error => {
-                console.error(error);
+                logger.error('Failed to fetch the following URL: '+url);
+                logger.error(error);
                 renderError();
             });
     }
 
-    const noFrameUrl = config.get('pywb.url') + '/' + req.params.url + (req.params['0'] ?? '')
+    const noFrameUrl = config.get('pywb.url') + req.url.slice('/wayback'.length)
     testUrl(noFrameUrl);
 }

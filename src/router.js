@@ -98,6 +98,27 @@ router.get('/image/view/:url*', function (req, res) {
     tracking(req, res,'ImageView');
 });
 
+// switch languages
+router.get('/switchlang', function (req, res) {
+    if(!!req.query && req.query.url){
+        let currentLocale = req.getLocale();
+        let newLocale = req.getLocales().find(l => l!=currentLocale);
+        res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: true }); 
+        
+        if(req.query.url.startsWith('/wayback')){
+            res.redirect(req.query.url);
+        } else {
+            let splitUrl = req.query.url.split('?');
+            let baseUrl = splitUrl.shift();
+            let parsedQuery = new URLSearchParams(splitUrl.join('?'));
+            parsedQuery.delete('l');
+            let newUrl = [baseUrl,parsedQuery.toString()].filter(t => t!='').join('?');
+            res.redirect(newUrl);
+        }
+        
+    }
+});
+
 
 // starts partials
 router.get('/partials/:id', function (req, res) {
