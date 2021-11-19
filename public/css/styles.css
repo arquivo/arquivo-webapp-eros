@@ -892,36 +892,39 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
   padding-left: 80px; 
 }
 
+
+/* Scrollbar styling */
+
+
+/* Firefox scroll bar */
+
+nav#replay-left-nav section {
+  margin-top: 14px;
+  scrollbar-color: #1c75c0 rgb(0, 0, 0);
+  scrollbar-width: thin;  
+  border-radius: 10px;  
+}
+
+/* Chrome, Opera, Edge, Safari scroll bar */
+
 nav#replay-left-nav section::-webkit-scrollbar {
   margin-top: 14px;
-  scrollbar-color: #0b497f rgb(0, 0, 0);
-  scrollbar-width: 14px;
-  
-  border-radius: 10px;
-  border: 2px solid #01060a; 
+  scrollbar-color: #1c75c0 rgb(0, 0, 0);
+  scrollbar-width: thin; 
 }
 
-
-/* scrollbar styling */
-
-nav#replay-left-nav section::-webkit-scrollbar{
-  width: 14px; 
-  
-}
 nav#replay-left-nav section::-webkit-scrollbar {
   width: 10px; 
-  scrollbar-width: auto;
+  scrollbar-width: thin;
   scrollbar-color: #0b497f;
 }
+
 nav#replay-left-nav section::-webkit-scrollbar-track {
   background: #000000;
-  border-radius: 10px;
 }
+
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
-  background-color: #1c75c0;
-  border-radius: 10px;
-  border: 2px solid #01060a;  
-  
+  background-color: #1c75c0;  
 }
 
 /* starts Font Awesome icons */
