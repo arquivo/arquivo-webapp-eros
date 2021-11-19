@@ -125,12 +125,18 @@ module.exports = function (req, res) {
 
     }
 
-    // remove 'all' from type 
+    // remove default settings
     if (requestData.get('type') == 'all') {
         requestData.delete('type');
     }
+    if (requestData.get('size') == 'all') {
+        requestData.delete('size');
+    }
+    if (requestData.get('safeSearch') == 'on') {
+        requestData.delete('safeSearch');
+    }
 
-    fullquery=[
+    let fullquery = [
          requestData.get('adv_and') ?? '',
         [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
         (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),

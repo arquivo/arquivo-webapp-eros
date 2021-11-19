@@ -764,6 +764,16 @@ body#homepage button#nav-options-right-button  {
   top: 4px;
 }
 
+#list-results-container .active:after {
+  clear: both;
+  height: 0;
+  right: -28px;
+  top: -20px;
+}
+#list-results-container .active:hover:after {
+  top: -18px;
+}
+
 ul li a:hover:after {
   color: rgba(3,63,114,1);
   opacity: 1;
