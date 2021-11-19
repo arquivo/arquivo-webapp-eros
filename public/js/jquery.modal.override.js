@@ -11,7 +11,7 @@ if ($ && $.modal) {
             this.show();
         }
         $(document).off('keydown.modal').on('keydown.modal', function (event) {
-            var current = getCurrent();
+            var current = $.modal.getCurrent();
             if (event.which === 27 && current.options.escapeClose) current.close();
         });
         if (this.options.clickClose) {
