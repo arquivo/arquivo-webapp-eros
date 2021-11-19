@@ -13,8 +13,9 @@
         switchLangData.set('l',t('menu.switch-language.lang'));
         switchLanguageUrl = '?' + switchLangData.toString();
       }
+      const switchLocale = getLocales().find(locale => locale.split('_').shift() == t('menu.switch-language.lang'));
       %>
-      <li id="menu-language"><a href="<%= switchLanguageUrl %>"><span class="fas fa-globe-americas" aria-hidden="true"></span><%= t('menu.switch-language.text') %></a></li>
+      <li id="menu-language"><a href="/switchlang"><span class="fas fa-globe-americas" aria-hidden="true"></span><%= t('menu.switch-language.text') %></a></li>
       <li id="menu-copy-link"><a href="#" onclick="copyURLToClipboard()"><span class="fas fa-copy" aria-hidden="true"></span><%= t('menu.copy-link.text') %></a></li>
       <li id="menu-pages"><a href="javascript:(void)" class="accordion-left-menu"><span class="fas fa-pager" aria-hidden="true"></span><%= t('menu.pages.text') %></a>
         <ul class="panel">

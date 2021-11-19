@@ -9,8 +9,12 @@ $(function () {
     });
     const modal = $('#modal');
 
-    $("#images-results").on("click", "li.image-card", function () {
+    $("#images-results").on("click", "li.image-card", function (e) {
+      const target = $(e.target).closest('li.image-card');
+      const index = target.attr('data-index');
+      
       let imageData = JSON.parse($(this).find('.image-data').first().text());
+      imageData['index'] = index;
 
       modal.html(modalImageDetails);
       setupModalImageDetails(imageData);
@@ -23,6 +27,11 @@ $(function () {
     });
 
     let setupModalImageDetails = function (imageData, target = modal) {
+
+      const form = $('#search-result-form-' + imageData.index);
+      if (form.length) {
+          $.ajax(form.attr('action'));
+      }
 
       let setModalText = function (selector, fieldName, transform = (v) => v) {
         if (imageData[fieldName] === undefined ||

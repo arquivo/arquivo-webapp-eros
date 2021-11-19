@@ -43,6 +43,12 @@
     <div class="modal-image-field">
       <p class="image-description-date"><%= t('modal-image-details.labels.timestamp') %><span class="date image-modal-content">12 March at 00:15 - 2021.</span></p>
     </div>
+    <div class="modal-image-field">
+      <p class="image-description-resolution"><%= t('modal-image-details.labels.resolution') %><span class="width image-modal-content"></span><span class="image-modal-content" style="padding:0">x</span><span class="height image-modal-content"></span></p>
+    </div>
+    <div class="modal-image-field">
+      <p class="image-description-mimetype"><%= t('modal-image-details.labels.mimetype') %><span class="mimetype image-modal-content"></span></p>
+    </div>
     <!-- ends image info-->
 
     <!--starts image page info -->
@@ -69,11 +75,13 @@
 
     <div class="raw-api-data-title">
       <h5 class="image-details-raw"><%= t('modal-image-details.titles.raw-api-data') %></h5>
-      <button id="copy-raw-api-data" style="top:0"><span class="fas fa-copy" aria-hidden="true"></span><%= t('modal-image-details.buttons.copy') %></button>
     </div>
     <div class="modal-image-field">
       <p class="raw-api-data"></p>
-      <button id="" onclick="closeImageDetailsModalWindow()"><i class="fas fa-close"></i><%= t('modal-image-details.buttons.close') %></button>
+      <div class="modal-technical-buttons-container">
+        <button id="copy-raw-api-data"><span class="fas fa-copy" aria-hidden="true"></span><%= t('modal-image-details.buttons.copy') %></button>
+        <button id="" onclick="closeImageDetailsModalWindow()"><i class="fas fa-close"></i><%= t('modal-image-details.buttons.close') %></button>
+      </div>
     </div>
     
   </section>

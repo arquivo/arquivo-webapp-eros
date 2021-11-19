@@ -48,7 +48,6 @@ $(() => {
         }
 
         doUpdate('#pages-results','.page-search-result','Page');
-        doUpdate('#image-cards-container','.image-card','Image',false);
     }
 
     const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";

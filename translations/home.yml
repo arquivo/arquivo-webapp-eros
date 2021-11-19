@@ -61,8 +61,14 @@ example-preserved-pages:
   header:
     pt: 'Exemplos de páginas preservadas'
     en: 'Examples of preserved pages'
+  url:
+    pt: https://sobre.arquivo.pt/pt/exemplos/
+    en: https://sobre.arquivo.pt/en/examples/
   
 themed-exhibitions:
   header:
     pt: 'Exposições temáticas'
     en: 'Themed exhibitions'
+  url:
+    pt: https://sobre.arquivo.pt/pt/exemplos/colecoes/
+    en: https://sobre.arquivo.pt/en/examples/collections/
