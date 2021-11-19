@@ -134,7 +134,7 @@ body#landing-replay p#chosen-url {
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currentlysupported by Chrome, Opera and Firefox */
-  width: 80%;
+  width: 60%;
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -764,6 +764,16 @@ body#homepage button#nav-options-right-button  {
   top: 4px;
 }
 
+#list-results-container .active:after {
+  clear: both;
+  height: 0;
+  right: -28px;
+  top: -20px;
+}
+#list-results-container .active:hover:after {
+  top: -18px;
+}
+
 ul li a:hover:after {
   color: rgba(3,63,114,1);
   opacity: 1;
@@ -1218,6 +1228,8 @@ section#search-tools #submit-search {
 .button-title {
   font-family: Arial, sans-serif, Helvetica;
   font-weight: normal;
+  margin: 0;
+  padding: 0%;
 }
 
 .fas, .fa-search::before {
@@ -1240,7 +1252,7 @@ section#search-tools #submit-search-mobile {
 
 /* Portuguese version search button width */
 :lang(pt) section#search-tools #submit-search, :lang(en) section#search-tools #submit-search { 
-  max-width: 118.5px; 
+  max-width: 123.5px; 
 } 
 
 /* English version advanced search button width */
@@ -1878,6 +1890,22 @@ section.image-details-description  {
   max-height: calc(40vh - 100px);
   overflow: auto;  
   overflow-x: hidden; 
+}
+
+section#modal-window-image-technical-details div.modal-technical-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+
+section#modal-window-image-technical-details div.modal-technical-buttons-container button {
+ margin-left: 7px;
+}
+
+/* Copy raw API data button */
+section#modal-window-image-technical-details button#copy-raw-api-data::before {
+padding-right: 5px;
 }
 
 section.image-details-description h5  {
@@ -3620,6 +3648,12 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   bottom: 2px;
 }
 
+/* Hide mobile icons in desktop*/
+.fa-ellipsis-h:before, .fa-bars:before {
+   display: none;
+}
+
+
 /*********************************/
 /********* MEDIA QUERIES *********/
 /*********************************/
@@ -3697,10 +3731,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   form#advanced-search-form-pages {
     padding-top: 90px;
   }
- 
-  header button#nav-menu-button-left {
-    display: none;
-  }
+  
   header button#nav-menu-mobile-button-left {
     display: block;
     position: absolute;
@@ -3721,7 +3752,36 @@ header button#nav-menu-mobile-button-left:hover {
 body#pages-search-results button#nav-options-right-button,
 body#images-search-results button#nav-options-right-button,
 body#landing-replay button#nav-options-right-button {
-    display: none;
+    display: block;
+    background: none;  
+    border: none;
+    outline: none;
+}
+
+/* Shows mobile icons in mobile display*/
+.fa-ellipsis-h:before {
+  display: block; 
+  position: relative;
+  left: 7px;
+  font-size: 20px;
+}
+
+.fa-bars:before {
+  display: block; 
+  position: relative;
+  font-size: large;
+}
+
+/* Hides desktop button name in mobile display*/
+.button-title {
+  display: none;
+}
+
+header button#nav-menu-button-left {
+  background: none;
+  padding: 0;
+  border: none;
+  outline: none;
 }
 
 body#pages-search-results button#nav-options-right-button-mobile,
@@ -3774,7 +3834,7 @@ section#search-tools #submit-search {
 
  .fas, .fa-search::before {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   }
 
  section#home-content h4, section#body-content h4 {  
@@ -3831,7 +3891,7 @@ nav#replay-left-nav {
 
 
   header button#nav-menu-button-left {
-    display: none;
+    display: block;
   }
   nav#replay-left-nav {
     display: none;
@@ -3853,26 +3913,6 @@ nav#replay-left-nav {
     border: none;
   }
 
-body#pages-search-results button#nav-options-right-button,
-body#images-search-results button#nav-options-right-button,
-body#landing-replay button#nav-options-right-button {
-    display: none;
-}
-
-body#pages-search-results button#nav-options-right-button-mobile,
-body#images-search-results button#nav-options-right-button-mobile,
-body#landing-replay button#nav-options-right-button-mobile {
-  display: block;
-  position: absolute;
-  right: 13px; 
-  font-size: 1.050em;
-  border-radius: 3px;   
-  width: 31px;
-  height: 31px;
-  background-color: transparent;
-  border: none;
-}
-
 section.header-content-container {
   margin: -5px auto 0 auto;  
 }
@@ -3891,6 +3931,25 @@ section#search-tools #submit-search {
  .fas, .fa-search::before {
   display: block;
   /*font-size: 17px;*/
+}
+
+/* Shows mobile icons in mobile display*/
+.fa-ellipsis-h::before {
+  display: block; 
+  position: relative;
+  left: 7px;
+  font-size: 20px;
+}
+
+.fa-bars::before {
+  display: block; 
+  position: relative;
+  font-size: large;
+}
+
+/* Hides desktop button name in mobile display*/
+.button-title {
+  display: none;
 }
 
  section#search-tools #submit-search {
@@ -3926,9 +3985,7 @@ section#home-content h4, section#body-content h4  {
       height: 36px;
       margin: 20px 5%;
   }
-  section#search-tools span.button-title {
-    display: none;
-}
+
 }
 
 /* Galaxy Fold
