@@ -8,11 +8,21 @@ $(function () {
       }
     });
     const modal = $('#modal');
+    document.onkeydown = (e) => {
+      if ($.modal.isActive() && modal.find('.image-navigation-button').length) {
+        if (e.keyCode == '37') {
+          modal.find('#previous-image-button').click();
+        }
+        if (e.keyCode == '39') {
+          modal.find('#next-image-button').click();
+        }
+      }
+    };
 
     $("#images-results").on("click", "li.image-card", function (e) {
       const target = $(e.target).closest('li.image-card');
       const index = target.attr('data-index');
-      
+
       let imageData = JSON.parse($(this).find('.image-data').first().text());
       imageData['index'] = index;
 
@@ -30,7 +40,7 @@ $(function () {
 
       const form = $('#search-result-form-' + imageData.index);
       if (form.length) {
-          $.ajax(form.attr('action'));
+        $.ajax(form.attr('action'));
       }
 
       let setModalText = function (selector, fieldName, transform = (v) => v) {
@@ -125,7 +135,7 @@ $(function () {
             newContainer.show();
             setupSlideOnClick(newSlide.prev(), 'previous');
             setupSlideOnClick(newSlide.next(), 'next');
-            if(isMobile()){
+            if (isMobile()) {
               modal.find('#image-details-button').click(function () {
                 modal.draggable("disable");
               })
