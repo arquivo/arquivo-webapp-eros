@@ -69,11 +69,13 @@
 
     <div class="raw-api-data-title">
       <h5 class="image-details-raw"><%= t('modal-image-details.titles.raw-api-data') %></h5>
-      <button id="copy-raw-api-data" style="top:0"><span class="fas fa-copy" aria-hidden="true"></span><%= t('modal-image-details.buttons.copy') %></button>
     </div>
     <div class="modal-image-field">
       <p class="raw-api-data"></p>
-      <button id="" onclick="closeImageDetailsModalWindow()"><i class="fas fa-close"></i><%= t('modal-image-details.buttons.close') %></button>
+      <div class="modal-technical-buttons-container">
+        <button id="copy-raw-api-data"><span class="fas fa-copy" aria-hidden="true"></span><%= t('modal-image-details.buttons.copy') %></button>
+        <button id="" onclick="closeImageDetailsModalWindow()"><i class="fas fa-close"></i><%= t('modal-image-details.buttons.close') %></button>
+      </div>
     </div>
     
   </section>

@@ -73,7 +73,7 @@ button {
   color: white;
   background-color: #1c75c0;  
   font-family: inherit;
-  font-size: 0.71em;
+  font-size: 0.75em;
   border-radius: 4px;
   border: 1px solid #1c75c0;
   outline: none;
@@ -425,7 +425,7 @@ footer .background-bottom-curve {
   max-width: 980px;
   height: auto; 
   padding:0px;
-  margin: 0 auto 150px auto;
+  margin: 0 auto 0px auto;
 }
 
 body#images-search-results main, body#pages-search-results main {
@@ -854,7 +854,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   text-decoration: none;
   color: white;
   padding: 0px 15.5px;
-  font-size: 0.75em;  
+  font-size: 0.7em;  
 }
 
 nav#left-nav section ul > li a { 
@@ -1240,7 +1240,7 @@ section#search-tools #submit-search-mobile {
 
 /* Portuguese version search button width */
 :lang(pt) section#search-tools #submit-search, :lang(en) section#search-tools #submit-search { 
-  max-width: 116.5px; 
+  max-width: 118.5px; 
 } 
 
 /* English version advanced search button width */
@@ -1353,7 +1353,7 @@ body#images-advanced-search section#search-tools-date-slider input[type="text"].
   color: white;
   background-color: transparent;
   border: none;
-  border-top: 1px solid #ffffff6b;
+  border-top: 1px solid #ffffff54;
   outline: none;
   right: 0;
   margin: 0 auto;
@@ -1719,6 +1719,7 @@ section#modal-window-image-technical-details p a  {
 section#modal-window-image-technical-details div.modal-image-field {  
   border-bottom: 1px solid #cccccc69;
 }
+
 section#modal-window-image-technical-details div.modal-image-field:last-child  {  
   display: block;
   flex-direction: row;
@@ -1747,7 +1748,7 @@ section#modal-window-image-technical-details > div.raw-api-data-title > button{
   min-width: 85px;
   height: 28.5px;
   position: relative;
-  top: 14px;
+  top: 60px;
 }
 section#modal-window-image-technical-details > div.raw-api-data-title > button > span{
   padding-right: 5px;
@@ -2495,13 +2496,7 @@ form#search-form input#submit-search-input {
       box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
     }
     
-    form#advanced-search-form-pages {
-      padding-top: 20px;
-    }
-
-
-
-     /* Advanced search form */
+    /* Advanced search form */
      form.advanced-search-form section.navigation-tools {      
       width: 100%;
       display: flex;
@@ -2646,6 +2641,7 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   white-space: nowrap;
   padding-top: 0px;
   padding-bottom: 10px;  
+  padding-left: 10px;
   font-size: 12px;
   color:#70757a;
   max-width: 960px;
@@ -3020,10 +3016,9 @@ section.navigation-tools button {
 } 
 
 body#pages-search-results section.navigation-tools button, body#images-search-results section.navigation-tools button {
-  margin: 0 10px;
-  padding: 6px 8.65px 6.5px 8.65px;
+  margin: 0 12px;
   border-radius: 4px;
-  font-size: 0.8em;
+  font-size: 1em;
   z-index: 0;  
 }
 
@@ -3762,9 +3757,15 @@ section#search-tools #submit-search {
   width: 53px;
  }
 
- /* Hides both search terms for: PT and EN, and shows magnifier on mobile version */
+ /* Hides both search terms for: PT and EN, and shows magnifier on mobile version button */
  section#search-tools #submit-search span {
   display: none;  
+ }
+
+ form#search-form input#submit-search-input {
+  padding-left: 10px; 
+  font-size: 1.050em;
+  background-image: none;
  }
 
  .fas, .fa-search::before {
@@ -3885,7 +3886,7 @@ section#search-tools #submit-search {
 
  .fas, .fa-search::before {
   display: block;
-  font-size: 17px;
+  /*font-size: 17px;*/
 }
 
  section#search-tools #submit-search {
@@ -3910,7 +3911,7 @@ section#home-content h4, section#body-content h4  {
 
   footer section section {
     width: 100%;
-    padding: 12px 8px;
+    padding: 12px 8px 0 0;
     }
 
   footer section section h4 {
@@ -4064,15 +4065,17 @@ section#search-tools #submit-search {
 
  section#pages-results, section#images-results {
     padding-bottom: 0px !important;
-    margin-bottom: -25px !important;
+    margin-bottom: -55px !important;
   }  
   button {  
     font-size: 0.625em;   
   }
-    p#estimated-results {   
+  p#estimated-results {   
       padding-top: 0px !important;
       font-size: 11px !important;  
+      padding-left: 10px;
   }
+  
   #slider-range-container {  
     padding: 38px 5px 28px 0 !important;    
   }
