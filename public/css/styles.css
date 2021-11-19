@@ -892,15 +892,20 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
   padding-left: 80px; 
 }
 
-
-/* Scrollbar styling */
-
+/* Scrollbar styling ********************************/
 
 /* Firefox scroll bar */
 
 nav#replay-left-nav section {
   margin-top: 14px;
-  scrollbar-color: #1c75c0 rgb(0, 0, 0);
+  scrollbar-color: #1c75c0 #00324b;
+  scrollbar-width: thin;  
+  border-radius: 10px;  
+}
+
+section.image-details-description nav#replay-left-nav section {
+  margin-top: 14px;
+  scrollbar-color: #1c75c0 #00324b;
   scrollbar-width: thin;  
   border-radius: 10px;  
 }
@@ -909,25 +914,27 @@ nav#replay-left-nav section {
 
 nav#replay-left-nav section::-webkit-scrollbar {
   margin-top: 14px;
-  scrollbar-color: #1c75c0 rgb(0, 0, 0);
+  scrollbar-color: #1c75c0 #00324b;
   scrollbar-width: thin; 
 }
 
 nav#replay-left-nav section::-webkit-scrollbar {
   width: 10px; 
   scrollbar-width: thin;
-  scrollbar-color: #0b497f;
+  scrollbar-color: #00324b;
 }
 
 nav#replay-left-nav section::-webkit-scrollbar-track {
-  background: #000000;
+  background: #00324b;
 }
 
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
   background-color: #1c75c0;  
 }
 
-/* starts Font Awesome icons */
+
+/* starts Font Awesome icons ****************************/
+
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
   padding-right: 12.5px;    
 }
