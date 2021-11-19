@@ -100,22 +100,36 @@ router.get('/image/view/:url*', function (req, res) {
 
 // switch languages
 router.get('/switchlang', function (req, res) {
-    if(!!req.query && req.query.url){
-        let currentLocale = req.getLocale();
-        let newLocale = req.getLocales().find(l => l!=currentLocale);
-        res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: true }); 
-        
-        if(req.query.url.startsWith('/wayback')){
-            res.redirect(req.query.url);
-        } else {
-            let splitUrl = req.query.url.split('?');
-            let baseUrl = splitUrl.shift();
-            let parsedQuery = new URLSearchParams(splitUrl.join('?'));
-            parsedQuery.delete('l');
-            let newUrl = [baseUrl,parsedQuery.toString()].filter(t => t!='').join('?');
-            res.redirect(newUrl);
+    if(!!req.headers && req.headers.referer){
+
+        let oldUrl = req.headers.referer;
+        let parsedUrl = new URL(oldUrl);
+
+        const config = require('config')
+
+        const validHosts = [
+            'localhost', // to allow local testing
+            (new URL(config.get('backend.url'))).hostname
+        ]
+        if(!validHosts.includes(parsedUrl.hostname)){
+            res.redirect('/');
         }
         
+        let currentLocale = req.getLocale();
+        let newLocale = req.getLocales().find(l => l!=currentLocale);
+        
+        if(parsedUrl.pathname.startsWith('/wayback')){
+            res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: true });
+        } else {
+            parsedUrl.searchParams.set('l',newLocale.split('_').shift());
+        }
+
+        const newUrl = parsedUrl.href.slice(parsedUrl.origin.length);
+        console.log(newUrl);
+        res.redirect(newUrl);
+        
+    } else {
+        res.redirect('/');
     }
 });
 

@@ -1875,7 +1875,7 @@ section.image-details-description  {
   text-align: initial;
   margin-top: 8px; 
   height: 100%;
-  max-height: 117px;
+  max-height: calc(40vh - 100px);
   overflow: auto;  
   overflow-x: hidden; 
 }
@@ -2625,7 +2625,7 @@ section#home-content h4, section#body-content h4 {
 /* Defines how images display on images modal */
 img.image-display {
   max-width: 100%;
-  max-height: 500px;
+  max-height: 50vh;
   border-radius: 3px;
   height: auto;
   cursor: pointer;
@@ -3008,6 +3008,10 @@ section.navigation-tools p {
   padding: 0 25px;
 } 
 
+main {
+  min-height: calc(100vh - 768px);
+}
+
 section.navigation-tools button {
   padding: 6px 7px 7px 7px;
   border-radius: 4px;
@@ -3023,7 +3027,7 @@ body#pages-search-results section.navigation-tools button, body#images-search-re
 }
 
 body#pages-search-results section.navigation-tools, body#images-search-results section.navigation-tools {
-  border-top: 1px solid #e8e8e8;
+  border-top: 0px solid #e8e8e8;
   margin-top: 0px;
   padding-top: 20px;
   height: auto;
