@@ -45,11 +45,6 @@ module.exports = function (req, res) {
     Object.keys(defaultRequestParameters)
         .filter(key => !requestData.has(key))
         .forEach(key => requestData.set(key, defaultRequestParameters[key]));
-
-    //remove redundant language information
-    if(requestData.has('l') && requestData.get('l') == req.getLanguage()){
-        requestData.delete('l');
-    }
     
     if(parseInt(requestData.get('from')) < parseInt(defaultRequestParameters.from)){
         requestData.set('from', defaultRequestParameters.from)
