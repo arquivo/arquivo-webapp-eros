@@ -1017,6 +1017,7 @@ body#table-list-results section#list-results-container {
   padding: 20px 1px 20px 1px;
   background-color: #033f72; 
   border-radius: 5px;
+  margin-bottom: 100px;
 }
 
 body#list-results main  {
@@ -1182,6 +1183,7 @@ body#table-list-results #tablePresentation {
   overflow-x: hidden;
   overflow-y: auto;  
   height: 49vh;
+  margin-bottom: 100px;
 }
 
 body#table-list-results section#url-results h3, body#table-list-results section#replay-menu-list h4 {   
@@ -3760,18 +3762,18 @@ body#landing-replay button#nav-options-right-button:hover {
     color: #ffffff;
 }
 
-body#pages-search-results button#nav-menu-button-left,
-body#images-search-results button#nav-menu-button-left,
-body#landing-replay button#nav-menu-button-left {
+button#nav-menu-button-left,
+button#nav-menu-button-left,
+button#nav-menu-button-left {
   background: none;
   padding: 0;
   border: none;
   outline: none;
 }
 
-body#pages-search-results button#nav-menu-button-left:hover,
-body#images-search-results button#nav-menu-button-left:hover,
-body#landing-replay button#nav-menu-button-left:hover {
+button#nav-menu-button-left:hover,
+button#nav-menu-button-left:hover,
+button#nav-menu-button-left:hover {
   color: #ffffff;
 }
 
@@ -3833,7 +3835,7 @@ section#search-tools #submit-search {
  }
 
  /* Hides both search terms for: PT and EN, and shows magnifier on mobile version button */
- section#search-tools #submit-search span {
+ sectionsearch-tools #submit-search span {
   display: none;  
  }
 
@@ -3842,6 +3844,7 @@ section#search-tools #submit-search {
   font-size: 1.1em;
   background-image: none;
  }
+ #nav-menu-button-left
 
  .fas, .fa-search::before {
   display: block;
