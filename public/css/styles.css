@@ -1309,6 +1309,8 @@ section#search-tools-date-slider input[type="text"].calendar-year-input {
   top: 0px;
   left: -4px;
   max-width: 45px;
+  width:min-content;
+  text-align: auto;
   height: 39px;
   padding-bottom: 12px;
   padding-top: 2px; 
@@ -1339,6 +1341,7 @@ input[type="text"].calendar-day-month-input {
   outline: none;
   right: 0;
   margin: 0 auto;
+  border-radius: 0;
 }
 
 
@@ -2369,7 +2372,7 @@ section#search-tools-buttons   {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 23px auto 25px auto;
+  margin: 23px auto 5px auto;
   padding: 0;
 }
 
@@ -2506,6 +2509,8 @@ form#search-form span.search-input-button {
   width: 100%;
   display: flex;
   flex-direction: row;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 form#search-form input#submit-search-input {
@@ -2519,7 +2524,7 @@ form#search-form input#submit-search-input {
     padding-right: 13px;    
     border: 1px solid #ccc;
     outline: none;
-    font-size: 1em;    
+    font-size: 1.1em;    
     border-radius: 5px;    
     border-right: none;
     transition: 0.2s;
@@ -2564,10 +2569,7 @@ body#save-page-now form#search-form input#submit-search-input {
   padding-left: 12px;
   background-image: none;
 }
-body#save-page-now form#search-form input#submit-search-input {    
-  padding-left: 12px;  
-  background-image: none;
-}
+
 body#save-page-now form#search-form {
   margin: 8px auto 0 auto;
   height: auto;
@@ -2675,7 +2677,7 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-top: 0px;
+  padding-top: 25px;
   padding-bottom: 10px;  
   padding-left: 8px;
   font-size: 12px;
@@ -3853,6 +3855,9 @@ section#search-tools #submit-search {
   padding-left: 10px; 
   font-size: 1.1em;
   background-image: none;
+  border: none;
+  max-height: 100%;
+  padding-bottom: 0;
  }
  #nav-menu-button-left
 
@@ -4180,7 +4185,7 @@ section#search-tools #submit-search {
 
 @media (min-width: 344px) and (max-width: 415px) {
   button {  
-    font-size: 0.7em;   
+    font-size: 0.75em;   
   }
 }
 
