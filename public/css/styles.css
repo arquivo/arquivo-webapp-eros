@@ -1307,8 +1307,8 @@ section#search-tools-date-slider input[type="text"].calendar-year-input {
   position: relative;
   z-index: 1;
   top: 0px;
-  left: -4px;
-  max-width: 45px;
+  left: 0px;
+  max-width: 38px;
   width:min-content;
   text-align: auto;
   height: 39px;
@@ -3984,7 +3984,7 @@ section#search-tools #submit-search {
  section#search-tools #submit-search {
   text-indent: 0px;
   line-height: 0;
-  width: 53px; 
+  width: 53.7px; 
   
  }
 
