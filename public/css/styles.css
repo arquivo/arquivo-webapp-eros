@@ -1148,7 +1148,7 @@ section#not-found-container h3, section#not-found-container h4 {
 }
 
 section#not-found-message {  
-margin: auto;
+    margin: 10px auto;
     width: 100%;
     max-width: 960px;
     font-size: 13px;   
@@ -2296,7 +2296,7 @@ ul#date-container-end {
   z-index: 0;
 }
 
-body#pages-advanced-search #slider-range-container, body#images-advanced-search #slider-range-container {
+body#homepage #slider-range-container, body#pages-advanced-search #slider-range-container, body#images-advanced-search #slider-range-container {
   position: relative;
   margin: 0 auto 20px auto;
   padding: 38px 0 28px 0;
@@ -2726,7 +2726,7 @@ section#not-found-message ul li.list-title, section#search-suggestion-message ul
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
-  margin: 0 auto;
+  margin: 0px auto;
   width: auto;
   max-width: 930px;
   font-size: 13px;  
@@ -3741,7 +3741,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   }
   
   form#advanced-search-form-pages {
-    padding-top: 90px;
+    padding-top: 50px;
   }
   
   header button#nav-menu-mobile-button-left {
