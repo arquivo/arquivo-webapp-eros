@@ -1837,7 +1837,7 @@ section.modal ul.replay-options li button {
   width: 100px;
 }
 
-div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
+section#confirm-narrative-modal, div.jquery-modal section#screenshot, div.jquery-modal section#print, div.jquery-modal section#complete-the-page {
   max-width: 280px;
 }
 
