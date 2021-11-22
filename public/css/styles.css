@@ -1304,16 +1304,8 @@ section#search-tools form input[type="text"], section#search-tools-date-slider i
   font-family: Arial, sans-serif;
 } 
 section#search-tools-date-slider input[type="text"].calendar-year-input {
-  position: relative;
-  z-index: 1;
-  top: 0px;
-  left: 0px;
-  max-width: 38px;
-  width:min-content;
-  text-align: auto;
+  max-width: 100%;  
   height: 39px;
-  padding-bottom: 12px;
-  padding-top: 2px; 
   font-size: 16px;
   text-align: center;
   color: white;
@@ -1436,6 +1428,15 @@ section#search-tools-date-slider #date-container-end, #date-container-end   {
 section#search-tools-date-slider #date-container-start li.search-calendar-year,
 section#search-tools-date-slider #date-container-end li.search-calendar-year {
   margin-top: 2.05px;
+  width: 100%;
+  width: -webkit-fill-available;
+  padding: 0;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  justify-items: center;
+
+
 }
 
 section#search-tools-date-slider #date-container-start li.search-calendar-year input[type="button"],
