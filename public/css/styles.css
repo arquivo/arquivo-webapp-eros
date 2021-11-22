@@ -892,39 +892,49 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
   padding-left: 80px; 
 }
 
+/* Scrollbar styling ********************************/
+
+/* Firefox scroll bar */
+
+nav#replay-left-nav section {
+  margin-top: 14px;
+  scrollbar-color: #1c75c0 #00324b;
+  scrollbar-width: thin;  
+  border-radius: 10px;  
+}
+
+section.image-details-description nav#replay-left-nav section {
+  margin-top: 14px;
+  scrollbar-color: #1c75c0 #00324b;
+  scrollbar-width: thin;  
+  border-radius: 10px;  
+}
+
+/* Chrome, Opera, Edge, Safari scroll bar */
+
 nav#replay-left-nav section::-webkit-scrollbar {
   margin-top: 14px;
-  scrollbar-color: #0b497f rgb(0, 0, 0);
-  scrollbar-width: 14px;
-  
-  border-radius: 10px;
-  border: 2px solid #01060a; 
+  scrollbar-color: #1c75c0 #00324b;
+  scrollbar-width: thin; 
 }
 
-
-/* scrollbar styling */
-
-nav#replay-left-nav section::-webkit-scrollbar{
-  width: 14px; 
-  
-}
 nav#replay-left-nav section::-webkit-scrollbar {
   width: 10px; 
-  scrollbar-width: auto;
-  scrollbar-color: #0b497f;
-}
-nav#replay-left-nav section::-webkit-scrollbar-track {
-  background: #000000;
-  border-radius: 10px;
-}
-nav#replay-left-nav section::-webkit-scrollbar-thumb {
-  background-color: #1c75c0;
-  border-radius: 10px;
-  border: 2px solid #01060a;  
-  
+  scrollbar-width: thin;
+  scrollbar-color: #00324b;
 }
 
-/* starts Font Awesome icons */
+nav#replay-left-nav section::-webkit-scrollbar-track {
+  background: #00324b;
+}
+
+nav#replay-left-nav section::-webkit-scrollbar-thumb {
+  background-color: #1c75c0;  
+}
+
+
+/* starts Font Awesome icons ****************************/
+
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
   padding-right: 12.5px;    
 }
@@ -1299,6 +1309,8 @@ section#search-tools-date-slider input[type="text"].calendar-year-input {
   top: 0px;
   left: -4px;
   max-width: 45px;
+  width:min-content;
+  text-align: auto;
   height: 39px;
   padding-bottom: 12px;
   padding-top: 2px; 
@@ -1329,6 +1341,7 @@ input[type="text"].calendar-day-month-input {
   outline: none;
   right: 0;
   margin: 0 auto;
+  border-radius: 0;
 }
 
 
@@ -2359,7 +2372,7 @@ section#search-tools-buttons   {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 23px auto 25px auto;
+  margin: 23px auto 5px auto;
   padding: 0;
 }
 
@@ -2496,6 +2509,8 @@ form#search-form span.search-input-button {
   width: 100%;
   display: flex;
   flex-direction: row;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 form#search-form input#submit-search-input {
@@ -2509,7 +2524,7 @@ form#search-form input#submit-search-input {
     padding-right: 13px;    
     border: 1px solid #ccc;
     outline: none;
-    font-size: 1em;    
+    font-size: 1.1em;    
     border-radius: 5px;    
     border-right: none;
     transition: 0.2s;
@@ -2554,10 +2569,7 @@ body#save-page-now form#search-form input#submit-search-input {
   padding-left: 12px;
   background-image: none;
 }
-body#save-page-now form#search-form input#submit-search-input {    
-  padding-left: 12px;  
-  background-image: none;
-}
+
 body#save-page-now form#search-form {
   margin: 8px auto 0 auto;
   height: auto;
@@ -2665,7 +2677,7 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding-top: 0px;
+  padding-top: 25px;
   padding-bottom: 10px;  
   padding-left: 8px;
   font-size: 12px;
@@ -3843,6 +3855,9 @@ section#search-tools #submit-search {
   padding-left: 10px; 
   font-size: 1.1em;
   background-image: none;
+  border: none;
+  max-height: 100%;
+  padding-bottom: 0;
  }
  #nav-menu-button-left
 
@@ -4170,7 +4185,7 @@ section#search-tools #submit-search {
 
 @media (min-width: 344px) and (max-width: 415px) {
   button {  
-    font-size: 0.7em;   
+    font-size: 0.75em;   
   }
 }
 
