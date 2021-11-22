@@ -302,7 +302,7 @@ h4#modal-datepicker-title {
   height: auto; 
   padding-bottom: 24px;
   width: 220px;
-  
+  min-height: 270.5px;
 }
 
 button#modal-datepicker-confirm-button {
