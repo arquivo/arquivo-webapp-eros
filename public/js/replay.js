@@ -100,16 +100,25 @@ class ArquivoReplay {
 
             $.modal.close();
             $('#loading-screen').modal({ escapeClose: false, clickClose: false, showClose: false });
-            imgElem.addEventListener('load', function () {
+            $(imgElem).off('load').on('load', function () {
                 $.modal.close();
                 let printContents = document.getElementById("divPrintMe").innerHTML;
-                let originalContents = document.body.innerHTML;
+                // let originalContents = document.body.innerHTML;
 
-                document.body.innerHTML = printContents;
+                var iframe = document.createElement('iframe');
+                document.body.appendChild(iframe);
+                iframe.contentWindow.document.open();
+                iframe.contentWindow.document.write('<html><head><title>' + document.title  + '</title>');
+                iframe.contentWindow.document.write('</head><body>');
+                iframe.contentWindow.document.write(printContents);
+                iframe.contentWindow.document.write('</body></html>');
+                iframe.contentWindow.document.close(); // necessary for IE >= 10
+                iframe.contentWindow.focus(); // necessary for IE >= 10*/
+            
+                iframe.contentWindow.print();
+                iframe.contentWindow.close();
 
-                window.print();
-
-                document.body.innerHTML = originalContents;
+                iframe.remove();                
             });
             imgElem.src = requestURL;
         });
