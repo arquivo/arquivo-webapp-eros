@@ -87,8 +87,8 @@ button:hover {
 }
 button:active {
   color: #f9fcff;
-  background-color: #033f72;  
-  border: 1px solid #033f72;
+  background-color: #00101e;  
+  border: 1px solid #00101e;
   outline: none;
   cursor: pointer;
 }
