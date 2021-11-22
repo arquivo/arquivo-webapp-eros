@@ -2507,10 +2507,12 @@ form#search-form {
 
 form#search-form span.search-input-button {
   width: 100%;
+  height: 45px;
   display: flex;
   flex-direction: row;
   border: 1px solid #ccc;
   border-radius: 5px;
+  
 }
 
 form#search-form input#submit-search-input {
