@@ -1336,7 +1336,7 @@ body#homepage section#search-tools-date-slider input[type="text"].calendar-day-m
 body#pages-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input,
 body#images-advanced-search section#search-tools-date-slider input[type="text"].calendar-day-month-input {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   top: 38px;
   left: 0.5px;
   width: 37px;
@@ -1498,7 +1498,7 @@ section#search-tools-date-slider #date-container-end:hover {
 
 section#search-tools-date-slider #date-container-start:active, 
 section#search-tools-date-slider #date-container-end:active {     
-  background: transparent url(../img/calendar.svg) no-repeat 0px 0px ;
+  background: transparent url(../img/calendar.svg) no-repeat 0px 0.5px ;
   background-size: 100%;
   color: white;
  
