@@ -982,7 +982,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 #menuReplayWithOldBrowser {  
   padding-left: 44px !important;
   padding-right: 25px;  
-  background: url(../img/old-browser-icon.svg) no-repeat 15.7px 13.5px;
+  background: url(../img/old-browser-icon.svg) no-repeat 19.7px 13.5px;
   background-size: 13px;  
 }
 
@@ -1509,10 +1509,14 @@ section#search-tools-date-slider #date-container-end:active li.search-calendar-y
 section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month input[type="text"], 
 section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month input[type="text"] {     
   color: white;
-  border-top: 1px solid white;
- 
+  border-top: 1px solid 1px solid #747c8c;
 }
 
+section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="text"] {
+  border-top: none;
+}
+
+section#search-tools-date-slider #date-container-start:active li.search-calendar-year input[type="text"], section#search-tools-date-slider #date-container-end:active li.search-calendar-year input[type="text"], section#search-tools-date-slider #date-container-start:active li.search-calendar-day-month input[type="text"], section#search-tools-date-slider #date-container-end:active li.search-calendar-day-month input[type="text"]
 section#search-tools-date-slider a {
 text-decoration: none;
 }
