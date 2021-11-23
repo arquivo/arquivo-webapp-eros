@@ -3808,6 +3808,9 @@ button#nav-menu-button-left:hover {
   display: none;
 }
 
+section#search-tools-date-slider {
+  margin: 8.5px 0 10px 0;
+}
 
 body#pages-search-results button#nav-options-right-button-mobile,
 body#images-search-results button#nav-options-right-button-mobile,
