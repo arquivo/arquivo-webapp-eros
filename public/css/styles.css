@@ -900,7 +900,7 @@ nav#replay-left-nav section {
   margin-top: 14px;
   scrollbar-color: #1c75c0 #00324b;
   scrollbar-width: thin;  
-  border-radius: 10px;  
+  border-radius: 0;  
 }
 
 section.image-details-description nav#replay-left-nav section {
