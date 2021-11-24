@@ -145,4 +145,9 @@ header button#nav-options-right-button {
     margin-top: 55px;
     margin-bottom: 20px;
 }
+#logo-complete-page {
+    position: relative;
+    top: 39px;
+}
+
 }
