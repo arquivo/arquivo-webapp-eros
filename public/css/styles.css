@@ -53,6 +53,7 @@ a#skip-navigation-links:visited {
 a {
   color:white;
 }
+
 a:hover {
   color:#1c75c0;
   background-color: transparent;
@@ -4182,7 +4183,8 @@ section#search-tools #submit-search {
 }
 
 @media (min-width: 0px) and (max-width: 415px) {
-/* Extend to 100% width left and right navigation buttons from both image and pages results navigation pages */
+
+  /* Extend to 100% width left and right navigation buttons from both image and pages results navigation pages */
   section#images-results ul li a img {
     box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
     cursor: pointer;
@@ -4243,8 +4245,7 @@ section#search-tools #submit-search {
     font-size: 0.75em;   
   }
 }
-
-
+}
 /* set up printing on replay */
 @media print {
   body * {
@@ -4258,5 +4259,57 @@ section#search-tools #submit-search {
     left: 0;
     top: 0;
   }
+}
+
+/***************************************************/
+/****** iPads and iPhones: Safari version 14 *******/
+/***************************************************/
+
+/* iPad Pro: Portrait */
+
+@media (width:1024px) and (height:1366px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;    
+  } 
+  #slider-range {
+    margin: auto 78.5px auto 70px !important;   
+}
+}
+/* iPad Pro: Landscape */
+@media (width:1366px) and (height:1024px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;    
+  } 
+  #slider-range {
+    margin: auto 78.5px auto 70px !important;   
+}
+}
+
+/* iPad Mini: Lanscape */
+@media (width: 768px) and (height:1024px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;    
+  } 
+  #slider-range {
+    margin: auto 78px auto 70px !important;   
+}
+}
+
+/* iPad Mini: Portrait */
+
+@media (width: 768px) and (height:1024px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;    
+  } 
+  #slider-range {
+    margin: auto 78.5px auto 70px !important;   
 }
 }
