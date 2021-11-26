@@ -174,7 +174,18 @@ $(function () {
               target.draggable("option", "revert", true)
             }
           }
+          if(target.scrolling){
+            modal.find('.image-details-description').first()[0].scrollTop += target.mouseY-event.clientY;
+            target.mouseY = event.clientY;
+          }
 
+        },
+        start: function (event,ui){
+          const description = modal.find('.image-details-description').first();
+          if (event.toElement && description.find(event.toElement).length){
+            target.scrolling = true;
+            target.mouseY = event.clientY;
+          }
         },
         stop: function (event, ui) {
           if (ui.position.left > threshold) {
@@ -183,8 +194,15 @@ $(function () {
           if (ui.position.left < -threshold) {
             target.find('#next-image-button').click();
           }
+          if(target.scrolling){
+            target.scrolling = false;
+          }
         }
       });
+      // const description = modal.find('.image-details-description').first();
+      // if(description.height() < description[0].scrollHeight){
+      //   modal.draggable('option', 'cancel', '.image-details-description');
+      // }
       modal.find('#image-details-button').click(function () {
         modal.draggable("disable");
       })
