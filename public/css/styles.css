@@ -3677,7 +3677,8 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   section#search-tools #submit-search-mobile {
     display: none; 
    }
-   body#pages-search-results button#nav-options-right-button, body#images-search-results button#nav-options-right-button  {
+   body#pages-search-results button#nav-options-right-button, 
+   body#images-search-results button#nav-options-right-button  {
     display: block;
   }
   header button#nav-options-right-button-mobile {
@@ -3685,9 +3686,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   }
 }
 /* 
-  ##Device = Laptops, Desktops
-  ##Screen = B/w 1025px to 1280px
-*/
+  Device = Laptops, Desktops Screen = B/w 1025px to 1280px */
 @media (min-width: 1025px) and (max-width: 1280px) {
   section#search-tools #submit-search-mobile {
     display: none; 
@@ -3696,10 +3695,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
     display: none;
   }
 }
-/* 
-  ##Device = Tablets, Ipads (portrait)
-  ##Screen = B/w 768px to 1024px
-*/
+/* Device = Tablets, Ipads (portrait) Screen = B/w 768px to 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   section#search-tools #submit-search-mobile {
     display: none; 
@@ -3728,11 +3724,11 @@ section#loading-section form#loading-form button#loading-results, section#loadin
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-}
-
-body#save-page-now-landing #replay_iframe {
+  }
+  body#save-page-now-landing #replay_iframe {
   padding-top: 36px !important;
  }
+}
 
 @media (min-width: 482px) and (max-width: 900px) {
  section#search-tools #submit-search-mobile {
@@ -3742,10 +3738,7 @@ body#save-page-now-landing #replay_iframe {
   display: none;
 }
 }
-/* 
-  ##Device = Tablets and Mobiles 
-  
-*/
+/* Device = Tablets and Mobiles */
 @media (min-width: 0px) and (max-width: 767px) { 
   
   body#landing-replay main#main-content {   
@@ -4301,19 +4294,20 @@ section#search-tools #submit-search {
 
 /************************************************/
 
-/* iPad Pro: Portrait */
+/* iPad Pro first generation: Portrait */
 
 @media (width:1024px) and (height:1366px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
     width: 1em !important;
-    height: 1.050em !important;    
+    height: 1.050em !important;     
   } 
   #slider-range {
     margin: auto 78.5px auto 70px !important;   
 }
 }
-/* iPad Pro: Landscape */
+
+/* iPad Pro first generation: Landscape */
 @media (width:1366px) and (height:1024px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
@@ -4325,20 +4319,20 @@ section#search-tools #submit-search {
 }
 }
 
-/* iPad Mini: Portrait */
+/* iPad Mini first generation  first generation: Portrait */
 
 @media (width: 768px) and (height:1024px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
     width: 1em !important;
-    height: 1.050em !important;    
+    height: 1.050em !important;       
   } 
   #slider-range {
     margin: auto 78.5px auto 70px !important;   
 }
 }
 
-/* iPad Mini: Lanscape */
+/* iPad Mini  first generation: Lanscape */
 @media (width: 768px) and (height:1024px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
