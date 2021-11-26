@@ -745,7 +745,7 @@ body#homepage button#nav-options-right-button  {
   float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0; 
+  right: 2px; 
   font-weight: normal;
   top: 4px;
 }
@@ -761,7 +761,7 @@ body#homepage button#nav-options-right-button  {
   float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0; 
+  right: 2px; 
   font-weight: normal;
   top: 4px;
 }
@@ -865,7 +865,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   display: block;
   text-decoration: none;
   color: white;
-  padding: 0px 17px;
+  padding: 0px 14px;
   font-size: 0.75em;  
 }
 
@@ -937,7 +937,7 @@ nav#replay-left-nav section::-webkit-scrollbar-thumb {
 /* starts Font Awesome icons ****************************/
 
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 12.5px;    
+  padding-right: 12px;    
 }
 /* ends Font Awesome icons */
 
@@ -3952,7 +3952,6 @@ nav#replay-left-nav {
     height: 36px;
     margin: 20px 5%;
  }
-
 }
 
 /* SavePageNow: center  search box for mobile */
@@ -4070,9 +4069,18 @@ section#home-content h4, section#body-content h4  {
 
 }
 
-/* Galaxy Fold
-  ##Screen = B/w 280px to 653px
-*/
+/* Max width: 415 px */
+
+@media (max-width: 415px) {
+/* Show list page date and hour centered on mobile: 320px max-width */
+li.menu-pages-replay-date-hour a {
+  padding-left: 40px;
+  text-align: center; 
+  margin: 0 auto;
+ 
+}
+/* Galaxy Fold: ##Screen = B/w 280px to 653px */
+
 @media (width: 280px) and (height: 653px) {
   form#advanced-search-form-pages {
     padding-top: 90px;
