@@ -1942,7 +1942,7 @@ button#copy-raw-api-data .fa-copy::before {
 section.image-details-description p  {
  padding: 3px 0 0 0px;
  font-size: 0.72em;
- line-height: 1.6em;
+ line-height: 1.5em;
 }
 
 section.image-details-description p.image-original-address {
@@ -4262,7 +4262,7 @@ section#search-tools #submit-search {
 
 @media (min-width: 344px) and (max-width: 415px) {
   button {  
-    font-size: 0.75em;   
+    font-size: 0.718em;   
   }
 }
 }
