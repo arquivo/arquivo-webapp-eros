@@ -199,10 +199,6 @@ $(function () {
           }
         }
       });
-      // const description = modal.find('.image-details-description').first();
-      // if(description.height() < description[0].scrollHeight){
-      //   modal.draggable('option', 'cancel', '.image-details-description');
-      // }
       modal.find('#image-details-button').click(function () {
         modal.draggable("disable");
       })
