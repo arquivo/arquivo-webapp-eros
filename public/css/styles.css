@@ -502,7 +502,7 @@ body#landing-replay iframe html {
 
 body#landing-replay main#main-content iframe  {
   padding: 0;
-  margin: 96px 0 0 0;
+  margin: 93px 0 0 0;
   max-width: 100%;
   width: inherit; 
 }
@@ -821,7 +821,7 @@ nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul
 nav#replay-right-nav section ul > li:first-child { 
   border-top: 0px solid #e3e3e32e;
   display: block;
-  padding-left: 15px;
+  padding-left: 13px;
   font-size: 0.75em;
   line-height: 1em;
   padding-top: 15px;
@@ -992,7 +992,7 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 #menuReplayWithOldBrowser {  
   padding-left: 44px !important;
   padding-right: 25px;  
-  background: url(../img/old-browser-icon.svg) no-repeat 13.8px 13.5px;
+  background: url(../img/old-browser-icon.svg) no-repeat 14.3px 13.5px;
   background-size: 13px;  
 }
 
@@ -1253,10 +1253,6 @@ section#search-tools #submit-search {
   padding: 0%;
 }
 
-.fas, .fa-search::before {
-display: none;
-} 
-
 /* Datepicker portuguese mobile version */
 
 section#search-tools #submit-search-mobile { 
@@ -1322,7 +1318,7 @@ section#search-tools-date-slider input[type="text"].calendar-year-input, section
 section#search-tools-date-slider input[type="text"].calendar-day-month-input,
 input[type="text"].calendar-day-month-input {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   top: 38px;
   left: 0.5px;
   width: 37px;
@@ -3367,6 +3363,12 @@ body#arquivo-404 main a:hover {
   text-decoration: underline;
 }
 
+/* New family style for old layout to display on not found page*/
+
+#info-texto-termos, #conteudo-erro {     
+  font-family: arial;
+}
+
 /* PRELOADER  ******************************************************************************************/
 
 #preloader-container {   
@@ -3680,6 +3682,10 @@ section#loading-section form#loading-form button#loading-results, section#loadin
    display: none;
 }
 
+#submit-search::before {
+  display: none;
+}
+
 
 /*********************************/
 /********* MEDIA QUERIES *********/
@@ -3826,6 +3832,11 @@ button#nav-menu-button-left:hover {
   font-size: large;
 }
 
+#submit-search::before {
+  display: block;
+}
+
+
 body#save-page-now-landing .left {  
   top: 80px;
   display: flex;
@@ -3907,13 +3918,6 @@ section#search-tools #submit-search {
   max-height: 100%;
   padding-bottom: 0;
  }
-
- #nav-menu-button-left
-
- .fas, .fa-search::before {
-  display: block;
-  font-size: 13px;
-  }
 
  section#home-content h4, section#body-content h4 {  
   font-size: 0.9em;
@@ -4016,11 +4020,6 @@ section#search-tools #submit-search {
   width: 53px; 
   
  }
-
- .fas, .fa-search::before {
-  display: block;
-  /*font-size: 17px;*/
-}
 
 /* Shows mobile icons in mobile display*/
 .fa-ellipsis-h::before {
