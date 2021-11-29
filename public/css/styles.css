@@ -897,7 +897,6 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
 
 /* Firefox scroll bar */
 
-
 nav#replay-left-nav section {
   margin-top: 14px;
   scrollbar-color: #1c75c0 #00324b;
@@ -905,45 +904,48 @@ nav#replay-left-nav section {
   border-radius: 10px;  
 }
 
-section.image-details-description, section#modal-window-image-technical-details {
+section.image-details-description, div.modal section::-webkit-scrollbar-thumb {
   margin-top: 14px;
   scrollbar-color: #bdbdbd #f5f5f5;
   scrollbar-width: thin;  
   border-radius: 0;  
 }
 
-/* Chrome, Opera, Edge, Safari scroll bar */
+/* Chrome, Opera, Edge, Safari scroll bar for replay and images modal */
 
-nav#replay-left-nav section::-webkit-scrollbar {
-  margin-top: 14px;
-  scrollbar-color: #1c75c0 #00324b;
-  scrollbar-width: thin; 
-}
-
-section.image-details-description, section#modal-window-image-technical-details {
-  margin-top: 14px;
-  scrollbar-color: #bdbdbd #f5f5f5;
-  scrollbar-width: thin;  
-  border-radius: 0;
-}
-
+/* Replay left nav scroll bar */
 
 nav#replay-left-nav section::-webkit-scrollbar {
   width: 10px; 
-  scrollbar-width: thin;
+  scrollbar-width: thin;   
   scrollbar-color: #00324b;
 }
 
-nav#replay-left-nav section::-webkit-scrollbar-track {
-  background: #00324b;
+nav#replay-left-nav section::-webkit-scrollbar-track  {
+  background: #00324b !important;
 }
 
 nav#replay-left-nav section::-webkit-scrollbar-thumb {
   background-color: #1c75c0;  
 }
 
+/* Image modal scroll bar */
 
-/* starts Font Awesome icons ****************************/
+div.modal section::-webkit-scrollbar {
+  width: 10px;     
+  scrollbar-color: #00324b;
+}
+
+div.modal section::-webkit-scrollbar-track  {
+  background: #f5f5f5 !important;
+}
+
+div.modal section::-webkit-scrollbar-thumb {
+  background-color: #bdbdbd;  
+}
+
+
+/* starts Font Awesome icons ****************************************/
 
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
   padding-right: 12px;    
