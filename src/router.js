@@ -128,6 +128,7 @@ router.get('/switchlang', function (req, res) {
         const newUrl = parsedUrl.href.slice(parsedUrl.origin.length);
         
         res.set('Cache-Control', 'no-store');
+        res.statusCode = 307;
         res.redirect(newUrl);
         
     } else {
