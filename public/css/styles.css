@@ -745,7 +745,7 @@ body#homepage button#nav-options-right-button  {
   float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0; 
+  right: 2px; 
   font-weight: normal;
   top: 4px;
 }
@@ -761,7 +761,7 @@ body#homepage button#nav-options-right-button  {
   float: right;
   font-size: 0.9em;
   position: relative;
-  right: 0; 
+  right: 2px; 
   font-weight: normal;
   top: 4px;
 }
@@ -865,7 +865,7 @@ nav#left-nav section ul > li a, nav#options-right-nav section ul > li a, nav#rep
   display: block;
   text-decoration: none;
   color: white;
-  padding: 0px 20px;
+  padding: 0px 14px;
   font-size: 0.75em;  
 }
 
@@ -897,18 +897,19 @@ nav#replay-left-nav section a.menu-pages-replay-date-hour  {
 
 /* Firefox scroll bar */
 
+
 nav#replay-left-nav section {
   margin-top: 14px;
   scrollbar-color: #1c75c0 #00324b;
   scrollbar-width: thin;  
-  border-radius: 0;  
+  border-radius: 10px;  
 }
 
-section.image-details-description nav#replay-left-nav section {
+section.image-details-description, section#modal-window-image-technical-details {
   margin-top: 14px;
-  scrollbar-color: #1c75c0 #00324b;
+  scrollbar-color: #bdbdbd #f5f5f5;
   scrollbar-width: thin;  
-  border-radius: 10px;  
+  border-radius: 0;  
 }
 
 /* Chrome, Opera, Edge, Safari scroll bar */
@@ -918,6 +919,14 @@ nav#replay-left-nav section::-webkit-scrollbar {
   scrollbar-color: #1c75c0 #00324b;
   scrollbar-width: thin; 
 }
+
+section.image-details-description, section#modal-window-image-technical-details {
+  margin-top: 14px;
+  scrollbar-color: #bdbdbd #f5f5f5;
+  scrollbar-width: thin;  
+  border-radius: 0;
+}
+
 
 nav#replay-left-nav section::-webkit-scrollbar {
   width: 10px; 
@@ -937,7 +946,7 @@ nav#replay-left-nav section::-webkit-scrollbar-thumb {
 /* starts Font Awesome icons ****************************/
 
 nav#left-nav section ul > li span, nav#options-right-nav section ul > li span, nav#replay-left-nav section ul > li span,  nav#replay-right-nav section ul > li span { 
-  padding-right: 12.5px;    
+  padding-right: 12px;    
 }
 /* ends Font Awesome icons */
 
@@ -983,12 +992,12 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
 #menuReplayWithOldBrowser {  
   padding-left: 44px !important;
   padding-right: 25px;  
-  background: url(../img/old-browser-icon.svg) no-repeat 19.65px 13.5px;
+  background: url(../img/old-browser-icon.svg) no-repeat 13.8px 13.5px;
   background-size: 13px;  
 }
 
 #menuReplayWithOldBrowser:hover {     
-  background: url(../img/old-browser-icon-blue.svg) no-repeat 16.4px 13.6px;
+  background: url(../img/old-browser-icon-blue.svg) no-repeat 13.8px 13.6px;
   background-size: 13px;  
 }
 
@@ -996,8 +1005,6 @@ nav#replay-left-nav section ul > li.menu-pages-replay-date-hour a {
   left: -1.4px;
   position: relative;
 }
-
-
 
 /* nav sub-menu ******************************************************************* */
 
@@ -1264,14 +1271,14 @@ section#search-tools #submit-search-mobile {
   right: 0;
 } 
 
-/* Portuguese version search button width */
-:lang(pt) section#search-tools #submit-search, :lang(en) section#search-tools #submit-search { 
-  max-width: 116.5px; 
+/* Portuguese version: search button width */
+:lang(en) section#search-tools #submit-search { 
+  max-width: 123.5px;
 } 
 
-/* English version advanced search button width */
-:lang(en) section#search-tools form#search-form-advanced button { 
-  outline: 10px;     
+/* English version: search button width */
+:lang(pt) section#search-tools #submit-search { 
+  max-width: 116.5px;
 } 
 
 section#search-tools-date-slider #date-container-start:hover li input[type="text"],
@@ -1757,14 +1764,18 @@ section#modal-window-image-technical-details > h5{
   padding-bottom: 15px;  
 }
 section#modal-window-image-technical-details > div.raw-api-data-title{
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  padding: 0;  
-  padding-top: 15px;
+  padding: 0;    
   align-items: center;
+  background-color: whitesmoke;
 }
+
 section#modal-window-image-technical-details > div.raw-api-data-title > button{
   width: 85px;
   min-width: 85px;
@@ -1918,7 +1929,7 @@ button#copy-raw-api-data .fa-copy::before {
   padding-right: 5px;
 }
 
-section.image-details-description h5  {
+#modal .image-details-description h5  {
   font-weight: bold;
   padding: 13px 0 2px;
   font-size: 0.75em;
@@ -1931,7 +1942,11 @@ section.image-details-description h5  {
 section.image-details-description p  {
  padding: 3px 0 0 0px;
  font-size: 0.72em;
- line-height: 1.4em;
+ line-height: 1.5em;
+}
+
+section.image-details-description p.image-original-address {
+  line-height: 1.68em;
 }
 
 section.image-details-description p.image-description-name {
@@ -2174,7 +2189,7 @@ a.close-modal {
 }
 
 div.jquery-modal div#modal {
-  padding: 25px 25px 25px 25px; 
+  padding: 25px; 
   border-radius: 5px;
   box-shadow: 0 0 100px #000;
   background-color: #f5f5f5;  
@@ -2528,15 +2543,15 @@ form#search-form input#submit-search-input {
     font-size: 1.1em;    
     border-radius: 5px;    
     border-right: none;
-    -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 25%);
-    box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 25%);
+    -webkit-box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0);
+    box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0);
     /* Fix for Safari older versions: input height */
     -webkit-appearance: initial;
   }
 
     form#search-form input#submit-search-input:hover {
-      -webkit-box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
-      box-shadow: 0px 4px 5px -2px rgba(0 0 0 / 25%) !important;
+      -webkit-box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.25) !important;
+      box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.25);
     }
     
     /* Advanced search form */
@@ -2681,7 +2696,7 @@ body#pages-search-results p#estimated-results, body#images-search-results p#esti
   white-space: nowrap;
   padding-top: 25px;
   padding-bottom: 10px;  
-  padding-left: 10px;
+  padding-left: 9px;
   font-size: 12px;
   color:#70757a;
   max-width: 970px;
@@ -2726,7 +2741,7 @@ section#not-found-message ul li.list-title, section#search-suggestion-message ul
 section#search-suggestion-message p {
   background-color: #f2fbf6;;
   color: #000000;
-  margin: 0px auto;
+  margin: 10px auto 0 auto;
   width: auto;
   max-width: 930px;
   font-size: 13px;  
@@ -2798,7 +2813,7 @@ section#pages-results ul {
   padding: 23px 20px 20px 20px;
   border: 1px solid #e7e7e7;
   border-radius: 5px;
-  box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 0%);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0);
   cursor: pointer;
   transition: box-shadow 0.3s;
   min-width: 240px;
@@ -2810,7 +2825,7 @@ section#pages-results ul.sub-results {
 
 section#pages-results ul:hover, section#pages-results ul:active {
   transition: box-shadow 0.3s;
-  box-shadow: 0px 3px 5px 0px rgb(0 0 0 / 20%);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
 section#pages-results ul > li > p {  
@@ -3251,7 +3266,7 @@ footer section#important-info {
   width: 100%; 
   max-width: 960px;
   margin: 0 auto; 
-  padding: 0 30px; 
+  padding: 0 28px; 
 }
 
 footer section#important-info a:hover {
@@ -3677,7 +3692,8 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   section#search-tools #submit-search-mobile {
     display: none; 
    }
-   body#pages-search-results button#nav-options-right-button, body#images-search-results button#nav-options-right-button  {
+   body#pages-search-results button#nav-options-right-button, 
+   body#images-search-results button#nav-options-right-button  {
     display: block;
   }
   header button#nav-options-right-button-mobile {
@@ -3685,9 +3701,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   }
 }
 /* 
-  ##Device = Laptops, Desktops
-  ##Screen = B/w 1025px to 1280px
-*/
+  Device = Laptops, Desktops Screen = B/w 1025px to 1280px */
 @media (min-width: 1025px) and (max-width: 1280px) {
   section#search-tools #submit-search-mobile {
     display: none; 
@@ -3696,10 +3710,7 @@ section#loading-section form#loading-form button#loading-results, section#loadin
     display: none;
   }
 }
-/* 
-  ##Device = Tablets, Ipads (portrait)
-  ##Screen = B/w 768px to 1024px
-*/
+/* Device = Tablets, Ipads (portrait) Screen = B/w 768px to 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   section#search-tools #submit-search-mobile {
     display: none; 
@@ -3728,11 +3739,11 @@ section#loading-section form#loading-form button#loading-results, section#loadin
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-}
-
-body#save-page-now-landing #replay_iframe {
+  }
+  body#save-page-now-landing #replay_iframe {
   padding-top: 36px !important;
  }
+}
 
 @media (min-width: 482px) and (max-width: 900px) {
  section#search-tools #submit-search-mobile {
@@ -3742,10 +3753,7 @@ body#save-page-now-landing #replay_iframe {
   display: none;
 }
 }
-/* 
-  ##Device = Tablets and Mobiles 
-  
-*/
+/* Device = Tablets and Mobiles */
 @media (min-width: 0px) and (max-width: 767px) { 
   
   body#landing-replay main#main-content {   
@@ -3873,7 +3881,7 @@ section#search-tools {
 
 section#search-tools #submit-search {
   line-height: 0;
-  width: 53px;
+  width: 54px;
  }
 
  /* Hides both search terms for: PT and EN, and shows magnifier on mobile version button */
@@ -3936,6 +3944,10 @@ nav#replay-left-nav {
     max-width: 220px;
   }
 
+  footer { 
+    padding: 28px 0 0 0;
+    }
+
    footer section section {
    width: 50%;
    padding: 20px 0px;
@@ -3948,7 +3960,6 @@ nav#replay-left-nav {
     height: 36px;
     margin: 20px 5%;
  }
-
 }
 
 /* SavePageNow: center  search box for mobile */
@@ -4066,9 +4077,18 @@ section#home-content h4, section#body-content h4  {
 
 }
 
-/* Galaxy Fold
-  ##Screen = B/w 280px to 653px
-*/
+/* Max width: 415 px */
+
+@media (max-width: 415px) {
+/* Show list page date and hour centered on mobile: 320px max-width */
+li.menu-pages-replay-date-hour a {
+  padding-left: 40px;
+  text-align: center; 
+  margin: 0 auto;
+ 
+}
+/* Galaxy Fold: ##Screen = B/w 280px to 653px */
+
 @media (width: 280px) and (height: 653px) {
   form#advanced-search-form-pages {
     padding-top: 90px;
@@ -4242,7 +4262,7 @@ section#search-tools #submit-search {
 
 @media (min-width: 344px) and (max-width: 415px) {
   button {  
-    font-size: 0.75em;   
+    font-size: 0.718em;   
   }
 }
 }
@@ -4265,19 +4285,44 @@ section#search-tools #submit-search {
 /****** iPads and iPhones: Safari version 14 *******/
 /***************************************************/
 
-/* iPad Pro: Portrait */
+/*  Define here Safari CSS styles to solve any inconsistency between browsers (example: font type size): any device and any version */
+
+/* Safari 10.1 + */
+@media not all and (min-resolution:.001dpcm) { 
+  @media {
+    #modal .image-details-description h5 {
+      font-weight: bold !important;    
+      font-size: 7.5px !important;     
+   }
+  }
+}   
+
+/* Safari 6 + to 10 */
+@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { 
+  @media {
+    #modal .image-details-description h5 {
+      font-weight: bold !important;    
+      font-size: 7.5px !important;     
+   }
+  }
+}
+
+/************************************************/
+
+/* iPad Pro first generation: Portrait */
 
 @media (width:1024px) and (height:1366px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
     width: 1em !important;
-    height: 1.050em !important;    
+    height: 1.050em !important;     
   } 
   #slider-range {
     margin: auto 78.5px auto 70px !important;   
 }
 }
-/* iPad Pro: Landscape */
+
+/* iPad Pro first generation: Landscape */
 @media (width:1366px) and (height:1024px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
@@ -4289,8 +4334,21 @@ section#search-tools #submit-search {
 }
 }
 
-/* iPad Mini: Lanscape */
+/* iPad Mini first generation  first generation: Portrait */
+
 @media (width: 768px) and (height:1024px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;       
+  } 
+  #slider-range {
+    margin: auto 78.5px auto 70px !important;   
+}
+}
+
+/* iPad Mini  first generation: Lanscape */
+@media (width: 1024px) and (height:768px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
     width: 1em !important;
@@ -4301,9 +4359,13 @@ section#search-tools #submit-search {
 }
 }
 
-/* iPad Mini: Portrait */
+/***************************************************/
+/****** Microsoft Surface Duo: Tablet  *************/
+/***************************************************/
 
-@media (width: 768px) and (height:1024px) {
+/* Portrait */
+
+@media (width: 540px) and (height:720px) {
   .ui-slider .ui-slider-handle {   
     top: -0.78em !important;
     width: 1em !important;
@@ -4311,5 +4373,17 @@ section#search-tools #submit-search {
   } 
   #slider-range {
     margin: auto 78.5px auto 70px !important;   
+}
+}
+
+/* Lanscape */
+@media (width: 720px) and (height:540px) {
+  .ui-slider .ui-slider-handle {   
+    top: -0.78em !important;
+    width: 1em !important;
+    height: 1.050em !important;    
+  } 
+  #slider-range {
+    margin: auto 78px auto 70px !important;   
 }
 }
