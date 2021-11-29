@@ -1322,7 +1322,7 @@ section#search-tools-date-slider input[type="text"].calendar-year-input, section
 section#search-tools-date-slider input[type="text"].calendar-day-month-input,
 input[type="text"].calendar-day-month-input {
   position: absolute;
-  z-index: 0;
+  z-index: -1;
   top: 38px;
   left: 0.5px;
   width: 37px;
@@ -3365,6 +3365,12 @@ body#arquivo-404 main a {
 
 body#arquivo-404 main a:hover {
   text-decoration: underline;
+}
+
+/* New family style for old layout to display on not found page*/
+
+#info-texto-termos, #conteudo-erro {     
+  font-family: arial;
 }
 
 /* PRELOADER  ******************************************************************************************/
