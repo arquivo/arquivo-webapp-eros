@@ -101,6 +101,7 @@ router.get('/image/view/:url*', function (req, res) {
 // switch languages
 router.get('/switchlang', function (req, res) {
     if(!!req.headers && req.headers.referer){
+        
 
         let oldUrl = req.headers.referer;
         let parsedUrl = new URL(oldUrl);
@@ -125,7 +126,9 @@ router.get('/switchlang', function (req, res) {
         }
 
         const newUrl = parsedUrl.href.slice(parsedUrl.origin.length);
-        console.log(newUrl);
+        
+        res.set('Cache-Control', 'no-store');
+        res.statusCode = 307;
         res.redirect(newUrl);
         
     } else {
