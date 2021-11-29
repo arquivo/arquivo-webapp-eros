@@ -821,7 +821,7 @@ nav#replay-left-nav section ul > li:first-child, nav#replay-right-nav section ul
 nav#replay-right-nav section ul > li:first-child { 
   border-top: 0px solid #e3e3e32e;
   display: block;
-  padding-left: 15px;
+  padding-left: 13px;
   font-size: 0.75em;
   line-height: 1em;
   padding-top: 15px;
@@ -3682,6 +3682,10 @@ section#loading-section form#loading-form button#loading-results, section#loadin
    display: none;
 }
 
+#submit-search::before {
+  display: none;
+}
+
 
 /*********************************/
 /********* MEDIA QUERIES *********/
@@ -3827,6 +3831,11 @@ button#nav-menu-button-left:hover {
   position: relative;
   font-size: large;
 }
+
+#submit-search::before {
+  display: block;
+}
+
 
 body#save-page-now-landing .left {  
   top: 80px;
