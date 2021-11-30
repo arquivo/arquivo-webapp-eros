@@ -2369,7 +2369,7 @@ height: 0.06em;
   cursor: grab !important;
   -webkit-box-shadow: 0px 4px 5px -2px rgb(0 0 0 / 55%);
   box-shadow: 0px 4px 5px -2px rgb(255 255 255 / 30%);
-  transition: 0.25s !important;
+  transition: 0.2s !important;
   border: 4px solid #eef9ffed !important;
   border-radius: 20px !important;
 }
@@ -2405,7 +2405,6 @@ section#search-tools-buttons form#search-form-advanced button  {
   height: auto;
   width: auto;
   display: block;
-  font-family: Helvetica, Arial, sans-serif;
 }
 
 :lang(en) #search-tools-buttons form#search-form-advanced button {
@@ -3635,7 +3634,7 @@ body#landing-replay .preloader div::after {
   }
 }
 
-/* Hide preloader form button and accessibility header*/
+/* Hide preloader form button and accessibility header */
 section#loading-section form#loading-form button#loading-results, section#loading-section h3 {
   visibility: collapse;
   height: 0;
@@ -3685,6 +3684,12 @@ section#loading-section form#loading-form button#loading-results, section#loadin
   display: none;
 }
 
+/***************************************************/
+/******  macOS Safari version 14 *******/
+/***************************************************/
+
+/*  Define here Safari CSS styles to solve any inconsistency between browsers (example: font type size): any device and any version */
+ 
 
 /*********************************/
 /********* MEDIA QUERIES *********/
@@ -3919,7 +3924,7 @@ section#search-tools #submit-search {
  }
 
  section#home-content h4, section#body-content h4 {  
-  font-size: 0.9em;
+  font-size: 0.8em;
   width: fit-content;
 }
 
@@ -4327,24 +4332,23 @@ section#search-tools #submit-search {
 
 /*  Define here Safari CSS styles to solve any inconsistency between browsers (example: font type size): any device and any version */
 
-/* Safari 10.1 + */
+/* macOS Safari (Desktop) */
 @media not all and (min-resolution:.001dpcm) { 
   @media {
     #modal .image-details-description h5 {
       font-weight: bold !important;    
-      font-size: 7.8px !important;     
+      font-size: 0.78em !important;     
    }
   }
 }   
 
-/* Safari 6 + to 10 */
-@media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { 
-  @media {
-    #modal .image-details-description h5 {
-      font-weight: bold !important;    
-      font-size: 7.8px !important;     
-   }
-  }
+/* iOS Safari (Mobile) */
+
+@supports (-webkit-touch-callout: none) {
+  #modal .image-details-description h5 {
+    font-weight: bold !important;    
+    font-size: 7.8px !important;     
+ } 
 }
 
 /************************************************/
