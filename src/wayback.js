@@ -19,6 +19,11 @@ module.exports = function (req, res) {
             const timestamp = fullUrl.split('/')[0];
             const url = fullUrl.split('/').filter((a, i) => i > 0).join('/');
 
+            if(/^\d+$/.test(timestamp) == false){
+                newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
+                res.redirect(newUrl);
+            }
+
             //Api request for technical details.
             const apiRequest = new PageSearchApiRequest();
             const apiRequestData = new URLSearchParams({
@@ -52,6 +57,8 @@ module.exports = function (req, res) {
                     const fullUrl = config.get('pywb.url') + '/' + newUrl;
                     testUrl(fullUrl);
                 } else if (res.ok) {
+
+
                     renderOk(newUrl);
                 } else {
                     logger.error('Something went wrong while trying to fetch the following URL: '+url);
