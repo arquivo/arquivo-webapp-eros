@@ -1785,6 +1785,7 @@ section#modal-window-image-technical-details > div.raw-api-data-title > button >
 
 section#modal-window-image-technical-details div.modal-image-field p.raw-api-data {
   white-space: pre-wrap;
+  word-break: break-word;
   overflow-wrap: anywhere;
   padding-bottom: 30px; 
 }
