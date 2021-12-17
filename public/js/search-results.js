@@ -15,7 +15,6 @@ $(() => {
                 const tstamp = result.attr('data-tstamp');
                 const url = result.attr('data-url');
 
-
                 ga('send', 'event', 'Search result', type + ' search', 'Result position', index);
                 const form = $('#search-result-form-'+index);
                 if(form.length){
@@ -31,10 +30,7 @@ $(() => {
                     } else {
                         $.ajax(fullUrl);
                     }
-                    
                 }
-
-                
             });
             $(parent).off("keypress",target).on("keypress",target,(e) => {
                 if(e.which == 32 || e.which == 13){
@@ -60,5 +56,5 @@ $(() => {
         }
     });
 
-    
+
 });

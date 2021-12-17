@@ -1,16 +1,16 @@
-<% if (typeof pageData != 'undefined'){ 
+<% if (typeof pageData != 'undefined'){
     const httpRegEx = /https?:\/\/(.*?)\/?$/;
-    const filteredURL = httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL 
-    const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa 
-    const year = pageData.tstamp.slice(0,4); 
-    const month = t('common.months.'+pageData.tstamp.slice(4,6)); 
-    const day = parseInt(pageData.tstamp.slice(6,8)); 
-    const dedupField = requestData.get('dedupField') ?? 'site' 
-    const subResult = dedupField == 'site' && pageData.originalURL == prevUrl; 
-    const query = requestData.get('q'); 
+    const filteredURL = httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL
+    const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa
+    const year = pageData.tstamp.slice(0,4);
+    const month = t('common.months.'+pageData.tstamp.slice(4,6));
+    const day = parseInt(pageData.tstamp.slice(6,8));
+    const dedupField = requestData.get('dedupField') ?? 'site'
+    const subResult = dedupField == 'site' && pageData.originalURL == prevUrl;
+    const query = requestData.get('q');
 
-    const siteRegEx = /(^|\s)site:/; 
-    const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {}); 
+    const siteRegEx = /(^|\s)site:/;
+    const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {});
     const mime = pageData.mimeType.split('/');
 
     const searchTerms = query
@@ -59,15 +59,25 @@
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
-        <form style="display: none;" id="search-result-form-<%= (index + 1) %>" action="/page/view/<%- requestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= pageData.originalURL %>"></form>
-        <% if (subResult && !siteRegEx.test(query) ) { %> 
+        <form method="get" style="display: none;" id="search-result-form-<%= (index + 1) %>" action="/wayback/<%= pageData.tstamp %>/<%= pageData.originalURL %>">
+            <%
+                var originalURL = new URL(pageData.originalURL);
+                console.log(originalURL['searchParams']);pageData.originalURL
+                for (const [key, value] of originalURL['searchParams']) {
+            %>
+                    <input type='hidden' name="<%= key %>" value="<%= value %>">
+            <%
+                }
+            %>
+        </form>
+        <% if (subResult && !siteRegEx.test(query) ) { %>
         <li>
             <form class="pages-search-results-list" action="/page/search">
                 <%
-                 const site = filteredURL.split('/')[0] 
-                 newRequestData.set('q',query + ' site:'+site) 
-                 newRequestData.set('dedupField','url') 
-                 const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page') 
+                 const site = filteredURL.split('/')[0]
+                 newRequestData.set('q',query + ' site:'+site)
+                 newRequestData.set('dedupField','url')
+                 const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page')
                  newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )
                  newRequestData.set('offset', 0 );
                  newRequestData.delete('trackingId');
@@ -79,5 +89,5 @@
         </li>
         <% } %>
     </ul>
-    
+
 <% } %>
