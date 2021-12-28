@@ -37,7 +37,11 @@ router.get('/url/search', function (req, res) {
 });
 
 router.get('/replay', function (req, res) {
-    res.render('pages/replay', { requestData: req.utils.sanitizeInputs(req, res) });
+    res.render('pages/replay', { 
+        requestData: req.utils.sanitizeInputs(req, res),
+        apiData: {},
+        requestedPage: {timestamp:'000011223344'}
+    });
 });
 
 // Images search results
