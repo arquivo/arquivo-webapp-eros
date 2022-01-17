@@ -19,8 +19,8 @@ complete-page:
     en: 'CompletePage: Complete page with external services'
     pt: 'CompletePage: Complete a página com recursos externos'
   description:
-    en: 'CompletePage uses the live web and other internet archives to find missing information on Arquivo.pt's archived pages.'
-    pt: 'O CompletePage usa a web viva e outros arquivos da web para recuperar informação em falta nas páginas arquivadas no Arquivo.pt'
+    en: "CompletePage uses the live web and other internet archives to find missing information on Arquivo.pt's archived pages."
+    pt: "O CompletePage usa a web viva e outros arquivos da web para recuperar informação em falta nas páginas arquivadas no Arquivo.pt"
 
 pages:
   title: 
