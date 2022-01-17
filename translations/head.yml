@@ -4,7 +4,7 @@ title:
   pt: 'Arquivo.pt - pesquise páginas do passado!'
 description:
   en: 'Arquivo.pt is a non profit service that mainly preserves information published online related to the Portuguese community. However, it also includes international sites. At Archive.pt anyone can search for information published since 1996.'
-  pt: 'O Arquivo.pt é um serviço sem fins lucrativos que preserva informação publicada na Web de interesse para a comunidade portuguesa. Em Arquivo.pt pode pesquisar informação arquivada desde 1996.'
+  pt: 'O Arquivo.pt é um serviço sem fins lucrativos que preserva informação publicada na Web de interesse para a comunidade portuguesa. No Arquivo.pt pode pesquisar informação arquivada desde 1996.'
 
 savepagenow:
   title: 
@@ -13,3 +13,59 @@ savepagenow:
   description:
     en: 'The SavePageNow service allows a page to be archived at the exact moment the user makes the request. The archived contents are later integrated in the Arquivo.pt collection.'
     pt: 'O serviço SavePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido. Os conteúdos arquivados são posteriormente integrados no acervo do Arquivo.pt.'
+
+complete-page:
+  title: 
+    en: 'CompletePage: Complete page with external services'
+    pt: 'CompletePage: Complete a página com recursos externos'
+  description:
+    en: 'CompletePage uses the live web and other internet archives to find missing information on Arquivo.pt's archived pages.'
+    pt: 'O CompletePage usa a web viva e outros arquivos da web para recuperar informação em falta nas páginas arquivadas no Arquivo.pt'
+
+pages:
+  title: 
+    en: 'Results for the query: ${query}'
+    pt: 'Resultados da pesquisa: ${query}'
+  description:
+    en: "Search results page for a user submitted query in the Arquivo.pt."
+    pt: "Página de resultados de uma pesquisa feita no Arquivo.pt."
+
+images:
+  title: 
+    en: 'Image Search: ${query}'
+    pt: 'Pesquisa de Imagens: ${query}'
+  description:
+    en: "Image search results page for a user submitted query in the Arquivo.pt."
+    pt: "Página de resultados de imagens de uma pesquisa feita no Arquivo.pt."
+
+pages-advanced:
+  title: 
+    en: 'Advanced page search'
+    pt: 'Pesquisa avançada de páginas'
+  description:
+    en: "Advanced Search's page that allow additional refinements such as: phrases, negation, file format."
+    pt: "Página de pesquisa avançada que permite pesquisas com restrições adicionais como: frases, negação, tipo de ficheiro."
+    
+images-advanced:
+  title: 
+    en: 'Advanced image search'
+    pt: 'Pesquisa avançada de imagens'
+  description:
+    en: "Advanced search's page that allow additional refinements such as: phrases, negation, file format."
+    pt: "Página de pesquisa avançada que permite pesquisas com restrições adicionais como: frases, negação, tipo de ficheiro."
+
+url:
+  title: 
+    en: 'Arquivo.pt: page versions of ${query}'
+    pt: 'Arquivo.pt: versões da página ${query}'
+  description:
+    en: "Arquivo.pt is a non profit service that mainly preserves information published online related to the Portuguese community. However, it also includes international sites. At Archive.pt anyone can search for information published since 1996."
+    pt: "O Arquivo.pt é um serviço sem fins lucrativos que preserva informação publicada na Web de interesse para a comunidade portuguesa. No Arquivo.pt pode pesquisar informação arquivada desde 1996."
+
+'404':
+  title: 
+    en: 'Page not found (404) - Arquivo.pt'
+    pt: 'Página não encontrada (404) - Arquivo.pt'
+  description:
+    en: "The webpage that you searched for couldn't be found in Arquivo.pt"
+    pt: "A página procurada não foi encontrada no Arquivo.pt"
