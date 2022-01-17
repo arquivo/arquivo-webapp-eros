@@ -1,12 +1,18 @@
-<title><%= t('head.title') %></title>
+<% 
+let token = '';
+if(typeof pagename != 'undefined'){
+    token = pagename+'.'
+}
+%>
+<title><%= t('head.'+token+'title') %></title>
   
 <link rel="icon" href="/img/logo-16.png">
 <meta charset="utf-8" />
 <meta name="Keywords" content="Web, archive, search, portuguese, Portugal, homepage" />
-<meta name="Description" content="<%= t('head.description') %>" />
+<meta name="Description" content="<%= t('head.'+token+'description') %>" />
 <!-- starts social media meta data -->
-<meta property="og:title" content="<%= t('head.title') %>"/>
-<meta property="og:description" content="<%= t('head.description') %>"/>
+<meta property="og:title" content="<%= t('head.'+token+'title') %>"/>
+<meta property="og:description" content="<%= t('head.'+token+'description') %>"/>
 <meta property="og:image" content="img/logoFace.png"/>
 <meta property="og:image:alt" content="Arquivo.pt">
 <meta property="og:image:type" content="image/png" />
