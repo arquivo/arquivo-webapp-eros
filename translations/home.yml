@@ -27,8 +27,14 @@ search-tools:
 
 arquivo-pt-award:
   header:
-    pt: 'Prémio Arquivo.pt 2021'
-    en: 'Arquivo.pt Award 2021'
+    pt: 'Prémio Arquivo.pt 2022'
+    en: 'Arquivo.pt Award 2022'
+  url:
+    pt: http://arquivo.pt/premio
+    en: http://arquivo.pt/award
+  img:
+    pt: /img/award-homepage-banner-2022-pt.jpg
+    en: /img/award-homepage-banner-2022-en.jpg
 
 the-past-web:
   header:
