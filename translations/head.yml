@@ -62,7 +62,7 @@ url:
     en: "Arquivo.pt is a non profit service that mainly preserves information published online related to the Portuguese community. However, it also includes international sites. At Archive.pt anyone can search for information published since 1996."
     pt: "O Arquivo.pt é um serviço sem fins lucrativos que preserva informação publicada na Web de interesse para a comunidade portuguesa. No Arquivo.pt pode pesquisar informação arquivada desde 1996."
 
-'404':
+notfound:
   title: 
     en: 'Page not found (404) - Arquivo.pt'
     pt: 'Página não encontrada (404) - Arquivo.pt'
