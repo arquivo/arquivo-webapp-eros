@@ -1,6 +1,7 @@
 
 module.exports = function (req, res, type) {
 
+    // http://localhost:3000/image/view/trackingID/timestamp/archivedUrl
     const logger = require('./logger')(type+'Tracking');
     const splitPath = (req.params.url + (req.params['0'] ?? '')).split('/');
     
@@ -10,7 +11,7 @@ module.exports = function (req, res, type) {
     const trackingID = splitPath[0];
     const sessionID = req.session.id;
     const timestamp = splitPath[1];
-    const archivedUrl = splitPath.filter((x,i) => {return i>1;}).join('/');
+    const archivedUrl = decodeURIComponent(splitPath[2]);
 
     const logString = `'${ipAddress}'\t"${userAgent}"\t'${requestUrl}'\t'${trackingID}'\t'${sessionID}'\t'${timestamp}'\t'${archivedUrl}'`;
     logger.info(logString);
