@@ -135,8 +135,8 @@ collaborate:
       en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
   savepagenow:
     text:
-      pt: Grave uma página
-      en: Record a webpage
+      pt: Grave páginas
+      en: Record webpages
     url:
       pt: /services/savepagenow?l=pt
       en: /services/savepagenow?l=en

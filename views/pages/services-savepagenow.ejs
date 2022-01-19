@@ -52,7 +52,7 @@
                     <form id="search-form" role="form" action="/services/savepagenow?l=<%= getLanguage() %>" method="POST">
                     <span class="search-input-button">
                         <input id="submit-search-input" type="search" placeholder="<%= t('services-savepagenow.form.label') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="<%= t('services-savepagenow.form.label') %>" value="<%- url %>">
-                        <button id="submit-search" type="submit" class="fas fa-search" value="search menu button"><span class="button-title"><%= t('services-savepagenow.form.button') %></span></button>
+                        <button id="submit-search" type="submit" class="fa fa-video-camera" value="search menu button"><span class="button-title"><%= t('services-savepagenow.form.button') %></span></button>
                     </span>
                     
                 </form>
@@ -62,6 +62,7 @@
                 <small id="savepagenow-example"><%= t('services-savepagenow.form.example') %></small>
                 <% } %>
             </section>
+                <p style="line-height: 27px;"><%- t('services-savepagenow.description') %></p>
                 </section>
             </main>
             <!-- ends main container-->

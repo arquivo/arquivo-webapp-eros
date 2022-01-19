@@ -55,21 +55,11 @@
     }
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
+        <a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link"></a>
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><a href="#" class="results-summary blockUrl"><p><%- pageData.snippet %></p></a></li>
-        <form method="get" style="display: none;" id="search-result-form-<%= (index + 1) %>" action="/wayback/<%= pageData.tstamp %>/<%= pageData.originalURL %>">
-            <%
-                var originalURL = new URL(pageData.originalURL);
-                console.log(originalURL['searchParams']);pageData.originalURL
-                for (const [key, value] of originalURL['searchParams']) {
-            %>
-                    <input type='hidden' name="<%= key %>" value="<%= value %>">
-            <%
-                }
-            %>
-        </form>
         <% if (subResult && !siteRegEx.test(query) ) { %>
         <li>
             <form class="pages-search-results-list" action="/page/search">
