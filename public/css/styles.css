@@ -765,6 +765,23 @@ body#homepage button#nav-options-right-button  {
 #replay-left-nav .accordion-replay-left-menu-day:after  {
   top: 5px;
 }
+
+#list-results-container a.accordion-replay-list:not(.active):after{
+  content: url(../img/button-a-down.svg);
+  float: right;
+  font-size: 0.9em;
+  position: relative; 
+  font-weight: normal;
+  clear: both;
+  height: 0;
+  right: -28px;
+  top: -20px;
+}
+
+#list-results-container a.accordion-replay-list:not(.active):hover:after{
+  top: -18px;
+}
+
 .active:after {
   content: url(../img/button-a-up.svg);
   float: right;
