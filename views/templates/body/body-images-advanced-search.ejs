@@ -12,6 +12,7 @@ let values = {
 let selectFor = function(key,value){
   return (value == values[key]) ? 'selected' : '';
 }
+
 if(typeof requestData != 'undefined'){
   Object.keys(values)
     .filter(key => requestData.has(key))
@@ -31,15 +32,15 @@ if(typeof requestData != 'undefined'){
   <legend><%= t('advanced-image-search.accessibility.legend') %></legend> 
    <!-- With these words -->
    <label for="adv_and"><%- t('advanced-image-search.fieldset.with.label') %></label>
-   <input type="text" name="adv_and" value=<%= values.adv_and %>>
+   <input type="text" name="adv_and" value="<%= values.adv_and %>">
    <small><%= t('advanced-image-search.fieldset.with.example') %></small>
    <!-- With this phrase -->
    <label for="adv_phr"><%- t('advanced-image-search.fieldset.phrase.label') %></label>
-   <input type="text" name="adv_phr" value=<%= values.adv_phr %>>
+   <input type="text" name="adv_phr" value="<%= values.adv_phr %>">
    <small><%= t('advanced-image-search.fieldset.phrase.example') %></small>
    <!-- Any of these words -->
    <label for="adv_not"><%- t('advanced-image-search.fieldset.without.label') %></label>
-   <input type="text" name="adv_not" value=<%= values.adv_not %>>
+   <input type="text" name="adv_not" value="<%= values.adv_not %>">
    <small><%= t('advanced-image-search.fieldset.without.example') %></small>   
    <!-- Between these dates -->
   <label><%- t('advanced-image-search.fieldset.date.label') %></label> 
@@ -70,7 +71,7 @@ if(typeof requestData != 'undefined'){
    </select>  
 
    <label for="siteSearch"><%- t('advanced-image-search.fieldset.website.label') %></label>
-   <input id="website" type="text" name="siteSearch" value=<%= values.siteSearch %>>
+   <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
    <small class="last-margin"><%= t('advanced-image-search.fieldset.website.example') %></small> 
     
   <!-- starts advanced search navigation -->
