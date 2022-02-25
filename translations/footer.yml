@@ -1,5 +1,8 @@
 #translations for the footer
 about:
+  important-info:
+    en: Important Information
+    pt: Informação Importante
   header:
     pt: 'Sobre'
     en: 'About'
@@ -196,3 +199,34 @@ help:
     url:
       pt: 'https://sobre.arquivo.pt/pt/contacto/'
       en: 'https://sobre.arquivo.pt/en/contact/'
+
+institutional:
+  header:
+    en: Institutional
+    pt: Institucional
+  fct-logo:
+    href:
+      en: https://www.fccn.pt/en/
+      pt: https://www.fccn.pt/
+    src:
+      en: /img/logo-fccn.png
+      pt: /img/logo-fccn.png
+    title:
+      en: Visit the website of FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional
+      pt: Visite o website da FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional
+    alt:
+      en: FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional
+      pt: FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional
+  pt-logo:
+    href:
+      en: https://www.portugal.gov.pt/en/gc21
+      pt: https://www.portugal.gov.pt/pt/ministerios/mctes.aspx
+    src:
+      en: /img/gov-pt.png
+      pt: /img/gov-pt.png
+    title:
+      en: Visit the website of the Portuguese government
+      pt: Visite o website da República Portuguesa
+    alt:
+      en: Portuguese Government
+      pt: República Portuguêsa
