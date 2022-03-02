@@ -1,4 +1,6 @@
 const { resolveInclude } = require('ejs');
+
+const fileUpload = require('express-fileupload');
 const express = require('express');
 const config = require('config');
 const session = require('express-session');
@@ -35,6 +37,11 @@ app.use((req,res,next) => {
 })
 
 app.use(cookies());
+
+//enables file upload
+app.use(fileUpload({
+  createParentPath: true
+}));
 
 // const morgan = require('morgan')
 // app.use(morgan('combined'))

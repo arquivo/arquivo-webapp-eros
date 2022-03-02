@@ -142,6 +142,44 @@ router.get('/switchlang', function (req, res) {
 });
 
 
+router.get('/fileupload', function (req, res) {
+    res.render('pages/file-upload');
+});
+
+
+router.post('/fileupload', function (req, res) {
+    try {
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file uploaded'
+            });
+        } else {
+            //Use the name of the input field (i.e. "testFile") to retrieve the uploaded file
+            let uploadedFile = req.files.testFile;
+            
+            //Use the mv() method to place the file in upload directory (i.e. "uploads")
+            uploadedFile.mv('./uploads/' + uploadedFile.name);
+
+            //send response
+            res.send({
+                status: true,
+                message: 'File is uploaded',
+                data: {
+                    name: uploadedFile.name,
+                    mimetype: uploadedFile.mimetype,
+                    size: uploadedFile.size
+                }
+            });
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+
+    // res.render('pages/file-upload');
+});
+
+
 // starts partials
 router.get('/partials/:id', function (req, res) {
     if (req.params.id == 'pages-search-results') {
