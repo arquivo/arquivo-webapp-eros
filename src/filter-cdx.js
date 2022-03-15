@@ -3,6 +3,15 @@ module.exports = function (apiData) {
     const delta = 3600;
     let prevKnown200Index = -1;
     let nextKnown200Index = -1;
+
+    const maxTimeWindowInSeconds = 6*3600;
+    const maxItemsPerTimeWindow = 4;
+
+    let prevKnownWindowStart = null;
+    let currentItemsInWindow = 0;
+
+
+
     const returnData = apiData
         // Sanity check
         .filter((item) => (item.status && item.timestamp && item.digest && item.url))
@@ -41,6 +50,23 @@ module.exports = function (apiData) {
         })
         // Sort by timestamp to properly order the results
         .sort(sortByTimestamp)
+        
+        // Only 4 items per 6h timewindow
+        .filter(item => {
+            if(!prevKnownWindowStart || timestampDifferenceInSeconds(prevKnownWindowStart,item.timestamp) > maxTimeWindowInSeconds)  {
+                prevKnownWindowStart = item.timestamp;
+                currentItemsInWindow = 1;
+                return true;
+            } else {
+                if(currentItemsInWindow < maxItemsPerTimeWindow){
+                    currentItemsInWindow += 1;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        })
+
         ;
 
     return returnData;
