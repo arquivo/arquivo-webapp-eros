@@ -159,7 +159,7 @@ router.post('/fileupload', function (req, res) {
             let uploadedFile = req.files.testFile;
             
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
-            uploadedFile.mv('./uploads/' + uploadedFile.name);
+            uploadedFile.mv('./uploads/CitationSaver/' + uploadedFile.name);
 
             //send response
             res.send({
