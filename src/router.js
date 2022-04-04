@@ -10,6 +10,9 @@ const replayTechnicalDetails = require('./replay-technical-details');
 const express = require('express');
 const router = express.Router();
 
+const config = require('config');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+
 //Backend routes
 backendRoutes(router);
 
@@ -146,6 +149,25 @@ router.get('/fileupload', function (req, res) {
     res.render('pages/file-upload');
 });
 
+const googleSheetId = config.get('citation.saver.google.sheet.id');
+const serviceAccountConfigs = require('../config/service_account.json');
+
+// Initialize the sheet - doc ID is the long id in the sheets URL
+async function addToSpreadsheet(row){
+  const doc = new GoogleSpreadsheet(googleSheetId);
+  
+  // Initialize Auth - see https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
+  await doc.useServiceAccountAuth(serviceAccountConfigs);
+  
+  await doc.loadInfo(); // loads document properties and worksheets
+  console.log(doc.title);
+  // await doc.updateProperties({ title: 'renamed doc' });
+  
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+
+  await sheet.addRow(row);
+
+}
 
 router.post('/fileupload', function (req, res) {
     try {
@@ -155,11 +177,20 @@ router.post('/fileupload', function (req, res) {
                 message: 'No file uploaded'
             });
         } else {
-            //Use the name of the input field (i.e. "testFile") to retrieve the uploaded file
+
+            
             let uploadedFile = req.files.testFile;
+
+            const timestamp = Date.now();
+            const email = req.body.email ?? '';
+            const path = './uploads/CitationSaver/' + uploadedFile.name;
+            //Use the name of the input field (i.e. "testFile") to retrieve the uploaded file
             
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
-            uploadedFile.mv('./uploads/CitationSaver/' + uploadedFile.name);
+            uploadedFile.mv(path);
+
+            
+            addToSpreadsheet([timestamp,email,path]);
 
             //send response
             res.send({
@@ -173,6 +204,7 @@ router.post('/fileupload', function (req, res) {
             });
         }
     } catch (err) {
+        console.error(err);
         res.status(500).send(err);
     }
 
