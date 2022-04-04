@@ -8,18 +8,10 @@ const serviceAccountConfigs = require('../config/service_account.json');
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row){
   const doc = new GoogleSpreadsheet(googleSheetId);
-  
-  // Initialize Auth - see https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
   await doc.useServiceAccountAuth(serviceAccountConfigs);
   
-  await doc.loadInfo(); // loads document properties and worksheets
-  console.log(doc.title);
-  // await doc.updateProperties({ title: 'renamed doc' });
-  
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-
   await sheet.addRow(row);
-
 }
 module.exports = function (req, res) {
     try {
