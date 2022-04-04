@@ -3,15 +3,13 @@ const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const savePageNow = require('./services-savepagenow');
+const citationSaver = require('./services-citationsaver');
 const wayback = require('./wayback');
 const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
 const replayTechnicalDetails = require('./replay-technical-details');
 const express = require('express');
 const router = express.Router();
-
-const config = require('config');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 //Backend routes
 backendRoutes(router);
@@ -149,66 +147,10 @@ router.get('/fileupload', function (req, res) {
     res.render('pages/file-upload');
 });
 
-const googleSheetId = config.get('citation.saver.google.sheet.id');
-const serviceAccountConfigs = require('../config/service_account.json');
 
-// Initialize the sheet - doc ID is the long id in the sheets URL
-async function addToSpreadsheet(row){
-  const doc = new GoogleSpreadsheet(googleSheetId);
-  
-  // Initialize Auth - see https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication
-  await doc.useServiceAccountAuth(serviceAccountConfigs);
-  
-  await doc.loadInfo(); // loads document properties and worksheets
-  console.log(doc.title);
-  // await doc.updateProperties({ title: 'renamed doc' });
-  
-  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-
-  await sheet.addRow(row);
-
-}
 
 router.post('/fileupload', function (req, res) {
-    try {
-        if(!req.files) {
-            res.send({
-                status: false,
-                message: 'No file uploaded'
-            });
-        } else {
-
-            
-            let uploadedFile = req.files.testFile;
-
-            const timestamp = Date.now();
-            const email = req.body.email ?? '';
-            const path = './uploads/CitationSaver/' + uploadedFile.name;
-            //Use the name of the input field (i.e. "testFile") to retrieve the uploaded file
-            
-            //Use the mv() method to place the file in upload directory (i.e. "uploads")
-            uploadedFile.mv(path);
-
-            
-            addToSpreadsheet([timestamp,email,path]);
-
-            //send response
-            res.send({
-                status: true,
-                message: 'File is uploaded',
-                data: {
-                    name: uploadedFile.name,
-                    mimetype: uploadedFile.mimetype,
-                    size: uploadedFile.size
-                }
-            });
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send(err);
-    }
-
-    // res.render('pages/file-upload');
+    citationSaver(req,res);
 });
 
 
