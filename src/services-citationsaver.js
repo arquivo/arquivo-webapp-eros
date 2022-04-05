@@ -10,6 +10,8 @@ async function addToSpreadsheet(row){
   const doc = new GoogleSpreadsheet(googleSheetId);
   await doc.useServiceAccountAuth(serviceAccountConfigs);
   
+  
+  await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
   await sheet.addRow(row);
 }
