@@ -27,7 +27,7 @@ module.exports = function (req, res) {
             
             let uploadedFile = req.files.testFile;
 
-            const newName = (Math.random() + 1).toString(36).substring(2);
+            const newName = (Math.random() + 1).toString(36).substring(2) + '.pdf';
 
             const timestamp = Date.now();
             const email = req.body.email ?? '';
