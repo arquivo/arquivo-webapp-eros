@@ -4,16 +4,27 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const serviceAccountConfigs = require('../config/service_account.json');
+const logger = require('./logger')()
 
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row){
   const doc = new GoogleSpreadsheet(googleSheetId);
+  try {
   await doc.useServiceAccountAuth(serviceAccountConfigs);
   
   
   await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
   await sheet.addRow(row);
+  } catch (e) {
+        logger.error(e);
+  }
+}
+
+const mimeToExtension = {
+    "application/msword" : "doc",
+    "application/pdf" : "pdf",
+    "text/plain" : "txt"
 }
 module.exports = function (req, res) {
     try {
@@ -26,8 +37,13 @@ module.exports = function (req, res) {
 
             
             let uploadedFile = req.files.testFile;
+            const outExtension = mimeToExtension[uploadedFile.mimetype];
 
-            const newName = (Math.random() + 1).toString(36).substring(2) + '.pdf';
+            if(!outExtension) {
+                throw new Error("Invalid MIME type");
+            }
+
+            const newName = (Math.random() + 1).toString(36).substring(2) + outExtension;
 
             const timestamp = Date.now();
             const email = req.body.email ?? '';
@@ -53,7 +69,7 @@ module.exports = function (req, res) {
             });
         }
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).send(err);
     }
 
