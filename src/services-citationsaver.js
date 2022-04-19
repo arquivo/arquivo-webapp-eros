@@ -43,7 +43,7 @@ module.exports = function (req, res) {
                 throw new Error("Invalid MIME type");
             }
 
-            const newName = (Math.random() + 1).toString(36).substring(2) + outExtension;
+            const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
 
             const timestamp = Date.now();
             const email = req.body.email ?? '';
