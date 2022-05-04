@@ -1,0 +1,13 @@
+accessibility:
+  en: CitationSaver form page
+  pt: Página do formulário do CitationSaver
+slogan:
+  en: Preserve citations to online content
+  pt: Preserva citações a conteúdos online
+description:
+  1: 
+    en: "Documents cite online content that quickly disappears. "
+    pt: 'Documentos citam recursos online que rapidamente desaparece.'
+  2:
+    en: "CitationSaver preserves the content of cited links (e.g. references to web pages in a book) so that they can be later recovered from Arquivo.pt."
+    pt: 'O serviço CitationSaver permite preservar estes recursos (ex. referências a páginas web num livro) arquivando-o no Arquivo.pt'

@@ -143,13 +143,13 @@ router.get('/switchlang', function (req, res) {
 });
 
 
-router.get('/fileupload', function (req, res) {
-    res.render('pages/file-upload');
+router.get('/services/citationsaver', function (req, res) {
+    res.render('pages/services-citation-saver');
 });
 
 
 
-router.post('/fileupload', function (req, res) {
+router.post('/services/citationsaver', function (req, res) {
     citationSaver(req,res);
 });
 

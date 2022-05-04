@@ -4,7 +4,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const serviceAccountConfigs = require('../config/service_account.json');
-const logger = require('./logger')()
+const logger = require('./logger')('CitationSaver');
 
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row){
@@ -36,7 +36,7 @@ module.exports = function (req, res) {
         } else {
 
             
-            let uploadedFile = req.files.testFile;
+            let uploadedFile = req.files.file;
             const outExtension = mimeToExtension[uploadedFile.mimetype];
 
             if(!outExtension) {
@@ -53,6 +53,7 @@ module.exports = function (req, res) {
             
             //Use the mv() method to place the file in upload directory (i.e. "uploads")
             uploadedFile.mv(path);
+            logger.info('File saved: '+ newName + '\tEmail: ' + email + '\tOriginal name: ' +  originalName);
 
             
             addToSpreadsheet([timestamp,email,path,originalName]);
