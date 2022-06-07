@@ -2,6 +2,7 @@
 const fetch = require('node-fetch');
 const config = require('config');
 const isValidUrl =  require('./utils/is-valid-url');
+const logger = require('./logger')('SavePageNow');
 
 module.exports = function (req, res) {
     const requestData = new URLSearchParams(req.body);
@@ -29,6 +30,8 @@ module.exports = function (req, res) {
         +'&user-agent='+encodeURIComponent(userAgent)+'&ip='+encodeURIComponent(userIp),{method: 'POST'});
     }
 
+    logger.info('Accessing requested page: '+url);
+
     if (isValidUrl(url)) {
         const fetchUrl = startsWithHttp.test(url) ? url : 'https://' + url;
         fetch(fetchUrl)
@@ -36,14 +39,16 @@ module.exports = function (req, res) {
                 if (res.ok) {
                     renderOk();
                 } else {
+                    logger.error('The webpage is down: '+res.url + ' Status: '+res.status + ' ' + res.statusText);
                     renderError('page-down');
                 }
             })
             .catch(error => {
-                console.error(error);
-                renderError()
+                logger.error('FetchError - ' + ['message','type','errno','code'].map(x => x +': '+ JSON.stringify(error[x])).join(', '));
+                renderOk();
             })
     } else {
+        logger.error('Invalid Url: '+url);
         renderError();
     }
 }

@@ -5,6 +5,7 @@
     <!-- starts global document: <head>...</head> -->
     <%- include("../templates/head",{pagename:'savepagenow'}) -%>
     <!-- ends global document: <head>...</head> -->
+
     </head>
 
     <!-- starts document body content -->
@@ -56,6 +57,17 @@
                     </span>
                     
                 </form>
+
+                <script>
+                    const urlPattern = /^\s*(((http|https):\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)\/?)\s*$/;
+                    $('#search-form').submit(function( event ) {
+                        if ( !urlPattern.test( $( "#submit-search-input" ).val())) {
+                            event.preventDefault();
+                            $('#savepagenow-example').replaceWith('<p id="save-page-url-message-error"></p>');
+                            $('#save-page-url-message-error').text('<%= t('services-savepagenow.form.error.default') %>');
+                        }
+                    });
+                </script>
                 <% if (typeof error != 'undefined' && error){ %>
                 <p id="save-page-url-message-error"><%= t('services-savepagenow.form.error.'+errorType) %></p>
                 <% } else { %>
@@ -65,6 +77,8 @@
                 <p style="line-height: 27px;"><%- t('services-savepagenow.description') %></p>
                 </section>
             </main>
+
+
             <!-- ends main container-->
 
             <!-- starts footer -->
