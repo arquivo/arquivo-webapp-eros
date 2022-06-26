@@ -11,7 +11,7 @@
     "js-datepicker": "^5.18.0",
     "lightpick": "^1.6.2",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "properties": "^1.2.1",
     "simplepicker": "^2.0.0",
     "start": "^5.1.0",
