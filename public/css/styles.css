@@ -2681,17 +2681,6 @@ body#save-page-now-landing .left .save-page-now-icon {
   color: white;
 }
 
-#savepagenow-modal span {  
-  display: flex;
-  justify-content: flex-start; 
-  padding-right: 4px;
-  font-size: 14px;
-  width: 19px; 
-  float: left;
-  align-items: center;
-  height: 23px;
-}
-
 section#home-content h4, section#body-content h4 {
   padding: 11px 6px 11px 14px;  
   font-weight: normal;

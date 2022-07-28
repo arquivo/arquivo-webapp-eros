@@ -146,6 +146,23 @@ section#savepagenow-modal h4 {
     margin-bottom: 18px;
 }
 
+section#savepagenow-modal #recording-url {
+    color: #1c75c0;
+    cursor: pointer;
+}
+section#savepagenow-modal #recording-url:hover {
+    color: black;
+}
+section#savepagenow-modal #recording-url:active {
+    color: hsl(207deg 75% 72%);
+}
+
+section#savepagenow-modal #copyUrl {
+    font-size: 13px;
+    display: inline-block;
+    float: none;
+}
+
 /* English version advanced search button width */
 :lang(pt) section#savepagenow-modal h4 {
     font-size: 13.7px;
@@ -166,7 +183,7 @@ div#modal span.savepagenow-modal {
 
 section#savepagenow-modal form {
    display: flex;
-   justify-content: flex-end;
+   justify-content: space-between;
    padding: 25px 0 0 0;
 }
 
@@ -174,6 +191,16 @@ section#savepagenow-modal form button {
     width: 103px;
  }
 
+ #savepagenow-modal span.fa-video-camera {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 4px;
+    font-size: 14px;
+    width: 19px;
+    float: left;
+    align-items: center;
+    height: 23px;
+  }
 
 
 .left p {
