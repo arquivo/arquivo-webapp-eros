@@ -44,39 +44,9 @@ module.exports = function (req, res) {
                 renderError('communication-failure');
             });
     }
-    const processUrl = function (url,hops=0) {
-        if(hops > maxHops){
-            logger.error('Error - Too many redirects ('+ hops +')');
-            renderError('communication-failure');
-            return;
-        }
+    const processUrl = function (url) {
         if (isValidUrl(url)) {
-            const fetchUrl = startsWithHttp.test(url) ? url : 'https://' + url;
-            const fetchConfigs = { redirect: 'manual' }
-
-            if (fetchUrl.toLowerCase().startsWith('https://')) {
-                fetchConfigs['agent'] = new https.Agent({
-                    rejectUnauthorized: false,
-                });
-            }
-
-            fetch(fetchUrl, fetchConfigs)
-                .then(res => {
-                    if (res.status === 301 || res.status === 302) {
-                        const locationURL = '' + new URL(res.headers.get('location'), res.url);
-                        logger.info('Found status ' + res.status + '. Redirecting to ' + locationURL);
-                        processUrl(locationURL,hops+1);
-                    } else if (res.ok) {
-                        renderOk();
-                    } else {
-                        logger.error('The webpage is down: ' + res.url + ' Status: ' + res.status + ' ' + res.statusText);
-                        renderError('page-down');
-                    }
-                })
-                .catch(error => {
-                    logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-                    renderError('communication-failure');
-                })
+            renderOk();
         } else {
             logger.error('Invalid Url: ' + url);
             renderError();
