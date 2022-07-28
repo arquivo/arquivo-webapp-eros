@@ -74,7 +74,7 @@
 
 
      %>   
-     <div id="tablePresentation">
+     <div id="tablePresentation" onload="console.log('test');$('#tablePresentation').animate({scrollLeft: '+='+($('#tablePresentation').find('td.year-month-data').first().position().left)}, 800, 'easeOutQuad');">
     <table id="replay-menu-table">
       <caption><%= t('url-search.accessibility.replay.table') %></caption>        
         <thead>

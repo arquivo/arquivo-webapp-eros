@@ -186,3 +186,15 @@ function isMobile () {
   return( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) || (window.matchMedia("(max-width: 767px)").matches);
 }
 
+function onSectionLoad(loadMessage,callback){
+  const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+  const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+  window[eventMethod](messageEvent, (e) => {
+      const key = e.message ? "message" : "data";
+      if(e[key] && e[key].arquivo_type && e[key].message){
+          if(e[key].arquivo_type == 'section-loaded' && e[key].message == loadMessage){
+              callback();
+          }
+      }
+  }, true);
+}

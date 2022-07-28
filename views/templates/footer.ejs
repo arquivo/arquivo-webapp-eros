@@ -5,7 +5,7 @@
 <footer> 
   <!-- starts wrap About, News, Collaborate and Help sections -->
   <section id="important-info">
-    <h3>Important Information</h3> 
+    <h3><%= t('footer.about.what-is.important-info') %></h3> 
   <!-- starts Sobre, Notícias, Colabore and Ajuda -->  
   <section id="useful-links">
     <!-- About -->
@@ -61,12 +61,12 @@
 
 <!-- starts institutional links -->
 <section id="institutional">
-  <h4>Institutional</h4>
+  <h4><%= t('footer.institutional.header.accessibility') %></h4>
     <!-- starts FCT image logo link --> 
-    <a href="//www.fccn.pt/" target="_blank" title="Visit the website of FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional"> <img src="/img/logo-fccn.png" alt="FCCN - Funda&ccedil;&atilde;o para a computa&ccedil;&atilde;o Cient&iacute;fica Nacional"></a> 
+    <a href="<%= t('footer.institutional.fct-logo.href') %>" target="_blank" title="<%= t('footer.institutional.fct-logo.title') %>"> <img src="<%= t('footer.institutional.fct-logo.src') %>" alt="<%= t('footer.institutional.fct-logo.alt') %>"></a> 
     <!-- ends FCT image logo link --> 
-       <!-- starts República Portuguesa image logo link --> 
-    <a href="//www.portugal.gov.pt/pt/ministerios/mctes.aspx" target="_blank" title="Visit the website of the Portuguese government"> <img src="/img/gov-pt.png" alt="Portuguese government"></a> 
+    <!-- starts República Portuguesa image logo link --> 
+    <a href="<%= t('footer.institutional.gov-logo.href') %>" target="_blank" title="<%= t('footer.institutional.gov-logo.title') %>"> <img src="<%= t('footer.institutional.gov-logo.src') %>" alt="<%= t('footer.institutional.gov-logo.alt') %>"></a> 
     <!-- ends República Portuguesa image logo link --> 
   </section>
   <!-- ends institutional links -->    

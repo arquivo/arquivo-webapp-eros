@@ -1,5 +1,8 @@
 #translations for the footer
 about:
+  important-info:
+    en: Important Information
+    pt: Informação Importante
   header:
     pt: 'Sobre'
     en: 'About'
@@ -93,7 +96,6 @@ news:
       pt: 'https://sobre.arquivo.pt/pt/imprensa/material-de-divulgacao/'
       en: 'https://sobre.arquivo.pt/en/about/press/dissemination-materials/'
   
-
 collaborate:
   header:
     pt: 'Colabore'
@@ -139,8 +141,7 @@ collaborate:
       en: Record webpages
     url:
       pt: /services/savepagenow?l=pt
-      en: /services/savepagenow?l=en
-      
+      en: /services/savepagenow?l=en  
   rnd:
     text:
       pt: 'Investigação'
@@ -148,7 +149,6 @@ collaborate:
     url:
       pt: 'https://arquivo.pt/investiga'
       en: 'https://arquivo.pt/research'
-   
 
 help:
   header:
@@ -196,3 +196,35 @@ help:
     url:
       pt: 'https://sobre.arquivo.pt/pt/contacto/'
       en: 'https://sobre.arquivo.pt/en/contact/'
+
+institutional:
+  header:
+    accessibility:
+      en: Institutional
+      pt: Institucional
+  fct-logo:
+    href:
+      en: https://www.fccn.pt/en/
+      pt: https://www.fccn.pt/
+    title:
+      en: Visit the website of FCCN - Fundação para a computação Científica Nacional
+      pt: Visite o website da FCCN - Fundação para a computação Científica Nacional
+    src:
+      en: /img/logo_FCT2022.svg
+      pt: /img/logo_FCT2022.svg
+    alt:
+      en: FCCN - Fundação para a computação Científica Nacional
+      pt: FCCN - Fundação para a computação Científica Nacional
+  gov-logo:
+    href:
+      en: https://www.portugal.gov.pt/en/gc21
+      pt: https://www.portugal.gov.pt/pt/ministerios/mctes.aspx
+    title:
+      en: Visit the website of the Portuguese government
+      pt: Visite o website do governo português
+    src:
+      en: /img/gov-pt.png
+      pt: /img/gov-pt.png
+    alt:
+      en: Portuguese government
+      pt: Governo português
