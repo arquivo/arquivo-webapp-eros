@@ -1226,10 +1226,18 @@ body#table-list-results section#table-results-container {
 }
 
 body#table-list-results #tablePresentation {   
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: auto;  
   height: 49vh;
   margin-bottom: 100px;
+}
+
+body#table-list-results #tablePresentation {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+body#table-list-results #tablePresentation::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
 }
 
 body#table-list-results section#url-results h3, body#table-list-results section#replay-menu-list h4 {   
