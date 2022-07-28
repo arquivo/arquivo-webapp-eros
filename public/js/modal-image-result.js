@@ -62,8 +62,9 @@ $(function () {
         }
       }
 
-      setModalAttr('form#view-image-website', 'pageLinkToArchive', 'action')
+      setModalAttr('a#view-image-website-a', 'pageLinkToArchive', 'href')
 
+      setModalAttr('a#image-container-a', 'imgLinkToArchive', 'href')
       setModalAttr('img.image-display', 'imgLinkToArchive', 'src')
       setModalAttr('img.image-display', 'imgTitle', 'title')
       setModalAttr('img.image-display', 'index', 'data-index')

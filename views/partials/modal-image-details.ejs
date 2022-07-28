@@ -9,7 +9,7 @@
 
   <!-- starts image container -->
   <section class="image-container">
-    <img class="image-display" src="/img/lisboa-image-details-01.jpg" alt="Electrico de Lisboa">
+    <a href="" id="image-container-a"><img class="image-display" src="/img/lisboa-image-details-01.jpg" alt="Electrico de Lisboa"></a>
   </section>
   <!-- ends image container -->
 
@@ -17,8 +17,8 @@
   <section class="image-details-navigation">
     <h4><%= t('modal-image-details.accessibility.image-details-navigation') %></h4>
     <form id="view-image-website" action="https://hotel-mix.de/hotels/portugal/lisbon">
-      <button type="submit" id="image-website-url-button" class="button" value="visit image website"><span
-          class="fas fa-eye" aria-hidden="true"></span><%= t('modal-image-details.buttons.visit') %></button>
+      <a id="view-image-website-a" href=""><button type="button" id="image-website-url-button" class="button" value="visit image website"><span
+          class="fas fa-eye" aria-hidden="true"></span><%= t('modal-image-details.buttons.visit') %></button></a>
     </form>
     <form id="jump-to-image-details" action="javascript:void(0)">
       <button type="submit" id="image-details-button" class="button" value="image technical details"
