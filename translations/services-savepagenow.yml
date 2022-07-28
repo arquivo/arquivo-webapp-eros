@@ -4,13 +4,13 @@ form:
     pt: Página do formulário do SavePageNow
   text:
     en: Record webpages on Arquivo.pt
-    pt: Grave páginas no Arquivo.pt
+    pt: Grava páginas no Arquivo.pt
   button:
     en: Record 
     pt: Gravar 
   example:
-    en: e.g. https://www.fccn.pt
-    pt: ex. https://www.fccn.pt
+    en: e.g. www.fccn.pt
+    pt: ex. www.fccn.pt
   label:
     en: Page address
     pt: Endereço da página 
@@ -21,9 +21,6 @@ form:
     page-down:
       en: The page is inaccessible. Make sure the address is correct.
       pt: A página está inacessível. Verifique se o endereço está correto.
-    communication-failure:
-      en: There was an error trying to reach the requested page. 
-      pt: Ocorreu um erro ao tentar aceder à página pedida.
 recorder:
   label:
     en: Browse to save pages
@@ -42,8 +39,8 @@ recorder:
       en: Save pages on Arquivo.pt
       pt: Grava páginas no Arquivo.pt
     text:
-      en: "Your browsing has been saved and will available on Arquivo.pt on the next 48 hours. Access it using the following link:"
-      pt: "A sua navegação foi gravada e ficará disponível no Arquivo.pt nas próximas 48 horas. Aceda ao seu conteúdo através do link:"
+      en: Your browsing has been saved and will soon be available on Arquivo.pt.
+      pt: A sua navegação foi salva e ficará disponível em breve no Arquivo.pt 
     button:
       en: OK
       pt: OK
