@@ -1,1 +1,12 @@
-<%- include('../fragments/loading-section',{action:'/partials/url-search-results'}) %>
+<% 
+const viewModeDefault = 'list'
+let viewMode = requestData.get('viewMode') ?? viewModeDefault; 
+%> 
+<script>
+    onSectionLoad('url-results-table', ()=> {
+        $('#tablePresentation').animate({scrollLeft: '+='+($('#tablePresentation').find('td.year-month-data').first().position().left)}, 800, 'easeOutQuad');
+    });
+</script>
+
+<%- include('../fragments/loading-section',{action:'/partials/url-search-results', onloadmessage:'url-results-'+viewMode}) %>
+<!-- $('#tablePresentation').animate({scrollLeft: '+='+($('#tablePresentation').find('td.year-month-data').first().position().left)}, 800, 'easeOutQuad'); -->

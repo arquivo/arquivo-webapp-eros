@@ -3,6 +3,7 @@ module.exports = function (apiData) {
     const delta = 3600;
     let prevKnown200Index = -1;
     let nextKnown200Index = -1;
+    
     const returnData = apiData
         // Sanity check
         .filter((item) => (item.status && item.timestamp && item.digest && item.url))

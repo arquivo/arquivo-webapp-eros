@@ -1,5 +1,8 @@
 #translations for the footer
 about:
+  important-info:
+    en: Important Information
+    pt: Informação Importante
   header:
     pt: 'Sobre'
     en: 'About'

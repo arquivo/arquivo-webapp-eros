@@ -1,6 +1,5 @@
 
 const PageSearchApiRequest = require('./apis/page-search-api');
-const cdxFilter = require('./filter-cdx')
 
 module.exports = function (req, res) {
     const requestData = req.utils.sanitizeInputs(req, res);
