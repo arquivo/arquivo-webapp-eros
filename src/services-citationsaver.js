@@ -9,16 +9,12 @@ const logger = require('./logger')('CitationSaver');
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row){
   const doc = new GoogleSpreadsheet(googleSheetId);
-  try {
   await doc.useServiceAccountAuth(serviceAccountConfigs);
   
   
   await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
   await sheet.addRow(row);
-  } catch (e) {
-        logger.error(e);
-  }
 }
 
 const mimeToExtension = {
@@ -45,6 +41,8 @@ module.exports = function (req, res) {
 
             const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
 
+
+            const date = (new Date()).toLocaleDateString('en-CA');
             const timestamp = Date.now();
             const email = req.body.email ?? '';
             const path = './uploads/CitationSaver/' + newName;
@@ -55,8 +53,18 @@ module.exports = function (req, res) {
             uploadedFile.mv(path);
             logger.info('File saved: '+ newName + '\tEmail: ' + email + '\tOriginal name: ' +  originalName);
 
-            
-            addToSpreadsheet([timestamp,email,path,originalName]);
+            // Date	
+            // Timestamp	
+            // Email User	
+            // Type of Submission	
+            // PDF Original Name from User	
+            // File Name CitationSaver System	
+            // PDF Path CitationSaver System	
+            // Results URLs without check	
+            // Results URLs with check	
+            // Results URLs File Path	
+            // Note/Error
+            addToSpreadsheet([date,timestamp,email,'File',originalName,newName,path]);
 
             //send response
             res.send({
