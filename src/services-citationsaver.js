@@ -108,7 +108,7 @@ function handleFile(req, res) {
 
 }
 /*
- *  Downloads given url if mimetype is allowed, puts it in the uploads folder.
+ * Creates a .link file in the uploads folder which contains the submitted URL.
  */
 function handleURL(req, res) {
 
@@ -121,89 +121,33 @@ function handleURL(req, res) {
         });
         return;
     }
-    let filename = (Math.random() + 1).toString(36).substring(2);
-    let outExtension, newName, path, mimetype, filesize;
 
-    let expectedError = false;
+    const outExtension = 'link';
+    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+    const date = (new Date()).toLocaleDateString('en-CA');
+    const timestamp = Date.now();
+    const email = req.body?.email ?? '';
+    const path = './uploads/CitationSaver/' + newName;
 
-    const startsWithHttp = /^https?:\/\//
-    const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url.toLowerCase() : 'https://' + url.toLowerCase();
-    https.globalAgent = new https.Agent({
-        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
-    });
-
-    logger.info(fetchUrl + ' ' + fetchUrl.startsWith('https://') )
-    fetch(fetchUrl)
-        .then((r) => {
-            function throwExpectedError(message) {
-                expectedError = true;
-                throw new Error(message);
-            }
-
-            if (!r.ok) {
-                throwExpectedError('Could not access website: ' + url);
-            }
-
-            mimetype = r.headers.get('content-type');
-            filesize = r.headers.get('content-length');
-            outExtension = mimeToExtension[mimetype.split(';')[0]];
-            if (!outExtension) {
-                throwExpectedError('Invalid MIME type: ' + mimetype);
-            }
-
-            if (Number(filesize) > maxUploadSize) {
-                throwExpectedError('File exceeds maximum size');
-            }
-
-            newName = filename + '.' + outExtension;
-            path = './uploads/CitationSaver/' + newName;
-            filesize = 0;
-            return new Promise((resolve, reject) => {
-                const dest = fs.createWriteStream(path);
-                r.body.pipe(dest);
-                r.body.on('data', (chunk) => {
-                    filesize += chunk.length;
-                    if (filesize > maxUploadSize) {
-                        expectedError = true;
-                        reject(new Error('File exceeds maximum size'));
-                    }
-                })
-                    .on("end", () => {
-                        resolve();
-                    });
-                dest.on("error", (err) => {
-                    fs.unlink(path);
-                    reject(err);
-                });
-            });
-        }).then(() => {
-            const date = (new Date()).toLocaleDateString('en-CA');
-            const timestamp = Date.now();
-            const email = req.body?.email ?? '';
-
-            logger.info('URL saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + url);
-            addToSpreadsheet([date, timestamp, email, 'URL', url, newName, path]);
-
-            res.send({
-                status: true,
-                message: 'URL is uploaded',
-                data: {
-                    name: url,
-                    mimetype: mimetype,
-                    size: filesize
-                }
-            });
-        })
-        .catch((err) => {
-            if (expectedError) {
-                res.send({
-                    status: false,
-                    message: err.message
-                })
-            } else {
-                unexpectedError(res, err);
+    fs.writeFile(path, url, err => {
+        if (err) {
+            fs.unlink(path);
+            throw err;
+        }
+        res.send({
+            status: true,
+            message: 'Text uploaded',
+            data: {
+                name: url,
+                mimetype: '',
+                size: url.length
             }
         });
+
+        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email );
+        addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
+    });
+
 }
 
 function handleText(req, res) {
@@ -241,6 +185,6 @@ function handleText(req, res) {
         });
 
         logger.info('Text saved: ' + newName + '\tEmail: ' + email );
-        addToSpreadsheet([date, timestamp, email, 'Link', originalName, newName, path]);
+        addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path]);
     });
 }
