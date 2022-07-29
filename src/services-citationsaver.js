@@ -9,8 +9,6 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
 const serviceAccountConfigs = require('../config/service_account.json');
-const { request } = require('http');
-const e = require('express');
 const logger = require('./logger')('CitationSaver');
 
 
@@ -77,6 +75,13 @@ function handleFile(req, res) {
         return;
     }
 
+    if (uploadedFile.size > maxUploadSize) {
+        res.send({
+            status: false,
+            message: 'File exceeds maximum size'
+        });
+        return;
+    }
 
     const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
     const date = (new Date()).toLocaleDateString('en-CA');
@@ -89,6 +94,16 @@ function handleFile(req, res) {
     logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path]);
+
+    res.send({
+        status: true,
+        message: 'File uploaded',
+        data: {
+            name: originalName,
+            mimetype: uploadedFile.mimetype,
+            size: uploadedFile.size
+        }
+    });
 
 }
 /*
@@ -165,7 +180,7 @@ function handleURL(req, res) {
             const timestamp = Date.now();
             const email = req.body?.email ?? '';
 
-            logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + url);
+            logger.info('URL saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + url);
             addToSpreadsheet([date, timestamp, email, 'URL', url, newName, path]);
 
             res.send({
@@ -194,7 +209,11 @@ function handleText(req, res) {
     const text = req.body.text;
 
     if (text.length > maxUploadSize) {
-        throw new Error('Text exceeds maximum size')
+        res.send({
+            status: false,
+            message: 'Text exceeds maximum size'
+        });
+        return;
     }
 
     const outExtension = 'txt';
@@ -220,6 +239,7 @@ function handleText(req, res) {
             }
         });
 
+        logger.info('Text saved: ' + newName + '\tEmail: ' + email );
         addToSpreadsheet([date, timestamp, email, 'Link', originalName, newName, path]);
     });
 }
