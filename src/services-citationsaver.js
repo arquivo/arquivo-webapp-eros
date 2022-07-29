@@ -148,7 +148,8 @@ function handleURL(req, res) {
                 r.body.on('data', (chunk) => {
                     filesize += chunk.length;
                     if (filesize > maxUploadSize) {
-                        throwExpectedError('File exceeds maximum size');
+                        expectedError = true;
+                        reject(new Error('File exceeds maximum size'));
                     }
                 })
                     .on("end", () => {
