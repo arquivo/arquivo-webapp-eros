@@ -1,6 +1,7 @@
 
 const fetch = require('node-fetch');
 const https = require('https');
+const http = require('https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -127,12 +128,12 @@ function handleURL(req, res) {
 
     const startsWithHttp = /^https?:\/\//
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url.toLowerCase() : 'https://' + url.toLowerCase();
-    const fetchOptions = fetchUrl.startsWith('https://') ? {
-        agent: new https.Agent({
-            rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
-        })
-    } : {};
-    fetch(fetchUrl, fetchOptions)
+    https.globalAgent = new https.Agent({
+        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
+    });
+
+    logger.info(fetchUrl + ' ' + fetchUrl.startsWith('https://') )
+    fetch(fetchUrl)
         .then((r) => {
             function throwExpectedError(message) {
                 expectedError = true;
