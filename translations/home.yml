@@ -52,29 +52,29 @@ what-is-arquivo-pt:
     pt: 'O que é o Arquivo.pt?'
     en: 'What is Arquivo.pt?'
   video-url:
-    pt: 'https://www.youtube.com/embed/EnSys0HDnCc?controls=0'
-    en: 'https://www.youtube.com/embed/uuEiTiilyX0?controls=0'
+    pt: 'https://arquivo.pt/embed/videopt'
+    en: 'https://arquivo.pt/embed/videoen'
 
 testimonials:
   header:
     pt: 'Testemunhos de utilizadores'
     en: 'Users testimonials'
   video-url:
-    pt: 'https://www.youtube.com/embed/noTK_wbeMC4?controls=0'
-    en: 'https://www.youtube.com/embed/_pNlBMGb5DQ?controls=0'
+    pt: 'https://arquivo.pt/embed/testemunhos'
+    en: 'https://arquivo.pt/embed/testimonials'
 
 example-preserved-pages:
   header:
     pt: 'Exemplos de páginas preservadas'
     en: 'Examples of preserved pages'
   url:
-    pt: https://sobre.arquivo.pt/pt/exemplos/
-    en: https://sobre.arquivo.pt/en/examples/
+    pt: https://arquivo.pt/exemplos
+    en: https://arquivo.pt/examples
   
 themed-exhibitions:
   header:
     pt: 'Exposições temáticas'
     en: 'Themed exhibitions'
   url:
-    pt: https://sobre.arquivo.pt/pt/exemplos/colecoes/
-    en: https://sobre.arquivo.pt/en/examples/collections/
+    pt: https://arquivo.pt/expos
+    en: https://arquivo.pt/exhibitions

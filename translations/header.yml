@@ -5,8 +5,8 @@ alert-container:
       en: Notification message
       pt: Mensagem de notificação
   url-copied:
-    en: URL link copied
-    pt: Endereço URL copiado
+    en: Link copied
+    pt: Link copiado
 
 search-tools:
   accessibility:
