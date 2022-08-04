@@ -935,13 +935,6 @@ nav#replay-left-nav section {
   border-radius: 10px;  
 }
 
-section.image-details-description, div.modal-image-details-container section.modal-window-image-technical-details {
-  margin-top: 14px;
-  scrollbar-color: #bdbdbd #f5f5f5;
-  scrollbar-width: thin;  
-  border-radius: 0;  
-}
-
 /* Chrome, Opera, Edge, Safari scroll bar for replay and images modal */
 
 /* Replay left nav scroll bar */
@@ -1652,11 +1645,6 @@ body#pages-advanced-search label, body#images-advanced-search label {
   padding: 50px !important;  
 }
 
-.modal-image-details-container{
-  top:0px;
-  max-width: calc(100vw - 150px);
-}
-
 section.modal {
   display: none;
   vertical-align: middle;
@@ -1697,141 +1685,6 @@ body#images-search-results section.image-container {
   display: flex;
   justify-content: center;
   padding: 0px 0 0px 0;
-}
-
-section#modal-window-image-technical-details {
-  display: none;
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;  
-  right: 0;
-  height: 100%;
-  padding: 0px 23px;
-  background: #f5f5f5; 
-  overflow-y: auto;
-  text-align: left; 
-  border-radius: 5px;
-}
-
-section#modal-window-image-technical-details h3 {
- padding-top: 30px;
- font-weight: initial;
- padding-bottom: 20px;
- font-size: 16px;
-}
-
-a#close-modal-tecnhical {
-  display: none;  
-  position: absolute;
-  z-index: 4;
-  top: 0;
-  right: 5px;
-}
-
-section#modal-window-image-technical-details h4 {
- visibility:hidden;
- height: 0;
-}
-
-section#modal-window-image-technical-details h5 {
-  font-weight: bold;
-  padding: 10px 0;
-  font-size: 0.8em;
- }
-
- section#modal-window-image-technical-details h5.page-description-heading,
- section#modal-window-image-technical-details h5.image-description-heading, 
- section#modal-window-image-technical-details h5.collection-description-heading,
- section#modal-window-image-technical-details h5.raw-api-data-title {  
-  font-size: 12.5px;
-  font-weight: 100;
-  padding-left: 0px;
- }
-
- section#modal-window-image-technical-details h5 {
-  font-weight: bold;
-  padding: 25px 0 7px 0;
-  font-size: 0.84em;    
- }
-
-section#modal-window-image-technical-details p  {  
-  font-size: 0.73em;
-  padding-bottom: 10px;
-  padding-left: 0px;  
-  line-height: 1.4em;
-  color: gray;
-  word-break: break-all;
-}
-
-section#modal-window-image-technical-details p span  {
-  position: relative;
-  top: -0.80px;
-  font-size: 0.85em;
-  color: #646464;
-  padding-right: 5px;
-}
-
-section#modal-window-image-technical-details p a  {
-  color: #1c75c0;
-  overflow: hidden;
-  text-decoration: none;
-  padding-left: 0px;
-  display: block;
-  margin-top: -14px;
-  line-height: 1.4em;
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
-}
-
-section#modal-window-image-technical-details div.modal-image-field:last-child  {  
-  display: block;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  padding: 10px 0;  
-  align-items: center;
-}
-
-section#modal-window-image-technical-details > h5{
-  border-bottom: 1px solid #cccccc69;
-  padding-bottom: 15px;  
-}
-section#modal-window-image-technical-details > div.raw-api-data-title{
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  padding: 0;    
-  align-items: center;
-  background-color: whitesmoke;
-}
-
-section#modal-window-image-technical-details > div.raw-api-data-title > button{
-  width: 85px;
-  min-width: 85px;
-  height: 28.5px;
-  position: relative;
-  top: 60px;
-}
-section#modal-window-image-technical-details > div.raw-api-data-title > button > span{
-  padding-right: 5px;
-  height: 2px;
-}
-
-section#modal-window-image-technical-details div.modal-image-field p.raw-api-data {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  padding-bottom: 30px; 
-}
-
-section.image-details-description div.modal-image-field p > span.image-modal-content{
-  padding-left:7px;
-  padding-right:10px;
 }
 
 body#landing-replay section.modal {
@@ -1904,122 +1757,6 @@ div.jquery-modal section#replay-with-old-browser li#netscape-icon {
   padding-right: 0px;
 }
 
-.image-modal-content {
-  font-size: 1em !important;
-}
-
-section#modal-window-image-technical-details .image-modal-content.resolution{
-  display: inline-block;
-}
-section#modal-window-image-technical-details .image-modal-content.width{
-  vertical-align: middle;
-  padding-right: 2px;
-}
-section#modal-window-image-technical-details .image-modal-content.height{
-  vertical-align: middle;
-  padding-right: 0;
-}
-
-section.image-details-navigation {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-section.image-details-navigation button span  {
-  margin-right: 4px;
-}
-
-section.image-details-navigation h4, section.image-details-description h4 {
-visibility: hidden;
-height: 0;
-}
-
-section.image-details-description  {
-  display: flex;
-  flex-direction: column;
-  text-align: initial;
-  margin-top: 8px; 
-  height: 100%;
-  max-height: calc(40vh - 100px);
-  overflow: auto;  
-  overflow-x: hidden; 
-}
-
-section#modal-window-image-technical-details div.modal-technical-buttons-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding-bottom: 10px;
-}
-
-section#modal-window-image-technical-details div.modal-technical-buttons-container button {
- margin-left: 7px;
-}
-
-/* Copy raw API data button */
-button#copy-raw-api-data .fa-copy::before { 
-  padding-right: 5px;
-}
-
-#modal .image-details-description h5  {
-  font-weight: bold;
-  padding: 13px 0 2px;
-  font-size: 0.78em;
-  border-top: 1px solid #cccccc69;
-  margin-top: 10px;
-  min-width: 450px;
-  width: 100%;
-}
-
-section.image-details-description p  {
- padding: 3px 0 0 0px;
- font-size: 0.72em;
- line-height: 1.5em;
-}
-
-section.image-details-description p.image-original-address {
-  line-height: 1.68em;
-}
-
-section.image-details-description p.image-description-name {
-  border-top: 1px solid #cccccc69;
-  margin-top: 10px;
-  padding-top: 12px;
-}
-
-section.image-details-description p.image-details-padding-right  {
-  padding-right: 5px;
-  display: block;
-}
-
-section.image-details-description p a  {
-  color: #1c75c0;
-  text-decoration: none;
-  padding-left: 5px;
-  line-height: 1.4em;
-  word-break: break-word;
-}
-
-section.image-details-description p.image-description-date span,section.image-details-description p.page-description-date span {
-  font-size: 0.9em;
-  position: relative;
-  top: -1.33px;
-}
-
-section.image-details-description p a:hover  {
-  color: #1c75c0;
-  text-decoration: underline;
-}
-
-section.image-details-description .image-original-address,
-section.image-details-description .page-original-address {
-  word-break: break-all;
-}
-
-
 section#replay-not-found {
   display: flex;  
   flex-direction: column;
@@ -2036,44 +1773,6 @@ section#replay-not-found a {
 section#replay-not-found a img {
   width: 100%;
   max-width: 162px;
-}
-
-button#previous-image-button {
-  position: absolute;
-  left: -50px;
-  top: 0;
-}
-
-button#next-image-button {
-  position: absolute;
-  right: -50px;
-  top: 0;
-}
-
-button.image-navigation-button { 
-  width: 50px;
-    height: calc(100%);
-  background: transparent;
-  border: none;
-} 
-
-button.image-navigation-button span { 
-  font-size: 2em;
-  color: #ccc;
-  transition: 0.2s;
-}
-
-button.image-navigation-button span:hover { 
-  font-size: 2.4em;
-  color: rgb(255, 255, 255);
-  transition: 0.2s;
-}
-
-section.image-details-description p span { 
-  position: relative;
-  top: 0.175px;
-  font-size: 0.8em;
-  color: #777;
 }
 
 /* Datepicker and note: !important styles are being used to replace original datepicker UI styles ***********************************/

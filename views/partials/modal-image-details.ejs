@@ -74,7 +74,12 @@
     <h4><%= t('modal-image-details.titles.image-technical-details') %></h4>
 
     <div class="raw-api-data-title">
-      <h5 class="image-details-raw"><%= t('modal-image-details.titles.raw-api-data') %></h5>
+      <h5 class="image-details-raw">
+        <%= t('modal-image-details.titles.api-data') %> 
+        <a href="<%= t('modal-image-details.titles.api-data-field-description.href') %>" target="_blank">
+          <%= t('modal-image-details.titles.api-data-field-description.text') %>
+        </a>
+      </h5>
     </div>
     <div class="modal-image-field">
       <p class="raw-api-data"></p>

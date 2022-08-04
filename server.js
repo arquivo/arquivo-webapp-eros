@@ -6,7 +6,7 @@ try {
   const fileUpload = require('express-fileupload');
   const express = require('express');
   const config = require('config');
-  const session = require('express-session');
+  const session = require('cookie-session');
   const cookies = require("cookie-parser");
   const path = require('path');
   const router = require('./src/router');

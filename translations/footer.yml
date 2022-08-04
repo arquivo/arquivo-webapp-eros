@@ -41,6 +41,13 @@ about:
     url:
       pt: 'https://arquivo.pt/api'
       en: 'https://arquivo.pt/api'
+  open-data:
+    text:
+      pt: 'Dados abertos'
+      en: 'Open datasets'
+    url:
+      pt: 'https://arquivo.pt/dadosabertos'
+      en: 'https://arquivo.pt/dadosabertos'
   terms:
     text:
       pt: 'Termos e Condições'
@@ -114,6 +121,13 @@ collaborate:
     url:
       pt: 'https://arquivo.pt/sugerir'
       en: 'https://arquivo.pt/suggest'
+  arquivo404:
+    text:
+      pt: 'Conserte links quebrados'
+      en: 'Fix broken links'
+    url:
+      pt: 'https://arquivo.pt/arquivo404'
+      en: 'https://arquivo.pt/arquivo404en'
   memorial:
     text:
       pt: 'Memorial'
