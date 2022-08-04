@@ -270,7 +270,7 @@ section#savepagenow-modal form button {
 
 body#save-page-now-landing #replay_iframe {
     overflow: hidden;
-    height: calc(100vh - 58px);
+    height: calc(100vh - 66px);
     width: 100%;
     max-width: 100%;
     max-height: 100%;
@@ -340,7 +340,7 @@ body#save-page-now-landing .button-title {
 @media (max-width:959px) {
 
     body#save-page-now-landing #replay_iframe {
-        height: calc(100vh - 146px);
+        height: calc(100vh - 153px);
         padding-top: 40px;
     }
 
