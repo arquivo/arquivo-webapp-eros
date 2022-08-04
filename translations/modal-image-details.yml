@@ -37,9 +37,16 @@ titles:
   collection:
     en: Collection
     pt: Coleção
-  raw-api-data:
-    en: Raw API data
-    pt: Dados da API em Bruto
+  api-data:
+    en: API data
+    pt: Dados da API 
+  api-data-field-description:
+    text: 
+        en: (field description)
+        pt: (descrição dos campos)
+    href:
+        en: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1-(beta)#response-fields
+        pt: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1-(beta)#response-fields
 labels:
   alt-text:
     en: 'Alternative Text:'
