@@ -1,0 +1,62 @@
+<section id="citation-saver-main">
+    <h3 class="accessibility"><%= t('services-citation-saver.accessibility') %></h3>
+    <img id="logo-citation-saver" class="image-width" src="/img/CitationSaver.svg" alt="CitationSaver">
+    <h4 id="save-page-now-slogan"><%= t('services-citation-saver.slogan') %></h4>
+
+    <p style="line-height: 27px;margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
+    <p style="line-height: 27px;"><%- t('services-citation-saver.description.2') %></p>
+
+    <div class="citation-saver-input-selection">
+        <input type="radio" name="input-selection" id="input-url" checked="checked">
+        <label for="input-url">URL</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post">
+                <label for="input-url-url">Insert the URL to the document:</label>
+                <input type="text" name="url" id="input-url-url">
+                <small>Accepted formats: PDF</small>
+
+
+                <label for="input-url-email">Email (optional):</label>
+                <input type="text" name="email" id="input-url-email">
+                <small>We will warn you when the archived content becomes accessible on Arquivo.pt</small>
+
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <input type="radio" name="input-selection" id="input-file-upload">
+        <label for="input-file-upload">File Upload</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post" enctype="multipart/form-data">
+                <label for="input-file-file">Upload a document from your computer:</label>
+                <input type="file" name="file" id="input-file-file">
+                <small>Accepted formats: PDF</small>
+
+
+                <label for="input-file-email">Email (optional):</label>
+                <input type="text" name="email" id="input-file-email">
+                <small>We will warn you when the archived content becomes accessible on Arquivo.pt</small>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <input type="radio" name="input-selection" id="input-text">
+        <label for="input-text">Text</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post">
+                <label for="input-text-text">Insert a text containing links:</label>
+                <textarea id="input-text-text" name="text"></textarea>
+
+
+                <label for="input-text-email">Email (optional):</label>
+                <input type="text" name="email" id="input-text-email">
+                <small>We will warn you when the archived content becomes accessible on Arquivo.pt</small>
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+
+</section>
