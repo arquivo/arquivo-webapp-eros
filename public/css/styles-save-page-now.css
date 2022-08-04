@@ -5,7 +5,8 @@ body#save-page-now-landing {
 
 /* Save page Now input */
 
-body#save-page-now section#home-content, section#body-content {
+body#save-page-now section#home-content,
+section#body-content {
     justify-content: flex-start;
     padding: 0 18px;
 }
@@ -15,59 +16,60 @@ img#logo-save-page-now {
 }
 
 
-body#save-page-now  section#home-content h4, body#save-page-now  section#body-content h4 {
+body#save-page-now section#home-content h4,
+body#save-page-now section#body-content h4 {
     padding: 11px 6px 11px 0px;
     font-weight: normal;
     font-size: 1em;
     width: fit-content;
-  }
-  
-body#save-page-now form#search-form input#submit-search-input {    
+}
+
+body#save-page-now form#search-form input#submit-search-input {
     padding-left: 12px;
     background-image: none;
 }
-  
- 
+
+
 body#save-page-now form#search-form {
     margin: 8px auto 0 auto;
     height: auto;
 }
-  
-body#save-page-now section#search-tools { 
+
+body#save-page-now section#search-tools {
     margin: 0px 0 21vh 0;
     padding: 0px;
 }
 
-header {    
+header {
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
     box-shadow: 0px 5px 8px -2px rgb(0 0 0 / 30%);
-    }
-    
+}
+
 .left {
-    position: absolute; 
+    position: absolute;
     top: 15px;
-    left: 15px;  
+    left: 15px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between; 
-    align-items: center;  
+    justify-content: space-between;
+    align-items: center;
 }
 
 .right {
-    position: absolute; 
+    position: absolute;
     top: 6px;
-    right: 5px; 
+    right: 5px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;  
+    justify-content: space-between;
     align-items: center;
 }
 
 #pulsing-section {
-    display: flex;   
+    display: flex;
     width: fit-content;
     margin-right: 20px;
     background-color: rgb(4, 37, 47);
@@ -82,7 +84,7 @@ header {
     font-style: italic;
 }
 
-.pulse {       
+.pulse {
     background: rgb(255, 0, 0);
     border-radius: 50%;
     margin: 5px;
@@ -95,13 +97,13 @@ header {
     border: 2px solid white;
 }
 
-#colorchange {  
-   -webkit-animation:colorchange 3s infinite alternate;
-   animation:colorchange 1s infinite alternate;
-   color: bisque;
-   font-size: small;
-   font-size: 12px;
-   box-shadow: none !important;
+#colorchange {
+    -webkit-animation: colorchange 3s infinite alternate;
+    animation: colorchange 1s infinite alternate;
+    color: bisque;
+    font-size: small;
+    font-size: 12px;
+    box-shadow: none !important;
 }
 
 header button#nav-options-right-button {
@@ -129,14 +131,14 @@ div#iframe_div {
 /* Modal: SavePageNow Notification pop-up*/
 
 section#savepagenow-modal img {
-   position: relative;
-   top: 0px;
-   width: 154px !important;
+    position: relative;
+    top: 0px;
+    width: 154px !important;
 }
 
 section#savepagenow-modal h3 {
-   visibility: collapse;
-   height: 0;
+    visibility: collapse;
+    height: 0;
 }
 
 section#savepagenow-modal h4 {
@@ -156,100 +158,117 @@ section#savepagenow-modal p {
     line-height: normal;
 }
 
-div#modal span.savepagenow-modal {  
+div#modal span.savepagenow-modal {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     padding-right: 8px;
     font-size: 20px;
-  }
+}
 
 section#savepagenow-modal form {
-   display: flex;
-   justify-content: flex-end;
-   padding: 25px 0 0 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 25px 0 0 0;
 }
 
 section#savepagenow-modal form button {
     width: 103px;
- }
-
-
+}
 
 .left p {
     font-size: 12px;
     color: white;
-    padding-left: 20px;}
+    padding-left: 20px;
+}
+
+#replay-iframe {
+    overflow: hidden;
+    height: calc( 100vh - 48px );
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding-top: 48px;
+}
 
 @keyframes pulse {
-	0% {
-		transform: scale(1);
-		box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
-	}
-	70% {
-		transform: scale(1);
-		box-shadow: 0 0 0 20px rgba(255, 0, 0, 0);
-	}
-	100% {
-		transform: scale(0.95);
-		box-shadow: 0 0 0 0 rgba(253, 0, 0, 0);
-	}
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 20px rgba(255, 0, 0, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(253, 0, 0, 0);
+    }
 }
 
 @keyframes colorchange {
-	0% {		  
-        color: red;    
-	}
-	70% {		
+    0% {
+        color: red;
+    }
+
+    70% {
         color: bisque;
-    }	
-	100% {	
-        color: red;		
-	}    
+    }
+
+    100% {
+        color: red;
+    }
 }
 
 @media (max-width:960px) {
-    .left p {display: none;} 
-}   
-
-@media (max-width:959px) { 
-   
-    header {        
-    display: flex;
-    flex-direction: column;       
+    .left p {
+        display: none;
     }
+}
+
+@media (max-width:959px) {
+
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+
     .left {
-    position: relative;  
-    left:0;  
-    margin-top: -25px;    
-}
+        position: relative;
+        left: 0;
+        margin-top: -25px;
+    }
 
-#logo-arquivo {
-    width: 162px !important;    
-}
+    #logo-arquivo {
+        width: 162px !important;
+    }
 
-#logo-save-page-now {
-    width: 150px !important;
-    margin-bottom: 24px;
-    margin-top: -25px;
-}
+    #logo-save-page-now {
+        width: 150px !important;
+        margin-bottom: 24px;
+        margin-top: -25px;
+    }
 
-.image-width {   
-    position: relative;
-    z-index: 2;
-    top: 24px;
-    width: 200px;
-}
-    .right {      
-    position: relative;
-    margin-top: 55px;
-    margin-bottom: 20px;
-    margin-left: 18px;
-}
-/* SavePageNow iframe div container */ 
-div#iframe_div {
-    width: 100%;
-    height: calc(100vh - 118px);
-    margin-top: 118px; 
-}
+    .image-width {
+        position: relative;
+        z-index: 2;
+        top: 24px;
+        width: 200px;
+    }
+
+    .right {
+        position: relative;
+        margin-top: 55px;
+        margin-bottom: 20px;
+        margin-left: 18px;
+    }
+
+    /* SavePageNow iframe div container */
+    div#iframe_div {
+        width: 100%;
+        height: calc(100vh - 118px);
+        margin-top: 118px;
+    }
 }
