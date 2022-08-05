@@ -1,0 +1,23 @@
+page-not-found:
+  pt: Não conseguimos encontrar a página.
+  en: Page not found.
+apology:
+  pt: Pedimos desculpa por este imprevisto.
+  en: We apologize for the inconvenience.
+report:
+  text:
+    pt: Avise-nos do problema
+    en: Report this problem
+  href:
+    pt: 'https://sobre.arquivo.pt/pt/contacto/'
+    en: 'https://sobre.arquivo.pt/en/contact/'
+return:
+  text: 
+    pt: Voltar à página principal
+    en: Return to the home page
+  href:
+    pt: '/?l=pt'
+    en: '/?l=en'
+arquivo404-message:
+  en: <a href=\'{archivedURL}\'>View an archived version of the page from {date}</a>
+  pt: <a href=\'{archivedURL}\'>Visite uma versão arquivada da página de {date}</a>

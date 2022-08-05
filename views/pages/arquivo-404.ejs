@@ -5,6 +5,7 @@
     <!-- starts global document: <head>...</head> -->
     <%- include("../templates/head",{pagename: 'notfound'}) -%>
     <!-- ends global document: <head>...</head> -->
+    <link rel="stylesheet" type="text/css" href="/css/styles-arquivo-404.css" media="screen">
     </head>
 
     <!-- starts document body content -->
@@ -15,13 +16,24 @@
         <!-- ends skip to main content -->
 
         <!-- starts 404 main content -->
+        <script>
+        function initArquivo404(){
+            ARQUIVO_NOT_FOUND_404
+                .message(<%- "'" + t('arquivo-404.arquivo404-message') + "'" %>)
+                .messageElementId('arquivo404-message')
+                .url('https://andremourao.com/courses')
+                .call();
+        }
+        </script>
+        <script type="text/javascript" src="https://arquivo.pt/arquivo404.js" async defer onload="initArquivo404()"></script>
+
         <main> 
-            <a id="logo-arquivo-link" href="/"><img id="logo-arquivo" src="../../img/arquivo-logo-black.svg" alt="Arquivo.pt"></a>
-            <h3>N&atilde;o conseguimos encontrar a p&aacute;gina.</h3>
-            <p>Pedimos desculpa por este imprevisto.</p>
-            <a href="https://sobre.arquivo.pt/contacto">Avise-nos do problema.</a>
-            <a href="https://arquivo.pt/">Voltar &agrave; p&aacute;gina principal.</a>
-            <a href="https://sobre.arquivo.pt/">Prémio Arquivo.pt <script>var d = new Date(); document.write(d.getFullYear());</script>.</a>
+            <a id="logo-arquivo-link" href="/"><img id="logo-arquivo" src="/img/logoFace.png" alt="Arquivo.pt"></a>
+            <h3><%= t('arquivo-404.page-not-found') %></h3>
+            <p><%= t('arquivo-404.apology') %></p>
+            <a href="<%- t('arquivo-404.report.href') %>"><%= t('arquivo-404.report.text') %></a>
+            <a href="<%- t('arquivo-404.return.href') %>"><%= t('arquivo-404.return.text') %></a>
+            <div id="arquivo404-message" style="margin-top: 4px;"></div>
         </main>
         <!-- ends 404 main content -->
 

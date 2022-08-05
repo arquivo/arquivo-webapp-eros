@@ -5,11 +5,12 @@
   <!-- starts global document: <head>...</head> -->
   <%- include("../templates/head", {pagename:'complete-page'}) -%>
   <!-- ends global document: <head>...</head> -->
+  <link rel="stylesheet" type="text/css" href="/css/styles-complete-page.css" media="screen">
+  <script src="/js/dynamic-header-url.js"></script>
   </head>
 
-<body id="save-page-now-landing">
+<body id="complete-page">
   
-  <link rel="stylesheet" type="text/css" href="/css/styles-complete-page.css" media="screen">
 <!-- Overwriting pywb set_state function in order to properly update our toolbar when iframe changes-->
   <header>  
     <!-- starts left, right and replay menus overlay modal -->
@@ -27,6 +28,9 @@
         <a id="logo-arquivo-link" href="/">
         <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
         </a>  
+        <div>
+          <a id="headerUrl" class="headerUrl" target="_blank" href="<%- requestData.get('url') %>" title="<%- requestData.get('url') %>"><%- requestData.get('url') %></a>
+        </div>
     </div>
     <!-- ends Arquivo.pt logo -->  
     
