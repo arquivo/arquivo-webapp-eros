@@ -57,11 +57,11 @@ header {
 
 iframe#replay_iframe {
     overflow: hidden; 
-    height: calc(100vh - 51px);
+    height: calc(100vh - 67px);
     width: 100%;
     max-width: 100%;
     max-height: 100%;
-    padding-top: 48px;
+    padding-top: 64px;
 }
 
 #colorchange {
@@ -151,6 +151,8 @@ header button#nav-options-right-button {
         width: 179px !important;
         margin-bottom: 24px;
         margin-top: -25px;
+        position: relative;
+        top: 108px;
     }
 
     .image-width {
@@ -167,9 +169,9 @@ header button#nav-options-right-button {
         margin-bottom: 20px;
     }
 
-    #logo-complete-page {
-        position: relative;
-        top: 108px;
+    iframe#replay_iframe {
+        padding-top: 177px;
+        height: calc(100vh - 180px);
     }
 
 }
