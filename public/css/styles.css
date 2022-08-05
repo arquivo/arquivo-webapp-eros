@@ -400,6 +400,7 @@ header button#nav-menu-button-left {
   width: 54px;
   height: 31px;
   border-radius: 3px;
+  top: 8px;
 }
 
 header button#nav-menu-mobile-button-left {

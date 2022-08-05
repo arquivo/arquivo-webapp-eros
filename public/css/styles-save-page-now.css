@@ -57,6 +57,17 @@ body#save-page-now p#save-page-url-message-error {
 
 /* Hides "Copy link" when in SavePageNow mode */
 
+section#savepagenow-description {
+    margin:0;
+    line-height: 27px;
+}
+section#savepagenow-description a {
+    color:  #1c75c0;
+}
+section#savepagenow-description a:hov {
+    color:  black;
+}
+
 body#save-page-now li#menu-copy-link {
     display: none;
 }
