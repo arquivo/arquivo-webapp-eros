@@ -3124,53 +3124,6 @@ footer section#institutional p {
   font-size: x-small;
 }
 
-/*  Arquivo 404 */
-
-body#arquivo-404 main {
-  text-align: center;
-  max-width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  padding: 0px 0px;
-  margin-bottom: 0;
-}
-
-body#arquivo-404 main img {
-  width: 100%;
-  max-width: 185px;
-}
-
-body#arquivo-404 main h3 {
-  width: fit-content;
-  visibility: visible;
-  height: auto;
-  font-size: 1.2em;
-  padding: 10px;
-}
-
-body#arquivo-404 main p {
-  padding-bottom: 10px;
-  font-size: 0.9em;
-}
-
-body#arquivo-404 main a {
-  display: inline;
-  font-size: 0.9em;
-  padding: 5px;
-  margin: 0 5px;
-  width: 100%;
-  color: #1c75c0;
-  text-decoration: none;
-}
-
-body#arquivo-404 main a:hover {
-  text-decoration: underline;
-}
-
 /* New family style for old layout to display on not found page*/
 
 #info-texto-termos,
