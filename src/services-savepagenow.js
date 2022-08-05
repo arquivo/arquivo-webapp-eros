@@ -36,6 +36,7 @@ module.exports = function (req, res) {
         res.render('pages/services-savepagenow-save', {
             url: config.get('services.savepagenow.url') + url,
             recordingUrl: config.get('wayback.url') + '/' + dateToTimestamp(new Date()) + '/' + url,
+            liveUrl: url
         });
         fetch(config.get('backend.url') + '/services/savepagenow?url=' + encodeURIComponent(url) + '&success=true&logging=true'
             + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })

@@ -1,6 +1,98 @@
+/* Save page Now input */
+
+body#save-page-now section#home-content,
+section#body-content {
+    justify-content: flex-start;
+    padding: 0 10px;
+    margin-top: 100px;
+    margin-bottom: 25vh;
+}
+
+body#save-page-now form#search-form input#submit-search-input {
+    padding-left: 12px;
+    background-image: none;
+}
+
+body#save-page-now form#search-form {
+    margin: 8px auto 0 auto;
+    height: auto;
+}
+
+body#save-page-now img#logo-save-page-now {
+    margin-right: 14px;
+}
+
+body#save-page-now section#search-tools {
+    margin: 0px 0 15px 0;
+    padding: 0px;
+}
+
+body#save-page-now section#home-content h3,
+section#body-content h3 {
+    visibility: collapse;
+    height: 0;
+}
+
+body#save-page-now h4#save-page-now-slogan {
+    padding: 11px 6px 11px 0px;
+}
+
+body#save-page-now small#savepagenow-example {
+    padding-top: 10px;
+    padding-left: 14px;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4em;
+    color: rgb(141 141 141)
+}
+
+body#save-page-now p#save-page-url-message-error {
+    padding-top: 10px;
+    padding-left: 14px;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4em;
+    color: red;
+}
+
+/* Hides "Copy link" when in SavePageNow mode */
+
+body#save-page-now li#menu-copy-link {
+    display: none;
+}
+
+/* Modal save page now */
+body#save-page-now #savepagenow-modal {
+    max-width: 300px;
+    text-align: center;
+}
+
+/* Landing page: SavePageNow icon */
+
+body#save-page-now .save-page-now-icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 18px;
+}
+
+body#save-page-now-landing .left .save-page-now-icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 14px;
+    color: white;
+}
+
 body#save-page-now-landing {
     overflow: hidden;
     height: 100vh;
+}
+
+body#save-page-now-landing header{
+    height: 58px;
 }
 
 /* Save page Now input */
@@ -35,11 +127,6 @@ body#save-page-now form#search-form {
     height: auto;
 }
 
-body#save-page-now section#search-tools {
-    margin: 0px 0 21vh 0;
-    padding: 0px;
-}
-
 header {
     display: flex;
     justify-content: center;
@@ -50,7 +137,6 @@ header {
 
 .left {
     position: absolute;
-    top: 15px;
     left: 15px;
     display: flex;
     flex-direction: row;
@@ -60,12 +146,12 @@ header {
 
 .right {
     position: absolute;
-    top: 6px;
     right: 5px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 2px;
 }
 
 #pulsing-section {
@@ -182,13 +268,36 @@ section#savepagenow-modal form button {
     padding-left: 20px;
 }
 
-#replay-iframe {
+body#save-page-now-landing #replay_iframe {
     overflow: hidden;
-    height: calc( 100vh - 48px );
+    height: calc(100vh - 58px);
     width: 100%;
     max-width: 100%;
     max-height: 100%;
-    padding-top: 48px;
+    padding-top: 71px;
+}
+
+#savepagenow-modal span {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 4px;
+    font-size: 14px;
+    width: 19px;
+    float: left;
+    align-items: center;
+    height: 23px;
+}
+
+
+body#save-page-now-landing .left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body#save-page-now-landing .button-title {
+    display: block;
 }
 
 @keyframes pulse {
@@ -230,39 +339,38 @@ section#savepagenow-modal form button {
 
 @media (max-width:959px) {
 
-    header {
+    body#save-page-now-landing #replay_iframe {
+        height: calc(100vh - 146px);
+        padding-top: 40px;
+    }
+
+    body#save-page-now-landing header {
+        height: 146px;
         display: flex;
         flex-direction: column;
     }
 
-    .left {
+    body#save-page-now-landing .left {
         position: relative;
         left: 0;
         margin-top: -25px;
     }
 
-    #logo-arquivo {
+    body#save-page-now-landing #logo-arquivo {
         width: 162px !important;
     }
 
-    #logo-save-page-now {
+    body#save-page-now-landing #logo-save-page-now {
         width: 150px !important;
         margin-bottom: 24px;
         margin-top: -25px;
     }
 
-    .image-width {
+    body#save-page-now-landing .image-width {
         position: relative;
         z-index: 2;
         top: 24px;
         width: 200px;
-    }
-
-    .right {
-        position: relative;
-        margin-top: 55px;
-        margin-bottom: 20px;
-        margin-left: 18px;
     }
 
     /* SavePageNow iframe div container */
@@ -270,5 +378,50 @@ section#savepagenow-modal form button {
         width: 100%;
         height: calc(100vh - 118px);
         margin-top: 118px;
+    }
+}
+
+@media (min-width: 0px) and (max-width: 959px) {
+    body#save-page-now-landing .left {
+        top: 94px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    body#save-page-now-landing .right {
+        position: relative;
+        margin-top: 58px;
+        margin-bottom: 2px;
+        margin-left: 18px;
+    }
+}
+
+/* SavePageNow: center  search box for mobile */
+
+@media (min-width: 0px) and (max-width: 429px) {
+
+    body#save-page-now section#home-content,
+    section#body-content {
+        justify-content: center;
+    }
+
+    body#save-page-now h4#save-page-now-slogan {
+        padding: 11px 18px 11px 0px;
+    }
+}
+
+
+@media (max-width: 415px) {
+
+    /* Galaxy Fold: ##Screen = B/w 280px to 653px */
+
+    @media (width: 280px) and (height: 653px) {
+        body#save-page-now-landing .left .fa.fa-video-camera::before {
+            position: relative;
+            top: 64.3px;
+            left: 2px;
+        }
     }
 }
