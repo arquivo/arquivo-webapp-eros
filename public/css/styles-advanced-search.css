@@ -19,6 +19,10 @@ table#table-format tr {
     line-height: 25px;
 }
 
+table#table-format tbody {
+    cursor: auto;
+}
+
 table#table-format tr td input {
     position: relative;
     top: -2px

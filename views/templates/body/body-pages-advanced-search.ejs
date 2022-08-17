@@ -59,32 +59,32 @@ if(typeof requestData != 'undefined'){
   <table id="table-format">
     <tbody>
       <tr>
-        <td><input type="checkbox" name="format.all" id="format.all" <%= checkTypeFor('all') %>></td>
-        <td><label for="format.all"><strong><%- t('advanced-page-search.fieldset.format.option.all') %></strong></label></td>
+        <td><input type="checkbox" format="all" <%= checkTypeFor('all') %>></td>
+        <td><label><strong><%- t('advanced-page-search.fieldset.format.option.all') %></strong></label></td>
 
-        <td><input type="checkbox" name="format.xls" id="format.xls" <%= checkTypeFor('xls') %>></td>
-        <td><label for="format.xls">Microsoft Excel (.xls)</label></td>
+        <td><input type="checkbox" format="xls" <%= checkTypeFor('xls') %>></td>
+        <td><label>Microsoft Excel (.xls)</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" name="format.ppt" id="format.ppt" <%= checkTypeFor('ppt') %>></td>
-        <td><label for="format.ppt">Microsoft PowerPoint (.ppt)</label></td>
+        <td><input type="checkbox" format="ppt" <%= checkTypeFor('ppt') %>></td>
+        <td><label>Microsoft PowerPoint (.ppt)</label></td>
 
-        <td><input type="checkbox" name="format.pdf" id="format.pdf" <%= checkTypeFor('pdf') %>></td>
-        <td><label for="format.pdf">Adobe PDF (.pdf)</label></td>
+        <td><input type="checkbox" format="pdf" <%= checkTypeFor('pdf') %>></td>
+        <td><label>Adobe PDF (.pdf)</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" name="format.doc" id="format.doc" <%= checkTypeFor('doc') %>></td>
-        <td><label for="format.doc">Microsoft Word (.doc)</label></td>
+        <td><input type="checkbox" format="doc" <%= checkTypeFor('doc') %>></td>
+        <td><label>Microsoft Word (.doc)</label></td>
 
-        <td><input type="checkbox" name="format.ps" id="format.ps" <%= checkTypeFor('ps') %>></td>
-        <td><label for="format.ps">Adobe PostScript (.ps)</label></td>
+        <td><input type="checkbox" format="ps" <%= checkTypeFor('ps') %>></td>
+        <td><label>Adobe PostScript (.ps)</label></td>
       </tr>
       <tr>
-        <td><input type="checkbox" name="format.html" id="format.html" <%= checkTypeFor('html') %>></td>
-        <td><label for="format.html">HTML (.htm, .html)</label></td>
+        <td><input type="checkbox" format="html" <%= checkTypeFor('html') %>></td>
+        <td><label>HTML (.htm, .html)</label></td>
         
-        <td><input type="checkbox" name="format.rtf" id="format.rtf" <%= checkTypeFor('rtf') %>></td>
-        <td><label for="format.rtf">Rich Text Format (.rtf)</label></td>
+        <td><input type="checkbox" format="rtf" <%= checkTypeFor('rtf') %>></td>
+        <td><label>Rich Text Format (.rtf)</label></td>
       </tr>
     </tbody>
   </table>
