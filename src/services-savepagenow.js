@@ -29,7 +29,6 @@ module.exports = function (req, res) {
             + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
             .catch(error => {
                 logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-                renderError('communication-failure');
             });
     }
     const renderOk = function () {
@@ -42,7 +41,6 @@ module.exports = function (req, res) {
             + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
             .catch(error => {
                 logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-                renderError('communication-failure');
             });
     }
     const processUrl = function (url) {
