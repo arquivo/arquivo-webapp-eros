@@ -8,8 +8,8 @@ let values = {
   maxItems: '',
 }
 
-let selectTypeFor = function(type){
-  return (type == values.type) ? 'selected' : '';
+let checkTypeFor = function(type){
+  return (values.type == 'all' || values.type.split(',').some(x => x==type)) ? 'checked' : '';
 }
 let selectMaxItemsFor = function(n){
   return (n == values.maxItems) ? 'selected' : '';
@@ -53,27 +53,49 @@ if(typeof requestData != 'undefined'){
   <%- include('../fragments/search-tools-date-slider') %>
   <!-- ends range slider block -->  
 
-   <!-- Formats -->
-   <label for="format"><%- t('advanced-page-search.fieldset.format.label') %></label>
-   <select id="format-type" name="format" class="">
-    <option value="all" <%= selectTypeFor('all') %>><%- t('advanced-page-search.fieldset.format.option.all') %></option>
-    <option value="pdf" <%= selectTypeFor('pdf') %>>Adobe PDF (.pdf)</option>
-    <option value="ps" <%= selectTypeFor('ps') %>>Adobe PostScript (.ps)</option>
-    <option value="html" <%= selectTypeFor('html') %>>HTML (.htm, .html)</option>
-    <option value="xls" <%= selectTypeFor('xls') %>>Microsoft Excel (.xls)</option>
-    <option value="ppt" <%= selectTypeFor('ppt') %>>Microsoft PowerPoint (.ppt)</option>
-    <option value="doc" <%= selectTypeFor('doc') %>>Microsoft Word (.doc)</option>
-    <option value="rtf" <%= selectTypeFor('rtf') %>>Rich Text Format (.rtf)</option>
-   </select>  
-   
-   <!-- Website -->
-   <label for="website"><%- t('advanced-page-search.fieldset.website.label') %></label>
-   <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
-   <small><%- t('advanced-page-search.fieldset.website.example') %></small>
+  <!-- Formats -->
+  <label for="format"><%- t('advanced-page-search.fieldset.format.label') %></label>
+  <input type="hidden" name="format">
+  <table id="table-format">
+    <tbody>
+      <tr>
+        <td><input type="checkbox" name="format.all" id="format.all" <%= checkTypeFor('all') %>></td>
+        <td><label for="format.all"><strong><%- t('advanced-page-search.fieldset.format.option.all') %></strong></label></td>
 
-   <!-- Number of results: pages -->
-   <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
-   <select id="number-of-results-pages" name="maxItems" class="">
+        <td><input type="checkbox" name="format.xls" id="format.xls" <%= checkTypeFor('xls') %>></td>
+        <td><label for="format.xls">Microsoft Excel (.xls)</label></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="format.ppt" id="format.ppt" <%= checkTypeFor('ppt') %>></td>
+        <td><label for="format.ppt">Microsoft PowerPoint (.ppt)</label></td>
+
+        <td><input type="checkbox" name="format.pdf" id="format.pdf" <%= checkTypeFor('pdf') %>></td>
+        <td><label for="format.pdf">Adobe PDF (.pdf)</label></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="format.doc" id="format.doc" <%= checkTypeFor('doc') %>></td>
+        <td><label for="format.doc">Microsoft Word (.doc)</label></td>
+
+        <td><input type="checkbox" name="format.ps" id="format.ps" <%= checkTypeFor('ps') %>></td>
+        <td><label for="format.ps">Adobe PostScript (.ps)</label></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" name="format.html" id="format.html" <%= checkTypeFor('html') %>></td>
+        <td><label for="format.html">HTML (.htm, .html)</label></td>
+        
+        <td><input type="checkbox" name="format.rtf" id="format.rtf" <%= checkTypeFor('rtf') %>></td>
+        <td><label for="format.rtf">Rich Text Format (.rtf)</label></td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- Website -->
+  <label for="website"><%- t('advanced-page-search.fieldset.website.label') %></label>
+  <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
+  <small><%- t('advanced-page-search.fieldset.website.example') %></small>
+
+  <!-- Number of results: pages -->
+  <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
+  <select id="number-of-results-pages" name="maxItems" class="">
     <option value="10" <%= selectMaxItemsFor(10) %>>10</option>
     <option value="20" <%= selectMaxItemsFor(20) %>>20</option>
     <option value="30" <%= selectMaxItemsFor(30) %>>30</option>
