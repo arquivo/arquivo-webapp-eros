@@ -1,8 +1,8 @@
 $(() => {
-    const form = $('form#advanced-search-form-pages');
-    const formatInput = form.find('input[name=format]').first();
+    const form = $('form.advanced-search-form');
+    const formatInput = form.find('input[name=type]').first();
     form.submit(function(e) {
-        let checkedTypes = form.find('input[type=checkbox]:checked').toArray().map(x => $(x).attr('format'));
+        let checkedTypes = form.find('input[format]:checked').toArray().map(x => $(x).attr('format'));
         if(checkedTypes.some(x => x == 'all')){
             formatInput.val('all')
         } else {
@@ -12,7 +12,7 @@ $(() => {
     })
 
     const allCheckbox = form.find('input[format="all"]');
-    const otherCheckboxes = form.find('input[type=checkbox]:not([format="all"])');
+    const otherCheckboxes = form.find('input[format]:not([format="all"])');
 
     allCheckbox.change(function(){
         otherCheckboxes.prop("checked", this.checked );
@@ -20,7 +20,7 @@ $(() => {
     otherCheckboxes.change(function(){
         if(!this.checked){
             allCheckbox.prop("checked",false);
-        } else if(otherCheckboxes.toArray().filter(x => x.checked).length == otherCheckboxes.length){
+        } else if(otherCheckboxes.toArray().every(x => x.checked)){
             allCheckbox.prop("checked",true);
         }
     });
