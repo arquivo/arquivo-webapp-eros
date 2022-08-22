@@ -70,11 +70,11 @@ fieldset:
         en: Show all
   website:
     label:
-      pt: '<strong>Sítio Web</strong>:'
-      en: '<strong>Website</strong>:'
+      pt: '<strong>Sítios Web,</strong> separados por vírgulas:'
+      en: '<strong>Websites,</strong> separated by commas:'
     example:
-      pt: 'ex. www.fccn.pt'
-      en: 'e.g. www.fccn.pt'
+      pt: 'ex. www.fccn.pt, www.fct.pt'
+      en: 'e.g. www.fccn.pt, www.fct.pt'
   search:
     en: Search
     pt: Pesquisar

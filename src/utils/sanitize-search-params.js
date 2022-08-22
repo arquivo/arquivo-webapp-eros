@@ -34,7 +34,7 @@ module.exports = function (req, res) {
     transformParameterName(requestData, 'format', 'type');
     transformParameterName(requestData, 'adv_mime', 'type');
     transformParameterName(requestData, 'hitsPerPage', 'maxItems');
-    transformParameterName(requestData, 'site', 'siteSearch');
+    transformParameterName(requestData, 'site', 'siteSearch', (v) => v.split(/\s/).join(''));
     transformParameterName(requestData, 'hitsPerDup', 'dedupValue');
 
     const defaultRequestParameters = {

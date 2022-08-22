@@ -1,6 +1,7 @@
 $(() => {
     const form = $('form.advanced-search-form');
     const formatInput = form.find('input[name=type]').first();
+    const siteInput = form.find('input[name=siteSearch]').first();
     form.submit(function(e) {
         let checkedTypes = form.find('input[format]:checked').toArray().map(x => $(x).attr('format'));
         if(checkedTypes.some(x => x == 'all')){
@@ -8,6 +9,11 @@ $(() => {
         } else {
             formatInput.val(checkedTypes.join(','));
         }
+        let siteSearch = siteInput.val();
+        if(siteSearch){
+            siteInput.val(siteSearch.split(/\s/).join(''));
+        }
+
         return true;
     })
 
