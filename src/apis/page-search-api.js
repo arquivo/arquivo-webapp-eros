@@ -21,6 +21,16 @@ class PageSearchApiRequest extends ApiRequest {
         
         super(config.get('text.search.api'),defaultApiParams);
     }
+
+    sanitizeRequestData(requestData) {
+        const apiRequestData = new URLSearchParams(requestData);
+        
+        if (apiRequestData.has('type')) {
+            const regex = new RegExp(`\\s*type:${apiRequestData.get('type')}\\s*`)
+            apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
+        }
+        return super.sanitizeRequestData(apiRequestData);
+    }
 }
 
 module.exports = PageSearchApiRequest;
