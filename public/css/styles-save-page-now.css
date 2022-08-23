@@ -314,6 +314,12 @@ body#save-page-now-landing .button-title {
     display: block;
 }
 
+a#headerUrl {
+    font-size: 12.6px;
+    font-weight: lighter;
+    font-family: 'Roboto';
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
