@@ -731,6 +731,11 @@ h4.accessibility {
   height: 0;
 }
 
+h3.accessibility, h4.accessibility {
+  visibility: collapse;
+   height: 0;
+}
+
 /* Copy URL alert and others */
 section#alert-container {
   position: absolute;
@@ -2780,7 +2785,7 @@ section.navigation-tools p {
 }
 
 main {
-  min-height: calc(100vh - 768px);
+  min-height: calc(100vh - 512px);
 }
 
 section.navigation-tools button {
