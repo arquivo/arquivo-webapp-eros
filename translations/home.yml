@@ -78,3 +78,60 @@ themed-exhibitions:
   url:
     pt: https://arquivo.pt/expos
     en: https://arquivo.pt/exhibitions
+
+news:
+  header:
+    pt: Notícias
+    en: News
+  title: 
+    pt: Notícias
+    en: News
+  text1: 
+    pt: Conheça as últimas novidades no âmbito da preservação digital
+    en: Find out more about the latest developments on digital preservation
+  imgAlt: 
+    pt: Conheça as últimas novidades no âmbito da preservação digital
+    en: Find out more about the latest developments on digital preservation
+  url:
+    pt: https://sobre.arquivo.pt/pt/category/noticias/
+    en: https://sobre.arquivo.pt/en/category/news-en/
+
+test:
+  header:
+    pt: Cartão de teste
+    en: Test Card
+  title: 
+    pt: Cartão
+    en: Test
+  subtitle: 
+    pt: de Teste
+    en: Card
+  text1: 
+    pt: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+    en: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+  imgAlt: 
+    pt: Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
+    en: Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
+  url:
+    pt: /
+    en: /
+
+memorial:
+  header:
+    pt: Memorial Arquivo.pt
+    en: Memorial Arquivo.pt
+  title: 
+    pt: Memorial
+    en: Memorial
+  subtitle: 
+    pt: Arquivo.pt
+    en: Arquivo.pt
+  text1: 
+    pt: O Memorial do Arquivo.pt preserva o seu site antigo 
+    en: Arquivo.pt's Memorial preserves your old website 
+  imgAlt: 
+    pt: O Memorial do Arquivo.pt preserva o seu site antigo 
+    en: Arquivo.pt's Memorial preserves your old website 
+  url:
+    pt: arquivo.pt/memorial
+    en: arquivo.pt/memorialen
