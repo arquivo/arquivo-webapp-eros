@@ -15,11 +15,15 @@
     </article>
     <!-- ends Arquivo.pt Ward section -->
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', textLines:1, isWide:true, color:'green'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', textLines:1, size:'wide', color:'green'}}) %>
     
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', textLines:1, isWide:false, color:'violet'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', textLines:1, color:'violet'}}) %>
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {textLines:1, color:'orange'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', textLines:1, color:'orange'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', textLines:1, color:'gray'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', textLines:1, color:'blue'}}) %>
 
     
     <!-- starts what is Arquivo.pt -->
