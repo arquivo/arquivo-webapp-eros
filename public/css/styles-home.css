@@ -30,6 +30,11 @@ article.wide img.card {
     max-height: unset;
 }
 
+article.short img.card {
+    min-height: unset;
+    max-height: 165px;
+}
+
 article figure .card-text {
     transform: translateX(-50%);
     position: absolute;
@@ -74,6 +79,7 @@ article figure .card-text p.subtitle {
     font-size: 32px;
     font-style: italic;
     display:inline-block;
+    margin-left: -5px;
 }
 
 article figure .card-text p.text {

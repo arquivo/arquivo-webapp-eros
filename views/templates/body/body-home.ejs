@@ -15,16 +15,6 @@
     </article>
     <!-- ends Arquivo.pt Ward section -->
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', textLines:1, size:'wide', color:'green'}}) %>
-    
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', textLines:1, color:'violet'}}) %>
-
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', textLines:1, color:'orange'}}) %>
-
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', textLines:1, color:'gray'}}) %>
-
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', textLines:1, color:'blue'}}) %>
-
     
     <!-- starts what is Arquivo.pt -->
     <article id="what-is-arquivo-pt" role="contentinfo"
@@ -73,7 +63,18 @@
         </figure>
     </article>
 
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', color:'gray'}}) %>
 
-    <!-- starts preserved pages -->
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'training', color:'yellow'}}) %>
+    
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', color:'violet', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', color:'orange', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', color:'green', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', color:'blue', size: 'short'}}) %>
+
+
 </section>
 <!-- ends home content -->

@@ -1,9 +1,9 @@
 <% let defaultConfigs =  {
     cardName: 'test',
-    size: false,
-    knowMore: true,
-    color: 'gray',
-    textLines: 2,
+    size: 'short', //possible: 'wide', 'short', false
+    knowMore: false,
+    color: 'gray', 
+    textLines: 1,
 } 
 
 let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardConfigs : {})}
@@ -12,7 +12,7 @@ let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardC
 
 
 
-<article role="contentinfo" aria-label="" class="<%- configs.size=='wide' ? 'wide' : '' %>">
+<article role="contentinfo" aria-label="" class="<%- configs.size ? configs.size : '' %>">
     <h4>
         <%= t('home.'+configs.cardName+'.header') %>
     </h4>
@@ -21,7 +21,7 @@ let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardC
             <div class="card-text">
                 <div class="title-wrapper">
                     <p class="title"><%- t('home.'+configs.cardName+'.title') %></p>
-                    <p class="subtitle"><%= t('home.'+configs.cardName+'.subtitle') %></p>
+                    <p class="subtitle"><%- t('home.'+configs.cardName+'.subtitle') %></p>
                 </div>
                 <% for(let i = 0; i<configs.textLines ; i++){ %>
                 <p class="text"><%= t('home.'+configs.cardName+'.text'+(i+1)) %></p>

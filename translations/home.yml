@@ -101,7 +101,7 @@ test:
     pt: Cartão de teste
     en: Test Card
   title: 
-    pt: Cartão
+    pt: Cartão&nbsp;
     en: Test
   subtitle: 
     pt: de Teste
@@ -124,8 +124,8 @@ memorial:
     pt: Memorial
     en: Memorial
   subtitle: 
-    pt: Arquivo.pt
-    en: Arquivo.pt
+    pt: '<img src="/img/arquivo-logo-black.svg" alt="Arquivo.pt" style="margin-bottom:-8px;height:32px;margin-left: 5px;"></img>'
+    en: '<img src="/img/arquivo-logo-black.svg" alt="Arquivo.pt" style="margin-bottom:-8px;height:32px;margin-left: 5px;"></img>'
   text1: 
     pt: O Memorial do Arquivo.pt preserva o seu site antigo 
     en: Arquivo.pt's Memorial preserves your old website 
@@ -147,7 +147,7 @@ savepagenow:
     pt: Now
     en: Now
   text1: 
-    pt: Grava páginas no Arquivo.pt 
+    pt: Grave páginas no Arquivo.pt 
     en: Record webpages on Arquivo.pt 
   imgAlt: 
     pt: Grava páginas no Arquivo.pt 
@@ -161,8 +161,8 @@ suggest:
     pt: Sugira sites
     en: Suggest webpages
   title: 
-    pt: Sugira
-    en: Suggest
+    pt: Sugira&nbsp;
+    en: Suggest&nbsp;
   subtitle: 
     pt: Site
     en: Site
@@ -195,5 +195,25 @@ arquivo404:
   url:
     pt: 'https://arquivo.pt/arquivo404'
     en: 'https://arquivo.pt/arquivo404en'
+
+training:
+  header:
+    pt: Formação
+    en: Training Courses
+  title: 
+    pt: Formação
+    en: Training&nbsp;
+  subtitle: 
+    pt: ''
+    en: Courses
+  text1: 
+    pt: Formações oferecidas pelo Arquivo.pt  
+    en: Training courses provided by Arquivo.pt 
+  imgAlt: 
+    pt: Formações oferecidas pelo Arquivo.pt na área de preservação e investigação sobre informação preservada da Web. 
+    en: Training courses provided by Arquivo.pt in the areas of web preservation and research.
+  url:
+    pt: 'https://arquivo.pt/forma'
+    en: 'https://arquivo.pt/training'
 
 # Arquivo404 https://arquivo.pt/arquivo404
