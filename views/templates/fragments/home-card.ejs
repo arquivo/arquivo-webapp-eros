@@ -1,0 +1,39 @@
+<% let defaultConfigs =  {
+    cardName: 'test',
+    isWide: false,
+    knowMore: true,
+    color: 'gray',
+    textLines: 2,
+} 
+
+let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardConfigs : {})}
+
+%>
+
+
+
+<article role="contentinfo" aria-label="" class="<%- configs.isWide ? 'wide' : '' %>">
+    <h4>
+        <%= t('home.'+configs.cardName+'.header') %>
+    </h4>
+    <figure>
+        <a href="<%- t('home.'+configs.cardName+'.url') %>">
+            <div class="card-text">
+                <div class="title-wrapper">
+                    <p class="title"><%= t('home.'+configs.cardName+'.title') %></p>
+                    <p class="subtitle"><%= t('home.'+configs.cardName+'.subtitle') %></p>
+                </div>
+                <% for(let i = 0; i<configs.textLines ; i++){ %>
+                <p class="text"><%= t('home.'+configs.cardName+'.text'+(i+1)) %></p>
+                <% } %>
+                <% if(configs.knowMore) { %>
+                <div class="know-more-wrapper">
+                    <p class="know-more"><%= t('common.learn-more') %></p>
+                </div>
+                <% } %>
+            </div>
+            <img src="/img/home-card-<%- configs.color %>.svg" alt="<%= t('home.'+configs.cardName+'.imgAlt') %>"
+                title="<%= t('home.'+configs.cardName+'.imgAlt') %>" class="card">
+        </a>
+    </figure>
+</article>

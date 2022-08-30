@@ -126,3 +126,7 @@ date:
 estimated-results:
   pt: Cerca de ${numResults} resultados desde ${from} até ${to}
   en: About ${numResults} results from ${from} to ${to} 
+
+learn-more:
+  en: Learn more
+  pt: Saber mais
