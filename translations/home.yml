@@ -135,3 +135,65 @@ memorial:
   url:
     pt: arquivo.pt/memorial
     en: arquivo.pt/memorialen
+
+savepagenow:
+  header:
+    pt: SavePageNow
+    en: SavePageNow
+  title: 
+    pt: <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>&nbsp;SavePage
+    en: <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>&nbsp;SavePage
+  subtitle: 
+    pt: Now
+    en: Now
+  text1: 
+    pt: Grava páginas no Arquivo.pt 
+    en: Record webpages on Arquivo.pt 
+  imgAlt: 
+    pt: Grava páginas no Arquivo.pt 
+    en: Record webpages on Arquivo.pt 
+  url:
+    pt: /services/savepagenow
+    en: /services/savepagenow
+
+suggest:
+  header:
+    pt: Sugira sites
+    en: Suggest webpages
+  title: 
+    pt: Sugira
+    en: Suggest
+  subtitle: 
+    pt: Site
+    en: Site
+  text1: 
+    pt: Sugira websites para serem preservados
+    en: Suggest webpages to be preserved
+  imgAlt: 
+    pt: Sugira websites para serem preservados
+    en: Suggest webpages to be preserved
+  url:
+    pt: 'https://arquivo.pt/sugerir'
+    en: 'https://arquivo.pt/suggest'
+
+arquivo404:
+  header:
+    pt: Arquivo404
+    en: Arquivo404
+  title: 
+    pt: Arquivo
+    en: Arquivo
+  subtitle: 
+    pt: 404
+    en: 404
+  text1: 
+    pt: Acabe com as “Páginas não encontradas” no seu website
+    en: Put an end to “page not found” on your website
+  imgAlt: 
+    pt: Acabe com as “Páginas não encontradas” no seu website
+    en: Put an end to “page not found” on your website
+  url:
+    pt: 'https://arquivo.pt/arquivo404'
+    en: 'https://arquivo.pt/arquivo404en'
+
+# Arquivo404 https://arquivo.pt/arquivo404
