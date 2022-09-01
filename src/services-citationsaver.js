@@ -69,6 +69,8 @@ function handleFile(req, res) {
 
     const outExtension = mimeToExtension[uploadedFile.mimetype];
     if (!outExtension) {
+        
+        logger.error('Invalid MIME type');
         res.send({
             status: false,
             message: 'Invalid MIME type'
@@ -77,6 +79,8 @@ function handleFile(req, res) {
     }
 
     if (uploadedFile.size > maxUploadSize) {
+
+        logger.error('File exceeds maximum size');
         res.send({
             status: false,
             message: 'File exceeds maximum size'
@@ -136,7 +140,7 @@ function handleURL(req, res) {
         }
         res.send({
             status: true,
-            message: 'Text uploaded',
+            message: 'Link uploaded',
             data: {
                 name: url,
                 mimetype: '',

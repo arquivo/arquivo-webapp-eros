@@ -150,3 +150,30 @@ div.citation-saver-input-selection {
 #logo-citation-saver {
     margin-top:25px;
 }
+
+section#citation-saver-modal h3 {
+    visibility: collapse;
+    height: 0;
+}
+
+section#citation-saver-modal p {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: small;
+    line-height: normal;
+}
+
+section#citation-saver-modal p.error {
+    color:red;
+    font-weight: 700;
+}
+
+section#citation-saver-modal form {
+    display: flex;
+    justify-content: flex-end;
+    padding: 25px 0 0 0;
+}
+
+section#citation-saver-modal form button {
+    width: 103px;
+}

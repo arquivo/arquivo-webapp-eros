@@ -1,4 +1,5 @@
 $(() => {
+    // $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
     $(".citation-saver-input-selection form").submit(function (e) {
 
         e.preventDefault();
@@ -13,10 +14,25 @@ $(() => {
             processData: false,
             contentType: false,
             success: (data) => {
-                alert(JSON.stringify(data));
+                if(data.status){
+                    $('#modal p.text').show();
+                    $('#modal p.error').hide();
+                } else {
+                    $('#modal p.text').hide();
+                    $('#modal p.error').show();
+                    $('#modal p.error').text('ERROR!! ' +JSON.stringify(data.message));
+                }
+                
+                $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
+                
             },
             error: (err) => {
-                alert('ERROR!! ' +JSON.stringify(err));
+                // alert('ERROR!! ' +JSON.stringify(err));
+                $('#modal p.text').hide();
+                $('#modal p.error').show();
+                $('#modal p.error').text('ERROR!! ' +JSON.stringify(err));
+
+                $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
             }
         });
 
