@@ -39,7 +39,7 @@ div#headerUrlContainer {
 
 .right {
     position: absolute;
-    top: 13px;
+    top: 26px;
     right: 0px;
     display: flex;
     flex-direction: row;
