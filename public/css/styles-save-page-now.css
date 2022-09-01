@@ -66,8 +66,8 @@ section#savepagenow-description a {
     color: #1c75c0;
 }
 
-section#savepagenow-description a:hov {
-    color: black;
+section#savepagenow-description p {
+    margin-bottom: 8px;
 }
 
 body#save-page-now li#menu-copy-link {
@@ -319,7 +319,7 @@ body#save-page-now-landing .button-title {
 a#headerUrl {
     font-size: 12.6px;
     font-weight: lighter;
-    font-family: 'Roboto';
+    font-family: Roboto, sans-serif;
     max-width: 500px;
     overflow: hidden;
     text-overflow: ellipsis;

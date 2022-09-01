@@ -43,7 +43,7 @@ article figure .card-text {
     z-index: 1;
     display: inline-block;
     text-align: right;
-    font-family: Roboto;
+    font-family: Roboto, sans-serif;
     color: black;
     -webkit-touch-callout: none;
     /* iOS Safari */

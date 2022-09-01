@@ -19,7 +19,7 @@ a#headerUrl, span#headerTimestamp {
     color:white;
     font-size: 12.6px;
     font-weight: 400;
-    font-family: 'Roboto';
+    font-family: Roboto, sans-serif;
     max-width: 500px;
 }
 div#headerUrlContainer {
