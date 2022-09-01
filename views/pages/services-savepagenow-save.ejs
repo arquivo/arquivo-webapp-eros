@@ -5,12 +5,12 @@
   <!-- starts global document: <head>...</head> -->
   <%- include("../templates/head", {pagename:'savepagenow'}) -%>
   <!-- ends global document: <head>...</head> -->
+  <link rel="stylesheet" type="text/css" href="/css/styles-save-page-now.css" media="screen">
+  <script src="/js/dynamic-header-url.js"></script>
+
   </head>
 
 <body id="save-page-now-landing">
-  
-  <link rel="stylesheet" type="text/css" href="/css/styles-save-page-now.css" media="screen">
-<!-- Overwriting pywb set_state function in order to properly update our toolbar when iframe changes-->
 <header>  
    <!-- starts left, right and replay menus overlay modal -->
    <%- include("../templates/fragments/menus-overlay.ejs") -%>
@@ -26,8 +26,11 @@
   <!-- starts Arquivo.pt logo -->
   <div>
       <a id="logo-arquivo-link" href="/">
-      <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
+          <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
       </a>  
+      <div>
+        <a id="headerUrl" class="headerUrl" target="_blank" href="<%= liveUrl %>" title="<%= liveUrl %>"><%= liveUrl %></a>
+      </div>
   </div>
   <!-- ends Arquivo.pt logo -->  
   
@@ -45,14 +48,13 @@
  </div>
 </header>
   <div id="iframe_div">
-    <iframe name="replay_iframe" id="replay_iframe" src="<%- url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent" style="overflow:hidden;height: 100vh;width: 100%;max-width: 100%;max-height: 100%;
-      padding-top: 48px;">
+    <iframe name="replay_iframe" id="replay_iframe" src="<%- url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent">
     </iframe>
 
   </div>
 
   <!-- stars save page now modal pop-up message -->
-  <div id="modal">
+  <div id="modal" style="display:none">
     <section id="savepagenow-modal">
       <h3><%= t('services-savepagenow.recorder.popup.accessibility') %></h3>
       <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span><img id="logo-save-page-now-modal" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow">

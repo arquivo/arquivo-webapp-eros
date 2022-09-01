@@ -29,19 +29,18 @@ module.exports = function (req, res) {
             + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
             .catch(error => {
                 logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-                renderError('communication-failure');
             });
     }
     const renderOk = function () {
         res.render('pages/services-savepagenow-save', {
             url: config.get('services.savepagenow.url') + url,
             recordingUrl: config.get('wayback.url') + '/' + dateToTimestamp(new Date()) + '/' + url,
+            liveUrl: url
         });
         fetch(config.get('backend.url') + '/services/savepagenow?url=' + encodeURIComponent(url) + '&success=true&logging=true'
             + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
             .catch(error => {
                 logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-                renderError('communication-failure');
             });
     }
     const processUrl = function (url) {

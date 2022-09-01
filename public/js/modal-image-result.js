@@ -18,6 +18,31 @@ $(function () {
         }
       }
     };
+    let currentState = null;
+    let onModalClose = () => {
+        history.pushState(null,'');
+    }
+    
+    // History interactions (to be able to use back/forward on browser) 
+    window.addEventListener('popstate', (e) => {
+      if(!e.state){
+        modal.off($.modal.CLOSE);
+        $.modal.close();
+        currentState = null;
+      } else if(e.state.index) {
+        currentState = {...e.state};
+        if($.modal.isActive()){
+          const activeIndex = $('img.image-display').first().attr('data-index');
+          if(e.state.index < activeIndex){
+            modal.find('#previous-image-button').click();
+          } else {
+            modal.find('#next-image-button').click();
+          }
+        } else {
+          $('#image-card-'+e.state.index).click();
+        }
+      }
+    }, false);
 
     $("#images-results").on("click", "li.image-card", function (e) {
       const target = $(e.target).closest('li.image-card');
@@ -37,6 +62,28 @@ $(function () {
     });
 
     let setupModalImageDetails = function (imageData, target = modal) {
+
+      // modal "OPEN" and "CLOSE" events trigger too many times. 
+      // This is a workaround:
+      // 
+      // Open event trigger is set whenever the modal is populated. This allows the OPEN event to clear its own trigger.
+      modal.off($.modal.OPEN); //clear previous OPEN triggers, to make sure only one function is triggered on the OPEN event
+      modal.on($.modal.OPEN, () => {
+        modal.off($.modal.OPEN); //OPEN clears its own trigger, to make sure subsequent OPEN triggers dont call the callback again
+        modal.off($.modal.CLOSE); //OPEN clears CLOSE trigger, to make sure only one function is triggered on the CLOSE event
+        setTimeout(() => { //Add a timeout because for some reason the OPEN event triggers the CLOSE event as well. 0 second delay works 
+                           // because the CLOSE event is already on the queue, so the timeout event triggers afterwards.
+          modal.on($.modal.CLOSE, function () { //OPEN sets the CLOSE trigger, to make sure CLOSE only triggers when modal is open
+            onModalClose();
+            modal.off($.modal.CLOSE); //CLOSE clears its own trigger, to make sure irregular CLOSE triggers dont call the callback again
+          })
+        }, 0);
+      });
+
+      //Update history (to be able to use back/forward on browser) 
+      if(currentState?.index != imageData.index ){
+        history.pushState(imageData,'');
+      }
 
       const form = $('#search-result-form-' + imageData.index);
       if (form.length) {
@@ -206,19 +253,12 @@ $(function () {
       modal.find('#close-modal-tecnhical').click(function () {
         modal.draggable("enable");
       })
-      modal.on($.modal.OPEN, function () {
-        $(this).off($.modal.OPEN);
-        setTimeout(function () {
-          modal.on($.modal.CLOSE, function () {
-            modal.draggable("destroy");
-            $(this).off($.modal.CLOSE);
-          })
-        }, 100);
-      })
+      onModalClose = () => {
+        history.pushState(null,'');
+        modal.draggable("destroy");
+      }
 
     }
-
-
 
   }
 });

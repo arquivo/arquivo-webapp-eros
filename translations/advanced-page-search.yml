@@ -13,15 +13,15 @@ fieldset:
       en: '<strong>Date</strong>:'
   with:
     label: 
-      pt: '<strong>Tenham</strong> estas palavras:'
-      en: '<strong>With</strong> these words:'
+      pt: 'Tenham estas <strong>palavras</strong>:'
+      en: 'With these <strong>words</strong>:'
     example:
       pt: 'ex. expo 98'
       en: 'e.g. group draw'
   phrase:
     label:
-      pt: '<strong>Tenham</strong> esta expressão ou frase:'
-      en: '<strong>With</strong> this phrase:'
+      pt: 'Tenham esta <strong>expressão ou frase</strong>:'
+      en: 'With this <strong>phrase</strong>:'
     example:
       pt: 'ex. pavilhão da utopia'
       en: 'e.g. euro 2004'
@@ -42,11 +42,11 @@ fieldset:
         en: All formats
   website:
     label:
-      pt: '<strong>Sítio Web</strong>:'
-      en: '<strong>Website</strong>:'
+      pt: '<strong>Sítios Web,</strong> separados por vírgulas:'
+      en: '<strong>Websites,</strong> separated by commas:'
     example:
-      pt: 'ex. www.fccn.pt'
-      en: 'e.g. www.fccn.pt'
+      pt: 'ex. www.fccn.pt, www.fct.pt'
+      en: 'e.g. www.fccn.pt, www.fct.pt'
   results:
     label:
       pt: '<strong>Número de resultados</strong>:'

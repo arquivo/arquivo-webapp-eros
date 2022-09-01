@@ -95,19 +95,7 @@
 <!-- starts white background top corner rounded shape -->
 
 <%
-  const year = requestedPage.timestamp.slice(0, 4);
-  const month = requestedPage.timestamp.slice(4, 6);
-  const day = requestedPage.timestamp.slice(6, 8);
-  const hours = requestedPage.timestamp.slice(8, 10);
-  const minutes = requestedPage.timestamp.slice(10, 12);
-  const seconds = requestedPage.timestamp.slice(12, 14);
-  const date = t('common.date.long',{
-    year: year,
-    month: t('common.months.'+month),
-    day: parseInt(day),
-    hours: hours,
-    minutes: minutes
-  });
+  const date = utils.timestampToText(t).long(requestedPage.timestamp);
 %>
 
 <!-- starts shows url link of page selected and timestamp -->

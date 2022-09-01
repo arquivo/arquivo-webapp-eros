@@ -2,9 +2,11 @@
 <html lang="<%- getLanguage() %>">
     
     <head>
-    <!-- starts global document: <head>...</head> -->
-    <%- include("../templates/head",{pagename:'savepagenow'}) -%>
-    <!-- ends global document: <head>...</head> -->
+        <!-- starts global document: <head>...</head> -->
+        <%- include("../templates/head",{pagename:'savepagenow'}) -%>
+        <!-- ends global document: <head>...</head> -->
+  
+        <link rel="stylesheet" type="text/css" href="/css/styles-save-page-now.css" media="screen">
 
     </head>
 
@@ -15,15 +17,15 @@
         <%- include("../templates/fragments/skip-to-main-content") -%>
         <!-- ends skip to main content -->
         
-            <!-- adds headers for search engines -->
-            <%- include("../templates/header/header-search-engine") -%>
-            <!-- ends headers for search engines -->
+        <!-- adds headers for search engines -->
+        <%- include("../templates/header/header-search-engine") -%>
+        <!-- ends headers for search engines -->
 
-            <!-- starts include header home -->
-            <header>
-                 <!-- starts left, right and replay menus overlay modal -->
+        <!-- starts include header home -->
+        <header>
+            <!-- starts left, right and replay menus overlay modal -->
             <%- include("../templates/fragments/menus-overlay.ejs") -%>
-    <!-- ends left, right and replay menus overlay modal -->
+            <!-- ends left, right and replay menus overlay modal -->
             <!-- Include menu button -->
             <%- include("../templates/menu/menu-button") -%>
             <!-- end include menu button -->
@@ -39,51 +41,20 @@
             <!-- starts white background top corner rounded shape -->
             <div class="background-top-curve"></div>
             <!-- ends white background top corner rounded shape -->
-            </header>
-            <!-- ends header -->
+        </header>
+        <!-- ends header -->
 
-            <!-- starts main container-->
-            <main id="main-content">
-                <section id="home-content" class="home-content-cl">    
-                    <h3><%= t('services-savepagenow.form.accessibility') %></h3>
-                    <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span><img id="logo-save-page-now" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow">
-                    <h4 id="save-page-now-slogan"><%= t('services-savepagenow.form.text') %></h4>
-                
-                    <section id="search-tools">
-                    <form id="search-form" role="form" action="/services/savepagenow?l=<%= getLanguage() %>" method="POST">
-                    <span class="search-input-button">
-                        <input id="submit-search-input" type="search" placeholder="<%= t('services-savepagenow.form.label') %>" autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url" aria-label="<%= t('services-savepagenow.form.label') %>" value="<%- url %>">
-                        <button id="submit-search" type="submit" class="fa fa-video-camera" value="search menu button"><span class="button-title"><%= t('services-savepagenow.form.button') %></span></button>
-                    </span>
-                    
-                </form>
-
-                <script>
-                    const urlPattern = /^\s*(((http|https):\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)\/?)\s*$/;
-                    $('#search-form').submit(function( event ) {
-                        if ( !urlPattern.test( $( "#submit-search-input" ).val())) {
-                            event.preventDefault();
-                            $('#savepagenow-example').replaceWith('<p id="save-page-url-message-error"></p>');
-                            $('#save-page-url-message-error').text('<%= t('services-savepagenow.form.error.default') %>');
-                        }
-                    });
-                </script>
-                <% if (typeof error != 'undefined' && error){ %>
-                <p id="save-page-url-message-error"><%= t('services-savepagenow.form.error.'+errorType) %></p>
-                <% } else { %>
-                <small id="savepagenow-example"><%= t('services-savepagenow.form.example') %></small>
-                <% } %>
-            </section>
-                <p style="line-height: 27px;"><%- t('services-savepagenow.description') %></p>
-                </section>
-            </main>
+        <!-- starts main container-->
+        <main id="main-content">
+            <%- include("../templates/body/body-services-savepagenow") -%>
+        </main>
 
 
-            <!-- ends main container-->
+        <!-- ends main container-->
 
-            <!-- starts footer -->
-            <%- include("../templates/footer") -%>
-            <!-- ends footer -->   
+        <!-- starts footer -->
+        <%- include("../templates/footer") -%>
+        <!-- ends footer -->   
 
     </body>
     <!-- ends document body content -->
