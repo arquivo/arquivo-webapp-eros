@@ -1,14 +1,35 @@
 header {
-
     display: flex;
     justify-content: center;
     align-content: center;
     align-items: center;
+    padding-bottom:24px;
+}
+
+a#headerUrl {
+    max-width: calc( 100vh - 150px );
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    margin: 0px 10px -2px 0px;
+}
+
+a#headerUrl, span#headerTimestamp {
+    color:white;
+    font-size: 12.6px;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    max-width: 500px;
+}
+div#headerUrlContainer {
+    position: relative;
+    top: 12px;
 }
 
 .left {
     position: absolute;
-    top: 23px;
+    top: 35px;
     left: 10px;
     display: flex;
     flex-direction: row;
@@ -18,7 +39,7 @@ header {
 
 .right {
     position: absolute;
-    top: 17px;
+    top: 26px;
     right: 0px;
     display: flex;
     flex-direction: row;
@@ -57,11 +78,11 @@ header {
 
 iframe#replay_iframe {
     overflow: hidden; 
-    height: calc(100vh - 67px);
+    height: calc(100vh - 87px);
     width: 100%;
     max-width: 100%;
     max-height: 100%;
-    padding-top: 64px;
+    padding-top: 84px;
 }
 
 #colorchange {
@@ -124,7 +145,7 @@ header button#nav-options-right-button {
     }
 }
 
-@media (max-width:960px) {
+@media (max-width:1400px) {
     .left p {
         display: none;
     }
@@ -152,7 +173,7 @@ header button#nav-options-right-button {
         margin-bottom: 24px;
         margin-top: -25px;
         position: relative;
-        top: 108px;
+        top: 69px;
     }
 
     .image-width {
@@ -165,13 +186,29 @@ header button#nav-options-right-button {
 
     .right {
         position: relative;
-        margin-top: 55px;
-        margin-bottom: 20px;
+        margin-top: 42px;
+        margin-bottom: 5px;
     }
 
     iframe#replay_iframe {
-        padding-top: 177px;
-        height: calc(100vh - 180px);
+        padding-top: 153px;
+        height: calc(100vh - 156px);
+    }
+
+    div#headerUrlContainer {
+        top: 5px;
+        display: none;
+    }
+    
+    a#headerUrl {
+        max-width: 480px;
+    }
+
+}
+
+@media (max-width:650px) {
+    a#headerUrl {
+        max-width: 330px;
     }
 
 }

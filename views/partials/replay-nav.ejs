@@ -93,13 +93,7 @@
                     const time = item.hours + 'h' + item.minutes;
                     %>
                         <li class="<%= classNames %>"><a href="<%- href %>" replay-url="<%= item.url %>" replay-timestamp="<%= item.timestamp %>">
-                            <%= t('common.date.long',{
-                                year: item.year,
-                                month: t('common.months.'+item.month),
-                                day: parseInt(item.day),
-                                hours: item.hours,
-                                minutes: item.minutes,                  
-                            })%>
+                            <%= utils.timestampToText(t).long(item.timestamp) %>
                         </a></li><%
             });
             //Close months list            

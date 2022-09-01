@@ -89,18 +89,11 @@
             <tr class="date-month-table-row"><%
                   allYears.forEach(year => {
                     if(row < tableData[year].length ){
-                      const title = t('common.date.long',{
-                        year: year,
-                        month: t('common.months.'+tableData[year][row].month),
-                        day: parseInt(tableData[year][row].day),
-                        hours: tableData[year][row].hours,
-                        minutes: tableData[year][row].minutes
-                      })
+                      const title = utils.timestampToText(t).long(tableData[year][row].timestamp);
                       %> 
-              <td class="year-month-data" headers="year-<%= year %>" id="table-cell-<%- tableData[year][row].timestamp %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>"><%= t('common.date.short',{
-                month: t('common.shortMonths.'+tableData[year][row].month),
-                day: parseInt(tableData[year][row].day)
-              }) %></a></td>
+              <td class="year-month-data" headers="year-<%= year %>" id="table-cell-<%- tableData[year][row].timestamp %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>">
+                <%= utils.timestampToText(t).short(tableData[year][row].timestamp); %>
+              </a></td>
                       <% } else { %>
               <td></td>
                       <% } %>

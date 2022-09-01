@@ -1,45 +1,80 @@
 <!-- starts home content -->
-<section id="home-content" class="home-content-cl">    
-  <h3>Highlighted</h3>
+<section id="home-content" class="home-content-cl">
+    <h3>Highlighted</h3>
     <!-- starts Arquivo.pt Ward section -->
-    <article id="news" role="contentinfo" aria-label="information about arquivo.pt award" class="main"> 
-        <h4><%= t('home.arquivo-pt-award.header') %></h4>
-       <picture>
-            <source media="(min-width:320px) and (max-width:550px)" srcset="/img/homepage-premio-card-mobile-en.jpg" title="Click here to know more about this award">
-            <a href="<%- t('home.arquivo-pt-award.url') %>"><img src="<%- t('home.arquivo-pt-award.img') %>" alt="Click here to know more about this" title="Click here to know more about this"></a>
-       </picture>       
-    </article> 
-    <!-- ends Arquivo.pt Ward section --> 
-    <!-- starts what is Arquivo.pt -->   
-    <article id="what-is-arquivo-pt" role="contentinfo" aria-label="informational video about arquivo.pt public service">  
-        <h4><%= t('home.what-is-arquivo-pt.header') %></h4>
-          <iframe src="<%- t('home.what-is-arquivo-pt.video-url') %>" title="What is Arquivo.pt" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <article id="arquivo-pt-award" role="contentinfo" aria-label="information about arquivo.pt award" class="main wide">
+        <h4>
+            <%= t('home.arquivo-pt-award.header') %>
+        </h4>
+        <picture>
+            <source media="(min-width:320px) and (max-width:550px)" srcset="/img/homepage-premio-card-mobile-en.jpg"
+                title="Click here to know more about this award">
+            <a href="<%- t('home.arquivo-pt-award.url') %>"><img src="<%- t('home.arquivo-pt-award.img') %>"
+                    alt="Click here to know more about this" title="Click here to know more about this"></a>
+        </picture>
     </article>
-    <!-- ends what is Arquivo.pt -->     
+    <!-- ends Arquivo.pt Ward section -->
+
+    
+    <!-- starts what is Arquivo.pt -->
+    <article id="what-is-arquivo-pt" role="contentinfo"
+        aria-label="informational video about arquivo.pt public service">
+        <h4>
+            <%= t('home.what-is-arquivo-pt.header') %>
+        </h4>
+        <iframe src="<%- t('home.what-is-arquivo-pt.video-url') %>" title="What is Arquivo.pt"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </article>
+    <!-- ends what is Arquivo.pt -->
     <!-- starts testimonials -->
     <article id="testimonials" role="contentinfo" aria-label="testimonial video about arquivo.pt service">
-        <h4><%= t('home.testimonials.header') %></h4>
+        <h4>
+            <%= t('home.testimonials.header') %>
+        </h4>
         <figure>
-           <iframe src="<%- t('home.testimonials.video-url') %>" title="Testimonials about Arquivo.pt" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </figure>
-    </article> 
-    <!-- ends testimonials -->   
-    <!-- starts preserved pages -->
-    <article id="example-preserved-pages" role="contentinfo" aria-label="examples of arquivo.pt service preserved pages"> 
-        <h4><%= t('home.example-preserved-pages.header') %></h4>
-        <figure>
-            <a href="<%- t('home.example-preserved-pages.url') %>"><img src="/img/page-examples-<%= getLanguage() %>.jpg" alt="Click here to know more about preserved pages" title="Click here to know more about preserved pages"></a>
-            <div>
-
-            </div>
-        </figure>
-    </article>    
-    <article id="themed-exhibitions" role="contentinfo" aria-label="themed exhibitions about arquivo.pt service">
-        <h4><%= t('home.themed-exhibitions.header') %></h4>
-        <figure>
-        <a href="<%- t('home.themed-exhibitions.url') %>"><img src="/img/exhibitions-<%= getLanguage() %>.jpg" alt="Click here to know more about theme exhibitions" title="Click here to know more about theme exhibitions"></a>
+            <iframe src="<%- t('home.testimonials.video-url') %>" title="Testimonials about Arquivo.pt"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
         </figure>
     </article>
+    <!-- ends testimonials -->
     <!-- starts preserved pages -->
+    <article id="example-preserved-pages" role="contentinfo"
+        aria-label="examples of arquivo.pt service preserved pages">
+        <h4>
+            <%= t('home.example-preserved-pages.header') %>
+        </h4>
+        <figure>
+            <a href="<%- t('home.example-preserved-pages.url') %>"><img
+                    src="/img/page-examples-<%= getLanguage() %>.jpg"
+                    alt="Click here to know more about preserved pages"
+                    title="Click here to know more about preserved pages"></a>
+        </figure>
+    </article>
+    <article id="themed-exhibitions" role="contentinfo" aria-label="themed exhibitions about arquivo.pt service">
+        <h4>
+            <%= t('home.themed-exhibitions.header') %>
+        </h4>
+        <figure>
+            <a href="<%- t('home.themed-exhibitions.url') %>"><img src="/img/exhibitions-<%= getLanguage() %>.jpg"
+                    alt="Click here to know more about theme exhibitions"
+                    title="Click here to know more about theme exhibitions"></a>
+        </figure>
+    </article>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', color:'gray'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'training', color:'yellow'}}) %>
+    
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', color:'violet', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', color:'orange', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', color:'green', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', color:'blue', size: 'short'}}) %>
+
+
 </section>
 <!-- ends home content -->

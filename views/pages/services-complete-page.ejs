@@ -28,8 +28,9 @@
         <a id="logo-arquivo-link" href="/">
         <img id="logo-arquivo" src="/img/arquivo-logo-white.svg" alt="Arquivo.pt">
         </a>  
-        <div>
+        <div id="headerUrlContainer">
           <a id="headerUrl" class="headerUrl" target="_blank" href="<%- requestData.get('url') %>" title="<%- requestData.get('url') %>"><%- requestData.get('url') %></a>
+          <span id="headerTimestamp" class="headerTimestamp"><%- utils.timestampToText(t).long(requestData.get('timestamp'))%></span>
         </div>
     </div>
     <!-- ends Arquivo.pt logo -->  

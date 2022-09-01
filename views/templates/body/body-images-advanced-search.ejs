@@ -12,7 +12,9 @@ let values = {
 let selectFor = function(key,value){
   return (value == values[key]) ? 'selected' : '';
 }
-
+let checkTypeFor = function(type){
+  return (values.type == 'all' || values.type.split(',').some(x => x==type)) ? 'checked' : '';
+}
 if(typeof requestData != 'undefined'){
   Object.keys(values)
     .filter(key => requestData.has(key))
@@ -47,14 +49,32 @@ if(typeof requestData != 'undefined'){
   <%- include('../fragments/search-tools-date-slider') %>
    <!-- Formats -->
    <label for="type"><%- t('advanced-image-search.fieldset.format.label') %></label>
-   <select id="format-type" name="type" class="">
-    <option value="all" <%= selectFor('type','all') %>><%= t('advanced-image-search.fieldset.format.option.all') %></option>
-    <option value="jpg" <%= selectFor('type','jpg') %>>Joint Photographic Experts Group (.jpg)</option>
-    <option value="png" <%= selectFor('type','png') %>>Portable Network Graphics (.png)</option>
-    <option value="gif" <%= selectFor('type','gif') %>>Graphics Interchange Format (.gif)</option>
-    <option value="bmp" <%= selectFor('type','bmp') %>>Bitmap Image File (.bmp)</option>
-    <option value="webp" <%= selectFor('type','webp') %>>WEBP (.webp)</option>
-   </select>  
+   <input type="hidden" id="format-type" name="type">
+    <table id="table-format">
+      <tbody>
+        <tr>
+          <td><input type="checkbox" format="all" <%= checkTypeFor('all') %>></td>
+          <td><label><strong><%= t('advanced-image-search.fieldset.format.option.all') %></strong></label></td>
+      
+          <td><input type="checkbox" format="gif" <%= checkTypeFor('gif') %>></td>
+          <td><label>Graphics Interchange Format (.gif)</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" format="jpg" <%= checkTypeFor('jpg') %>></td>
+          <td><label>Joint Photographic Experts Group (.jpg)</label></td>
+      
+          <td><input type="checkbox" format="bmp" <%= checkTypeFor('bmp') %>></td>
+          <td><label>Bitmap Image File (.bmp)</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" format="png" <%= checkTypeFor('png') %>></td>
+          <td><label>Portable Network Graphics (.png)</label></td>
+      
+          <td><input type="checkbox" format="webp" <%= checkTypeFor('webp') %>></td>
+          <td><label>WEBP (.webp)</label></td>
+        </tr>
+      </tbody>
+    </table>
    <!-- words -->
    <label for="size"><%- t('advanced-image-search.fieldset.size.label') %></label>
     <select id="image-size" name="size" class="">

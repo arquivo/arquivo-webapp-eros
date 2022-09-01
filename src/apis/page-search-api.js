@@ -21,6 +21,19 @@ class PageSearchApiRequest extends ApiRequest {
         
         super(config.get('text.search.api'),defaultApiParams);
     }
+
+    sanitizeRequestData(requestData) {
+        const apiRequestData = new URLSearchParams(requestData);
+
+        ['site', 'type', 'collection','safe','size'].forEach(inlineParam => {
+            const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
+            if (apiRequestData.has(requestParam)) {
+                const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)
+                apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
+            }
+        });
+        return super.sanitizeRequestData(apiRequestData);
+    }
 }
 
 module.exports = PageSearchApiRequest;
