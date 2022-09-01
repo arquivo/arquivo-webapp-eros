@@ -140,7 +140,7 @@ function handleURL(req, res) {
         }
         res.send({
             status: true,
-            message: 'Text uploaded',
+            message: 'Link uploaded',
             data: {
                 name: url,
                 mimetype: '',
