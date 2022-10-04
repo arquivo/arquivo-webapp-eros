@@ -133,8 +133,8 @@ memorial:
     pt: O Memorial do Arquivo.pt preserva o seu site antigo 
     en: Arquivo.pt's Memorial preserves your old website 
   url:
-    pt: arquivo.pt/memorial
-    en: arquivo.pt/memorialen
+    pt: 'https://arquivo.pt/memorial'
+    en: 'https://arquivo.pt/memorialen'
 
 savepagenow:
   header:
