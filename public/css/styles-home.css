@@ -15,6 +15,10 @@ article {
     height: fit-content;
 }
 
+article.home-card>h4 {
+    display:none;
+}
+
 article figure {
     border-radius: 3px;
     position: relative;
@@ -156,4 +160,12 @@ article h3 {
     font-weight: normal;
     color: black !important;
     line-height: 0.9em !important;
+}
+
+/* Device = Tablets and Mobiles */
+@media (min-width: 0px) and (max-width: 767px) {
+   article.home-card {
+        width: 100%;
+    }
+
 }
