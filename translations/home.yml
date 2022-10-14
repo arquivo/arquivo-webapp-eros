@@ -67,6 +67,12 @@ example-preserved-pages:
   header:
     pt: 'Exemplos de páginas preservadas'
     en: 'Examples of preserved pages'
+  title:
+    pt: 'Exemplos de páginas preservadas'
+    en: 'Examples of preserved pages'
+  text1: 
+    pt: Explore o Arquivo.pt através da nossa selecção de páginas preservadas
+    en: Explore Arquivo.pt through our selection of preserved webpages
   url:
     pt: https://arquivo.pt/exemplos
     en: https://arquivo.pt/examples
@@ -75,6 +81,15 @@ themed-exhibitions:
   header:
     pt: 'Exposições temáticas'
     en: 'Themed exhibitions'
+  title:
+    pt: 'Exposições temáticas'
+    en: 'Themed exhibitions'
+  text1: 
+    pt: Coleções de páginas do passado preservadas, agrupadas pelo critério institucional ou temático
+    en: Collections of preserved pages from the past, grouped by institutional or topic scope
+  imgAlt: 
+    pt: Coleções de páginas do passado preservadas, agrupadas pelo critério institucional ou temático
+    en: Collections of preserved pages from the past, grouped by institutional or topic scope
   url:
     pt: https://arquivo.pt/expos
     en: https://arquivo.pt/exhibitions

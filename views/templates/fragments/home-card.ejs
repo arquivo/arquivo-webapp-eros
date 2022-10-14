@@ -12,7 +12,7 @@ let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardC
 
 
 
-<article role="contentinfo" aria-label="" class="<%- configs.size ? configs.size : '' %>">
+<article role="contentinfo" aria-label="" class="<%- configs.size ? configs.size : '' %> home-card">
     <h4>
         <%= t('home.'+configs.cardName+'.header') %>
     </h4>
@@ -32,7 +32,7 @@ let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardC
                 </div>
                 <% } %>
             </div>
-            <img src="/img/home-card-<%- configs.color %>.svg" alt="<%= t('home.'+configs.cardName+'.imgAlt') %>"
+            <img src="/img/home-card-<%- configs.color %>.jpg" alt="<%= t('home.'+configs.cardName+'.imgAlt') %>"
                 title="<%= t('home.'+configs.cardName+'.imgAlt') %>" class="card">
         </a>
     </figure>

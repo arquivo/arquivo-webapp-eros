@@ -40,9 +40,9 @@
     </article>
     <!-- ends testimonials -->
     <!-- starts preserved pages -->
-    <article id="example-preserved-pages" role="contentinfo"
+    <!-- <article id="example-preserved-pages" role="contentinfo"
         aria-label="examples of arquivo.pt service preserved pages">
-        <h4>
+        <h4">
             <%= t('home.example-preserved-pages.header') %>
         </h4>
         <figure>
@@ -53,7 +53,7 @@
         </figure>
     </article>
     <article id="themed-exhibitions" role="contentinfo" aria-label="themed exhibitions about arquivo.pt service">
-        <h4>
+        <h4">
             <%= t('home.themed-exhibitions.header') %>
         </h4>
         <figure>
@@ -61,7 +61,12 @@
                     alt="Click here to know more about theme exhibitions"
                     title="Click here to know more about theme exhibitions"></a>
         </figure>
-    </article>
+    </article> -->
+
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'example-preserved-pages', color:'green', size: false}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'themed-exhibitions', color:'blue', size: false}}) %>
 
     <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', color:'gray'}}) %>
 
