@@ -65,11 +65,11 @@ testimonials:
 
 example-preserved-pages:
   header:
-    pt: 'Exemplos de páginas preservadas'
-    en: 'Examples of preserved pages'
+    pt: 'Exemplos de páginas'
+    en: 'Examples of pages'
   title:
-    pt: 'Exemplos de páginas preservadas'
-    en: 'Examples of preserved pages'
+    pt: 'Exemplos de páginas'
+    en: 'Examples of pages'
   text1: 
     pt: Explore o Arquivo.pt através da nossa selecção de páginas preservadas
     en: Explore Arquivo.pt through our selection of preserved webpages
