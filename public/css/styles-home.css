@@ -16,7 +16,7 @@ article {
 }
 
 article.home-card>h4 {
-    display:none;
+    display: none;
 }
 
 article figure {
@@ -36,13 +36,13 @@ article.wide img.card {
 
 article.short img.card {
     min-height: unset;
-    max-height: 165px;
+    height: 200px;
 }
 
 article figure .card-text {
     transform: translateX(-50%);
     position: absolute;
-    left: 50%;
+    left: calc(50% - 5px);
     top: 10%;
     z-index: 1;
     display: inline-block;
@@ -67,36 +67,40 @@ article.wide figure .card-text {
     top: 20%;
     text-align: center;
 }
+
 article figure .card-text .title-wrapper {
-    display:block;
-    margin-bottom: 30px;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 20px;
 
 }
+
 article figure .card-text p.title {
     font-weight: 700;
-    font-size: 32px;
-    display:inline-block;
+    font-size: 28px;
+    display: inline-block;
 }
 
 article figure .card-text p.subtitle {
     font-weight: 400;
-    font-size: 32px;
+    font-size: 28px;
     font-style: italic;
-    display:inline-block;
+    display: inline-block;
     margin-left: -5px;
 }
 
 article figure .card-text p.text {
-    font-weight: 300;
-    font-size: 20px;
+    font-weight: 400;
+    opacity: 0.65;
+    font-size: 18px;
     line-height: 1.3;
     width: 70%;
     padding-left: 30%;
 }
 
 article.wide figure .card-text p.text {
-    width:100%;
-    padding:0;
+    width: 100%;
+    padding: 0;
 }
 
 article figure p.know-more {
@@ -119,6 +123,7 @@ article figure img {
     filter: saturate(1) sepia(0.1);
     transition: 1s;
 }
+
 article:hover figure img.card {
     filter: saturate(1) sepia(0.1);
     transition: 1s;
@@ -164,8 +169,31 @@ article h3 {
 
 /* Device = Tablets and Mobiles */
 @media (min-width: 0px) and (max-width: 767px) {
-   article.home-card {
+    article {
         width: 100%;
+    }
+
+    article figure .card-text {
+        text-align: center;
+    }
+
+    article figure .card-text p.text {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+
+    article figure .card-text {
+        left: 50%;
+    }
+
+    article figure .card-text p.title,
+    article figure .card-text p.subtitle {
+        font-size: 30px;
+    }
+
+
+    article figure .card-text .title-wrapper {
+        margin-top: 20px;
     }
 
 }
