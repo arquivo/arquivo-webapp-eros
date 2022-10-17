@@ -39,46 +39,22 @@
         </figure>
     </article>
     <!-- ends testimonials -->
-    <!-- starts preserved pages -->
-    <!-- <article id="example-preserved-pages" role="contentinfo"
-        aria-label="examples of arquivo.pt service preserved pages">
-        <h4">
-            <%= t('home.example-preserved-pages.header') %>
-        </h4>
-        <figure>
-            <a href="<%- t('home.example-preserved-pages.url') %>"><img
-                    src="/img/page-examples-<%= getLanguage() %>.jpg"
-                    alt="Click here to know more about preserved pages"
-                    title="Click here to know more about preserved pages"></a>
-        </figure>
-    </article>
-    <article id="themed-exhibitions" role="contentinfo" aria-label="themed exhibitions about arquivo.pt service">
-        <h4">
-            <%= t('home.themed-exhibitions.header') %>
-        </h4>
-        <figure>
-            <a href="<%- t('home.themed-exhibitions.url') %>"><img src="/img/exhibitions-<%= getLanguage() %>.jpg"
-                    alt="Click here to know more about theme exhibitions"
-                    title="Click here to know more about theme exhibitions"></a>
-        </figure>
-    </article> -->
 
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', color:'green', size: 'short'}}) %>
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'example-preserved-pages', color:'green', size: 'short'}}) %>
-
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'themed-exhibitions', color:'blue', size: 'short'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', color:'blue', size: 'short'}}) %>
 
     <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'news', color:'gray'}}) %>
 
     <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'training', color:'yellow'}}) %>
     
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', color:'violet', size: 'short'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'example-preserved-pages', color:'violet', size: 'short'}}) %>
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'suggest', color:'orange', size: 'short'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'themed-exhibitions', color:'orange', size: 'short'}}) %>
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'savepagenow', color:'green', size: 'short'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', color:'pink', size: 'short'}}) %>
 
-    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', color:'blue', size: 'short'}}) %>
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', color:'white', size: 'short'}}) %>
 
 
 </section>

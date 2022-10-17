@@ -71,6 +71,9 @@ example-preserved-pages:
     pt: 'Exemplos de páginas'
     en: 'Examples of pages'
   text1: 
+    pt: Conheça algumas páginas preservadas
+    en: Browse a few preserved pages
+  imgAlt: 
     pt: Explore o Arquivo.pt através da nossa selecção de páginas preservadas
     en: Explore Arquivo.pt through our selection of preserved webpages
   url:
@@ -85,8 +88,8 @@ themed-exhibitions:
     pt: 'Exposições temáticas'
     en: 'Themed exhibitions'
   text1: 
-    pt: Coleções de páginas do passado preservadas, agrupadas pelo critério institucional ou temático
-    en: Collections of preserved pages from the past, grouped by institutional or topic scope
+    pt: Explore coleções de páginas do passado agrupadas por tema
+    en: Explore collections past-web pages grouped by theme
   imgAlt: 
     pt: Coleções de páginas do passado preservadas, agrupadas pelo critério institucional ou temático
     en: Collections of preserved pages from the past, grouped by institutional or topic scope
@@ -102,34 +105,14 @@ news:
     pt: Notícias
     en: News
   text1: 
-    pt: Conheça as últimas novidades no âmbito da preservação digital
-    en: Find out more about the latest developments on digital preservation
+    pt: Fique a par das últimas novidades
+    en: Follow our latest updates
   imgAlt: 
     pt: Conheça as últimas novidades no âmbito da preservação digital
     en: Find out more about the latest developments on digital preservation
   url:
     pt: https://sobre.arquivo.pt/pt/category/noticias/
     en: https://sobre.arquivo.pt/en/category/news-en/
-
-test:
-  header:
-    pt: Cartão de teste
-    en: Test Card
-  title: 
-    pt: Cartão&nbsp;
-    en: Test
-  subtitle: 
-    pt: de Teste
-    en: Card
-  text1: 
-    pt: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-    en: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-  imgAlt: 
-    pt: Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
-    en: Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam
-  url:
-    pt: /
-    en: /
 
 memorial:
   header:
@@ -138,14 +121,11 @@ memorial:
   title: 
     pt: Memorial
     en: Memorial
-  subtitle: 
-    pt: '<img src="/img/arquivo-logo-black.svg" alt="Arquivo.pt" style="margin-bottom:-8px;height:32px;margin-left: 5px;"></img>'
-    en: '<img src="/img/arquivo-logo-black.svg" alt="Arquivo.pt" style="margin-bottom:-8px;height:32px;margin-left: 5px;"></img>'
   text1: 
-    pt: O Memorial do Arquivo.pt preserva o seu site antigo 
-    en: Arquivo.pt's Memorial preserves your old website 
+    pt: Preserve o seu antigo website antes de o desativar 
+    en: Preserve your old website before deactivating it
   imgAlt: 
-    pt: O Memorial do Arquivo.pt preserva o seu site antigo 
+    pt: O Memorial do Arquivo.pt preserva o seu site antigo  
     en: Arquivo.pt's Memorial preserves your old website 
   url:
     pt: 'https://arquivo.pt/memorial'
@@ -162,11 +142,11 @@ savepagenow:
     pt: Now
     en: Now
   text1: 
-    pt: Grave páginas no Arquivo.pt 
-    en: Record webpages on Arquivo.pt 
+    pt: Arquive uma página imediatamente
+    en: Archive a webpage immediately
   imgAlt: 
-    pt: Grava páginas no Arquivo.pt 
-    en: Record webpages on Arquivo.pt 
+    pt: Arquive uma página imediatamente
+    en: Archive a webpage immediately 
   url:
     pt: /services/savepagenow
     en: /services/savepagenow
@@ -176,8 +156,8 @@ suggest:
     pt: Sugira sites
     en: Suggest webpages
   title: 
-    pt: Sugira&nbsp;
-    en: Suggest&nbsp;
+    pt: Sugira
+    en: Suggest
   subtitle: 
     pt: Site
     en: Site
@@ -203,10 +183,10 @@ arquivo404:
     en: 404
   text1: 
     pt: Acabe com as “Páginas não encontradas” no seu website
-    en: Put an end to “page not found” on your website
+    en: Fix "pages not found" on your website
   imgAlt: 
     pt: Acabe com as “Páginas não encontradas” no seu website
-    en: Put an end to “page not found” on your website
+    en: Fix "pages not found" on your website
   url:
     pt: 'https://arquivo.pt/arquivo404'
     en: 'https://arquivo.pt/arquivo404en'
@@ -222,8 +202,8 @@ training:
     pt: ''
     en: Courses
   text1: 
-    pt: Formações oferecidas pelo Arquivo.pt  
-    en: Training courses provided by Arquivo.pt 
+    pt: Aprenda como preservar informação digital  
+    en: Learn how to preserve digital information 
   imgAlt: 
     pt: Formações oferecidas pelo Arquivo.pt na área de preservação e investigação sobre informação preservada da Web. 
     en: Training courses provided by Arquivo.pt in the areas of web preservation and research.
