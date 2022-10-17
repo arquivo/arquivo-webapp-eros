@@ -68,8 +68,8 @@ example-preserved-pages:
     pt: 'Exemplos de páginas'
     en: 'Examples of pages'
   title:
-    pt: 'Exemplos de páginas'
-    en: 'Examples of pages'
+    pt: 'Exemplos'
+    en: 'Examples'
   text1: 
     pt: Conheça algumas páginas preservadas
     en: Browse a few preserved pages
@@ -85,8 +85,8 @@ themed-exhibitions:
     pt: 'Exposições temáticas'
     en: 'Themed exhibitions'
   title:
-    pt: 'Exposições temáticas'
-    en: 'Themed exhibitions'
+    pt: 'Exposições'
+    en: 'Exhibitions'
   text1: 
     pt: Explore coleções de páginas do passado agrupadas por tema
     en: Explore collections past-web pages grouped by theme
@@ -158,9 +158,6 @@ suggest:
   title: 
     pt: Sugira
     en: Suggest
-  subtitle: 
-    pt: Site
-    en: Site
   text1: 
     pt: Sugira websites para serem preservados
     en: Suggest webpages to be preserved
@@ -197,10 +194,7 @@ training:
     en: Training Courses
   title: 
     pt: Formação
-    en: Training&nbsp;
-  subtitle: 
-    pt: ''
-    en: Courses
+    en: Training
   text1: 
     pt: Aprenda como preservar informação digital  
     en: Learn how to preserve digital information 
