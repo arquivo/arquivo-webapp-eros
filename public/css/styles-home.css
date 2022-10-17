@@ -117,6 +117,10 @@ article figure div.know-more-wrapper {
     margin-top: 37px;
 }
 
+article.home-card figure a {
+    height: 200px;
+    display: block;
+}
 
 article figure img {
     height: 100%;
@@ -125,8 +129,11 @@ article figure img {
 }
 
 article:hover figure img.card {
-    filter: saturate(1) sepia(0.1);
-    transition: 1s;
+    filter: none
+}
+
+article figure img.card {
+    filter: none
 }
 
 article:hover figure img {

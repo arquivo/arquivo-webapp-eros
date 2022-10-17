@@ -12,7 +12,7 @@ let configs = {...defaultConfigs, ...(typeof cardConfigs !== 'undefined' ? cardC
 
 
 
-<article role="contentinfo" aria-label="" class="<%- configs.size ? configs.size : '' %> home-card">
+<article role="contentinfo" aria-label="" class="<%- configs.size ? configs.size : '' %> home-card card-<%- configs.cardName %>">
     <h4>
         <%= t('home.'+configs.cardName+'.header') %>
     </h4>
