@@ -35,5 +35,5 @@ popup:
     en: "The document was successfully uploaded. It's cited links will soon be available on Arquivo.pt."
     pt: 'O documento foi transferido com sucesso. Os recursos online citados no documento ficarão disponíveis em breve no Arquivo.pt'
 button:
-  en: "Save Citations"
-  pt: "Guarde Citações"
+  en: "Save citations"
+  pt: "Guarde citações"
