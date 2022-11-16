@@ -12,16 +12,28 @@ description:
     en: "CitationSaver preserves the content of cited links (e.g. references to web pages in a book) so that they can be later recovered from Arquivo.pt."
     pt: 'O serviço CitationSaver permite preservar estes recursos (ex. referências a páginas web num livro) arquivando-o no Arquivo.pt'
 url:
-  1:
     en: "Insert the URL to the document:"
     pt: 'Insira o URL do documento:'
+upload:
+    en: "Upload a document from your computer:"
+    pt: 'Carregue um documento a partir do seu computador:'
+text:
+    en: "Insert a text containing URLs:"
+    pt: 'Inserir um texto contendo URLs:'
+field:
+  1:
+    en: "Accepted formats: PDF and TXT. Limit: 100 MB"
+    pt: 'Formatos aceites: PDF e TXT. Limite: 100 MB'
   2:
-    en: "Accepted formats: PDF, TXT. Limit: 100 MB"
-    pt: 'Formatos aceites: PDF, TXT. Limite: 100 MB'
+    en: "Email (optional):"
+    pt: 'Email (opcional):'
 popup:
   accessibility:
-    en: 'Notification Popup'
+    en: "Notification Popup"
     pt: 'Janela de notificação'
   text:
-    en: The document was successfully uploaded. It's cited links will soon be available on Arquivo.pt.
-    pt: O documento foi transferido com sucesso. Os recursos online citados no documento ficarão disponíveis em breve no Arquivo.pt 
+    en: "The document was successfully uploaded. It's cited links will soon be available on Arquivo.pt."
+    pt: 'O documento foi transferido com sucesso. Os recursos online citados no documento ficarão disponíveis em breve no Arquivo.pt'
+button:
+  en: "Save Citations"
+  pt: "Guarde Citações"

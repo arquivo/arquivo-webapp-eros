@@ -11,29 +11,29 @@
         <label for="input-url">URL</label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post">
-                <label for="input-url-url"><%- t('services-citation-saver.url.1') %></label>
+                <label for="input-url-url"><%- t('services-citation-saver.url') %></label>
                 <input type="text" name="url" id="input-url-url">
-                <small><%- t('services-citation-saver.url.2') %></small>
+                <small><%- t('services-citation-saver.field.1') %></small>
 
-                <label for="input-url-email">Email (optional):</label>
+                <label for="input-url-email"><%- t('services-citation-saver.field.2') %></label>
                 <input type="text" name="email" id="input-url-email">
 
-                <button type="submit">Save</button>
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
             </form>
         </div>
         <input type="radio" name="input-selection" id="input-file-upload">
         <label for="input-file-upload">File Upload</label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post" enctype="multipart/form-data">
-                <label for="input-file-file">Upload a document from your computer:</label>
+                <label for="input-file-file"><%- t('services-citation-saver.upload') %></label>
                 <input type="file" name="file" id="input-file-file">
-                <small>Accepted formats: PDF</small>
+                <small><%- t('services-citation-saver.field.1') %></small>
 
 
-                <label for="input-file-email">Email (optional):</label>
+                <label for="input-file-email"><%- t('services-citation-saver.field.2') %></label>
                 <input type="text" name="email" id="input-file-email">
 
-                <button type="submit">Save</button>
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
             </form>
         </div>
 
@@ -41,14 +41,14 @@
         <label for="input-text">Text</label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post">
-                <label for="input-text-text">Insert a text containing links:</label>
+                <label for="input-text-text"><%- t('services-citation-saver.text') %></label>
                 <textarea id="input-text-text" name="text"></textarea>
 
 
-                <label for="input-text-email">Email (optional):</label>
+                <label for="input-text-email"><%- t('services-citation-saver.field.2') %></label>
                 <input type="text" name="email" id="input-text-email">
 
-                <button type="submit">Save</button>
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
             </form>
         </div>
     </div>
