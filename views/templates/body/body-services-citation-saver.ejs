@@ -11,9 +11,9 @@
         <label for="input-url">URL</label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post">
-                <label for="input-url-url">Insert the URL to the document:</label>
+                <label for="input-url-url"><%- t('services-citation-saver.url.1') %></label>
                 <input type="text" name="url" id="input-url-url">
-                <small>Accepted formats: PDF</small>
+                <small><%- t('services-citation-saver.url.2') %></small>
 
                 <label for="input-url-email">Email (optional):</label>
                 <input type="text" name="email" id="input-url-email">
