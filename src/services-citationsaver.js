@@ -141,25 +141,24 @@ function handleURL(req, res) {
         .then((r) => {
             function throwExpectedError(message) {
                 expectedError = true;
+                logger.info('Blocking submitted URL: "' + url +'" Reason: "' + message + '"');
                 throw new Error(message);
             }
 
             if (!r.ok) {
-                throwExpectedError('Could not access website: ' + url);
+                throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
             }
 
             mimetype = r.headers.get('content-type');
             filesize = r.headers.get('content-length');
 
             if (!mimeToExtension[mimetype.split(';')[0]]) {
-                throwExpectedError('Invalid MIME type: ' + mimetype);
+                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
             }
 
             if (Number(filesize) > maxUploadSize) {
-                throwExpectedError('File exceeds maximum size');
+                throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
             }
-
-            logger.info('FetchUrlOK: '+fetchUrl)
 
         }).then(() => {
 

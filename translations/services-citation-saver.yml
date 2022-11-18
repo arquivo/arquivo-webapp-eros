@@ -34,6 +34,20 @@ popup:
   text:
     en: "The document was successfully uploaded. It's cited links will soon be available on Arquivo.pt."
     pt: 'O documento foi transferido com sucesso. Os recursos online citados no documento ficarão disponíveis em breve no Arquivo.pt'
+errors:
+  URL:
+    invalid:
+      en: URL not found. Make sure the address is correct. 
+      pt: URL não encontrado. Verifique se o endereço está correto.
+    mimetype:
+      en: The URL was not submitted. The document format must be PDF or TXT.
+      pt: O URL não foi submetido. O formato do documento tem de ser PDF ou TXT.
+    filesize:
+      en: The URL was not submitted. The document size must be under 100 MB.
+      pt: O URL não foi submetido. A dimensão do documento não pode exceder os 100 MB.
+    default:
+      en: Something went wrong, we could not accept the URL.
+      pt: Algo correu mal, não conseguimos aceitar o URL.
 button:
   en: "Save citations"
   pt: "Guarde citações"
