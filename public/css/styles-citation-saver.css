@@ -164,7 +164,7 @@ section#citation-saver-modal p {
 }
 
 section#citation-saver-modal p.error {
-    color:red;
+    color:black;
     font-weight: 700;
 }
 

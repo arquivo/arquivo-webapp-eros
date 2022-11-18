@@ -80,10 +80,10 @@ function handleFile(req, res) {
 
     if (uploadedFile.size > maxUploadSize) {
 
-        logger.error('File exceeds maximum size');
+        logger.error('File exceeds maximum size of 100 MB');
         res.send({
             status: false,
-            message: 'File exceeds maximum size'
+            message: 'File exceeds maximum size of 100 MB'
         });
         return;
     }
