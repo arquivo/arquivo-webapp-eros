@@ -1,7 +1,6 @@
 
 const fetch = require('node-fetch');
 const https = require('https');
-const http = require('https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -24,10 +23,10 @@ async function addToSpreadsheet(row) {
 }
 
 const mimeToExtension = {
-    "application/msword": "doc",
+    // "application/msword": "doc",
     "application/pdf": "pdf",
     "text/plain": "txt",
-    "text/html": "html"
+    // "text/html": "html"
 }
 module.exports = function (req, res) {
     try {
@@ -69,7 +68,7 @@ function handleFile(req, res) {
 
     const outExtension = mimeToExtension[uploadedFile.mimetype];
     if (!outExtension) {
-        
+
         logger.error('Invalid MIME type');
         res.send({
             status: false,
@@ -96,10 +95,10 @@ function handleFile(req, res) {
 
     uploadedFile.mv(path);
 
-    logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path]);
 
+    logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
     res.send({
         status: true,
         message: 'File uploaded',
@@ -126,31 +125,89 @@ function handleURL(req, res) {
         return;
     }
 
-    const outExtension = 'link';
-    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
-    const date = (new Date()).toLocaleDateString('en-CA');
-    const timestamp = Date.now();
-    const email = req.body?.email ?? '';
-    const path = './uploads/CitationSaver/' + newName;
+    let expectedError = false;
 
-    fs.writeFile(path, url, err => {
-        if (err) {
-            fs.unlink(path);
-            throw err;
-        }
-        res.send({
-            status: true,
-            message: 'Link uploaded',
-            data: {
-                name: url,
-                mimetype: '',
-                size: url.length
+    const startsWithHttp = /^https?:\/\//
+    const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url.toLowerCase() : 'https://' + url.toLowerCase();
+    const fetchOptions = { 
+        method: 'HEAD'
+    };
+
+    https.globalAgent = new https.Agent({
+        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
+    });
+
+    fetch(fetchUrl, fetchOptions)
+        .then((r) => {
+            function throwExpectedError(message) {
+                expectedError = true;
+                throw new Error(message);
+            }
+
+            if (!r.ok) {
+                throwExpectedError('Could not access website: ' + url);
+            }
+
+            mimetype = r.headers.get('content-type');
+            filesize = r.headers.get('content-length');
+
+            if (!mimeToExtension[mimetype.split(';')[0]]) {
+                throwExpectedError('Invalid MIME type: ' + mimetype);
+            }
+
+            if (Number(filesize) > maxUploadSize) {
+                throwExpectedError('File exceeds maximum size');
+            }
+
+            logger.info('FetchUrlOK: '+fetchUrl)
+
+        }).then(() => {
+
+            const outExtension = 'link';
+            const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+            const date = (new Date()).toLocaleDateString('en-CA');
+            const timestamp = Date.now();
+            const email = req.body?.email ?? '';
+            const path = './uploads/CitationSaver/' + newName;
+
+            fs.writeFile(path, url, err => {
+                if (err) {
+                    fs.unlink(path);
+                    throw err;
+                }
+                res.send({
+                    status: true,
+                    message: 'Link uploaded',
+                    data: {
+                        name: url,
+                        mimetype: '',
+                        size: url.length
+                    }
+                });
+
+                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
+                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+            });
+
+
+        })
+
+
+
+
+
+        .catch((err) => {
+            if (expectedError) {
+                res.send({
+                    status: false,
+                    message: err.message
+                })
+            } else {
+                unexpectedError(res, err);
             }
         });
 
-        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email );
-        addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
-    });
+
 
 }
 
@@ -160,7 +217,7 @@ function handleText(req, res) {
     if (text.length > maxUploadSize) {
         res.send({
             status: false,
-            message: 'Text exceeds maximum size'
+            message: 'Text exceeds maximum size of ' + maxUploadSize + 'Bytes'
         });
         return;
     }
@@ -188,7 +245,7 @@ function handleText(req, res) {
             }
         });
 
-        logger.info('Text saved: ' + newName + '\tEmail: ' + email );
         addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path]);
+        logger.info('Text saved: ' + newName + '\tEmail: ' + email);
     });
 }
