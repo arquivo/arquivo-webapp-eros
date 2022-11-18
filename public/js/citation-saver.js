@@ -20,7 +20,7 @@ $(() => {
                 } else {
                     $('#modal p.text').hide();
                     $('#modal p.error').show();
-                    $('#modal p.error').text('ERROR!! ' +JSON.stringify(data.message));
+                    $('#modal p.error').text(JSON.stringify(data.message));
                 }
                 
                 $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
