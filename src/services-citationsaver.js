@@ -37,9 +37,10 @@ module.exports = function (req, res) {
         } else if (req.body?.file || req.files) {
             handleFile(req, res);
         } else {
+            logger.error('Malformed form.');
             res.send({
                 status: false,
-                message: 'Malformed form.'
+                message: req.t('services-citation-saver.errors.default')
             });
             return;
         }
@@ -50,7 +51,10 @@ module.exports = function (req, res) {
 
 function unexpectedError(res, err) {
     logger.error(err);
-    res.status(500).send(err);
+    res.send({
+        status: false,
+        message: req.t('services-citation-saver.errors.default')
+    });
 }
 
 function handleFile(req, res) {
@@ -58,7 +62,7 @@ function handleFile(req, res) {
     if (!req.files) {
         res.send({
             status: false,
-            message: 'No file uploaded'
+            message: req.t('services-citation-saver.errors.file.missing')
         });
         return;
     }
@@ -72,17 +76,17 @@ function handleFile(req, res) {
         logger.error('Invalid MIME type');
         res.send({
             status: false,
-            message: 'Invalid MIME type'
+            message: req.t('services-citation-saver.errors.file.mimetype')
         });
         return;
     }
 
     if (uploadedFile.size > maxUploadSize) {
 
-        logger.error('File exceeds maximum size of 100 MB');
+        logger.error('File exceeds maximum size');
         res.send({
             status: false,
-            message: 'File exceeds maximum size of 100 MB'
+            message: req.t('services-citation-saver.errors.file.filesize')
         });
         return;
     }
@@ -120,7 +124,7 @@ function handleURL(req, res) {
     if (!isValidUrl(url)) {
         res.send({
             status: false,
-            message: 'Invalid URL'
+            message: req.t('services-citation-saver.errors.URL.invalid')
         });
         return;
     }
@@ -187,16 +191,9 @@ function handleURL(req, res) {
                 addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
                 logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
             });
-
-
-        })
-
-
-
-
-
-        .catch((err) => {
+        }).catch((err) => {
             if (expectedError) {
+                logger.error(err.message);
                 res.send({
                     status: false,
                     message: err.message
@@ -214,9 +211,10 @@ function handleText(req, res) {
     const text = req.body.text;
 
     if (text.length > maxUploadSize) {
+        logger.error(req.t('services-citation-saver.errors.file.filesize'))
         res.send({
             status: false,
-            message: 'Text exceeds maximum size of ' + maxUploadSize + 'Bytes'
+            message: req.t('services-citation-saver.errors.text.filesize')
         });
         return;
     }

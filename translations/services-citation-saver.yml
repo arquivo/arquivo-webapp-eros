@@ -48,6 +48,23 @@ errors:
     default:
       en: Something went wrong, we could not accept the URL.
       pt: Algo correu mal, não conseguimos aceitar o URL.
+  file:
+    missing:
+      en: The file was not uploaded, no file was submitted.
+      pt: O ficheiro não foi transferido, nenhum ficheiro foi submetido.
+    mimetype:
+      en: The file was not uploaded. The document format must be PDF or TXT.
+      pt: O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.
+    filesize:
+      en: The file was not uploaded. The document size must be under 100 MB.
+      pt: O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.
+  text:
+    filesize:
+      en: The text was not uploaded. The text size must be under 100 MB.
+      pt: O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.
+  default:
+    en: Something went wrong, please try again later.
+    pt: Algo correu mal, por favor tente novamente mais tarde.
 button:
   en: "Save citations"
   pt: "Guarde citações"
