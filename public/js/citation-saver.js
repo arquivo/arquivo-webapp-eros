@@ -1,5 +1,4 @@
 $(() => {
-    // $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
     $(".citation-saver-input-selection form").submit(function (e) {
 
         e.preventDefault();
@@ -20,7 +19,11 @@ $(() => {
                 } else {
                     $('#modal p.text').hide();
                     $('#modal p.error').show();
-                    $('#modal p.error').text(JSON.stringify(data.message));
+                    if(typeof data.message == 'string'){
+                        $('#modal p.error').text(data.message);
+                    } else {
+                        $('#modal p.error').text(JSON.stringify(data.message));
+                    }
                 }
                 
                 $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
@@ -30,8 +33,11 @@ $(() => {
                 // alert('ERROR!! ' +JSON.stringify(err));
                 $('#modal p.text').hide();
                 $('#modal p.error').show();
-                $('#modal p.error').text(JSON.stringify(err));
-
+                if(typeof err == 'string'){
+                    $('#modal p.error').text(err);
+                } else {
+                    $('#modal p.error').text(JSON.stringify(err));
+                }
                 $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
             }
         });
