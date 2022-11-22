@@ -37,20 +37,56 @@ module.exports = function (req, res) {
         } else if (req.body?.file || req.files) {
             handleFile(req, res);
         } else {
-            logger.error('Malformed form.');
+            logger.info(loggerErrorMessage(req, res, 'Malformed form.', req.t('services-citation-saver.errors.empty')));
             res.send({
                 status: false,
-                message: req.t('services-citation-saver.errors.default')
+                message: req.t('services-citation-saver.errors.empty')
             });
             return;
         }
     } catch (err) {
-        unexpectedError(res, err);
+        unexpectedError(req, res, err);
     }
 }
 
-function unexpectedError(res, err) {
-    logger.error(err);
+
+function loggerErrorMessage(req, res, start, reason) {
+    const maxLogEntryArrayLength = 30;
+    const maxLogEntryStringLength = 250;
+    const maxSanitizerDepth = 100;
+
+    function stringifySanitizer(obj) {
+        var i = 0;
+
+        return function (k, v) {
+            // Handle circular objects
+            if (i !== 0 && typeof (obj) === 'object' && typeof (v) == 'object' && obj == v)
+                return '[Circular]';
+
+            // Limit the depth 
+            if (i >= maxSanitizerDepth)
+                return '[Unknown]';
+
+            ++i; // so we know we aren't using the original object anymore
+
+            // Truncate big strings
+            if (typeof v == 'string' && v.length > maxLogEntryStringLength) {
+                return v.substring(0, maxLogEntryStringLength / 2) + '[Truncated]' + v.substring(v.length - maxLogEntryStringLength / 2);
+            }
+            // Truncate big arrays
+            if (typeof v == 'object' && Array.isArray(v) && v.length > maxLogEntryArrayLength) {
+                return [...v.filter((x, i) => i <= maxLogEntryArrayLength / 2), '[Truncated]', ...v.filter((x, i) => i > v.length - maxLogEntryArrayLength / 2)];
+            }
+            return v;
+        }
+    }
+    reqData = { body: req.body, files: req.files };
+    return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
+}
+
+
+function unexpectedError(req, res, err) {
+    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
     res.send({
         status: false,
         message: req.t('services-citation-saver.errors.default')
@@ -59,35 +95,30 @@ function unexpectedError(res, err) {
 
 function handleFile(req, res) {
 
-    if (!req.files) {
+    function sendExpectedError(message) {
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted file.', message));
         res.send({
             status: false,
-            message: req.t('services-citation-saver.errors.file.missing')
+            message: message
         });
+    }
+    if (!req.files) {
+        sendExpectedError(req.t('services-citation-saver.errors.file.missing'));
         return;
     }
 
     const uploadedFile = req.files.file;
     const originalName = uploadedFile.name;
-
     const outExtension = mimeToExtension[uploadedFile.mimetype];
-    if (!outExtension) {
 
-        logger.error('Invalid MIME type');
-        res.send({
-            status: false,
-            message: req.t('services-citation-saver.errors.file.mimetype')
-        });
+    if (!outExtension) {
+        sendExpectedError(req.t('services-citation-saver.errors.file.mimetype'));
         return;
     }
 
     if (uploadedFile.size > maxUploadSize) {
 
-        logger.error('File exceeds maximum size');
-        res.send({
-            status: false,
-            message: req.t('services-citation-saver.errors.file.filesize')
-        });
+        sendExpectedError(req.t('services-citation-saver.errors.file.filesize'));
         return;
     }
 
@@ -101,8 +132,8 @@ function handleFile(req, res) {
 
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path]);
-
     logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
+
     res.send({
         status: true,
         message: 'File uploaded',
@@ -119,13 +150,17 @@ function handleFile(req, res) {
  */
 function handleURL(req, res) {
 
+    function sendExpectedError(message) {
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted URL.', message));
+        res.send({
+            status: false,
+            message: message
+        });
+    }
     const url = req.body.url
 
     if (!isValidUrl(url)) {
-        res.send({
-            status: false,
-            message: req.t('services-citation-saver.errors.URL.invalid')
-        });
+        sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
         return;
     }
 
@@ -133,7 +168,7 @@ function handleURL(req, res) {
 
     const startsWithHttp = /^https?:\/\//
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url.toLowerCase() : 'https://' + url.toLowerCase();
-    const fetchOptions = { 
+    const fetchOptions = {
         method: 'HEAD'
     };
 
@@ -145,7 +180,6 @@ function handleURL(req, res) {
         .then((r) => {
             function throwExpectedError(message) {
                 expectedError = true;
-                logger.info('Blocking submitted URL: "' + url +'" Reason: "' + message + '"');
                 throw new Error(message);
             }
 
@@ -178,6 +212,9 @@ function handleURL(req, res) {
                     fs.unlink(path);
                     throw err;
                 }
+
+                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
+                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
                 res.send({
                     status: true,
                     message: 'Link uploaded',
@@ -188,18 +225,12 @@ function handleURL(req, res) {
                     }
                 });
 
-                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
-                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
             });
         }).catch((err) => {
             if (expectedError) {
-                logger.error(err.message);
-                res.send({
-                    status: false,
-                    message: err.message
-                })
+                sendExpectedError(err.message);
             } else {
-                unexpectedError(res, err);
+                unexpectedError(req, res, err);
             }
         });
 
@@ -211,7 +242,7 @@ function handleText(req, res) {
     const text = req.body.text;
 
     if (text.length > maxUploadSize) {
-        logger.error(req.t('services-citation-saver.errors.file.filesize'))
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize')));
         res.send({
             status: false,
             message: req.t('services-citation-saver.errors.text.filesize')

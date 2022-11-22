@@ -62,6 +62,9 @@ errors:
     filesize:
       en: The text was not uploaded. The text size must be under 100 MB.
       pt: O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.
+  empty:
+    en: No document was submitted.
+    pt: Nenhum documento foi submetido.
   default:
     en: Something went wrong, please try again later.
     pt: Algo correu mal, por favor tente novamente mais tarde.
