@@ -1,0 +1,70 @@
+<section id="citation-saver-main">
+    <h3 class="accessibility"><%= t('services-citation-saver.accessibility') %></h3>
+    <img id="logo-citation-saver" class="image-width" src="/img/CitationSaver.svg" alt="CitationSaver">
+    <h4 id="save-page-now-slogan"><%= t('services-citation-saver.slogan') %></h4>
+
+    <p style="line-height: 27px;margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
+    <p style="line-height: 27px;"><%- t('services-citation-saver.description.2') %></p>
+
+    <div class="citation-saver-input-selection">
+        <input type="radio" name="input-selection" id="input-url" checked="checked">
+        <label for="input-url">URL</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post">
+                <label for="input-url-url"><%- t('services-citation-saver.url') %></label>
+                <input type="text" name="url" id="input-url-url">
+                <small><%- t('services-citation-saver.field.1') %></small>
+
+                <label for="input-url-email"><%- t('services-citation-saver.field.2') %></label>
+                <input type="text" name="email" id="input-url-email">
+
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
+            </form>
+        </div>
+        <input type="radio" name="input-selection" id="input-file-upload">
+        <label for="input-file-upload">File Upload</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post" enctype="multipart/form-data">
+                <label for="input-file-file"><%- t('services-citation-saver.upload') %></label>
+                <input type="file" name="file" id="input-file-file">
+                <small><%- t('services-citation-saver.field.1') %></small>
+
+
+                <label for="input-file-email"><%- t('services-citation-saver.field.2') %></label>
+                <input type="text" name="email" id="input-file-email">
+
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
+            </form>
+        </div>
+
+        <input type="radio" name="input-selection" id="input-text">
+        <label for="input-text">Text</label>
+        <div class="input-tab">
+            <form action="/services/citationsaver" method="post">
+                <label for="input-text-text"><%- t('services-citation-saver.text') %></label>
+                <textarea id="input-text-text" name="text"></textarea>
+
+
+                <label for="input-text-email"><%- t('services-citation-saver.field.2') %></label>
+                <input type="text" name="email" id="input-text-email">
+
+                <button type="submit"><%- t('services-citation-saver.button') %></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal" style="display:none">
+        <section id="citation-saver-modal">
+          <h3><%= t('services-citation-saver.popup.accessibility') %></h3>
+          <img id="logo-citation-saver-modal" class="image-width" src="/img/CitationSaver.svg" alt="CitationSaver">
+    
+          <p class="text"><%= t('services-citation-saver.popup.text') %></p>
+          <p class="error" style="display:none"></p>
+          <form action="/services/citationsaver">
+            <button type="submit"><%= t('services-savepagenow.recorder.popup.button') %></button>
+            <input type="hidden" name="l" value="<%- getLanguage() %>">
+          </form>
+        </section>
+      </div>
+
+</section>

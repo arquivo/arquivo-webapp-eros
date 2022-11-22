@@ -136,8 +136,8 @@ savepagenow:
     pt: SavePageNow
     en: SavePageNow
   title: 
-    pt: <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>&nbsp;SavePage
-    en: <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>&nbsp;SavePage
+    pt: SavePage
+    en: SavePage
   subtitle: 
     pt: Now
     en: Now

@@ -1,0 +1,53 @@
+accessibility:
+  en: CitationSaver form page
+  pt: Página do formulário do CitationSaver
+slogan:
+  en: Preserve citations to online content
+  pt: Preserva citações a conteúdos online
+description:
+  1: 
+    en: "Documents cite online content that quickly disappears. "
+    pt: 'Documentos citam recursos online que rapidamente desaparecem.'
+  2:
+    en: "CitationSaver preserves the content of cited links (e.g. references to web pages in a book) so that they can be later recovered from Arquivo.pt."
+    pt: 'O serviço CitationSaver permite preservar estes recursos (ex. referências a páginas web num livro) arquivando-o no Arquivo.pt'
+url:
+    en: "Insert the URL to the document:"
+    pt: 'Insira o URL do documento:'
+upload:
+    en: "Upload a document from your computer:"
+    pt: 'Carregue um documento a partir do seu computador:'
+text:
+    en: "Insert a text containing URLs:"
+    pt: 'Inserir um texto contendo URLs:'
+field:
+  1:
+    en: "Accepted formats: PDF and TXT. Limit: 100 MB"
+    pt: 'Formatos aceites: PDF e TXT. Limite: 100 MB'
+  2:
+    en: "Email (optional):"
+    pt: 'Email (opcional):'
+popup:
+  accessibility:
+    en: "Notification Popup"
+    pt: 'Janela de notificação'
+  text:
+    en: "The document was successfully uploaded. It's cited links will soon be available on Arquivo.pt."
+    pt: 'O documento foi transferido com sucesso. Os recursos online citados no documento ficarão disponíveis em breve no Arquivo.pt'
+errors:
+  URL:
+    invalid:
+      en: URL not found. Make sure the address is correct. 
+      pt: URL não encontrado. Verifique se o endereço está correto.
+    mimetype:
+      en: The URL was not submitted. The document format must be PDF or TXT.
+      pt: O URL não foi submetido. O formato do documento tem de ser PDF ou TXT.
+    filesize:
+      en: The URL was not submitted. The document size must be under 100 MB.
+      pt: O URL não foi submetido. A dimensão do documento não pode exceder os 100 MB.
+    default:
+      en: Something went wrong, we could not accept the URL.
+      pt: Algo correu mal, não conseguimos aceitar o URL.
+button:
+  en: "Save citations"
+  pt: "Guarde citações"

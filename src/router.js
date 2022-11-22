@@ -3,6 +3,7 @@ const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
 const savePageNow = require('./services-savepagenow');
+const citationSaver = require('./services-citationsaver');
 const wayback = require('./wayback');
 const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
@@ -139,6 +140,17 @@ router.get('/switchlang', function (req, res) {
     } else {
         res.redirect('/');
     }
+});
+
+
+router.get('/services/citationsaver', function (req, res) {
+    res.render('pages/services-citation-saver');
+});
+
+
+
+router.post('/services/citationsaver', function (req, res) {
+    citationSaver(req,res);
 });
 
 
