@@ -4,6 +4,16 @@ accessibility:
 slogan:
   en: Preserve citations to online content
   pt: Preserva citações a conteúdos online
+tab:
+  1:
+    en: "URL"
+    pt: 'Link'
+  2:
+    en: "File"
+    pt: 'Ficheiro'
+  3:
+    en: "Text"
+    pt: 'Texto'
 description:
   1: 
     en: "Documents cite online content that quickly disappears. "
