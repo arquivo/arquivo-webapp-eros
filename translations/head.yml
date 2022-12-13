@@ -72,8 +72,8 @@ notfound:
 
 citation-saver:
   title: 
-    en: 'CitationSaver: Preserve citations for online content'
-    pt: 'CitationSaver: Preserve citações para conteúdo online'
+    en: 'CitationSaver: preserves citations to online resources'
+    pt: 'CitationSaver: preserva citações para recursos online'
   description:
     en: "CitationSaver extracts the citations to online content from documents, so that the resources it is citing are preserved by Arquivo.pt."
     pt: "O CitationSaver extrai citações para conteúdo online de documentos para preservar os recursos citados no Arquivo.pt"

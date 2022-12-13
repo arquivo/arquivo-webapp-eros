@@ -2,15 +2,28 @@ accessibility:
   en: CitationSaver form page
   pt: Página do formulário do CitationSaver
 slogan:
-  en: Preserve citations to online content
+  en: Preserves citations to online resources
   pt: Preserva citações a conteúdos online
+tab:
+  1:
+    en: "URL"
+    pt: 'Link'
+  2:
+    en: "File"
+    pt: 'Ficheiro'
+  3:
+    en: "Text"
+    pt: 'Texto'
 description:
   1: 
-    en: "Documents cite online content that quickly disappears. "
-    pt: 'Documentos citam recursos online que rapidamente desaparecem.'
+    en: "Documents cite online content that quickly disappear."
+    pt: 'Os documentos citam conteúdos online que desaparecem rapidamente.'
   2:
-    en: "CitationSaver preserves the content of cited links (e.g. references to web pages in a book) so that they can be later recovered from Arquivo.pt."
-    pt: 'O serviço CitationSaver permite preservar estes recursos (ex. referências a páginas web num livro) arquivando-o no Arquivo.pt'
+    en: "CitationSaver preserves the content of cited links (e.g. web pages cited in a book) so that they can be later recovered from Arquivo.pt."
+    pt: 'O CitationSaver preserva o conteúdo das ligações citadas (ex. páginas web citadas num livro) para que possam ser recuperadas mais tarde a partir do Arquivo.pt.'
+  3:
+    en: "Submit a document and CitationSaver will preserve its cited links:"
+    pt: "Submeta um documento e o CitationSaver preservará as ligações nele citadas:"
 url:
     en: "Insert the URL to the document:"
     pt: 'Insira o URL do documento:'
@@ -22,11 +35,11 @@ text:
     pt: 'Inserir um texto contendo URLs:'
 field:
   1:
-    en: "Accepted formats: PDF and TXT. Limit: 100 MB"
-    pt: 'Formatos aceites: PDF e TXT. Limite: 100 MB'
+    en: "Accepted formats: PDF, TXT. Max size: 100 MB"
+    pt: 'Formatos aceites: PDF, TXT. Tamanho máximo: 100 MB'
   2:
-    en: "Email (optional):"
-    pt: 'Email (opcional):'
+    en: "Your email (optional):"
+    pt: 'O seu e-mail (opcional):'
 popup:
   accessibility:
     en: "Notification Popup"
@@ -48,6 +61,26 @@ errors:
     default:
       en: Something went wrong, we could not accept the URL.
       pt: Algo correu mal, não conseguimos aceitar o URL.
+  file:
+    missing:
+      en: The file was not uploaded, no file was submitted.
+      pt: O ficheiro não foi transferido, nenhum ficheiro foi submetido.
+    mimetype:
+      en: The file was not uploaded. The document format must be PDF or TXT.
+      pt: O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.
+    filesize:
+      en: The file was not uploaded. The document size must be under 100 MB.
+      pt: O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.
+  text:
+    filesize:
+      en: The text was not uploaded. The text size must be under 100 MB.
+      pt: O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.
+  empty:
+    en: No document was submitted.
+    pt: Nenhum documento foi submetido.
+  default:
+    en: Something went wrong, please try again later.
+    pt: Algo correu mal, por favor tente novamente mais tarde.
 button:
-  en: "Save citations"
-  pt: "Guarde citações"
+  en: "Save cited links"
+  pt: "Guardar ligações citadas"

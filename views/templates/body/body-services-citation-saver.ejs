@@ -5,10 +5,11 @@
 
     <p style="line-height: 27px;margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
     <p style="line-height: 27px;"><%- t('services-citation-saver.description.2') %></p>
+    <p style="line-height: 27px;"><%- t('services-citation-saver.description.3') %></p>
 
     <div class="citation-saver-input-selection">
         <input type="radio" name="input-selection" id="input-url" checked="checked">
-        <label for="input-url">URL</label>
+        <label for="input-url"><%- t('services-citation-saver.tab.1') %></label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post">
                 <label for="input-url-url"><%- t('services-citation-saver.url') %></label>
@@ -22,7 +23,7 @@
             </form>
         </div>
         <input type="radio" name="input-selection" id="input-file-upload">
-        <label for="input-file-upload">File Upload</label>
+        <label for="input-file-upload"><%- t('services-citation-saver.tab.2') %></label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post" enctype="multipart/form-data">
                 <label for="input-file-file"><%- t('services-citation-saver.upload') %></label>
@@ -38,7 +39,7 @@
         </div>
 
         <input type="radio" name="input-selection" id="input-text">
-        <label for="input-text">Text</label>
+        <label for="input-text"><%- t('services-citation-saver.tab.3') %></label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post">
                 <label for="input-text-text"><%- t('services-citation-saver.text') %></label>
