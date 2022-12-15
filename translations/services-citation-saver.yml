@@ -7,7 +7,7 @@ slogan:
 tab:
   1:
     en: "URL"
-    pt: 'URL'
+    pt: 'Link'
   2:
     en: "File"
     pt: 'Ficheiro'
@@ -29,7 +29,7 @@ upload:
     pt: 'Carregue um documento a partir do seu computador:'
 text:
     en: "Insert a text containing URLs:"
-    pt: 'Insira um texto contendo URLs:'
+    pt: 'Inserir um texto contendo URLs:'
 field:
   1:
     en: "Accepted formats: PDF and TXT. Limit: 100 MB"
