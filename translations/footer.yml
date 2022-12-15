@@ -154,8 +154,8 @@ collaborate:
       pt: Grave páginas
       en: Record webpages
     url:
-      pt: /services/savepagenow?l=pt
-      en: /services/savepagenow?l=en  
+      pt: https://arquivo.pt/savepagenow
+      en: https://arquivo.pt/savepagenow?l=en  
   rnd:
     text:
       pt: 'Investigação'
