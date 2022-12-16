@@ -43,7 +43,10 @@ if(typeof requestData != 'undefined'){
     <script>
         $('#search-tools-narrative-button').click(() => {
             $('#search-form-narrative input[name=query]').val($('#submit-search-input').val());
-            ga('send', 'event', 'contameHistorias', 'Pressed', $('#submit-search-input').val() || '<empty>');
+            gtag("event", 'contameHistorias', {
+                "type": 'Pressed', 
+                "query": $('#submit-search-input').val() || '<empty>' 
+            } );
             $('#confirm-narrative-modal').modal();
         });
         $('#search-form-narrative').submit(function (e) {
@@ -51,7 +54,10 @@ if(typeof requestData != 'undefined'){
                 $('#search-form-narrative input[name=query]').remove();
                 $('#search-form-narrative').attr('action',"<%- config.get('contame.historias.url') %>");
             }
-            ga('send', 'event', 'contameHistorias', 'Searched', $('#submit-search-input').val() || '<empty>');
+            gtag("event", 'contameHistorias', {
+                "type": 'Searched', 
+                "query": $('#submit-search-input').val() || '<empty>' 
+            } );
             return true;
         });
 
@@ -72,7 +78,6 @@ if(typeof requestData != 'undefined'){
                 name: 'to',
                 value: $('#end-date').val()
             }).appendTo(e.target);
-            // ga('send', 'event', 'contameHistorias', 'Searched', $('#submit-search-input').val() || '<empty>');
             return true;
         });
     </script>

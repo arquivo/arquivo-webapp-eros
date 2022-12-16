@@ -111,8 +111,8 @@ news:
     pt: Conheça as últimas novidades no âmbito da preservação digital
     en: Find out more about the latest developments on digital preservation
   url:
-    pt: https://sobre.arquivo.pt/pt/category/noticias/
-    en: https://sobre.arquivo.pt/en/category/news-en/
+    pt: 'https://arquivo.pt/noticias'
+    en: 'https://arquivo.pt/news'
 
 memorial:
   header:
@@ -148,8 +148,8 @@ savepagenow:
     pt: Arquive uma página imediatamente
     en: Archive a webpage immediately 
   url:
-    pt: /services/savepagenow
-    en: /services/savepagenow
+    pt: https://arquivo.pt/savepagenow
+    en: https://arquivo.pt/savepagenow?l=en
 
 suggest:
   header:

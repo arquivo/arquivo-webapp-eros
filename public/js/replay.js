@@ -17,9 +17,13 @@ class ArquivoReplay {
 
     sendToAnalytics(category,action,label) {
         const replay = this;
-        if(!!ga){
-            ga("send", "event", category, action, label || 'arquivo.pt/' + replay.getConfig('requestedPage.fullUrl'));
+        if(!!gtag){
+            gtag("event", category, {
+                "action": action, 
+                "label": label || 'arquivo.pt/' + replay.getConfig('requestedPage.fullUrl') 
+            } );
         }
+
     }
 
     init() {
@@ -273,7 +277,7 @@ class ArquivoReplay {
                 }
                 if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
                     replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
-                    ga('send', 'pageview');
+                    gtag("event", 'page_view');
                 }
                 if ( e[key].wb_type == 'not-found' ) {
                     $('#replay-in-iframe').hide();
