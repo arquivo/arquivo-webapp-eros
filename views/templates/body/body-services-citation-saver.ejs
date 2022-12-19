@@ -3,9 +3,9 @@
     <img id="logo-citation-saver" class="image-width" src="/img/CitationSaver.svg" alt="CitationSaver">
     <h4 id="save-page-now-slogan"><%= t('services-citation-saver.slogan') %></h4>
 
-    <p style="line-height: 27px;margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
-    <p style="line-height: 27px;"><%- t('services-citation-saver.description.2') %></p>
-    <p style="line-height: 27px;"><%- t('services-citation-saver.description.3') %></p>
+    <p style="margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
+    <p><%- t('services-citation-saver.description.2') %></p>
+    <p><%- t('services-citation-saver.description.3') %></p>
 
     <div class="citation-saver-input-selection">
         <input type="radio" name="input-selection" id="input-url" checked="checked">
@@ -26,8 +26,16 @@
         <label for="input-file-upload"><%- t('services-citation-saver.tab.2') %></label>
         <div class="input-tab">
             <form action="/services/citationsaver" method="post" enctype="multipart/form-data">
+                
                 <label for="input-file-file"><%- t('services-citation-saver.upload') %></label>
-                <input type="file" name="file" id="input-file-file">
+                <div id="input-file-selector">
+                    <button id="input-file-button" class="button" type="button"><%- t('services-citation-saver.upload-selection.button') %></button>
+                    <span id="input-file-text"><%- t('services-citation-saver.upload-selection.default-text') %></span>
+                </div>
+                <div style='height: 0px;width:0px; overflow:hidden;'>            
+                    <input type="file" name="file" id="input-file-file" style="visibility:hidden">
+                </div>
+                <!-- here you can have file submit button or you can write a simple script to upload the file automatically-->
                 <small><%- t('services-citation-saver.field.1') %></small>
 
 

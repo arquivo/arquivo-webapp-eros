@@ -30,6 +30,14 @@ url:
 upload:
     en: "Upload a document from your computer:"
     pt: 'Carregue um documento a partir do seu computador:'
+upload-selection:
+    button:
+      en: Select a file
+      pt: Selecione um ficheiro
+    default-text:
+      en: No file selected
+      pt: Nenhum ficheiro selecionado
+
 text:
     en: "Insert a text containing URLs:"
     pt: 'Insira um texto contendo URLs:'

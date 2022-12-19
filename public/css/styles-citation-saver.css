@@ -177,3 +177,31 @@ section#citation-saver-modal form {
 section#citation-saver-modal form button {
     width: 103px;
 }
+
+#citation-saver-main > p{
+    line-height: 24px;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    margin-block-end: 24px;
+    margin-bottom: 24px;
+}
+
+#input-file-selector {
+    display: inline-block;
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+    border-color: #C4C4C4;
+    border-width: 1px;
+    border-style: solid;
+    padding: 0 11px 0 0;
+    line-height: 42px;
+}
+#input-file-button {
+    line-height: 29px;
+}
+#input-file-text {
+    color: gray;
+    vertical-align: middle;
+    margin-left: 6px;
+}
