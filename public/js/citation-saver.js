@@ -44,3 +44,14 @@ $(() => {
 
     });
 });
+
+function getFile() {
+}
+  
+$(document).on("click", "#input-file-selector", function(e) {
+    e.preventDefault();
+    $("#input-file-file").click();
+});
+$(document).on("input", "input:file", function(e) {
+    $("#input-file-text").text(e.target.files[0].name);
+});

@@ -14,12 +14,17 @@ const logger = require('./logger')('CitationSaver');
 
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row) {
-    const doc = new GoogleSpreadsheet(googleSheetId);
-    await doc.useServiceAccountAuth(serviceAccountConfigs)
+    try {
+        const doc = new GoogleSpreadsheet(googleSheetId);
+        await doc.useServiceAccountAuth(serviceAccountConfigs)
 
-    await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-    await sheet.addRow(row);
+        await doc.loadInfo();
+        const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
+        await sheet.addRow(row);
+    } catch (err) {
+        logger.error('Failed to connect to google services. Reason: "'+ err + '". Data: '+JSON.stringify(row));
+    }
+    
 }
 
 const mimeToExtension = {
