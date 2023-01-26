@@ -231,8 +231,11 @@ citationsaver:
     pt: CitationSaver
     en: CitationSaver
   title: 
-    pt: CitationSaver
-    en: CitationSaver
+    pt: Citation
+    en: Citation
+  subtitle: 
+    pt: Saver
+    en: Saver
   text1: 
     pt: Preserve citações para documentação online  
     en: Preserve citations to online documentation
