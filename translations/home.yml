@@ -27,14 +27,17 @@ search-tools:
 
 arquivo-pt-award:
   header:
-    pt: 'Conheça os vencedores do Prémio Arquivo.pt 2022'
-    en: 'Meet the winners of the Arquivo.pt Award 2022'
+    pt: 'Prémio Arquivo.pt 2023'
+    en: 'Arquivo.pt Award 2023'
   url:
-    pt: http://arquivo.pt/vencedores2022
-    en: http://arquivo.pt/winners2022
+    pt: http://arquivo.pt/premio2023
+    en: http://arquivo.pt/award2023
   img:
-    pt: /img/vencedores-homepage-banner-2022-pt.jpg
-    en: /img/vencedores-homepage-banner-2022-en.jpg
+    pt: /img/premio-homepage-banner-2023-PT-min.jpg
+    en: /img/premio-homepage-banner-2023-EN-min.jpg
+  mobile-img:
+    pt: /img/premio-homepage-banner-2023-PT-mobile.jpg
+    en: /img/premio-homepage-banner-2023-EN-mobile.jpg
 
 the-past-web:
   header:
@@ -204,5 +207,44 @@ training:
   url:
     pt: 'https://arquivo.pt/forma'
     en: 'https://arquivo.pt/training'
+
+publications:
+  header:
+    pt: Publicações
+    en: Publications
+  title: 
+    pt: Publicações
+    en: Publications
+  text1: 
+    pt: Artigos e outros documentos publicados pelo Arquivo.pt  
+    en: Articles and other documents published by Arquivo.pt
+  imgAlt: 
+    pt: Publicações científicas, relatórios técnicos e outra documentação produzida pelo Arquivo.pt  
+    en: Scientific publications, technical reports and other documents produced by Arquivo.pt
+  url:
+    pt: 'https://arquivo.pt/publica'
+    en: 'https://arquivo.pt/publications'
+
+
+citationsaver:
+  header:
+    pt: CitationSaver
+    en: CitationSaver
+  title: 
+    pt: Citation
+    en: Citation
+  subtitle: 
+    pt: Saver
+    en: Saver
+  text1: 
+    pt: Preserve citações para documentação online  
+    en: Preserve citations to online documentation
+  imgAlt: 
+    pt: O CitationSaver preserva o conteúdo das ligações citadas (ex. páginas web citadas num livro) para que possam ser recuperadas mais tarde a partir do Arquivo.pt. 
+    en: itationSaver preserves the content of cited links (e.g. web pages cited in a book) so that they can be later recovered from Arquivo.pt.
+  url:
+    pt: 'https://arquivo.pt/citationsaver'
+    en: 'https://arquivo.pt/citationsaver?l=en'
+
 
 # Arquivo404 https://arquivo.pt/arquivo404

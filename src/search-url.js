@@ -3,6 +3,7 @@ const sanitizeInputs = require('./utils/sanitize-search-params');
 const CDXSearchApiRequest = require('./apis/cdx-api')
 const cdxFilter = require('./filter-cdx')
 const SuggestionApi = require('./apis/suggestion-api')
+const logger = require('./logger')('UrlSearch');
 
 module.exports = function (req, res) {
     const requestData = sanitizeInputs(req, res);
@@ -23,6 +24,9 @@ module.exports = function (req, res) {
         (suggestion) => {
             apiRequest.get(requestData,
                 (apiData) => {
+                    if(apiData.length == 0) {
+                        logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
+                    }
                     res.render('partials/url-' + viewMode + '-results', {
                         requestData: requestData,
                         apiData: cdxFilter(apiData),

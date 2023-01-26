@@ -140,11 +140,16 @@ div.citation-saver-input-selection {
 
 #citation-saver-main{
     margin-bottom: 50px; 
+    margin-left: 5px;
+    margin-right: 5px;
 }
-#citation-saver-main h4 {
+
+#citation-saver-slogan{
     display: inline;
     font-weight: 700;
-    padding-left: 10px;
+    padding-left: 6px;
+    position: relative;
+    bottom: 2px;
 }
 
 #logo-citation-saver {
@@ -197,11 +202,26 @@ section#citation-saver-modal form button {
     padding: 0 11px 0 0;
     line-height: 42px;
 }
+
 #input-file-button {
     line-height: 29px;
 }
+
 #input-file-text {
     color: gray;
     vertical-align: middle;
     margin-left: 6px;
+}
+
+@media (max-width: 767px) {
+    section#citation-saver-main {
+        margin-bottom: 50px;
+        margin-top: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    #citation-saver-slogan{
+        padding-left: 3px;
+        font-size: small;
+    }
 }

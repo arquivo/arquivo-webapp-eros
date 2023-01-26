@@ -54,7 +54,6 @@ module.exports = function (req, res) {
     }
 }
 
-
 function loggerErrorMessage(req, res, start, reason) {
     const maxLogEntryArrayLength = 30;
     const maxLogEntryStringLength = 250;
@@ -88,7 +87,6 @@ function loggerErrorMessage(req, res, start, reason) {
     reqData = { body: req.body, files: req.files };
     return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
 }
-
 
 function unexpectedError(req, res, err) {
     logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
@@ -172,7 +170,8 @@ function handleURL(req, res) {
     let expectedError = false;
 
     const startsWithHttp = /^https?:\/\//
-    const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url.toLowerCase() : 'https://' + url.toLowerCase();
+
+    const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
     const fetchOptions = {
         method: 'HEAD'
     };
@@ -196,7 +195,7 @@ function handleURL(req, res) {
             filesize = r.headers.get('content-length');
 
             if (!mimeToExtension[mimetype.split(';')[0]]) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
+                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype') + '   ' + mimetype);
             }
 
             if (Number(filesize) > maxUploadSize) {

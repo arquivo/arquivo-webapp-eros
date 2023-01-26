@@ -6,12 +6,12 @@
         <h4>
             <%= t('home.arquivo-pt-award.header') %>
         </h4>
+        <a href="<%- t('home.arquivo-pt-award.url') %>">
         <picture>
-            <source media="(min-width:320px) and (max-width:550px)" srcset="/img/homepage-premio-card-mobile-en.jpg"
-                title="Click here to know more about this award">
-            <a href="<%- t('home.arquivo-pt-award.url') %>"><img src="<%- t('home.arquivo-pt-award.img') %>"
-                    alt="Click here to know more about this" title="Click here to know more about this"></a>
+            <source media="(min-width:0px) and (max-width:767px)" srcset="<%- t('home.arquivo-pt-award.mobile-img') %>">
+            <img src="<%- t('home.arquivo-pt-award.img') %>" alt="Click here to know more about this" title="Click here to know more about this">
         </picture>
+        </a>
     </article>
     <!-- ends Arquivo.pt Ward section -->
 
@@ -55,6 +55,10 @@
     <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'arquivo404', color:'pink', size: 'short'}}) %>
 
     <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'memorial', color:'white', size: 'short'}}) %>
+
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'publications', color:'green', size: 'short'}}) %>
+    
+    <%- include('../fragments/home-card.ejs',{cardConfigs: {cardName: 'citationsaver', color:'blue', size: 'short'}}) %>
 
 
 </section>

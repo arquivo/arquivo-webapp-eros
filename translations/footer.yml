@@ -156,6 +156,13 @@ collaborate:
     url:
       pt: https://arquivo.pt/savepagenow
       en: https://arquivo.pt/savepagenow?l=en  
+  citationsaver:
+    text:
+      pt: Preserve citações para recursos online
+      en: Preserve citations to online resources
+    url:
+      pt: https://arquivo.pt/citationsaver
+      en: https://arquivo.pt/citationsaver?l=en  
   rnd:
     text:
       pt: 'Investigação'
@@ -231,8 +238,8 @@ institutional:
       pt: FCCN - Fundação para a computação Científica Nacional
   gov-logo:
     href:
-      en: https://www.portugal.gov.pt/en/gc21
-      pt: https://www.portugal.gov.pt/pt/ministerios/mctes.aspx
+      en: https://www.portugal.gov.pt/en/gc23
+      pt: https://www.portugal.gov.pt/pt/gc23/area-de-governo/ciencia-tecnologia-e-ensino-superior
     title:
       en: Visit the website of the Portuguese government
       pt: Visite o website do governo português
