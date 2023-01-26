@@ -27,14 +27,14 @@ search-tools:
 
 arquivo-pt-award:
   header:
-    pt: 'Conheça os vencedores do Prémio Arquivo.pt 2022'
-    en: 'Meet the winners of the Arquivo.pt Award 2022'
+    pt: 'Prémio Arquivo.pt 2023'
+    en: 'Arquivo.pt Award 2023'
   url:
-    pt: http://arquivo.pt/vencedores2022
-    en: http://arquivo.pt/winners2022
+    pt: http://arquivo.pt/premio2023
+    en: http://arquivo.pt/award2023
   img:
-    pt: /img/vencedores-homepage-banner-2022-pt.jpg
-    en: /img/vencedores-homepage-banner-2022-en.jpg
+    pt: /img/premio-homepage-banner-2023-PT-min.jpg
+    en: /img/premio-homepage-banner-2023-EN-min.jpg
 
 the-past-web:
   header:
