@@ -163,7 +163,7 @@ collaborate:
     url:
       pt: https://arquivo.pt/citationsaver
       en: https://arquivo.pt/citationsaver?l=en  
-  rnd:
+  rnd: #<--- No longer used!
     text:
       pt: 'Investigação'
       en: 'Research & Development'
