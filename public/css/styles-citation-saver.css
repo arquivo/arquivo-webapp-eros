@@ -224,4 +224,7 @@ section#citation-saver-modal form button {
         padding-left: 3px;
         font-size: small;
     }
+    #input-file-text {
+        font-size: small;
+    }
 }
