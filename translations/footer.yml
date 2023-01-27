@@ -158,8 +158,8 @@ collaborate:
       en: https://arquivo.pt/savepagenow?l=en  
   citationsaver:
     text:
-      pt: Preserve citações para recursos online
-      en: Preserve citations to online resources
+      pt: Preserve citações
+      en: Preserve citations
     url:
       pt: https://arquivo.pt/citationsaver
       en: https://arquivo.pt/citationsaver?l=en  
