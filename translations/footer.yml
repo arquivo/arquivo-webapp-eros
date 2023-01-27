@@ -26,7 +26,7 @@ about:
       en: 'Exhibitions'
     url:
       pt: 'https://arquivo.pt/expos'
-      en: 'https://sobre.arquivo.pt/en/11557-2/collections/'
+      en: 'https://arquivo.pt/exhibitions'
   press:
     text:
       pt: 'Área de imprensa'
@@ -100,8 +100,8 @@ news:
       pt: 'Material de Divulgação'
       en: 'Dissemination material'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/imprensa/material-de-divulgacao/'
-      en: 'https://sobre.arquivo.pt/en/about/press/dissemination-materials/'
+      pt: 'https://arquivo.pt/divulgar'
+      en: 'https://arquivo.pt/disseminate'
   
 collaborate:
   header:
@@ -158,8 +158,8 @@ collaborate:
       en: https://arquivo.pt/savepagenow?l=en  
   citationsaver:
     text:
-      pt: Preserve citações para recursos online
-      en: Preserve citations to online resources
+      pt: Preserve citações
+      en: Preserve citations
     url:
       pt: https://arquivo.pt/citationsaver
       en: https://arquivo.pt/citationsaver?l=en  

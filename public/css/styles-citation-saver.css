@@ -22,17 +22,23 @@ div.citation-saver-input-selection {
     background-color: rgba(205, 206, 207, 1);
     color: #0F0F0F80;
 
-    margin-right: 5px; 
-    width: calc(33% - 32px);
+    border-left: 1px solid rgb(234 235 238); 
+    width: calc(100%/3 - 2px/3 - 28px);
     text-align: center;
+}
+.citation-saver-input-selection>label {
+    border-bottom: 1px solid rgba(3, 63, 114, 0.7);
 
+}
+
+.citation-saver-input-selection label[for="input-url"] {
+    border-left: 0 !important;
 }
 
 .citation-saver-input-selection .input-tab {
     background-color: rgb(234 235 238);
     padding: 15px;
     order: 1;
-    border-top: 1px solid rgba(3, 63, 114, 0.7);
     display: none;
 }
 
@@ -42,10 +48,17 @@ div.citation-saver-input-selection {
     padding: 19px 34px 34px 34px;
 }
 
+/*input[type="radio"]:checked~label{*/
+input[type="radio"]:checked+label+div+input+label{
+    border-left: 1px solid #002849;
+}
+
 .citation-saver-input-selection input[type="radio"]:checked+label {
     background-color: rgb(234 235 238);
     color: black;
-    border-bottom: 3px solid #002849;
+    border-top: 3px solid #002849;
+    border-left: 1px solid #002849;
+    border-bottom: 1px solid rgb(234 235 238);
 }
 
 .citation-saver-input-selection .input-tab form,
@@ -222,6 +235,9 @@ section#citation-saver-modal form button {
     }
     #citation-saver-slogan{
         padding-left: 3px;
+        font-size: small;
+    }
+    #input-file-text {
         font-size: small;
     }
 }
