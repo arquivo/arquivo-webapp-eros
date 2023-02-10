@@ -185,6 +185,7 @@ router.post('/services/savepagenow', function (req, res) {
 // patching 
 router.get('/services/complete-page', function (req, res) {
     const requestData = new URLSearchParams(req.query);
+    requestData.set('url', decodeURIComponent(requestData.get('url')));
     res.render('pages/services-complete-page', {
         requestData: requestData,
     });
