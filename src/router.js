@@ -37,14 +37,6 @@ router.get('/url/search', function (req, res) {
     res.render('pages/replay-table-list-results', { requestData: req.utils.sanitizeInputs(req, res) });
 });
 
-router.get('/replay', function (req, res) {
-    res.render('pages/replay', { 
-        requestData: req.utils.sanitizeInputs(req, res),
-        apiData: {},
-        requestedPage: {timestamp:'000011223344'}
-    });
-});
-
 // Images search results
 router.get('/image/search', function (req, res) {
     const requestData = req.utils.sanitizeInputs(req, res);
