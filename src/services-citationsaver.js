@@ -195,7 +195,7 @@ function handleURL(req, res) {
             filesize = r.headers.get('content-length');
 
             if (!mimeToExtension[mimetype.split(';')[0]]) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype') + '   ' + mimetype);
+                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
             }
 
             if (Number(filesize) > maxUploadSize) {
