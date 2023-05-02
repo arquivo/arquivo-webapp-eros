@@ -24,6 +24,13 @@ description:
   3:
     en: "Submit a document and CitationSaver will preserve its cited links:"
     pt: "Submeta um documento e o CitationSaver preservará as ligações nele citadas:"
+learn-more:
+  text:
+    en: Learn more
+    pt: Saber mais
+  href:
+    en: https://sobre.arquivo.pt/en/new-citationsaver-service-preserves-cited-web-content/
+    pt: https://sobre.arquivo.pt/pt/novo-servico-citationsaver-preserva-conteudos-web-citados/
 url:
     en: "Insert the URL to the document:"
     pt: 'Insira o URL do documento:'
