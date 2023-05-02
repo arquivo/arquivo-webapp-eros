@@ -220,6 +220,10 @@ section#citation-saver-modal form button {
     line-height: 29px;
 }
 
+a.learn-more {
+    color: #1c75c0;
+}
+
 #input-file-text {
     color: gray;
     vertical-align: middle;
