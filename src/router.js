@@ -120,10 +120,10 @@ router.get('/switchlang', function (req, res) {
         let currentLocale = req.getLocale();
         let newLocale = req.getLocales().find(l => l!=currentLocale);
         
+        res.clearCookie('i18n');
+        res.cookie('i18n', newLocale, { maxAge: 900000 });
+        
         if(parsedUrl.pathname.startsWith('/wayback')){
-            res.clearCookie('i18n');
-            res.cookie('i18n', newLocale, { maxAge: 900000 });
-        } else {
             parsedUrl.searchParams.set('l',newLocale.split('_').shift());
         }
 
