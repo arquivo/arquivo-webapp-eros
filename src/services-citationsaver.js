@@ -134,8 +134,12 @@ function handleFile(req, res) {
     uploadedFile.mv(path);
 
 
-    addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path]);
-    logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
+    addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path])
+        .then(() => {
+            logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
+        }).catch(err => {
+            logger.error('Failed to save file: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName+ '\t Due to the following error: '+err);
+        });
 
     res.send({
         status: true,
@@ -217,8 +221,12 @@ function handleURL(req, res) {
                     throw err;
                 }
 
-                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path]);
-                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
+                    .then(() => {
+                        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+                    }).catch(err => {
+                        logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
+                    });
                 res.send({
                     status: true,
                     message: 'Link uploaded',
@@ -277,7 +285,11 @@ function handleText(req, res) {
             }
         });
 
-        addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path]);
-        logger.info('Text saved: ' + newName + '\tEmail: ' + email);
+        addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
+            .then(() => {
+                logger.info('Text saved: ' + newName + '\tEmail: ' + email);
+            }).catch(err => {
+                logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err);
+            });
     });
 }
