@@ -123,7 +123,7 @@ router.get('/switchlang', function (req, res) {
         res.clearCookie('i18n');
         res.cookie('i18n', newLocale, { maxAge: 900000 });
         
-        if(parsedUrl.pathname.startsWith('/wayback')){
+        if(!parsedUrl.pathname.startsWith('/wayback')){
             parsedUrl.searchParams.set('l',newLocale.split('_').shift());
         }
 
