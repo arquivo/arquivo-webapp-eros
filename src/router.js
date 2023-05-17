@@ -121,12 +121,18 @@ router.get('/switchlang', function (req, res) {
         let newLocale = req.getLocales().find(l => l!=currentLocale);
         
         if(parsedUrl.pathname.startsWith('/wayback')){
-            res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: true });
+            res.clearCookie('i18n');
+            res.cookie('i18n', newLocale, { maxAge: 900000 });
         } else {
             parsedUrl.searchParams.set('l',newLocale.split('_').shift());
         }
 
         const newUrl = parsedUrl.href.slice(parsedUrl.origin.length);
+
+        //Prevent browser caching from ruining everything
+        res.set('Cache-control', 'no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
         res.redirect(newUrl);
         
     } else {
