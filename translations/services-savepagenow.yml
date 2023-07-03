@@ -39,8 +39,8 @@ recorder:
       en: Save pages on Arquivo.pt
       pt: Grava páginas no Arquivo.pt
     text:
-      en: Your browsing has been saved and will soon be available on Arquivo.pt.
-      pt: A sua navegação foi salva e ficará disponível em breve no Arquivo.pt 
+      en: "Your browsing has been saved and will soon be available on Arquivo.pt. Access it using the following link:"
+      pt: "A sua navegação foi gravada e ficará disponível em breve no Arquivo.pt. Aceda ao seu conteúdo através do link:"
     button:
       en: OK
       pt: OK
