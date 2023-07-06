@@ -24,20 +24,20 @@ search-tools:
   narrative-popup:
     pt: Vai sair do Arquivo.pt para o ContaMeHistorias.pt
     en: You are leaving Arquivo.pt to ContaMeHistorias.pt
-
-arquivo-pt-award:
+  
+arquivo-pt-winners:
   header:
-    pt: 'Prémio Arquivo.pt 2023'
-    en: 'Arquivo.pt Award 2023'
+    pt: 'Prémio Arquivo.pt 2023 - Conheça os vencedores!'
+    en: 'Arquivo.pt Award 2023 - Meet the winners!'
   url:
-    pt: http://arquivo.pt/premio2023
-    en: http://arquivo.pt/award2023
+    pt: http://arquivo.pt/vencedores2023
+    en: http://arquivo.pt/winners2023
   img:
-    pt: /img/premio-homepage-banner-2023-PT-min.jpg
-    en: /img/premio-homepage-banner-2023-EN-min.jpg
+    pt: /img/vencedores-homepage-banner-2023-PT-min.jpg
+    en: /img/vencedores-homepage-banner-2023-EN-min.jpg
   mobile-img:
-    pt: /img/premio-homepage-banner-2023-PT-mobile.jpg
-    en: /img/premio-homepage-banner-2023-EN-mobile.jpg
+    pt: /img/vencedores-homepage-banner-2023-PT-mobile-min.jpg
+    en: /img/vencedores-homepage-banner-2023-EN-mobile-min.jpg
 
 the-past-web:
   header:
