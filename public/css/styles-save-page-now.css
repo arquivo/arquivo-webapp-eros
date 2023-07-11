@@ -258,12 +258,6 @@ section#savepagenow-modal #recording-url:active {
     color: hsl(207deg 75% 72%);
 }
 
-section#savepagenow-modal #copyUrl {
-    font-size: 13px;
-    display: inline-block;
-    float: none;
-}
-
 /* English version advanced search button width */
 :lang(pt) section#savepagenow-modal h4 {
     font-size: 13.7px;
@@ -293,8 +287,11 @@ section#savepagenow-modal form button {
 }
 
 section#savepagenow-modal form button#copyUrl {
+    display: inline-block;
     width: auto;
     padding-left: 30px;
+    font-size: 13px;
+    margin: 0 auto 0 auto;
 }
 
 section#savepagenow-modal form button#copyUrl span {
