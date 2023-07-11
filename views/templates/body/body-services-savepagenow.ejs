@@ -23,7 +23,7 @@
         </form>
 
         <script>
-            const urlPattern = /^\s*(((http|https):\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?+$#*\(?\)?]*)\/?)\s*$/;
+            const urlPattern = /^\s*(((http|https):\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?!+$#*\(?\)?]*)\/?)\s*$/;
             $('#search-form').submit(function (event) {
                 if (!urlPattern.test($("#submit-search-input").val())) {
                     event.preventDefault();
