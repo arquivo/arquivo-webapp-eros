@@ -251,9 +251,11 @@ section#savepagenow-modal #recording-url {
     color: #1c75c0;
     cursor: pointer;
 }
+
 section#savepagenow-modal #recording-url:hover {
     color: black;
 }
+
 section#savepagenow-modal #recording-url:active {
     color: hsl(207deg 75% 72%);
 }
@@ -277,9 +279,9 @@ div#modal span.savepagenow-modal {
 }
 
 section#savepagenow-modal form {
-   display: flex;
-   justify-content: space-between;
-   padding: 25px 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 0 0 0;
 }
 
 section#savepagenow-modal form button {
@@ -309,7 +311,7 @@ section#savepagenow-modal form button#copyUrl span {
     float: left;
     align-items: center;
     height: 23px;
-  }
+}
 
 
 .left p {
@@ -351,6 +353,20 @@ body#save-page-now-landing .left {
 
 body#save-page-now-landing .button-title {
     display: block;
+}
+
+body#save-page-now-landing .left {
+    height: 100%;
+}
+
+body#save-page-now-landing .left .logo {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+body#save-page-now-landing .left .logo .overlay-link {
+    z-index: 3;
 }
 
 a#headerUrl {
@@ -418,6 +434,7 @@ a#headerUrl {
         position: relative;
         left: 0;
         margin-top: -25px;
+        height: unset;
     }
 
     body#save-page-now-landing #logo-arquivo {
