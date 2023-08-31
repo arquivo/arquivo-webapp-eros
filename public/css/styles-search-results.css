@@ -496,17 +496,14 @@ section#pages-results ul>li>a.results-date {
     font-style: italic;
 }
 
-section#pages-results ul>li>a.results-summary {
+section#pages-results ul>li>.results-summary {
     display: block;
     text-decoration: none;
     padding-bottom: 0;
     color: #4d5156;
     font-size: 14px;
     line-height: 1.58;
-}
-
-section#pages-results ul>li>a.results-summary em {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 section#pages-results+ul:nth-last-child(1) {
