@@ -17,7 +17,7 @@
         <li class="list-title">&rarr; <%= t('page-search.not-found.suggestions.title') %></li>
         <li class="fix-padding"><%- t('page-search.not-found.suggestions.'+searchType+'.first') %></li>
         <li><%- t('page-search.not-found.suggestions.'+searchType+'.second') %></li>
-        <li><%- t('page-search.not-found.suggestions.'+searchType+'.third') %></li>
+        <li><%- t('page-search.not-found.suggestions.'+searchType+'.third',{url:query}) %></li>
         <% if (searchType == 'url-search') { %> 
         <li><%- t('page-search.not-found.suggestions.url-search.fourth',{url:query}) %></li>
         <% } %>

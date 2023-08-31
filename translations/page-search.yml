@@ -63,8 +63,8 @@ not-found:
         en: <a href="//arquivo.pt/sugerir">Suggest</a> the site to be archived
         pt: <a href="//arquivo.pt/sugerir">Sugira</a> a página para que seja arquivada
       third:
-        en: <a href="//timetravel.mementoweb.org/">Search other web archives</a>
-        pt: <a href="//timetravel.mementoweb.org/">Pesquise outros arquivos web</a>
+        en: <a href="//web.archive.org/web/*/${url}">Search other web archives</a>
+        pt: <a href="//web.archive.org/web/*/${url}">Pesquise outros arquivos web</a>
       fourth:
         en: Try using <a href="/services/savepagenow?url=${url}">SavePageNow</a> to record the missing webpage 
         pt: Use o <a href="/services/savepagenow?url=${url}">SavePageNow</a> para gravar a página em falta
