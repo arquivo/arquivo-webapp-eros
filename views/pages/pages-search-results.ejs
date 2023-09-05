@@ -5,10 +5,18 @@
     <!-- starts global document: <head>...</head> -->
     <%- include("../templates/head",{pagename:'pages',meta:{ query: requestData.get('q')} }) -%>
     <!-- ends global document: <head>...</head> -->
+    
+    <!-- starts styling for search results -->
+    <link rel="stylesheet" type="text/css" href="/css/styles-search-results.css" media="screen">
+    <!-- ends styling for search results -->
 
     <!-- starts logic for exporting -->
     <script src="/js/exports.js"></script>
     <!-- ends logic for exporting -->
+
+    <!-- starts logic for text selection on search results -->
+    <script src="/js/page-search-results.js"></script>
+    <!-- ends logic for text selection on search results -->
     </head>
 
     <!-- starts document body content -->

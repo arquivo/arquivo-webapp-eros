@@ -4,6 +4,7 @@ module.exports = function (apiData) {
     let prevKnown200Index = -1;
     let nextKnown200Index = -1;
     
+    const currentYear = new Date().getFullYear();
     const returnData = apiData
         // Sanity check
         .filter((item) => (item.status && item.timestamp && item.digest && item.url))
@@ -40,8 +41,11 @@ module.exports = function (apiData) {
         .filter((item, index, array) => {
             return (index == 0 || item.status[0] != '2' || item.digest != array[index - 1].digest || item.timestamp.substring(6, 8) != array[index - 1].timestamp.substring(6, 8))
         })
+        // Soft embargo: don't display versions from the current year (issue #1343) 
+        .filter(item => item.timestamp.slice(0,4) < currentYear)
         // Sort by timestamp to properly order the results
         .sort(sortByTimestamp)
+        
         ;
 
     return returnData;

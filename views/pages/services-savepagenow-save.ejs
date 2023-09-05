@@ -18,8 +18,12 @@
         
   <!-- starts SavePageNow image -->
   <div class="left">
+    <div class="logo">
+    <a href="/services/savepagenow" class="overlay-link"></a>
     <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>
-    <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow.svg" alt="save page now"><p><%= t('services-savepagenow.recorder.label') %></p>
+    <img id="logo-save-page-now" class="image-width" src="/img/SavePageNow.svg" alt="save page now">
+  </div>
+    <p><%= t('services-savepagenow.recorder.label') %></p>
   </div>
   <!-- ends SavePageNow image -->
   
@@ -61,8 +65,9 @@
       <h4 id="save-page-now-slogan"><%= t('services-savepagenow.recorder.popup.slogan') %></h4>
 
       <p><%= t('services-savepagenow.recorder.popup.text') %></p>
+      <p style="word-break: break-all; margin-top: 5px;"><a id="recording-url" href="<%- recordingUrl %>" target="_blank"><%= recordingUrl %></a></p>
       <form action="/services/savepagenow">
-        <button type="submit"><%= t('services-savepagenow.recorder.popup.button') %></button>
+        <button type="submit" id="copyUrl" onclick="navigator.clipboard.writeText($('#recording-url').attr('href'))"><span class="fas fa-copy" aria-hidden="true"></span>&nbsp;<%= t('services-savepagenow.recorder.popup.button') %></button>
         <input type="hidden" name="l" value="<%- getLanguage() %>">
       </form>
     </section>

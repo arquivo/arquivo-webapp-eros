@@ -8,7 +8,7 @@
   }) -%>
 <% } else { %>
     
-    <% if (suggestion != apiData.request_parameters.q) { %>
+    <% if (suggestion != requestData.get('q')) { %>
         <%- include("../templates/fragments/search-suggestion") -%>
     <% } %>
 

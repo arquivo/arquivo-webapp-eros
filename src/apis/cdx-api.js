@@ -12,8 +12,8 @@ class CDXSearchApiRequest extends ApiRequest {
             filter: '!:~status:4|5',
             fields: 'url,timestamp,status,digest'
         }
-        super(config.get('cdx.api'), defaultApiParams);
-        this.apiData = [];
+        const defaultApiReply = [];
+        super(config.get('cdx.api'), defaultApiParams, defaultApiReply);
         this.dataFunction = (requestData) => {
             return (d) => {
                 this.apiReply = this.apiReply + d.toString();

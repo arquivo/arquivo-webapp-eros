@@ -13,26 +13,29 @@ class ApiRequest {
         this.closeFunction = (requestData, callback) => { return () => { callback(this.apiData); } };
         this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(e); callback(this.defaultApiReply); } };
         this.logger = logger('ApiRequest');
+        this.options = {method:'GET'};
     }
 
     get(requestData, callback) {
-        let get;
+        let request;
         if (this.apiUrl.startsWith('https')) {
-            get = https.get;
+            request = https.request;
         } else {
-            get = http.get;
+            request = http.request;
         }
         try {
             this.logger.info(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString())
-            const apiReq = get(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
+            const apiReq = request(this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString(),
+            this.options,
             (apiRes) => {
                 apiRes.on('data', this.dataFunction(requestData));
                 apiRes.on('end', this.endFunction(requestData));
                 apiRes.on('close', this.closeFunction(requestData, callback));
                 apiRes.on('error', this.errorFunction(requestData, callback));
-            })
-            apiReq.end();
+            });
             apiReq.on('error', this.errorFunction(requestData, callback));
+            apiReq.on('timeout', () => { apiReq.destroy( 'Timeout (' + (this.options.timeout || '120000') + ' ms)') });
+            apiReq.end();
 
         } catch (e) {
             this.errorFunction(requestData,callback)(e);

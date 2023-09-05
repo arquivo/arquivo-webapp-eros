@@ -39,11 +39,11 @@ recorder:
       en: Save pages on Arquivo.pt
       pt: Grava páginas no Arquivo.pt
     text:
-      en: Your browsing has been saved and will soon be available on Arquivo.pt.
-      pt: A sua navegação foi salva e ficará disponível em breve no Arquivo.pt 
+      en: "Your browsing has been recorded. Access it later with this link:"
+      pt: "A sua navegação foi gravada e ficará disponível em breve neste link:"
     button:
-      en: OK
-      pt: OK
+      en: Copy link and close
+      pt: Copiar link e fechar
 description:
   first-line:
     en: "The SavePageNow service allows a page to be archived at the exact moment the user makes the request."

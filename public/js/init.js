@@ -7,7 +7,7 @@ $(function(){
     }
 
     //disable links inside elements with "blockUrl" class
-    $('.blockUrl a').click((e) => e.preventDefault());
+    $('a.blockUrl').click((e) => e.preventDefault());
 
     //load ajax content:
     const loadingSection = $('#loading-section');

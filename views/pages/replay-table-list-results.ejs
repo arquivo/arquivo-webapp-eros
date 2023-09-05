@@ -2,9 +2,13 @@
 <html lang="<%- getLanguage() %>">
     
     <head>
-    <!-- starts global document: <head>...</head> -->
-    <%- include("../templates/head", {pagename: 'url', meta:{ query: requestData.get('q')} }) -%>
-    <!-- ends global document: <head>...</head> -->
+        <!-- starts global document: <head>...</head> -->
+        <%- include("../templates/head", {pagename: 'url', meta:{ query: requestData.get('q')} }) -%>
+        <!-- ends global document: <head>...</head> -->
+
+        <!-- starts styling for search results -->
+        <link rel="stylesheet" type="text/css" href="/css/styles-search-results.css" media="screen">
+        <!-- ends styling for search results -->
     </head>
 
     <!-- starts document body content -->

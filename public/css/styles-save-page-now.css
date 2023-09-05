@@ -247,6 +247,19 @@ section#savepagenow-modal h4 {
     margin-bottom: 18px;
 }
 
+section#savepagenow-modal #recording-url {
+    color: #1c75c0;
+    cursor: pointer;
+}
+
+section#savepagenow-modal #recording-url:hover {
+    color: black;
+}
+
+section#savepagenow-modal #recording-url:active {
+    color: hsl(207deg 75% 72%);
+}
+
 /* English version advanced search button width */
 :lang(pt) section#savepagenow-modal h4 {
     font-size: 13.7px;
@@ -267,13 +280,39 @@ div#modal span.savepagenow-modal {
 
 section#savepagenow-modal form {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 25px 0 0 0;
 }
 
 section#savepagenow-modal form button {
     width: 103px;
 }
+
+section#savepagenow-modal form button#copyUrl {
+    display: inline-block;
+    width: auto;
+    padding-left: 30px;
+    font-size: 13px;
+    margin: 0 auto 0 auto;
+}
+
+section#savepagenow-modal form button#copyUrl span {
+    position: absolute;
+    top: 2px;
+    left: 10px;
+}
+
+#savepagenow-modal span.fa-video-camera {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 4px;
+    font-size: 14px;
+    width: 19px;
+    float: left;
+    align-items: center;
+    height: 23px;
+}
+
 
 .left p {
     font-size: 12px;
@@ -314,6 +353,20 @@ body#save-page-now-landing .left {
 
 body#save-page-now-landing .button-title {
     display: block;
+}
+
+body#save-page-now-landing .left {
+    height: 100%;
+}
+
+body#save-page-now-landing .left .logo {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+body#save-page-now-landing .left .logo .overlay-link {
+    z-index: 3;
 }
 
 a#headerUrl {
@@ -381,6 +434,7 @@ a#headerUrl {
         position: relative;
         left: 0;
         margin-top: -25px;
+        height: unset;
     }
 
     body#save-page-now-landing #logo-arquivo {
