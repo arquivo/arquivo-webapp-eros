@@ -31,7 +31,7 @@ const mimeToExtension = {
     // "application/msword": "doc",
     "application/pdf": "pdf",
     "text/plain": "txt",
-    // "text/html": "html"
+    "text/html": "html"
 }
 module.exports = function (req, res) {
     try {
