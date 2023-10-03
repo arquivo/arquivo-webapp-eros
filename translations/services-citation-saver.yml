@@ -50,8 +50,8 @@ text:
     pt: 'Insira um texto contendo URLs:'
 field:
   1:
-    en: "Accepted formats: PDF, TXT. Max size: 100 MB"
-    pt: 'Formatos aceites: PDF, TXT. Tamanho máximo: 100 MB'
+    en: "Accepted formats: PDF, TXT, HTML. Max size: 100 MB"
+    pt: 'Formatos aceites: PDF, TXT, HTML. Tamanho máximo: 100 MB'
   2:
     en: "Your email (optional):"
     pt: 'O seu e-mail (opcional):'
@@ -71,8 +71,8 @@ errors:
       en: URL not found. Make sure the address is correct. 
       pt: URL não encontrado. Verifique se o endereço está correto.
     mimetype:
-      en: The URL was not submitted. The document format must be PDF or TXT.
-      pt: O URL não foi submetido. O formato do documento tem de ser PDF ou TXT.
+      en: The URL was not submitted. The document format must be PDF, TXT or HTML.
+      pt: O URL não foi submetido. O formato do documento tem de ser PDF, TXT ou HTML.
     filesize:
       en: The URL was not submitted. The document size must be under 100 MB.
       pt: O URL não foi submetido. A dimensão do documento não pode exceder os 100 MB.
