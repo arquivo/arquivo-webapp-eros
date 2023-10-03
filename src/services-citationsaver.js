@@ -8,6 +8,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
+const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const serviceAccountConfigs = require('../config/service_account.json');
 const logger = require('./logger')('CitationSaver');
 
@@ -129,7 +130,7 @@ function handleFile(req, res) {
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
-    const path = './uploads/CitationSaver/' + newName;
+    const path = uploadFolderPath + '/' + newName;
 
     uploadedFile.mv(path);
 
@@ -209,7 +210,7 @@ function handleURL(req, res) {
             const date = (new Date()).toLocaleDateString('en-CA');
             const timestamp = Date.now();
             const email = req.body?.email ?? '';
-            const path = './uploads/CitationSaver/' + newName;
+            const path = uploadFolderPath + '/' + newName;
 
             fs.writeFile(path, url, err => {
                 if (err) {
@@ -259,7 +260,7 @@ function handleText(req, res) {
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
-    const path = './uploads/CitationSaver/' + newName;
+    const path = uploadFolderPath + '/' + newName;
     const originalName = '';
 
     fs.writeFile(path, text, err => {
