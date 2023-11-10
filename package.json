@@ -10,7 +10,7 @@
     "express-fileupload": "^1.4.0",
     "express-session": "^1.17.2",
     "express-winston": "^4.2.0",
-    "google-spreadsheet": "^3.2.0",
+    "google-spreadsheet": "^4.1.1",
     "i18n-node-yaml": "^1.0.4",
     "js-datepicker": "^5.18.0",
     "jws": "^4.0.0",
