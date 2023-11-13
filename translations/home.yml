@@ -30,8 +30,8 @@ arquivo-pt-award:
     pt: 'Prémio Arquivo.pt 2024'
     en: 'Arquivo.pt Award 2024'
   url:
-    pt: http://arquivo.pt/vencedores2023
-    en: http://arquivo.pt/winners2023
+    pt: http://arquivo.pt/premio
+    en: http://arquivo.pt/award
   img:
     pt: /img/premio-homepage-banner-2024-PT.jpg
     en: /img/premio-homepage-banner-2024-EN.jpg
