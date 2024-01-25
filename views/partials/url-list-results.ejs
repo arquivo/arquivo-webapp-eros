@@ -7,7 +7,9 @@
   }) -%>
 <% } else { %>
   <% if (suggestion != requestData.get('q')) { %>
-    <%- include("../templates/fragments/search-suggestion") -%>
+    <%- include("../templates/fragments/search-suggestion", {
+      suggestionType: 'url'
+    }) -%>
   <% } %>
 
 
