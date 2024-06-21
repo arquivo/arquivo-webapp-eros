@@ -138,19 +138,37 @@ function toggleKeyboardNavigation(){
 
 function exportAnnotations() {
 
-  var filename = "annotations.json"
-  var text = JSON.stringify(JSON.parse(window.localStorage.getItem('annotations')), null, 2);
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
+    var filename = "annotations.json"
+    let original = JSON.parse(window.localStorage.getItem('annotations'));
+    let output = JSON.parse(window.localStorage.getItem('annotations'));
+    if (output?.page?.queries !== undefined){
+        output.page.queries = Object.keys(original.page.queries).map(k => {
+            let obj = {"query":k, ...original.page.queries[k]}
+            obj.results = Object.keys(original.page.queries[k].results).map(id => ({id,...original.page.queries[k].results[id]}))
+            return obj;
+        }) 
+    }
+  
+    if (output?.image?.queries !== undefined){
+        output.image.queries = Object.keys(original.image.queries).map(k => {
+            let obj = {"query":k, ...original.image.queries[k]}
+            obj.results = Object.keys(original.image.queries[k].results).map(id => ({id,...original.image.queries[k].results[id]}))
+            return obj;
+        }) 
+    }
+      
+    var text = JSON.stringify(output, null, 2);
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+  }
 
 function changePosition(position, childrenCount, nCols){
     if (position < 0){
