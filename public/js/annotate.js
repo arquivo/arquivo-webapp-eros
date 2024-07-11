@@ -195,7 +195,7 @@ $( document ).ready(function() {
 
     if (annotateQS == "true"){
         window.localStorage.setItem('annotate', "true");
-    } else if (annotateQS == "false"){
+    } else {
         window.localStorage.setItem('annotate', "false");
     }  
 
