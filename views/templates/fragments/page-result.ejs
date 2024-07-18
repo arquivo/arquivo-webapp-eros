@@ -1,7 +1,7 @@
 <% if (typeof pageData != 'undefined'){
     const httpRegEx = /https?:\/\/(.*?)\/?$/;
     const filteredURL = httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL
-    const resultTitle = pageData.title == '' ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa
+    const resultTitle = !pageData.title ? pageData.originalURL : ""; //falta por em bold os termos da pesquisa
     const year = pageData.tstamp.slice(0,4);
     const month = t('common.months.'+pageData.tstamp.slice(4,6));
     const day = parseInt(pageData.tstamp.slice(6,8));
@@ -53,6 +53,7 @@
         });
         return resultText;
     }
+
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
         <a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link"></a>
