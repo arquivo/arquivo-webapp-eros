@@ -23,9 +23,8 @@
         </form>
 
         <script>
-            const urlPattern = /^\s*(((http|https):\/\/)?([a-zA-Z\d][-\w\.]+)\.([a-zA-Z\.]{2,6})([-\/\w\p{L}\.~,;:%&=?!+$#*\(?\)?]*)\/?)\s*$/;
             $('#search-form').submit(function (event) {
-                if (!urlPattern.test($("#submit-search-input").val())) {
+                if (!isValidUrl($("#submit-search-input").val())) {
                     event.preventDefault();
                     $('#savepagenow-example').replaceWith('<p id="save-page-url-message-error"></p>');
                     $('#save-page-url-message-error').text('<%= t('services-savepagenow.form.error.default') %>');
