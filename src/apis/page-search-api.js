@@ -1,7 +1,7 @@
 const ApiRequest = require('./api-request');
 const config = require('config');
 class PageSearchApiRequest extends ApiRequest {
-    constructor() {
+    constructor(backend=null) {
         const defaultApiParams = {
             q: null,
             from: config.get('search.start.date'),
@@ -18,8 +18,19 @@ class PageSearchApiRequest extends ApiRequest {
             metadata: null,
             trackingId: null,
         }
-        
-        super(config.get('text.search.api'),defaultApiParams);
+        let apiEndpoint;
+        switch (backend) {
+            case 'solr':
+                apiEndpoint = config.get('text.search.api.solr');
+                break;
+            case 'nutchwax':
+                apiEndpoint = config.get('text.search.api.nutchwax');
+                break;
+            default:
+                apiEndpoint = config.get('text.search.api.default');
+                break;
+        }
+        super(apiEndpoint,defaultApiParams);
     }
 
     sanitizeRequestData(requestData) {
