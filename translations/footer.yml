@@ -210,6 +210,13 @@ help:
     url:
       pt: 'https://arquivo.pt/forma'
       en: 'https://arquivo.pt/training'
+  catalog:
+    text:
+      pt: 'Catálogo'
+      en: 'Catalog'
+    url:
+      pt: 'https://arquivo.pt/catalogo'
+      en: 'https://arquivo.pt/catalog'
   contact:
     text:
       pt: 'Contacto'
