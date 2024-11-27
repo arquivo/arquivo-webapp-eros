@@ -1,34 +1,30 @@
-
 const ApiRequest = require('./api-request');
 const config = require('config');
 const dateToTimestamp = require('../utils/date-to-timestamp');
 
-class ImageSearchApiRequest extends ApiRequest {
+class TitleSearchApiRequest extends ApiRequest {
     constructor() {
         const defaultApiParams = {
-            q: '',
+            title: null,
+            q: null,
             from: config.get('search.start.date'),
             to: dateToTimestamp(new Date()),
             type: null,
             offset: 0,
-            siteSearch: null,
             collection: null,
-            maxItems: config.get('image.results.per.page'),
-            dedupValue: null,
-            dedupField: null,
-            fields: 'imgSrc,imgMimeType,imgHeight,imgWidth,imgTstamp,imgTitle,imgAlt,imgCaption,imgLinkToArchive,pageURL,pageTstamp,pageLinkToArchive,pageTitle,collection,imgDigest,pageHost,pageImages,safe',
+            maxItems: config.get('text.results.per.page'),
+            fields: null,
             prettyPrint: false,
-            size:'all',
-            safeSearch:'on',
             trackingId: null,
         }
-        super(config.get('image.search.api'),defaultApiParams);
+        let apiEndpoint = config.get('title.search.api');
+        super(apiEndpoint,defaultApiParams);
     }
 
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
 
-        ['site', 'type', 'collection', 'size', 'safe'].forEach(inlineParam => {
+        ['type', 'collection'].forEach(inlineParam => {
             const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
             if (apiRequestData.has(requestParam)) {
                 const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)
@@ -39,4 +35,4 @@ class ImageSearchApiRequest extends ApiRequest {
     }
 }
 
-module.exports = ImageSearchApiRequest;
+module.exports = TitleSearchApiRequest;

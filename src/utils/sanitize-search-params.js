@@ -1,5 +1,6 @@
 const config = require('config');
 const { request } = require('express');
+const dateToTimestamp = require('./date-to-timestamp');
 
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
@@ -39,7 +40,7 @@ module.exports = function (req, res) {
 
     const defaultRequestParameters = {
         from: config.get('search.start.date'),
-        to: (new Date()).toLocaleDateString('en-CA').split('-').join('')
+        to: dateToTimestamp(new Date())
     }
 
     Object.keys(defaultRequestParameters)

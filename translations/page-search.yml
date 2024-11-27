@@ -3,8 +3,8 @@ accessibility:
     pt: Resultados da Pesquisa de Páginas
     en: Page Search Results
 view-more-results:
-  pt: Mais resultados de ${site}
-  en: More results from ${site}
+  pt: Mais resultados semelhantes
+  en: More similar results
 
 #translations for search suggestion
 search-suggestion:

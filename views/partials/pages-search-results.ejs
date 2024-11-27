@@ -15,13 +15,21 @@
     <h3><%= t('page-search.accessibility.title') %></h3>    
     <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
         numResults:(''+apiData.estimated_nr_results).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
-        from: apiData.request_parameters.from.slice(0,4),
-        to: apiData.request_parameters.to.slice(0,4)
+        from: requestData.get('from').slice(0,4),
+        to: requestData.get('to').slice(0,4)
     }) %></p></li>
 
     <% apiData.response_items.forEach((element,index) => { %>
+        <% let prevTitle = null; %>
+        <% if(index > 0){
+            if(!apiData.response_items[index-1].title){
+                prevTitle = apiData.response_items[index-1].originalURL;
+            } else {
+                prevTitle = apiData.response_items[index-1].title;
+            }
+        } %>
         <!-- starts result <%= (index+1) %> -->
-        <%- include("../templates/fragments/page-result",{pageData: element, index:index, prevUrl: index==0? null : apiData.response_items[index-1].originalURL}) -%>
+        <%- include("../templates/fragments/page-result",{pageData: element, index:index, prevTitle: prevTitle}) -%>
         <!-- ends result <%= (index+1) %> -->
 
     <% }); %>

@@ -1,11 +1,12 @@
 const ApiRequest = require('./api-request');
 const config = require('config');
+const dateToTimestamp = require('../utils/date-to-timestamp');
 class PageSearchApiRequest extends ApiRequest {
     constructor(backend=null) {
         const defaultApiParams = {
             q: null,
             from: config.get('search.start.date'),
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            to: dateToTimestamp(new Date()),
             type: null,
             offset: 0,
             siteSearch: null,
@@ -36,7 +37,7 @@ class PageSearchApiRequest extends ApiRequest {
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
 
-        ['site', 'type', 'collection','safe','size'].forEach(inlineParam => {
+        ['site', 'type', 'collection'].forEach(inlineParam => {
             const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
             if (apiRequestData.has(requestParam)) {
                 const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)

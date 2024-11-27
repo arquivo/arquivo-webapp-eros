@@ -14,10 +14,10 @@ if (typeof pageData != 'undefined'){
     const month = t('common.months.'+pageData.tstamp.slice(4,6));
     const day = parseInt(pageData.tstamp.slice(6,8));
     const dedupField = requestData.get('dedupField') ?? 'site'
-    const subResult = dedupField == 'site' && pageData.originalURL == prevUrl;
+    const subResult = resultTitle == prevTitle && !!requestData && !requestData.has('title');
     const query = requestData.get('q');
 
-    const siteRegEx = /(^|\s)site:/;
+    // const siteRegEx = /(^|\s)site:/;
     const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {});
     const mime = pageData.mimeType.split('/');
 
@@ -69,21 +69,20 @@ if (typeof pageData != 'undefined'){
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><p class="results-summary blockUrl"><%- pageData.snippet %></p></li>
-        <% if (subResult && !siteRegEx.test(query) ) { %>
+        <% if (subResult) { %>
         <li>
             <form class="pages-search-results-list" action="/page/search">
                 <%
                  const site = filteredURL.split('/')[0]
-                 newRequestData.set('q',query + ' site:'+site)
-                 newRequestData.set('dedupField','url')
+                 newRequestData.set('q',query)
+                 newRequestData.set('title',resultTitle)
                  const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page')
                  newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )
-                 newRequestData.set('offset', 0 );
                  newRequestData.delete('trackingId');
                  newRequestData.set('offset', 0 );
                 %>
                 <%- include('hidden-search-inputs',{requestData:newRequestData}) %>
-                <button type="submit"> <%= t('page-search.view-more-results',{site}) %></button>
+                <button type="submit"> <%= t('page-search.view-more-results') %></button>
             </form>
         </li>
         <% } %>

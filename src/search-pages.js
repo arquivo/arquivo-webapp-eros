@@ -2,11 +2,12 @@ const sanitizeInputs = require('./utils/sanitize-search-params');
 const makeExportObject = require('./export-page-search');
 const SuggestionApi = require('./apis/suggestion-api');
 const PageSearchApiRequest = require('./apis/page-search-api');
+const TitleSearchApiRequest = require('./apis/title-search-api');
 const logger = require('./logger')('PageSearch');
 
 module.exports = function (req, res) {
     const requestData = sanitizeInputs(req, res);
-    const apiRequest = new PageSearchApiRequest(requestData.get('api'));
+    const apiRequest = requestData.has('title') ? new TitleSearchApiRequest() : new PageSearchApiRequest(requestData.get('api'));
     const suggestionRequest = new SuggestionApi();
 
     suggestionRequest.getSuggestion(requestData.get('q'), requestData.get('l') ?? 'pt',

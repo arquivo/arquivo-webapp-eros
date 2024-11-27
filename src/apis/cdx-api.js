@@ -1,14 +1,15 @@
 const https = require('https');
 const ApiRequest = require('./api-request');
 const config = require('config');
+const dateToTimestamp = require('../utils/date-to-timestamp');
 
 class CDXSearchApiRequest extends ApiRequest {
     constructor() {
         const defaultApiParams = {
-            output: 'json',
-            from: config.get('search.start.date'),
             url: '',
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            from: config.get('search.start.date'),
+            to: dateToTimestamp(new Date()),
+            output: 'json',
             filter: '!:~status:4|5',
             fields: 'url,timestamp,status,digest'
         }
