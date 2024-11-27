@@ -3,11 +3,11 @@ form:
     en: ArchivePageNow form page
     pt: Página do formulário do ArchivePageNow
   text:
-    en: Record webpages on Arquivo.pt
-    pt: Grava páginas no Arquivo.pt
+    en: Archive webpages on Arquivo.pt
+    pt: Arquive páginas no Arquivo.pt
   button:
-    en: Record 
-    pt: Gravar 
+    en: Archive 
+    pt: Arquivar 
   example:
     en: e.g. www.fccn.pt
     pt: ex. www.fccn.pt
@@ -23,11 +23,11 @@ form:
       pt: A página está inacessível. Verifique se o endereço está correto.
 recorder:
   label:
-    en: Browse to save pages
-    pt: Navegue para ir gravando as páginas
+    en: Browse to archive pages
+    pt: Navegue para ir arquivando as páginas
   saving:
-    en: Saving...
-    pt: Gravando...
+    en: Archiving...
+    pt: Arquivando...
   stop:
     en: Conclude
     pt: Concluir
