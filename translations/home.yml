@@ -134,13 +134,13 @@ memorial:
     pt: 'https://arquivo.pt/memorial'
     en: 'https://arquivo.pt/memorialen'
 
-savepagenow:
+archivepagenow:
   header:
-    pt: SavePageNow
-    en: SavePageNow
+    pt: ArchivePageNow
+    en: ArchivePageNow
   title: 
-    pt: SavePage
-    en: SavePage
+    pt: ArchivePage
+    en: ArchivePage
   subtitle: 
     pt: Now
     en: Now
@@ -151,8 +151,8 @@ savepagenow:
     pt: Arquive uma página imediatamente
     en: Archive a webpage immediately 
   url:
-    pt: https://arquivo.pt/savepagenow
-    en: https://arquivo.pt/savepagenow?l=en
+    pt: https://arquivo.pt/archivepagenow
+    en: https://arquivo.pt/archivepagenow?l=en
 
 suggest:
   header:

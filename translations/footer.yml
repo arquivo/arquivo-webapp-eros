@@ -149,13 +149,13 @@ collaborate:
     url:
       pt: 'https://arquivo.pt/doar'
       en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
-  savepagenow:
+  archivepagenow:
     text:
-      pt: Grave páginas
-      en: Record webpages
+      pt: Arquive páginas
+      en: Archive webpages
     url:
-      pt: https://arquivo.pt/savepagenow
-      en: https://arquivo.pt/savepagenow?l=en  
+      pt: https://arquivo.pt/archivepagenow
+      en: https://arquivo.pt/archivepagenow?l=en  
   citationsaver:
     text:
       pt: Preserve citações

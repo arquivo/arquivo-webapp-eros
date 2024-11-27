@@ -2,7 +2,7 @@ const backendRoutes = require('./backend-routes');
 const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
-const savePageNow = require('./services-savepagenow');
+const archivePageNow = require('./services-archivepagenow');
 const citationSaver = require('./services-citationsaver');
 const wayback = require('./wayback');
 const tracking = require('./tracking');
@@ -169,20 +169,26 @@ router.get('/partials/:id', function (req, res) {
     }
 });
 
-// savepagenow form
+// Backwards compatibility with old service name (SavePageNow -> ArchivePageNow) 
 router.get('/services/savepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
-    res.render('pages/services-savepagenow', {
+    res.redirect('/services/archivepagenow?'+requestData.toString());
+});
+
+// ArchivePageNow form
+router.get('/services/archivepagenow', function (req, res) {
+    const requestData = new URLSearchParams(req.query);
+    res.render('pages/services-archivepagenow', {
         url: (requestData.get('url') ?? '').trim(),
         error: false
     });
 });
 
-// savepagenow recording page
-router.post('/services/savepagenow', function (req, res) {
+// ArchivePageNow recording page
+router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     if (!requestData.has('logging')) {
-        savePageNow(req, res);
+        archivePageNow(req, res);
     } else {
         res.end();
     }

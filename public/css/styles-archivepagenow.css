@@ -1,0 +1,537 @@
+/* Save page Now input */
+
+body#archivepagenow section#archivepagenow-content,
+section#body-content {
+    justify-content: flex-start;
+    padding: 0 10px;
+    margin-top: 100px;
+    margin-bottom: 25vh;
+}
+
+body#archivepagenow form#search-form input#submit-search-input {
+    padding-left: 12px;
+    background-image: none;
+}
+
+body#archivepagenow form#search-form {
+    margin: 8px auto 0 auto;
+    height: auto;
+}
+
+body#archivepagenow img#logo-archivepagenow {
+    margin-right: 14px;
+}
+
+body#archivepagenow section#search-tools {
+    margin: 0px 0 15px 0;
+    padding: 0px;
+}
+
+body#archivepagenow section#archivepagenow-content h3,
+section#body-content h3 {
+    visibility: collapse;
+    height: 0;
+}
+
+body#archivepagenow h4#archivepagenow-slogan {
+    padding: 11px 6px 11px 0px;
+}
+
+body#archivepagenow small#archivepagenow-example {
+    padding-top: 10px;
+    padding-left: 14px;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4em;
+    color: rgb(141 141 141)
+}
+
+body#archivepagenow p#save-page-url-message-error {
+    padding-top: 10px;
+    padding-left: 14px;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4em;
+    color: red;
+}
+
+/* Hides "Copy link" when in ArchivePageNow mode */
+
+section#archivepagenow-description {
+    margin: 0;
+    line-height: 27px;
+}
+
+section#archivepagenow-description a {
+    color: #1c75c0;
+}
+
+section#archivepagenow-description p {
+    margin-bottom: 8px;
+}
+
+body#archivepagenow li#menu-copy-link {
+    display: none;
+}
+
+/* Modal ArchivePageNow now */
+body#archivepagenow #archivepagenow-modal {
+    max-width: 300px;
+    text-align: center;
+}
+
+/* Landing page: ArchivePageNow icon */
+
+body#archivepagenow .archivepagenow-icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 18px;
+}
+
+body#archivepagenow-landing .left .archivepagenow-icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 14px;
+    color: white;
+}
+
+body#archivepagenow-landing {
+    overflow: hidden;
+    height: 100vh;
+}
+
+body#archivepagenow-landing header {
+    height: 58px;
+}
+
+/* Save page Now input */
+
+body#archivepagenow section#archivepagenow-content,
+section#body-content {
+    justify-content: flex-start;
+    padding: 0 18px;
+}
+
+img#logo-archivepagenow {
+    margin-right: 5px;
+}
+
+
+body#archivepagenow section#archivepagenow-content h4,
+body#archivepagenow section#body-content h4 {
+    padding: 11px 6px 11px 0px;
+    font-weight: normal;
+    font-size: 1em;
+    width: fit-content;
+}
+
+body#archivepagenow form#search-form input#submit-search-input {
+    padding-left: 12px;
+    background-image: none;
+}
+
+
+body#archivepagenow form#search-form {
+    margin: 8px auto 0 auto;
+    height: auto;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    box-shadow: 0px 5px 8px -2px rgb(0 0 0 / 30%);
+}
+
+.left {
+    position: absolute;
+    left: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.right {
+    position: absolute;
+    right: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2px;
+}
+
+#pulsing-section {
+    display: flex;
+    width: fit-content;
+    margin-right: 20px;
+    background-color: rgb(4, 37, 47);
+    border-radius: 50px;
+    flex-direction: row;
+    justify-content: left;
+    align-content: center;
+    align-items: center;
+    color: antiquewhite;
+    font-size: small;
+    padding-right: 10px;
+    font-style: italic;
+}
+
+.pulse {
+    background: rgb(255, 0, 0);
+    border-radius: 50%;
+    margin: 5px;
+    height: 21px;
+    width: 21px;
+    box-shadow: 0 0 0 0 rgb(255 255 255);
+    transform: scale(1);
+    animation: pulse 1s infinite;
+    color: bisque;
+    border: 2px solid white;
+}
+
+#colorchange {
+    -webkit-animation: colorchange 3s infinite alternate;
+    animation: colorchange 1s infinite alternate;
+    color: bisque;
+    font-size: small;
+    font-size: 12px;
+    box-shadow: none !important;
+}
+
+header button#nav-options-right-button {
+    position: relative !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 31px;
+    font-size: 0.8em;
+    border-radius: 3px;
+    padding: 12px;
+}
+
+.image-width {
+    width: 130px;
+}
+
+div#iframe_div {
+    width: 100%;
+    height: 100vh;
+    margin-top: -1px;
+}
+
+/* Modal: ArchivePageNow Notification pop-up*/
+
+section#archivepagenow-modal img {
+    position: relative;
+    top: 0px;
+    width: 154px !important;
+}
+
+section#archivepagenow-modal h3 {
+    visibility: collapse;
+    height: 0;
+}
+
+section#archivepagenow-modal h4 {
+    font-size: 13.5px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 18px;
+}
+
+section#archivepagenow-modal #recording-url {
+    color: #1c75c0;
+    cursor: pointer;
+}
+
+section#archivepagenow-modal #recording-url:hover {
+    color: black;
+}
+
+section#archivepagenow-modal #recording-url:active {
+    color: hsl(207deg 75% 72%);
+}
+
+/* English version advanced search button width */
+:lang(pt) section#archivepagenow-modal h4 {
+    font-size: 13.7px;
+}
+
+section#archivepagenow-modal p {
+    font-size: small;
+    line-height: normal;
+}
+
+div#modal span.archivepagenow-modal {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-right: 8px;
+    font-size: 20px;
+}
+
+section#archivepagenow-modal form {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 0 0 0;
+}
+
+section#archivepagenow-modal form button {
+    width: 103px;
+}
+
+section#archivepagenow-modal form button#copyUrl {
+    display: inline-block;
+    width: auto;
+    padding-left: 30px;
+    font-size: 13px;
+    margin: 0 auto 0 auto;
+}
+
+section#archivepagenow-modal form button#copyUrl span {
+    position: absolute;
+    top: 2px;
+    left: 10px;
+}
+
+#archivepagenow-modal span.fa-video-camera {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 4px;
+    font-size: 14px;
+    width: 19px;
+    float: left;
+    align-items: center;
+    height: 23px;
+}
+
+
+.left p {
+    font-size: 12px;
+    color: white;
+    padding-left: 20px;
+}
+
+body#archivepagenow-landing #replay_iframe {
+    overflow: hidden;
+    height: calc(100vh - 70px);
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding-top: 70px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#archivepagenow-modal span {
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 4px;
+    font-size: 14px;
+    width: 19px;
+    float: left;
+    align-items: center;
+    height: 23px;
+}
+
+
+body#archivepagenow-landing .left {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body#archivepagenow-landing .button-title {
+    display: block;
+}
+
+body#archivepagenow-landing .left {
+    height: 100%;
+}
+
+body#archivepagenow-landing .left .logo {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+
+body#archivepagenow-landing .left .logo .overlay-link {
+    z-index: 3;
+}
+
+a#headerUrl {
+    font-size: 12.6px;
+    font-weight: lighter;
+    font-family: Roboto, sans-serif;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+
+.title-wrapper {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    font-size: 19px;
+}
+
+#archivepagenow-content .title-wrapper {
+    color: #002849;
+}
+
+#archivepagenow-landing .title-wrapper {
+    color: #FFFFFF;
+    margin-top: 24px;
+}
+
+span.title {
+    font-weight: 700;
+}
+
+span.subtitle {
+    font-weight: 400;
+    font-style: italic;
+    margin-left: -5px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 20px rgba(255, 0, 0, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(253, 0, 0, 0);
+    }
+}
+
+@keyframes colorchange {
+    0% {
+        color: red;
+    }
+
+    70% {
+        color: bisque;
+    }
+
+    100% {
+        color: red;
+    }
+}
+
+@media (max-width:1300px) {
+    .left p {
+        display: none;
+    }
+}
+
+@media (max-width:959px) {
+
+    body#archivepagenow-landing #replay_iframe {
+        height: calc(100vh - 153px);
+        padding-top: 153px;
+    }
+
+    body#archivepagenow-landing header {
+        height: 146px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    body#archivepagenow-landing .left {
+        position: relative;
+        left: 0;
+        margin-top: -25px;
+        height: unset;
+    }
+
+    #archivepagenow-landing .title-wrapper {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    body#archivepagenow-landing .image-width {
+        position: relative;
+        z-index: 2;
+        width: 200px;
+    }
+
+    body#archivepagenow-landing .left .image-width {
+        top: 24px;
+    }
+
+    /* ArchivePageNow iframe div container */
+    div#iframe_div {
+        width: 100%;
+        height: calc(100vh - 118px);
+        margin-top: 118px;
+    }
+
+    a#headerUrl {
+        display: none;
+    }
+}
+
+@media (min-width: 0px) and (max-width: 959px) {
+    body#archivepagenow-landing .left {
+        top: 75px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    body#archivepagenow-landing .right {
+        position: relative;
+        margin-top: 58px;
+        margin-bottom: 2px;
+        margin-left: 18px;
+    }
+}
+
+/* ArchivePageNow: center  search box for mobile */
+
+@media (min-width: 0px) and (max-width: 429px) {
+
+    body#archivepagenow section#archivepagenow-content,
+    section#body-content {
+        justify-content: center;
+    }
+
+    body#archivepagenow h4#archivepagenow-slogan {
+        padding: 11px 18px 11px 0px;
+    }
+}
+
+
+@media (max-width: 415px) {
+
+    /* Galaxy Fold: ##Screen = B/w 280px to 653px */
+
+    @media (width: 280px) and (height: 653px) {
+        body#archivepagenow-landing .left .fa.fa-video-camera::before {
+            position: relative;
+            top: 64.3px;
+            left: 2px;
+        }
+    }
+}

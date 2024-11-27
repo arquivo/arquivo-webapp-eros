@@ -66,5 +66,5 @@ not-found:
         en: <a href="//web.archive.org/web/*/${url}">Search other web archives</a>
         pt: <a href="//web.archive.org/web/*/${url}">Pesquise outros arquivos web</a>
       fourth:
-        en: Try using <a href="/services/savepagenow?url=${url}">SavePageNow</a> to record the missing webpage 
-        pt: Use o <a href="/services/savepagenow?url=${url}">SavePageNow</a> para gravar a página em falta
+        en: Try using <a href="/services/archivepagenow?url=${url}">ArchivePageNow</a> to record the missing webpage 
+        pt: Use o <a href="/services/archivepagenow?url=${url}">ArchivePageNow</a> para gravar a página em falta

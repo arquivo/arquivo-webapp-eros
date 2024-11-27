@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="<%- getLanguage() %>">
+    
+    <head>
+        <!-- starts global document: <head>...</head> -->
+        <%- include("../templates/head",{pagename:'archivepagenow'}) -%>
+        <!-- ends global document: <head>...</head> -->
+  
+        <link rel="stylesheet" type="text/css" href="/css/styles-archivepagenow.css" media="screen">
+
+    </head>
+
+    <!-- starts document body content -->
+    <body id="archivepagenow" class="homepage-cl">
+
+        <!-- starts skip to main content -->
+        <%- include("../templates/fragments/skip-to-main-content") -%>
+        <!-- ends skip to main content -->
+        
+        <!-- adds headers for search engines -->
+        <%- include("../templates/header/header-search-engine") -%>
+        <!-- ends headers for search engines -->
+
+        <!-- starts include header home -->
+        <header>
+            <!-- starts left, right and replay menus overlay modal -->
+            <%- include("../templates/fragments/menus-overlay.ejs") -%>
+            <!-- ends left, right and replay menus overlay modal -->
+            <!-- Include menu button -->
+            <%- include("../templates/menu/menu-button") -%>
+            <!-- end include menu button -->
+
+            <!-- adds logo -->
+            <%- include("../templates/header/logo") -%>
+            <!-- ends logo -->
+
+            <!-- Include left nav -->
+            <%- include("../templates/menu/left_nav_menu") -%>
+            <!-- ends left nav -->
+
+            <!-- starts white background top corner rounded shape -->
+            <div class="background-top-curve"></div>
+            <!-- ends white background top corner rounded shape -->
+        </header>
+        <!-- ends header -->
+
+        <!-- starts main container-->
+        <main id="main-content">
+            <%- include("../templates/body/body-services-archivepagenow") -%>
+        </main>
+
+
+        <!-- ends main container-->
+
+        <!-- starts footer -->
+        <%- include("../templates/footer") -%>
+        <!-- ends footer -->   
+
+    </body>
+    <!-- ends document body content -->
+    
+</html>

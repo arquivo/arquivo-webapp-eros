@@ -1,0 +1,60 @@
+form:
+  accessibility:
+    en: ArchivePageNow form page
+    pt: Página do formulário do ArchivePageNow
+  text:
+    en: Record webpages on Arquivo.pt
+    pt: Grava páginas no Arquivo.pt
+  button:
+    en: Record 
+    pt: Gravar 
+  example:
+    en: e.g. www.fccn.pt
+    pt: ex. www.fccn.pt
+  label:
+    en: Page address
+    pt: Endereço da página 
+  error:
+    default:
+      en: Address not found. Make sure the address is correct. 
+      pt: Endereço não encontrado. Verifique se o endereço está correto.
+    page-down:
+      en: The page is inaccessible. Make sure the address is correct.
+      pt: A página está inacessível. Verifique se o endereço está correto.
+recorder:
+  label:
+    en: Browse to save pages
+    pt: Navegue para ir gravando as páginas
+  saving:
+    en: Saving...
+    pt: Gravando...
+  stop:
+    en: Conclude
+    pt: Concluir
+  popup:
+    accessibility:
+      en: 'Notification Popup'
+      pt: 'Janela de notificação'
+    slogan:
+      en: Archive pages on Arquivo.pt
+      pt: Arquive páginas no Arquivo.pt
+    text:
+      en: "Your browsing has been recorded. Access it later with this link:"
+      pt: "A sua navegação foi gravada e ficará disponível em breve neste link:"
+    button:
+      en: Copy link and close
+      pt: Copiar link e fechar
+description:
+  first-line:
+    en: "The ArchivePageNow service allows a page to be archived at the exact moment the user makes the request."
+    pt: 'O serviço ArchivePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido.'
+  second-line:
+    en: "The archived contents are later integrated in the Arquivo.pt collection."
+    pt: 'Os conteúdos arquivados serão posteriormente integrados no acervo do Arquivo.pt.'
+learn-more:
+  text:
+    en: Learn more
+    pt: Saber mais
+  href:
+    en: https://sobre.arquivo.pt/en/savepagenow-to-record-webpages-immediately-on-arquivo-pt/
+    pt: https://sobre.arquivo.pt/pt/grave-paginas-no-arquivo-pt-com-o-savepagenow/
