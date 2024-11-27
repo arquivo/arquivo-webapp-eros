@@ -388,8 +388,18 @@ a#headerUrl {
     font-size: 19px;
 }
 
-#archivepagenow-content .title-wrapper {
+#archivepagenow-content .title-wrapper,
+#archivepagenow-landing #modal .title-wrapper {
     color: #002849;
+    margin-top: 0px;
+}
+#archivepagenow-landing #modal .title-wrapper {
+    margin-bottom: 0px;
+}
+#archivepagenow-landing #modal .title,
+#archivepagenow-landing #modal .subtitle {
+    width: auto;
+    font-size: inherit;
 }
 
 #archivepagenow-landing .title-wrapper {
