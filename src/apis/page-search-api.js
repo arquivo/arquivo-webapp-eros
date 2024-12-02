@@ -10,6 +10,7 @@ class PageSearchApiRequest extends ApiRequest {
             type: null,
             offset: 0,
             siteSearch: null,
+            titleSearch: null,
             collection: null,
             maxItems: config.get('text.results.per.page'),
             dedupValue: null,
@@ -37,8 +38,8 @@ class PageSearchApiRequest extends ApiRequest {
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
 
-        ['site', 'type', 'collection'].forEach(inlineParam => {
-            const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
+        ['site', 'type', 'collection', 'title'].forEach(inlineParam => {
+            const requestParam = ['site','safe', 'title'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
             if (apiRequestData.has(requestParam)) {
                 const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));

@@ -14,7 +14,7 @@ if (typeof pageData != 'undefined'){
     const month = t('common.months.'+pageData.tstamp.slice(4,6));
     const day = parseInt(pageData.tstamp.slice(6,8));
     const dedupField = requestData.get('dedupField') ?? 'site'
-    const subResult = resultTitle == prevTitle && !!requestData && !requestData.has('title');
+    const subResult = resultTitle == prevTitle && !!requestData && !requestData.has('titleSearch');
     const query = requestData.get('q');
 
     // const siteRegEx = /(^|\s)site:/;
@@ -75,7 +75,7 @@ if (typeof pageData != 'undefined'){
                 <%
                  const site = filteredURL.split('/')[0]
                  newRequestData.set('q',query)
-                 newRequestData.set('title',resultTitle)
+                 newRequestData.set('titleSearch',resultTitle)
                  const maxItems = newRequestData.get('maxItems') ?? config.get('text.results.per.page')
                  newRequestData.set('maxItems', Math.min(2000, 10 * maxItems ) )
                  newRequestData.delete('trackingId');
