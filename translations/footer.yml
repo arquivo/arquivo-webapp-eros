@@ -149,13 +149,13 @@ collaborate:
     url:
       pt: 'https://arquivo.pt/doar'
       en: 'https://sobre.arquivo.pt/en/collaborate/supplying-historical-portuguese-web-contents/'
-  savepagenow:
+  archivepagenow:
     text:
-      pt: Grave páginas
-      en: Record webpages
+      pt: Arquive páginas
+      en: Archive webpages
     url:
-      pt: https://arquivo.pt/savepagenow
-      en: https://arquivo.pt/savepagenow?l=en  
+      pt: https://arquivo.pt/archivepagenow
+      en: https://arquivo.pt/archivepagenow?l=en  
   citationsaver:
     text:
       pt: Preserve citações
@@ -210,6 +210,13 @@ help:
     url:
       pt: 'https://arquivo.pt/forma'
       en: 'https://arquivo.pt/training'
+  catalog:
+    text:
+      pt: 'Catálogo'
+      en: 'Catalog'
+    url:
+      pt: 'https://arquivo.pt/catalogo'
+      en: 'https://arquivo.pt/catalog'
   contact:
     text:
       pt: 'Contacto'
@@ -231,8 +238,8 @@ institutional:
       en: Visit the website of FCCN - Fundação para a computação Científica Nacional
       pt: Visite o website da FCCN - Fundação para a computação Científica Nacional
     src:
-      en: /img/by_fccn_positive.svg
-      pt: /img/by_fccn_positive.svg
+      en: /img/2024_logo-fccn-fct-A-preto.svg
+      pt: /img/2024_logo-fccn-fct-A-preto.svg
     alt:
       en: FCCN - Fundação para a computação Científica Nacional
       pt: FCCN - Fundação para a computação Científica Nacional

@@ -1,13 +1,13 @@
 form:
   accessibility:
-    en: SavePageNow form page
-    pt: Página do formulário do SavePageNow
+    en: ArchivePageNow form page
+    pt: Página do formulário do ArchivePageNow
   text:
-    en: Record webpages on Arquivo.pt
-    pt: Grava páginas no Arquivo.pt
+    en: Archive webpages on Arquivo.pt
+    pt: Arquive páginas no Arquivo.pt
   button:
-    en: Record 
-    pt: Gravar 
+    en: Archive 
+    pt: Arquivar 
   example:
     en: e.g. www.fccn.pt
     pt: ex. www.fccn.pt
@@ -23,11 +23,11 @@ form:
       pt: A página está inacessível. Verifique se o endereço está correto.
 recorder:
   label:
-    en: Browse to save pages
-    pt: Navegue para ir gravando as páginas
+    en: Browse to archive pages
+    pt: Navegue para ir arquivando as páginas
   saving:
-    en: Saving...
-    pt: Gravando...
+    en: Archiving...
+    pt: Arquivando...
   stop:
     en: Conclude
     pt: Concluir
@@ -36,8 +36,8 @@ recorder:
       en: 'Notification Popup'
       pt: 'Janela de notificação'
     slogan:
-      en: Save pages on Arquivo.pt
-      pt: Grava páginas no Arquivo.pt
+      en: Archive pages on Arquivo.pt
+      pt: Arquive páginas no Arquivo.pt
     text:
       en: "Your browsing has been recorded. Access it later with this link:"
       pt: "A sua navegação foi gravada e ficará disponível em breve neste link:"
@@ -46,8 +46,8 @@ recorder:
       pt: Copiar link e fechar
 description:
   first-line:
-    en: "The SavePageNow service allows a page to be archived at the exact moment the user makes the request."
-    pt: 'O serviço SavePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido.'
+    en: "The ArchivePageNow service allows a page to be archived at the exact moment the user makes the request."
+    pt: 'O serviço ArchivePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido.'
   second-line:
     en: "The archived contents are later integrated in the Arquivo.pt collection."
     pt: 'Os conteúdos arquivados serão posteriormente integrados no acervo do Arquivo.pt.'

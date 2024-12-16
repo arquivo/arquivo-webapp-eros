@@ -1,0 +1,188 @@
+/* "hidden" white rectangle with both left and right bottom corners curved, above footer */
+
+footer .background-bottom-curve {
+    position: relative;
+    z-index: 0;
+    bottom: 1px;
+    margin: 0;
+    width: 100%;
+    height: 12px;
+    background-color: white;
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+}
+
+/* Footer * ******************************************************/
+
+footer {
+    /*background-color:/* To use on future milestone: #e5e5e5*/
+    background-color: #033f72;
+    color: #444;
+    margin: 0px 0 0 0;
+    padding: 50px 0 0 0;
+}
+
+footer ul {
+    line-height: 1.5em;
+
+}
+
+footer a {
+    color: #ffffffc4;
+    /*To use in future releases: #444 */
+    font-size: 0.75em;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: white;
+    /*To use in future releases: rgb(0, 0, 0)#444 */
+    background-color: transparent;
+}
+
+footer a:active {
+    color: white;
+    /*To use in future releases: rgb(0, 0, 0)#000 */
+}
+
+footer section {
+    padding: 0;
+    margin: 0 18px;
+}
+
+footer section#important-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: inherit;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px;
+}
+
+footer section#important-info a:hover {
+    text-decoration: underline;
+}
+
+footer section section {
+    padding: 0;
+    margin: 0;
+    width: 25%;
+}
+
+footer section section h3 {
+    visibility: collapse;
+    height: 0;
+}
+
+footer section section h4 {
+    padding-bottom: 14px;
+    font-size: 0.95em;
+    font-weight: bold;
+    color: #ffffffeb
+        /*#444*/
+    ;
+}
+
+footer section#institutional {
+    max-width: 100%;
+    margin: 50px auto 0 auto;
+    padding: 40px 0;
+    background: #f0f0f0;
+    text-align: center;
+}
+
+footer section#institutional h4 {
+    visibility: collapse;
+    height: 0;
+}
+
+footer section#institutional img {
+    height: 100px;
+    margin: 10px 5%;
+}
+
+footer section#institutional img {
+    filter: grayscale(100%);
+}
+
+footer section#institutional p {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 25px 0 0 0;
+    color: black;
+    font-size: x-small;
+}
+
+
+/* Device = Tablets and Mobiles */
+@media (min-width: 0px) and (max-width: 767px) {
+
+    footer {
+        padding: 28px 0 0 0;
+    }
+
+    footer section section {
+        width: 50%;
+        padding: 20px 0px;
+    }
+
+    footer section section h4 {
+        font-size: 1em;
+        font-weight: bold;
+    }
+
+    footer section#institutional img {
+        height: 100px;
+        margin: 10px 5%;
+    }
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 480px
+*/
+@media (min-width: 0px) and (max-width: 480px) {
+
+    footer section section {
+        width: 100%;
+        padding: 12px 8px 0 0;
+    }
+
+    footer section section h4 {
+        font-size: 1em;
+        font-weight: 500;
+    }
+
+    footer section#institutional img {
+        height: 100px;
+        margin: 10px 5%;
+    }
+
+}
+
+@media (max-width: 415px) {
+
+    /* Galaxy Fold: ##Screen = B/w 280px to 653px */
+
+    @media (width: 280px) and (height: 653px) {
+
+        footer section section {
+            width: 100%;
+            padding: 12px 8px;
+        }
+
+        footer section section h4 {
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        footer section#institutional img {
+            height: 100px;
+            margin: 10px 5%;
+        }
+
+    }
+
+}

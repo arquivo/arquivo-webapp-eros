@@ -1,0 +1,53 @@
+<section id="archivepagenow-content">
+    <h3>
+        <%= t('services-archivepagenow.form.accessibility') %>
+    </h3>
+    
+    <h4 id="archivepagenow-slogan">
+    <span class="fa fa-video-camera save-page-now-icon" aria-hidden="true"></span>
+    <div class="title-wrapper">
+        <span class="title">ArchivePage</span>
+        <span class="subtitle">Now</span>
+    </div> 
+    <%= t('services-archivepagenow.form.text') %>
+    </h4>
+
+    <section id="search-tools">
+        <form id="search-form" role="form" action="/services/archivepagenow?l=<%= getLanguage() %>" method="POST">
+            <span class="search-input-button">
+                <input id="submit-search-input" type="search" placeholder="<%= t('services-archivepagenow.form.label') %>"
+                    autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url"
+                    aria-label="<%= t('services-archivepagenow.form.label') %>" value="<%- url %>">
+                <button id="submit-search" type="submit" class="fa fa-video-camera" value="search menu button"><span
+                        class="button-title">
+                        <%= t('services-archivepagenow.form.button') %>
+                    </span></button>
+            </span>
+
+        </form>
+
+        <script>
+            $('#search-form').submit(function (event) {
+                if (!isValidUrl($("#submit-search-input").val())) {
+                    event.preventDefault();
+                    $('#archivepagenow-example').replaceWith('<p id="save-page-url-message-error"></p>');
+                    $('#save-page-url-message-error').text('<%= t('services-archivepagenow.form.error.default') %>');
+                }
+            });
+        </script>
+        <% if (typeof error !='undefined' && error){ %>
+            <p id="save-page-url-message-error">
+                <%= t('services-archivepagenow.form.error.'+errorType) %>
+            </p>
+            <% } else { %>
+                <small id="archivepagenow-example">
+                    <%= t('services-archivepagenow.form.example') %>
+                </small>
+                <% } %>
+    </section>
+    <section id="archivepagenow-description">
+        <p><%- t('services-archivepagenow.description.first-line') %></p>
+        <p><%= t('services-archivepagenow.description.second-line') %></p>
+        <p><a href="<%- t('services-archivepagenow.learn-more.href') %>"><%= t('services-archivepagenow.learn-more.text') %></a></p>
+    </section>
+</section>

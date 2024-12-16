@@ -505,7 +505,9 @@ section#pages-results ul>li>.results-summary {
     line-height: 1.58;
     font-weight: normal;
 }
-
+section#pages-results ul>li>.results-summary em{
+    font-weight: bold;
+}
 section#pages-results+ul:nth-last-child(1) {
     margin-bottom: 0px !important;
 }

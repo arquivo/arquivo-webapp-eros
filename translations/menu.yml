@@ -54,7 +54,7 @@ about:
   url:
     pt: 'https://sobre.arquivo.pt/pt/'
     en: 'https://sobre.arquivo.pt/en/'
-savepagenow:
+archivepagenow:
   text: 
-    pt: 'Grave páginas'
-    en: 'SavePageNow'
+    pt: 'Arquive páginas'
+    en: 'ArchivePageNow'

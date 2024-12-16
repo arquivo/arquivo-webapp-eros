@@ -1,3 +1,4 @@
+<% if (typeof suggestionType == 'undefined') { suggestionType = 'page'; } %>
 <% 
 let suggestionRequestData = new URLSearchParams()
 
@@ -15,7 +16,7 @@ if(typeof requestData != 'undefined'){
     <section id="search-suggestion-message">
      <h4><%= t('page-search.search-suggestion.accessibility.message') %></h4> 
      <p id="term-suggested" >&rarr; <%= t('page-search.search-suggestion.did-you-mean') %> <a href="javascript:$('#search-suggestion-form').submit();"><%= suggestion %></a></p>
-     <form action="/page/search" id="search-suggestion-form" style="display: none;">
+     <form action="/<%= suggestionType %>/search" id="search-suggestion-form" style="display: none;">
         <%- include('hidden-search-inputs', {requestData:suggestionRequestData}) %>
     </form>
     </section> 

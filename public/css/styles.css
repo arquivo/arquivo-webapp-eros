@@ -426,20 +426,6 @@ header .background-top-curve {
   border-top-right-radius: 10px;
 }
 
-/* "hidden" white rectangle with both left and right bottom corners curved, above footer */
-
-footer .background-bottom-curve {
-  position: relative;
-  z-index: 0;
-  bottom: 1px;
-  margin: 0;
-  width: 100%;
-  height: 12px;
-  background-color: white;
-  border-bottom-left-radius: 1px;
-  border-bottom-right-radius: 1px;
-}
-
 main {
   display: flex;
   flex-direction: row;
@@ -2158,109 +2144,6 @@ section#body-content h3 {
   height: 0;
 }
 
-/* Footer * ******************************************************/
-
-footer {
-  /*background-color:/* To use on future milestone: #e5e5e5*/
-  background-color: #033f72;
-  color: #444;
-  margin: 0px 0 0 0;
-  padding: 50px 0 0 0;
-}
-
-footer ul {
-  line-height: 1.5em;
-
-}
-
-footer a {
-  color: #ffffffc4;
-  /*To use in future releases: #444 */
-  font-size: 0.75em;
-  text-decoration: none;
-}
-
-footer a:hover {
-  color: white;
-  /*To use in future releases: rgb(0, 0, 0)#444 */
-  background-color: transparent;
-}
-
-footer a:active {
-  color: white;
-  /*To use in future releases: rgb(0, 0, 0)#000 */
-}
-
-footer section {
-  padding: 0;
-  margin: 0 18px;
-}
-
-footer section#important-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: inherit;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-footer section#important-info a:hover {
-  text-decoration: underline;
-}
-
-footer section section {
-  padding: 0;
-  margin: 0;
-  width: 25%;
-}
-
-footer section section h3 {
-  visibility: collapse;
-  height: 0;
-}
-
-footer section section h4 {
-  padding-bottom: 14px;
-  font-size: 0.95em;
-  font-weight: bold;
-  color: #ffffffeb
-    /*#444*/
-  ;
-}
-
-footer section#institutional {
-  max-width: 100%;
-  margin: 50px auto 0 auto;
-  padding: 40px 0;
-  background: #f0f0f0;
-  text-align: center;
-}
-
-footer section#institutional h4 {
-  visibility: collapse;
-  height: 0;
-}
-
-footer section#institutional img {
-  height: 45px;
-  margin: 20px 5%;
-}
-
-footer section#institutional img {
-  filter: grayscale(100%);
-}
-
-footer section#institutional p {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 25px 0 0 0;
-  color: black;
-  font-size: x-small;
-}
-
 /* New family style for old layout to display on not found page*/
 
 #info-texto-termos,
@@ -2797,25 +2680,6 @@ body#landing-replay .preloader div::after {
     height: 157px;
   }
 
-  footer {
-    padding: 28px 0 0 0;
-  }
-
-  footer section section {
-    width: 50%;
-    padding: 20px 0px;
-  }
-
-  footer section section h4 {
-    font-size: 1em;
-    font-weight: bold;
-  }
-
-  footer section#institutional img {
-    height: 36px;
-    margin: 20px 5%;
-  }
-
   /* Handle sliders styles for mobile */
 
   #slider-range span:nth-child(2) {
@@ -2944,21 +2808,6 @@ body#landing-replay .preloader div::after {
     height: 200px;
   }
 
-  footer section section {
-    width: 100%;
-    padding: 12px 8px 0 0;
-  }
-
-  footer section section h4 {
-    font-size: 1em;
-    font-weight: 500;
-  }
-
-  footer section#institutional img {
-    height: 36px;
-    margin: 20px 5%;
-  }
-
 }
 
 /* Max width: 415 px */
@@ -3038,21 +2887,6 @@ body#landing-replay .preloader div::after {
 
     article iframe {
       height: 200px;
-    }
-
-    footer section section {
-      width: 100%;
-      padding: 12px 8px;
-    }
-
-    footer section section h4 {
-      font-size: 0.9em;
-      font-weight: 700;
-    }
-
-    footer section#institutional img {
-      height: 36px;
-      margin: 20px 5%;
     }
 
     button {

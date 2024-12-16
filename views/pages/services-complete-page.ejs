@@ -42,10 +42,7 @@
         <p id="colorchange"><%= t('services-complete-page.completing') %></p>         
     </div>
     <!-- ends completing animation -->
-
-  <!-- stars save page now button --> 
-   <!-- <button id="nav-options-right-button" class="button" onclick="$('#modal').modal({escapeClose: false, clickClose: false, showClose: false });" value="top navigation right menu options button"><%= t('services-savepagenow.recorder.stop') %></button>  -->
-  <!-- ends save page now button -->  
+     
  </div>
 </header>
   <div id="iframe_div">
@@ -53,21 +50,5 @@
     </iframe>
 
   </div>
-
-  <!-- stars save page now modal pop-up message -->
-  <!-- <div id="modal">
-    <section id="savepagenow-modal">
-      <h3><%= t('services-savepagenow.recorder.popup.accessibility') %></h3>
-      <img id="logo-save-page-now-modal" class="image-width" src="/img/SavePageNow-blue.svg" alt="SavePageNow">
-      <h4 id="save-page-now-slogan"><%= t('services-savepagenow.recorder.popup.slogan') %></h4>
-
-      <p><%= t('services-savepagenow.recorder.popup.text') %></p>
-      <form action="/wayback/<%= requestData.get('timestamp') %>/<%= requestData.get('url') %>">
-        <button type="submit"><%= t('services-savepagenow.recorder.popup.button') %></button>
-        <input type="hidden" name="l" value="<%- getLanguage() %>">
-      </form>
-    </section>
-  </div> -->
- <!-- ends save page now modal pop-up message -->
 </body>
 </html>

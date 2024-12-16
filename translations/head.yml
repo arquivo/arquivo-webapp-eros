@@ -6,13 +6,13 @@ description:
   en: 'Arquivo.pt is a non profit service that mainly preserves information published online related to the Portuguese community. However, it also includes international sites. At Archive.pt anyone can search for information published since 1996.'
   pt: 'O Arquivo.pt é um serviço sem fins lucrativos que preserva informação publicada na Web de interesse para a comunidade portuguesa. No Arquivo.pt pode pesquisar informação arquivada desde 1996.'
 
-savepagenow:
+archivepagenow:
   title: 
-    en: 'SavePageNow: Record webpages on Arquivo.pt '
-    pt: 'SavePageNow: Grave páginas no Arquivo.pt'
+    en: 'ArchivePageNow: Archive webpages on Arquivo.pt '
+    pt: 'ArchivePageNow: Arquive páginas no Arquivo.pt'
   description:
-    en: 'The SavePageNow service allows a page to be archived at the exact moment the user makes the request. The archived contents are later integrated in the Arquivo.pt collection.'
-    pt: 'O serviço SavePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido. Os conteúdos arquivados serão posteriormente integrados no acervo do Arquivo.pt.'
+    en: 'The ArchivePageNow service allows a page to be archived at the exact moment the user makes the request. The archived contents are later integrated in the Arquivo.pt collection.'
+    pt: 'O serviço ArchivePageNow permite arquivar uma página no exato momento em que o utilizador faz o pedido. Os conteúdos arquivados serão posteriormente integrados no acervo do Arquivo.pt.'
 
 complete-page:
   title: 

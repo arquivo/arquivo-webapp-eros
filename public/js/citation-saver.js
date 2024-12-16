@@ -6,6 +6,11 @@ $(() => {
         var form = $(this);
         var actionUrl = form.attr('action');
 
+        
+        $('#modal #citation-saver-progress-bar').show();
+        $('#modal #citation-saver-modal').hide();
+        $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
+
         $.ajax({
             type: "POST",
             url: actionUrl,
@@ -26,8 +31,6 @@ $(() => {
                     }
                 }
                 
-                $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
-                
             },
             error: (err) => {
                 // alert('ERROR!! ' +JSON.stringify(err));
@@ -38,7 +41,10 @@ $(() => {
                 } else {
                     $('#modal p.error').text(JSON.stringify(err));
                 }
-                $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
+            },
+            complete: () => {
+                $('#modal #citation-saver-progress-bar').hide();
+                $('#modal #citation-saver-modal').show();
             }
         });
 

@@ -27,17 +27,31 @@ search-tools:
   
 arquivo-pt-award:
   header:
-    pt: 'Prémio Arquivo.pt 2024'
-    en: 'Arquivo.pt Award 2024'
+    pt: 'Prémio Arquivo.pt 2025'
+    en: 'Arquivo.pt Award 2025'
   url:
     pt: http://arquivo.pt/premio
     en: http://arquivo.pt/award
   img:
-    pt: /img/premio-homepage-banner-2024-PT.jpg
-    en: /img/premio-homepage-banner-2024-EN.jpg
+    pt: /img/premio-homepage-banner-2025-PT.jpg
+    en: /img/premio-homepage-banner-2025-EN.jpg
   mobile-img:
-    pt: /img/premio-homepage-banner-2024-PT-mobile.jpg
-    en: /img/premio-homepage-banner-2024-EN-mobile.jpg
+    pt: /img/premio-homepage-banner-2025-PT-mobile.jpg
+    en: /img/premio-homepage-banner-2025-EN-mobile.jpg
+
+# arquivo-pt-winners:
+#   header:
+#     pt: 'Prémio Arquivo.pt 2024 - Conheça os vencedores!'
+#     en: 'Arquivo.pt Award 2024 - Meet the winners!'
+#   url:
+#     pt: http://arquivo.pt/vencedores
+#     en: http://arquivo.pt/winners
+#   img:
+#     pt: /img/vencedores-homepage-banner-2024-PT-min.jpg
+#     en: /img/vencedores-homepage-banner-2024-EN-min.jpg
+#   mobile-img:
+#     pt: /img/vencedores-homepage-banner-2024-PT-mobile-min.jpg
+#     en: /img/vencedores-homepage-banner-2024-EN-mobile-min.jpg
 
 the-past-web:
   header:
@@ -134,13 +148,13 @@ memorial:
     pt: 'https://arquivo.pt/memorial'
     en: 'https://arquivo.pt/memorialen'
 
-savepagenow:
+archivepagenow:
   header:
-    pt: SavePageNow
-    en: SavePageNow
+    pt: ArchivePageNow
+    en: ArchivePageNow
   title: 
-    pt: SavePage
-    en: SavePage
+    pt: ArchivePage
+    en: ArchivePage
   subtitle: 
     pt: Now
     en: Now
@@ -151,8 +165,8 @@ savepagenow:
     pt: Arquive uma página imediatamente
     en: Archive a webpage immediately 
   url:
-    pt: https://arquivo.pt/savepagenow
-    en: https://arquivo.pt/savepagenow?l=en
+    pt: https://arquivo.pt/archivepagenow
+    en: https://arquivo.pt/archivepagenow?l=en
 
 suggest:
   header:

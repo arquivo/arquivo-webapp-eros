@@ -1,6 +1,6 @@
 /* Save page Now input */
 
-body#save-page-now section#home-content,
+body#archivepagenow section#archivepagenow-content,
 section#body-content {
     justify-content: flex-start;
     padding: 0 10px;
@@ -8,36 +8,36 @@ section#body-content {
     margin-bottom: 25vh;
 }
 
-body#save-page-now form#search-form input#submit-search-input {
+body#archivepagenow form#search-form input#submit-search-input {
     padding-left: 12px;
     background-image: none;
 }
 
-body#save-page-now form#search-form {
+body#archivepagenow form#search-form {
     margin: 8px auto 0 auto;
     height: auto;
 }
 
-body#save-page-now img#logo-save-page-now {
+body#archivepagenow img#logo-archivepagenow {
     margin-right: 14px;
 }
 
-body#save-page-now section#search-tools {
+body#archivepagenow section#search-tools {
     margin: 0px 0 15px 0;
     padding: 0px;
 }
 
-body#save-page-now section#home-content h3,
+body#archivepagenow section#archivepagenow-content h3,
 section#body-content h3 {
     visibility: collapse;
     height: 0;
 }
 
-body#save-page-now h4#save-page-now-slogan {
+body#archivepagenow h4#archivepagenow-slogan {
     padding: 11px 6px 11px 0px;
 }
 
-body#save-page-now small#savepagenow-example {
+body#archivepagenow small#archivepagenow-example {
     padding-top: 10px;
     padding-left: 14px;
     font-size: 12px;
@@ -46,7 +46,7 @@ body#save-page-now small#savepagenow-example {
     color: rgb(141 141 141)
 }
 
-body#save-page-now p#save-page-url-message-error {
+body#archivepagenow p#save-page-url-message-error {
     padding-top: 10px;
     padding-left: 14px;
     font-size: 12px;
@@ -55,34 +55,34 @@ body#save-page-now p#save-page-url-message-error {
     color: red;
 }
 
-/* Hides "Copy link" when in SavePageNow mode */
+/* Hides "Copy link" when in ArchivePageNow mode */
 
-section#savepagenow-description {
+section#archivepagenow-description {
     margin: 0;
     line-height: 27px;
 }
 
-section#savepagenow-description a {
+section#archivepagenow-description a {
     color: #1c75c0;
 }
 
-section#savepagenow-description p {
+section#archivepagenow-description p {
     margin-bottom: 8px;
 }
 
-body#save-page-now li#menu-copy-link {
+body#archivepagenow li#menu-copy-link {
     display: none;
 }
 
-/* Modal save page now */
-body#save-page-now #savepagenow-modal {
+/* Modal ArchivePageNow now */
+body#archivepagenow #archivepagenow-modal {
     max-width: 300px;
     text-align: center;
 }
 
-/* Landing page: SavePageNow icon */
+/* Landing page: ArchivePageNow icon */
 
-body#save-page-now .save-page-now-icon {
+body#archivepagenow .archivepagenow-icon {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -90,7 +90,7 @@ body#save-page-now .save-page-now-icon {
     font-size: 18px;
 }
 
-body#save-page-now-landing .left .save-page-now-icon {
+body#archivepagenow-landing .left .archivepagenow-icon {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -99,43 +99,43 @@ body#save-page-now-landing .left .save-page-now-icon {
     color: white;
 }
 
-body#save-page-now-landing {
+body#archivepagenow-landing {
     overflow: hidden;
     height: 100vh;
 }
 
-body#save-page-now-landing header {
+body#archivepagenow-landing header {
     height: 58px;
 }
 
 /* Save page Now input */
 
-body#save-page-now section#home-content,
+body#archivepagenow section#archivepagenow-content,
 section#body-content {
     justify-content: flex-start;
     padding: 0 18px;
 }
 
-img#logo-save-page-now {
+img#logo-archivepagenow {
     margin-right: 5px;
 }
 
 
-body#save-page-now section#home-content h4,
-body#save-page-now section#body-content h4 {
+body#archivepagenow section#archivepagenow-content h4,
+body#archivepagenow section#body-content h4 {
     padding: 11px 6px 11px 0px;
     font-weight: normal;
     font-size: 1em;
     width: fit-content;
 }
 
-body#save-page-now form#search-form input#submit-search-input {
+body#archivepagenow form#search-form input#submit-search-input {
     padding-left: 12px;
     background-image: none;
 }
 
 
-body#save-page-now form#search-form {
+body#archivepagenow form#search-form {
     margin: 8px auto 0 auto;
     height: auto;
 }
@@ -227,50 +227,50 @@ div#iframe_div {
     margin-top: -1px;
 }
 
-/* Modal: SavePageNow Notification pop-up*/
+/* Modal: ArchivePageNow Notification pop-up*/
 
-section#savepagenow-modal img {
+section#archivepagenow-modal img {
     position: relative;
     top: 0px;
     width: 154px !important;
 }
 
-section#savepagenow-modal h3 {
+section#archivepagenow-modal h3 {
     visibility: collapse;
     height: 0;
 }
 
-section#savepagenow-modal h4 {
+section#archivepagenow-modal h4 {
     font-size: 13.5px;
     padding-bottom: 18px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 18px;
 }
 
-section#savepagenow-modal #recording-url {
+section#archivepagenow-modal #recording-url {
     color: #1c75c0;
     cursor: pointer;
 }
 
-section#savepagenow-modal #recording-url:hover {
+section#archivepagenow-modal #recording-url:hover {
     color: black;
 }
 
-section#savepagenow-modal #recording-url:active {
+section#archivepagenow-modal #recording-url:active {
     color: hsl(207deg 75% 72%);
 }
 
 /* English version advanced search button width */
-:lang(pt) section#savepagenow-modal h4 {
+:lang(pt) section#archivepagenow-modal h4 {
     font-size: 13.7px;
 }
 
-section#savepagenow-modal p {
+section#archivepagenow-modal p {
     font-size: small;
     line-height: normal;
 }
 
-div#modal span.savepagenow-modal {
+div#modal span.archivepagenow-modal {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -278,17 +278,17 @@ div#modal span.savepagenow-modal {
     font-size: 20px;
 }
 
-section#savepagenow-modal form {
+section#archivepagenow-modal form {
     display: flex;
     justify-content: space-between;
     padding: 25px 0 0 0;
 }
 
-section#savepagenow-modal form button {
+section#archivepagenow-modal form button {
     width: 103px;
 }
 
-section#savepagenow-modal form button#copyUrl {
+section#archivepagenow-modal form button#copyUrl {
     display: inline-block;
     width: auto;
     padding-left: 30px;
@@ -296,13 +296,13 @@ section#savepagenow-modal form button#copyUrl {
     margin: 0 auto 0 auto;
 }
 
-section#savepagenow-modal form button#copyUrl span {
+section#archivepagenow-modal form button#copyUrl span {
     position: absolute;
     top: 2px;
     left: 10px;
 }
 
-#savepagenow-modal span.fa-video-camera {
+#archivepagenow-modal span.fa-video-camera {
     display: flex;
     justify-content: flex-start;
     padding-right: 4px;
@@ -320,7 +320,7 @@ section#savepagenow-modal form button#copyUrl span {
     padding-left: 20px;
 }
 
-body#save-page-now-landing #replay_iframe {
+body#archivepagenow-landing #replay_iframe {
     overflow: hidden;
     height: calc(100vh - 70px);
     width: 100%;
@@ -332,7 +332,7 @@ body#save-page-now-landing #replay_iframe {
     left: 0;
 }
 
-#savepagenow-modal span {
+#archivepagenow-modal span {
     display: flex;
     justify-content: flex-start;
     padding-right: 4px;
@@ -344,28 +344,28 @@ body#save-page-now-landing #replay_iframe {
 }
 
 
-body#save-page-now-landing .left {
+body#archivepagenow-landing .left {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-body#save-page-now-landing .button-title {
+body#archivepagenow-landing .button-title {
     display: block;
 }
 
-body#save-page-now-landing .left {
+body#archivepagenow-landing .left {
     height: 100%;
 }
 
-body#save-page-now-landing .left .logo {
+body#archivepagenow-landing .left .logo {
     display: flex;
     height: 100%;
     position: relative;
 }
 
-body#save-page-now-landing .left .logo .overlay-link {
+body#archivepagenow-landing .left .logo .overlay-link {
     z-index: 3;
 }
 
@@ -378,6 +378,43 @@ a#headerUrl {
     text-overflow: ellipsis;
     white-space: nowrap;
     display: inline-block;
+}
+
+
+.title-wrapper {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    font-size: 19px;
+}
+
+#archivepagenow-content .title-wrapper,
+#archivepagenow-landing #modal .title-wrapper {
+    color: #002849;
+    margin-top: 0px;
+}
+#archivepagenow-landing #modal .title-wrapper {
+    margin-bottom: 0px;
+}
+#archivepagenow-landing #modal .title,
+#archivepagenow-landing #modal .subtitle {
+    width: auto;
+    font-size: inherit;
+}
+
+#archivepagenow-landing .title-wrapper {
+    color: #FFFFFF;
+    margin-top: 24px;
+}
+
+span.title {
+    font-weight: 700;
+}
+
+span.subtitle {
+    font-weight: 400;
+    font-style: italic;
+    margin-left: -5px;
 }
 
 @keyframes pulse {
@@ -419,45 +456,40 @@ a#headerUrl {
 
 @media (max-width:959px) {
 
-    body#save-page-now-landing #replay_iframe {
+    body#archivepagenow-landing #replay_iframe {
         height: calc(100vh - 153px);
         padding-top: 153px;
     }
 
-    body#save-page-now-landing header {
+    body#archivepagenow-landing header {
         height: 146px;
         display: flex;
         flex-direction: column;
     }
 
-    body#save-page-now-landing .left {
+    body#archivepagenow-landing .left {
         position: relative;
         left: 0;
         margin-top: -25px;
         height: unset;
     }
 
-    body#save-page-now-landing #logo-arquivo {
-        width: 162px !important;
+    #archivepagenow-landing .title-wrapper {
+        margin-top: 0px;
+        margin-bottom: 0px;
     }
 
-    body#save-page-now-landing #logo-save-page-now {
-        width: 150px !important;
-        margin-bottom: 24px;
-        margin-top: -25px;
-    }
-
-    body#save-page-now-landing .image-width {
+    body#archivepagenow-landing .image-width {
         position: relative;
         z-index: 2;
         width: 200px;
     }
 
-    body#save-page-now-landing .left .image-width {
+    body#archivepagenow-landing .left .image-width {
         top: 24px;
     }
 
-    /* SavePageNow iframe div container */
+    /* ArchivePageNow iframe div container */
     div#iframe_div {
         width: 100%;
         height: calc(100vh - 118px);
@@ -470,7 +502,7 @@ a#headerUrl {
 }
 
 @media (min-width: 0px) and (max-width: 959px) {
-    body#save-page-now-landing .left {
+    body#archivepagenow-landing .left {
         top: 75px;
         display: flex;
         flex-direction: row;
@@ -478,7 +510,7 @@ a#headerUrl {
         align-items: center;
     }
 
-    body#save-page-now-landing .right {
+    body#archivepagenow-landing .right {
         position: relative;
         margin-top: 58px;
         margin-bottom: 2px;
@@ -486,16 +518,16 @@ a#headerUrl {
     }
 }
 
-/* SavePageNow: center  search box for mobile */
+/* ArchivePageNow: center  search box for mobile */
 
 @media (min-width: 0px) and (max-width: 429px) {
 
-    body#save-page-now section#home-content,
+    body#archivepagenow section#archivepagenow-content,
     section#body-content {
         justify-content: center;
     }
 
-    body#save-page-now h4#save-page-now-slogan {
+    body#archivepagenow h4#archivepagenow-slogan {
         padding: 11px 18px 11px 0px;
     }
 }
@@ -506,7 +538,7 @@ a#headerUrl {
     /* Galaxy Fold: ##Screen = B/w 280px to 653px */
 
     @media (width: 280px) and (height: 653px) {
-        body#save-page-now-landing .left .fa.fa-video-camera::before {
+        body#archivepagenow-landing .left .fa.fa-video-camera::before {
             position: relative;
             top: 64.3px;
             left: 2px;
