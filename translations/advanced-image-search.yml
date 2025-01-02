@@ -28,26 +28,26 @@ fieldset:
   without:
     label:
       pt: '<strong>Não relacionadas</strong> com estas palavras:'
-      en: '<strong>Not releated</strong> to this expression or sentence:'
+      en: '<strong>Not related</strong> to this expression or sentence:'
     example:
       pt: 'ex. concerto'
       en: 'e.g. rugby'
   format:
     label:
-      pt: '<strong>Imagens</strong> com o formato:'
-      en: '<strong>Images</strong> with the format:'
+      pt: 'Imagens com o <strong>formato</strong>:'
+      en: 'Images with the <strong>format</strong>:'
     option:
       all:
         pt: Todos os formatos
         en: All formats
   size:
     label:
-      pt: '<strong>Imagens</strong>:'
-      en: '<strong>Images</strong>:'
+      pt: '<strong>Tamanho das imagens</strong>:'
+      en: '<strong>Image size</strong>:'
     option:
       all:
-        pt: Mostrar todas
-        en: Show all
+        pt: Todos os tamanhos
+        en: All sizes
       small:
         pt: Pequenas
         en: Small
