@@ -60,7 +60,7 @@ function prepareAnnotator(type, div){
             metadata["url"] = id.split("/").slice(1).join('/')
             metadata["timestamp"] = id.split("/")[0]
             metadata["position"] = position
-            $( this ).find("a.overlay-link").hide();
+            $( this ).find("a.overlay-link").attr("style","height:calc(100% - 100px)");
         } else if (type == 'image'){
             position = parseInt($( this ).attr("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
             //<li class="image-card" id="image-card-1" data-index="1" data-tstamp="20170624094538" data-url="http://www.primebrands.pt/uploads/marcas/teste/59381b31bfd5d.jpg"> 
@@ -188,7 +188,6 @@ function changePosition(position, childrenCount, nCols){
 
 $( document ).ready(function() {
 
-
     const urlQueryString = window.location.search;
     const urlParams = new URLSearchParams(urlQueryString);
     const annotateQS = urlParams.get('annotate')
@@ -226,6 +225,15 @@ $( document ).ready(function() {
             startValue = parseInt(startValue)
         }
         startValue += 1
+
+        let api = urlParams.get('api');
+        if(!!api){
+            let apiInput = $(document.createElement('input'));
+            apiInput.attr('type','hidden');
+            apiInput.attr('name','api');
+            apiInput.attr('value',api);
+            $('#search-form').append(apiInput);
+        }
 
         var nRes = 0
         if (window.location.href.includes("/image/search")){
