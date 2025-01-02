@@ -128,7 +128,7 @@ function toggleRelevance(diff){
 
 function turnOffAnnotations(){
     window.localStorage.setItem('annotate', "false");
-    location.reload(); 
+    window.location.href = window.location.href.replace(/[&\?]annotate=true/,'');
 }
 
 function toggleKeyboardNavigation(){
@@ -188,6 +188,7 @@ function changePosition(position, childrenCount, nCols){
 
 $( document ).ready(function() {
 
+
     const urlQueryString = window.location.search;
     const urlParams = new URLSearchParams(urlQueryString);
     const annotateQS = urlParams.get('annotate')
@@ -195,9 +196,7 @@ $( document ).ready(function() {
 
     if (annotateQS == "true"){
         window.localStorage.setItem('annotate', "true");
-    } else {
-        window.localStorage.setItem('annotate', "false");
-    }  
+    } 
 
     const annotate = (window.localStorage.getItem('annotate') == "true")
     console.log("ANNOTATE: "+ annotate);
@@ -217,51 +216,41 @@ $( document ).ready(function() {
         turnOffAnnotationsButton.attr("onclick", "turnOffAnnotations()")
         turnOffAnnotationsButton.html("<button>Desligar modo anotação</button>")
 
-        var hiddenFiles = $(document.createElement('input'))
-        hiddenFiles.attr("id", "files")
-        hiddenFiles.attr("type", "file")
-        hiddenFiles.attr("name", "files")
-        hiddenFiles.attr("style", "display: none")
-
-        var hiddenDownload = $(document.createElement('a'))
-        hiddenDownload.attr("id", "link")
-        hiddenDownload.attr("style", "display: none")
-
         const urlqueryString = window.location.search;
         const urlParams = new URLSearchParams(urlqueryString);
-        var startValue = urlParams.get('start')
-        if (startValue == null)
+        var startValue = urlParams.get('offset')
+
+        if (startValue == null){
             startValue = 0
-        else
+        } else {
             startValue = parseInt(startValue)
+        }
         startValue += 1
 
         var nRes = 0
-        if (window.location.href.includes("arquivo.pt/image/search")){
-            type = "image"  
-            div = "li.image-card"
-            divResId = "image-cards-container"
-            divChild = "li.image-card"
-            nRows = 3
-            nRes = 24
-        } else if (window.location.href.includes("arquivo.pt/page/search")){
-            type = "page"
-            div = "ul.page-search-result"
-            divResId = "#pages-results"
-            divChild = "ul"
-            nRows = 10
-            nRes = 10
+        if (window.location.href.includes("/image/search")){
+            type = "image";
+            div = "li.image-card";
+            divResId = "image-cards-container";
+            divChild = "li.image-card";
+            nRows = 3;
+            nRes = 24;
+        } else if (window.location.href.includes("/page/search")){
+            type = "page";
+            div = "ul.page-search-result";
+            divResId = "#pages-results";
+            divChild = "ul";
+            nRows = 10;
+            nRes = 10;
         }
 
         var start = $(document.createElement('p'))
         start.attr("id", "startend")
-        start.html("<span>" + startValue + " até " + (startValue+nRes) + "</span>")
+        start.html("<span>" + startValue + " até " + (startValue+nRes-1) + "</span>")
 
         $("#search-tools-buttons").append(exportAnnotationsButton)
         $("#search-tools-buttons").append(turnOffAnnotationsButton)
         $("#search-tools-buttons").append(start)
-        $("#search-tools-buttons").append(hiddenFiles)
-        $("#search-tools-buttons").append(hiddenDownload)
 
         var interval = window.setInterval(function(){
             if ($(div).length > 0){
