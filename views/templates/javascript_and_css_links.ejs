@@ -1,3 +1,5 @@
+<% const currentEndpoint = originalUrl.split('?')[0]; %>
+
 <!-- starts css styles links -->
 
 <link rel="stylesheet" type="text/css" href="/css/reset.css" media="screen">
@@ -51,16 +53,24 @@
 <!-- Add regional terms to imported libraries -->
 <%- include('translatelibs') -%>
 
-
+<!-- General initializations needed for the Arquivo.pt website -->
 <script src="/js/init.js"></script>
+
+<% // Logic that only applies to endpoints with a search bar: %>
+<% if( ['/url/search','/page/search','/image/search','/'].includes(currentEndpoint) ){ %>
+<!-- Logic to make the search buttons work as intended -->
+<script src="/js/search-tools.js"></script>
+<% } %>
 
 <!-- starts js datepicker -->
 <script src="/js/datepicker.js"></script>
 <!-- ends js datepicker -->
 
-<!-- starts js datepicker -->
+
+<% if( '/image/search' == currentEndpoint ){ %>
+<!-- starts image modal logic -->
 <script src="/js/modal-image-result.js"></script>
-<!-- ends js datepicker -->
+<% } %>
 
 <!-- starts Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=<%- config.get('google.analytics.token') %>"></script>
