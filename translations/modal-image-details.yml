@@ -45,8 +45,8 @@ titles:
         en: (field description)
         pt: (descrição dos campos)
     href:
-        en: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1#request-parameters
-        pt: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1#request-parameters
+        en: https://arquivo.pt/api/imagesearch#request-parameters
+        pt: https://arquivo.pt/api/imagesearch#request-parameters
 labels:
   alt-text:
     en: 'Alternative Text:'
