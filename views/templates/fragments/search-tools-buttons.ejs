@@ -40,46 +40,5 @@ if(typeof requestData != 'undefined'){
         <li><a href="#" rel="modal:close"><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></a></li>
     </ul>
     <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
-    <script>
-        $('#search-tools-narrative-button').click(() => {
-            $('#search-form-narrative input[name=query]').val($('#submit-search-input').val());
-            gtag("event", 'contameHistorias', {
-                "type": 'Pressed', 
-                "query": $('#submit-search-input').val() || '<empty>' 
-            } );
-            $('#confirm-narrative-modal').modal();
-        });
-        $('#search-form-narrative').submit(function (e) {
-            if($('#search-form-narrative input[name=query]').val() == ''){
-                $('#search-form-narrative input[name=query]').remove();
-                $('#search-form-narrative').attr('action',"<%- config.get('contame.historias.url') %>");
-            }
-            gtag("event", 'contameHistorias', {
-                "type": 'Searched', 
-                "query": $('#submit-search-input').val() || '<empty>' 
-            } );
-            return true;
-        });
-
-        $('form.search-type').submit(function (e) {
-            $(e.target).find('input').remove();
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'q',
-                value: $('#submit-search-input').val()
-            }).appendTo(e.target);
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'from',
-                value: $('#start-date').val()
-            }).appendTo(e.target);
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'to',
-                value: $('#end-date').val()
-            }).appendTo(e.target);
-            return true;
-        });
-    </script>
 </section>
 <% } %>

@@ -60,7 +60,7 @@ function prepareAnnotator(type, div){
             metadata["url"] = id.split("/").slice(1).join('/')
             metadata["timestamp"] = id.split("/")[0]
             metadata["position"] = position
-            $( this ).find("a.overlay-link").hide();
+            $( this ).find("a.overlay-link").attr("style","height:calc(100% - 100px)");
         } else if (type == 'image'){
             position = parseInt($( this ).attr("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
             //<li class="image-card" id="image-card-1" data-index="1" data-tstamp="20170624094538" data-url="http://www.primebrands.pt/uploads/marcas/teste/59381b31bfd5d.jpg"> 
@@ -128,7 +128,7 @@ function toggleRelevance(diff){
 
 function turnOffAnnotations(){
     window.localStorage.setItem('annotate', "false");
-    location.reload(); 
+    window.location.href = window.location.href.replace(/[&\?]annotate=true/,'');
 }
 
 function toggleKeyboardNavigation(){
@@ -195,9 +195,7 @@ $( document ).ready(function() {
 
     if (annotateQS == "true"){
         window.localStorage.setItem('annotate', "true");
-    } else {
-        window.localStorage.setItem('annotate', "false");
-    }  
+    } 
 
     const annotate = (window.localStorage.getItem('annotate') == "true")
     console.log("ANNOTATE: "+ annotate);
@@ -217,51 +215,50 @@ $( document ).ready(function() {
         turnOffAnnotationsButton.attr("onclick", "turnOffAnnotations()")
         turnOffAnnotationsButton.html("<button>Desligar modo anotação</button>")
 
-        var hiddenFiles = $(document.createElement('input'))
-        hiddenFiles.attr("id", "files")
-        hiddenFiles.attr("type", "file")
-        hiddenFiles.attr("name", "files")
-        hiddenFiles.attr("style", "display: none")
-
-        var hiddenDownload = $(document.createElement('a'))
-        hiddenDownload.attr("id", "link")
-        hiddenDownload.attr("style", "display: none")
-
         const urlqueryString = window.location.search;
         const urlParams = new URLSearchParams(urlqueryString);
-        var startValue = urlParams.get('start')
-        if (startValue == null)
+        var startValue = urlParams.get('offset')
+
+        if (startValue == null){
             startValue = 0
-        else
+        } else {
             startValue = parseInt(startValue)
+        }
         startValue += 1
 
+        let api = urlParams.get('api');
+        if(!!api){
+            let apiInput = $(document.createElement('input'));
+            apiInput.attr('type','hidden');
+            apiInput.attr('name','api');
+            apiInput.attr('value',api);
+            $('#search-form').append(apiInput);
+        }
+
         var nRes = 0
-        if (window.location.href.includes("arquivo.pt/image/search")){
-            type = "image"  
-            div = "li.image-card"
-            divResId = "image-cards-container"
-            divChild = "li.image-card"
-            nRows = 3
-            nRes = 24
-        } else if (window.location.href.includes("arquivo.pt/page/search")){
-            type = "page"
-            div = "ul.page-search-result"
-            divResId = "#pages-results"
-            divChild = "ul"
-            nRows = 10
-            nRes = 10
+        if (window.location.href.includes("/image/search")){
+            type = "image";
+            div = "li.image-card";
+            divResId = "image-cards-container";
+            divChild = "li.image-card";
+            nRows = 3;
+            nRes = 24;
+        } else if (window.location.href.includes("/page/search")){
+            type = "page";
+            div = "ul.page-search-result";
+            divResId = "#pages-results";
+            divChild = "ul";
+            nRows = 10;
+            nRes = 10;
         }
 
         var start = $(document.createElement('p'))
         start.attr("id", "startend")
-        start.html("<span>" + startValue + " até " + (startValue+nRes) + "</span>")
+        start.html("<span>" + startValue + " até " + (startValue+nRes-1) + "</span>")
 
         $("#search-tools-buttons").append(exportAnnotationsButton)
         $("#search-tools-buttons").append(turnOffAnnotationsButton)
         $("#search-tools-buttons").append(start)
-        $("#search-tools-buttons").append(hiddenFiles)
-        $("#search-tools-buttons").append(hiddenDownload)
 
         var interval = window.setInterval(function(){
             if ($(div).length > 0){
