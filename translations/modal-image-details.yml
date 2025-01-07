@@ -45,8 +45,8 @@ titles:
         en: (field description)
         pt: (descrição dos campos)
     href:
-        en: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1-(beta)#response-fields
-        pt: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1-(beta)#response-fields
+        en: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1#request-parameters
+        pt: https://github.com/arquivo/pwa-technologies/wiki/ImageSearch-API-v1.1#request-parameters
 labels:
   alt-text:
     en: 'Alternative Text:'
