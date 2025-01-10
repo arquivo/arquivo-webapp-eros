@@ -13,7 +13,7 @@ $(function(){
     $('#search-form-narrative').submit(function (e) {
         if($('#search-form-narrative input[name=query]').val() == ''){
             $('#search-form-narrative input[name=query]').remove();
-            $('#search-form-narrative').attr('action',"<%- config.get('contame.historias.url') %>");
+            $('#search-form-narrative').attr('action', contaMeHistoriasURL); // URL filled in javascript_and_css_links.ejs, it's contame.historias.url property
         }
         gtag("event", 'contameHistorias', {
             "type": 'Searched', 
