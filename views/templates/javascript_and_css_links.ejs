@@ -59,6 +59,7 @@
 <% // Logic that only applies to endpoints with a search bar: %>
 <% if( ['/url/search','/page/search','/image/search','/'].includes(currentEndpoint) ){ %>
 <!-- Logic to make the search buttons work as intended -->
+<script>const contaMeHistoriasURL = "<%- config.get('contame.historias.url') %>";</script>
 <script src="/js/search-tools.js"></script>
 <% } %>
 

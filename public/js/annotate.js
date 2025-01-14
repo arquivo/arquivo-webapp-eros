@@ -185,6 +185,13 @@ function changePosition(position, childrenCount, nCols){
     $($(divResId).children(divChild)[selectedPosition])[0].scrollIntoView(false);
 }
 
+function clearAnnotations(){
+    if(confirm("Tem a certeza que quer apagar TODAS as anotações feitas até agora, incluindo com outros termos de pesquisa? Considere exportar as anotações antes de apagar.")){
+        window.localStorage.removeItem('annotations');
+        window.location.reload();
+    }
+}
+
 
 $( document ).ready(function() {
 
@@ -200,20 +207,30 @@ $( document ).ready(function() {
     const annotate = (window.localStorage.getItem('annotate') == "true")
     console.log("ANNOTATE: "+ annotate);
     if (annotate){
+        $('#search-form-pages').hide();
+        $('#search-form-images').hide();
+        $('#search-tools-narrative-button').hide();
+
         var exportAnnotationsButton = $(document.createElement('a'))
         exportAnnotationsButton.attr("id", "exportAnnotationsButton")
-        //exportAnnotationsButton.attr("class", "advancedSearch")
+        exportAnnotationsButton.attr("style", "margin-left: -7px;")
         exportAnnotationsButton.attr("href", "#")
         exportAnnotationsButton.attr("onclick", "exportAnnotations()")
         exportAnnotationsButton.html("<button>Exportar anotações</button>")
-                
+
         var turnOffAnnotationsButton = $(document.createElement('a'))
         turnOffAnnotationsButton.attr("id", "turnOffAnnotationsButton")
-        //turnOffAnnotationsButton.attr("class", "advancedSearch")
         turnOffAnnotationsButton.attr("style", "margin-left:5px")
         turnOffAnnotationsButton.attr("href", "#")
         turnOffAnnotationsButton.attr("onclick", "turnOffAnnotations()")
         turnOffAnnotationsButton.html("<button>Desligar modo anotação</button>")
+
+        var clearAnnotationsButton = $(document.createElement('a'))
+        clearAnnotationsButton.attr("id", "clearAnnotationsButton")
+        clearAnnotationsButton.attr("style", "margin-left:5px")
+        clearAnnotationsButton.attr("href", "#")
+        clearAnnotationsButton.attr("onclick", "clearAnnotations()")
+        clearAnnotationsButton.html("<button>Limpar anotações</button>")
 
         const urlqueryString = window.location.search;
         const urlParams = new URLSearchParams(urlqueryString);
@@ -255,9 +272,11 @@ $( document ).ready(function() {
         var start = $(document.createElement('p'))
         start.attr("id", "startend")
         start.html("<span>" + startValue + " até " + (startValue+nRes-1) + "</span>")
+        start.attr("style", "margin-left: 60px; margin-top: 5px;");
 
         $("#search-tools-buttons").append(exportAnnotationsButton)
         $("#search-tools-buttons").append(turnOffAnnotationsButton)
+        $("#search-tools-buttons").append(clearAnnotationsButton)
         $("#search-tools-buttons").append(start)
 
         var interval = window.setInterval(function(){
