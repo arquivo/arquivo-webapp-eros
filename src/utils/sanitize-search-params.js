@@ -131,16 +131,19 @@ module.exports = function (req, res) {
         requestData.delete('safeSearch');
     }
 
-    let fullquery = [
-         requestData.get('adv_and') ?? '',
-        [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
-        (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),
-        [requestData.get('siteSearch') ?? '']        .filter(t => t != '').map(t => `site:${t}`).join(''),
-        [requestData.get('size') ?? '']              .filter(t => t != '').map(t => `size:${t}`).join(''),
-        [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
-        [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
-        [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
-    ]
-    requestData.set('q', fullquery.filter(t => t!='').join(' '));
+    
+    if(q == ''){
+        let fullquery = [
+            requestData.get('adv_and') ?? '',
+           [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
+           (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),
+           [requestData.get('siteSearch') ?? '']        .filter(t => t != '').map(t => `site:${t}`).join(''),
+           [requestData.get('size') ?? '']              .filter(t => t != '').map(t => `size:${t}`).join(''),
+           [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
+           [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
+           [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
+       ]
+        requestData.set('q', fullquery.filter(t => t!='').join(' '));
+    }
     return requestData;
 }
