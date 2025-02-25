@@ -294,10 +294,19 @@ body#images-search-results p#estimated-results {
     padding-bottom: 10px;
     padding-left: 9px;
     font-size: 12px;
-    color: #70757a;
+    color: #535353;
     max-width: 970px;
     margin: 0 auto;
 }
+
+body#table-list-results p#estimated-results strong,
+body#list-results p#estimated-results strong,
+body#pages-search-results p#estimated-results strong,
+body#images-search-results p#estimated-results strong {
+    font-weight: 700;
+    color: #333;
+}
+
 
 /* Not found and search suggestion page */
 

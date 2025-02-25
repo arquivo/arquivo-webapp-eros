@@ -16,11 +16,11 @@
 
     <!-- starts pages search results: create a fetch loop here -->
 
-    <p id="estimated-results"><%= t('common.estimated-results',{
+    <%- include("../templates/fragments/search-estimated-results", {
         numResults:(''+apiData.totalItems).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
         from: requestData.get('from').slice(0,4),
         to: requestData.get('to').slice(0,4)
-    }) %></p>
+    }) %>
 
     <!-- starts result #1 -->
     <ul id="image-cards-container">
