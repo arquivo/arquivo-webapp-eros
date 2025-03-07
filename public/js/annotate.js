@@ -7,6 +7,10 @@ var yellow = "rgba(255,255,0)"
 var greenB = "rgba(0,255,0,0.4)"
 var green = "rgba(0,255,0)"
 var gray = "rgba(200,200,200)"
+var black = "rgba(0,0,0,0.4)"
+var blackB = "rgba(0,0,0,0.8)"
+var whiteB = "rgba(255,255,255)"
+
 
 
 var type = null
@@ -18,10 +22,11 @@ var query = null
 var queryString = null
 
 var relevance = {
-    "-1": {"color": gray, "colorB": gray, "value": "Not annotated"}, 
-    "0": {"color": red, "colorB": redB, "value": "Not relevant"}, 
-    "1": {"color": yellow, "colorB": yellowB, "value": "Partially relevant"}, 
-    "2": {"color": green, "colorB": greenB, "value": "Highly relevant"}
+    "-2": {"color": black, "colorB": blackB, "value": "Conteúdo inacessível", "fontColor": gray}, 
+    "-1": {"color": gray, "colorB": gray, "value": "Não anotado"}, 
+    "0": {"color": red, "colorB": redB, "value": "Não relevante"}, 
+    "1": {"color": yellow, "colorB": yellowB, "value": "Parcialmente relevante"}, 
+    "2": {"color": green, "colorB": greenB, "value": "Muito relevante"}
 }
 
 var defaultRelevance = -1
@@ -74,20 +79,22 @@ function prepareAnnotator(type, div){
 
         var buttonDiv = $(document.createElement('div'))
         $( this ).append(buttonDiv)
-        for (var relevanceLocal=0; relevanceLocal < 3; relevanceLocal++){
-            var button = document.createElement('input')
-            button.type = 'button';
-            button.id = position+relevance[relevanceLocal].value;
-            button.alt = relevanceLocal
-            button.value = relevance[relevanceLocal].value;
-            button.style = "height: 70px; margin-top: 10px; width: 33%; background-color: " + relevance[relevanceLocal].colorB
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var relevanceLocal = parseInt($( this ).attr("alt"))
-                changeRelevance(relevanceLocal, id)
-            }, false);
-            buttonDiv.append(button)
+        for (var relevanceLocal=-2; relevanceLocal < 3; relevanceLocal++){
+            if (relevanceLocal != -1){
+                var button = document.createElement('input')
+                button.type = 'button';
+                button.id = position+relevance[relevanceLocal].value;
+                button.alt = relevanceLocal
+                button.value = relevance[relevanceLocal].value;
+                button.style = "height: 70px; margin-top: 10px; width: 25%; background-color: " + relevance[relevanceLocal].colorB + "; color:" + (relevance[relevanceLocal].fontColor ?? "black")
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var relevanceLocal = parseInt($( this ).attr("alt"))
+                    changeRelevance(relevanceLocal, id)
+                }, false);
+                buttonDiv.append(button)
+            }
         }
         var divId = document.createElement('div')
         divId.id = id
@@ -211,9 +218,18 @@ $( document ).ready(function() {
         $('#search-form-images').hide();
         $('#search-tools-narrative-button').hide();
 
+        
+
+        var clearAnnotationsButton = $(document.createElement('a'))
+        clearAnnotationsButton.attr("id", "clearAnnotationsButton")
+        clearAnnotationsButton.attr("style", "margin-left:-7px")
+        clearAnnotationsButton.attr("href", "#")
+        clearAnnotationsButton.attr("onclick", "clearAnnotations()")
+        clearAnnotationsButton.html("<button>Limpar anotações</button>")
+
         var exportAnnotationsButton = $(document.createElement('a'))
         exportAnnotationsButton.attr("id", "exportAnnotationsButton")
-        exportAnnotationsButton.attr("style", "margin-left: -7px;")
+        exportAnnotationsButton.attr("style", "margin-left: 5px;")
         exportAnnotationsButton.attr("href", "#")
         exportAnnotationsButton.attr("onclick", "exportAnnotations()")
         exportAnnotationsButton.html("<button>Exportar anotações</button>")
@@ -224,13 +240,6 @@ $( document ).ready(function() {
         turnOffAnnotationsButton.attr("href", "#")
         turnOffAnnotationsButton.attr("onclick", "turnOffAnnotations()")
         turnOffAnnotationsButton.html("<button>Desligar modo anotação</button>")
-
-        var clearAnnotationsButton = $(document.createElement('a'))
-        clearAnnotationsButton.attr("id", "clearAnnotationsButton")
-        clearAnnotationsButton.attr("style", "margin-left:5px")
-        clearAnnotationsButton.attr("href", "#")
-        clearAnnotationsButton.attr("onclick", "clearAnnotations()")
-        clearAnnotationsButton.html("<button>Limpar anotações</button>")
 
         const urlqueryString = window.location.search;
         const urlParams = new URLSearchParams(urlqueryString);
@@ -259,14 +268,14 @@ $( document ).ready(function() {
             divResId = "image-cards-container";
             divChild = "li.image-card";
             nRows = 3;
-            nRes = 24;
+            nRes = parseInt((new URLSearchParams(window.location.search)).get('maxItems') ?? "24");
         } else if (window.location.href.includes("/page/search")){
             type = "page";
             div = "ul.page-search-result";
             divResId = "#pages-results";
             divChild = "ul";
             nRows = 10;
-            nRes = 10;
+            nRes = parseInt((new URLSearchParams(window.location.search)).get('maxItems') ?? "10");
         }
 
         var start = $(document.createElement('p'))
@@ -274,9 +283,10 @@ $( document ).ready(function() {
         start.html("<span>" + startValue + " até " + (startValue+nRes-1) + "</span>")
         start.attr("style", "margin-left: 60px; margin-top: 5px;");
 
+        
+        $("#search-tools-buttons").append(clearAnnotationsButton)
         $("#search-tools-buttons").append(exportAnnotationsButton)
         $("#search-tools-buttons").append(turnOffAnnotationsButton)
-        $("#search-tools-buttons").append(clearAnnotationsButton)
         $("#search-tools-buttons").append(start)
 
         var interval = window.setInterval(function(){
