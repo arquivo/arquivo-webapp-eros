@@ -353,78 +353,8 @@ p#modal-datepicker-input-p {
   border-radius: 5px;
 }
 
-/* header */
-
-header {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 2;
-  height: auto;
-  padding: 8px 0 4px 0;
-  background-color: #033f72;
-  text-align: center;
-}
-
-/* default status for menu overlay */
-div#menus-overlay {
-  display: none;
-  position: relative;
-  z-index: 99999;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.65);
-}
-
-body#landing-replay header {
-  box-shadow: 0px 5px 8px -2px rgba(0, 0, 0, 0.30);
-}
-
-header a#logo-arquivo-link:hover {
-  background-color: transparent;
-}
-
-header button#nav-menu-button-left {
-  position: absolute;
-  left: 10px;
-  width: 54px;
-  height: 31px;
-  border-radius: 3px;
-  top: 8px;
-}
-
-header button#nav-menu-mobile-button-left {
-  display: none;
-}
-
-header button#nav-options-right-button {
-  display: block;
-  position: absolute;
-  right: 10px;
-  width: 66px;
-  height: 31px;
-  font-size: 0.75em;
-  border-radius: 5px;
-}
-
-header img {
-  width: 162px;
-}
-
 /* Main ************************************************************* */
 /* "hidden" white rectangle with both left and right top corners curved, below the arquivo.pt logo */
-
-header .background-top-curve {
-  position: relative;
-  z-index: 0;
-  top: 5px;
-  margin: 0;
-  height: 4px;
-  background-color: white;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
 
 main {
   display: flex;
@@ -479,10 +409,6 @@ body#landing-replay main#main-content {
   max-width: calc(100% - 200px);
   padding: 0 0 0 200px;
   margin: 0;
-}
-
-body#landing-replay header .background-top-curve {
-  display: none;
 }
 
 body#landing-replay iframe html {
@@ -1053,18 +979,6 @@ nav#reply-right-nav section ul>li>ul>li a {
 /* ends nav MENU: replay left and right ************************************************** */
 
 /* Sections: *********************************************************************** */
-
-/* Header container wrap */
-section.header-content-container {
-  margin: 65px auto 0 auto;
-  max-width: 960px;
-  padding: 0 10px;
-}
-
-section.header-content-container h3 {
-  visibility: collapse;
-  height: 0;
-}
 
 section {
   margin: 0 auto;
@@ -2511,10 +2425,6 @@ body#landing-replay .preloader div::after {
   section#search-tools #submit-search-mobile {
     display: none;
   }
-
-  header button#nav-options-right-button-mobile {
-    display: none;
-  }
 }
 
 /* 
@@ -2523,19 +2433,11 @@ body#landing-replay .preloader div::after {
   section#search-tools #submit-search-mobile {
     display: none;
   }
-
-  header button#nav-options-right-button-mobile {
-    display: none;
-  }
 }
 
 /* Device = Tablets, Ipads (portrait) Screen = B/w 768px to 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   section#search-tools #submit-search-mobile {
-    display: none;
-  }
-
-  header button#nav-options-right-button-mobile {
     display: none;
   }
 }
@@ -2548,18 +2450,10 @@ body#landing-replay .preloader div::after {
   section#search-tools #submit-search-mobile {
     display: none;
   }
-
-  header button#nav-options-right-button-mobile {
-    display: none;
-  }
 }
 
 @media (min-width: 482px) and (max-width: 900px) {
   section#search-tools #submit-search-mobile {
-    display: none;
-  }
-
-  header button#nav-options-right-button-mobile {
     display: none;
   }
 }
@@ -2570,23 +2464,6 @@ body#landing-replay .preloader div::after {
   body#landing-replay main#main-content {
     padding: 0;
     margin: 0;
-  }
-
-  header button#nav-menu-mobile-button-left {
-    display: block;
-    position: absolute;
-    left: 10px;
-    font-size: 1.1em;
-    border-radius: 3px;
-    width: 31px;
-    height: 31px;
-    background: none;
-    border: none;
-  }
-
-  header button#nav-menu-mobile-button-left:hover {
-    color: white;
-    border: none;
   }
 
   /* Shows mobile icons in mobile display*/
@@ -2614,10 +2491,6 @@ body#landing-replay .preloader div::after {
 
   section#search-tools-date-slider {
     margin: 8.5px 0 10px 0;
-  }
-
-  section.header-content-container {
-    margin: -5px auto 0 auto;
   }
 
   .background-top-curve {
@@ -2727,10 +2600,6 @@ body#landing-replay .preloader div::after {
 */
 @media (min-width: 0px) and (max-width: 480px) {
 
-  header button#nav-menu-button-left {
-    display: block;
-  }
-
   nav#replay-left-nav {
     display: none;
   }
@@ -2738,22 +2607,6 @@ body#landing-replay .preloader div::after {
   body#landing-replay main#main-content {
     width: 100%;
     max-width: 100%;
-  }
-
-  header button#nav-menu-mobile-button-left {
-    display: block;
-    position: absolute;
-    left: 10px;
-    font-size: 1.1em;
-    border-radius: 5px;
-    width: 31px;
-    height: 31px;
-    background: none;
-    border: none;
-  }
-
-  section.header-content-container {
-    margin: -5px auto 0 auto;
   }
 
   section#search-tools {
@@ -2830,10 +2683,6 @@ body#landing-replay .preloader div::after {
       padding: 6px 4.65px 6.5px 4.65px !important;
     }
 
-    header button#nav-menu-button-left {
-      display: none;
-    }
-
     nav#replay-left-nav {
       display: none;
     }
@@ -2849,24 +2698,8 @@ body#landing-replay .preloader div::after {
       height: 50px !important;
     }
 
-    header button#nav-menu-mobile-button-left {
-      display: block;
-      position: absolute;
-      left: 10px;
-      font-size: 1.1em;
-      border-radius: 5px;
-      width: 31px;
-      height: 31px;
-      background: none;
-      border: none;
-    }
-
     body#homepage button#nav-options-right-button-mobile {
       display: none;
-    }
-
-    section.header-content-container {
-      margin: -5px auto 0 auto;
     }
 
     section#search-tools {
