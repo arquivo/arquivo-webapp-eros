@@ -11,7 +11,7 @@ class PageSearchApiRequest extends ApiRequest {
             siteSearch: null,
             collection: null,
             maxItems: config.get('text.results.per.page'),
-            dedupValue: null,
+            dedupValue: 1,
             dedupField: null,
             fields: null,
             prettyPrint: false,
