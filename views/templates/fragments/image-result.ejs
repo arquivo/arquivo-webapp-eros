@@ -5,7 +5,7 @@
         <li>
             <a href="#modal" rel="modal:open" class="results-image">
                 <img 
-                    <% if(config.get('webapp.hideImageResultsOnError')) { %> onerror="$(this).parents('li.image-card').first().hide()" <% } %>                
+                    <% if(config.has('webapp.hideImageResultsOnError') && config.get('webapp.hideImageResultsOnError')) { %> onerror="$(this).parents('li.image-card').first().hide()" <% } %>                
                     src="<%= imageData.imgLinkToArchive %>" 
                     title="<%= imageData.imgTitle && imageData.imgTitle[0] %>" 
                     alt="<%= imageData.imgAlt && imageData.imgAlt[0] %>"
