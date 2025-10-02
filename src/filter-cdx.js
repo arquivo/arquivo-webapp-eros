@@ -41,8 +41,8 @@ module.exports = function (apiData) {
         .filter((item, index, array) => {
             return (index == 0 || item.status[0] != '2' || item.digest != array[index - 1].digest || item.timestamp.substring(6, 8) != array[index - 1].timestamp.substring(6, 8))
         })
-        // Soft embargo: don't display versions from the current year (issue #1343) 
-        .filter(item => item.timestamp.slice(0,4) < currentYear)
+        // Embargo: don't display versions younger than 1 year old 
+        .filter(item => getDateFromTimestamp(item.timestamp) < (new Date()).setFullYear(currentYear-1))
         // Sort by timestamp to properly order the results
         .sort(sortByTimestamp)
         
