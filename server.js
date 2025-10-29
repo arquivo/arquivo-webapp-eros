@@ -61,13 +61,20 @@ try {
       requestLanguage = req.headers['accept-language'];
       req.headers['accept-language'] = null;
     }
+    
+    const locale = (req.cookies ? req.cookies.i18n : null) || 'pt_PT';
     let oldL = null;
+    
     if(req.url.startsWith('/wayback') && !!req.query  && !!req.query.l){
       oldL = req.query.l;
-      const locale = (req.cookies ? req.cookies.i18n : null) || 'pt_PT';
       req.query.l = locale.split('_').shift();
     }
     i18n.middleware(req,res,() => {});
+
+    // Remove HttpOnly from cookie so wayback can read it
+    //  because i18n.middleware sets it to true (hard-coded):
+    res.cookie('i18n', locale, { httpOnly: false, maxAge: 900000 });
+
     if(req.headers && req.headers['accept-language'] === null){
       req.headers['accept-language'] = requestLanguage;
     }
