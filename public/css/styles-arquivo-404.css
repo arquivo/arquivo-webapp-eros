@@ -14,8 +14,7 @@ body#arquivo-404 main {
   
   body#arquivo-404 main img {
     width: 100%;
-    max-width: 270px;
-    height: 135px;
+    max-width: 400px;
     object-fit: cover;
   }
   

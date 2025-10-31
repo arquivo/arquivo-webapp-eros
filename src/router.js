@@ -121,7 +121,7 @@ router.get('/switchlang', function (req, res) {
         let newLocale = req.getLocales().find(l => l!=currentLocale);
         
         res.clearCookie('i18n');
-        res.cookie('i18n', newLocale, { maxAge: 900000 });
+        res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: false });
         
         if(!parsedUrl.pathname.startsWith('/wayback')){
             parsedUrl.searchParams.set('l',newLocale.split('_').shift());
@@ -133,6 +133,7 @@ router.get('/switchlang', function (req, res) {
         res.set('Cache-control', 'no-cache, no-store, must-revalidate');
         res.set('Pragma', 'no-cache');
         res.set('Expires', '0');
+
         res.redirect(newUrl);
         
     } else {
