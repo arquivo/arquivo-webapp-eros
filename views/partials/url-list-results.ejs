@@ -15,11 +15,11 @@
 
 <section id="url-results" class="url-results-cl">
   <h3><%= t('url-search.accessibility.title') %></h3>    
-  <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
-    numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
-    from: requestData.get('from').slice(0,4),
-    to: requestData.get('to').slice(0,4)
-}) %></span></p>
+  <%- include("../templates/fragments/search-estimated-results", {
+        numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
+        from: requestData.get('from').slice(0,4),
+        to: requestData.get('to').slice(0,4)
+  }) %>
 <!-- starts list results container -->
 <section id="list-results-container">
   <!-- starts replay: list -->

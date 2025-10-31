@@ -13,12 +13,12 @@
     }) -%>
   <% } %>
 <section id="url-results" class="url-results-cl">
-  <h3><%= t('url-search.accessibility.title') %></h3>    
-  <p id="estimated-results"><span id="estimated-results-value"><%= t('common.estimated-results',{
-    numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
-    from: requestData.get('from').slice(0,4),
-    to: requestData.get('to').slice(0,4)
-}) %></span></p>
+  <h3><%= t('url-search.accessibility.title') %></h3>   
+  <%- include("../templates/fragments/search-estimated-results", {
+        numResults:(''+apiData.length).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
+        from: requestData.get('from').slice(0,4),
+        to: requestData.get('to').slice(0,4)
+  }) %>
 <!-- starts table results container -->
 <section id="table-results-container">
 <!-- starts replay: table -->
