@@ -3,7 +3,7 @@
 # Docker
 
 Run using docker compose:
-```
+```bash
 docker-compose up
 ```
 
@@ -13,7 +13,7 @@ You might need to review config/default.properties to make sure everything is wo
 
 Run using node:
 
-```
+```bash
 npm i
 node ./server.js
 ```

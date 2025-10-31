@@ -60,11 +60,11 @@ not-found:
         en: Verify the URL
         pt: Verifique o URL
       second:
-        en: <a href="//arquivo.pt/sugerir">Suggest</a> the site to be archived
-        pt: <a href="//arquivo.pt/sugerir">Sugira</a> a página para que seja arquivada
-      third:
-        en: <a href="//web.archive.org/web/*/${url}">Search other web archives</a>
-        pt: <a href="//web.archive.org/web/*/${url}">Pesquise outros arquivos web</a>
-      fourth:
         en: Try using <a href="/services/archivepagenow?url=${url}">ArchivePageNow</a> to record the missing webpage 
         pt: Use o <a href="/services/archivepagenow?url=${url}">ArchivePageNow</a> para gravar a página em falta
+      third:
+        en: <a href="//arquivo.pt/sugerir">Suggest</a> the site to be archived
+        pt: <a href="//arquivo.pt/sugerir">Sugira</a> a página para que seja arquivada
+      fourth:
+        en: <a href="//web.archive.org/web/*/${url}">Search other web archives</a>
+        pt: <a href="//web.archive.org/web/*/${url}">Pesquise outros arquivos web</a>
