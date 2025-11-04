@@ -9,6 +9,8 @@ docker-compose up
 
 You might need to review config/default.properties to make sure everything is working properly.
 
+Then you could check the application on: http://localhost:3000/
+
 # Node
 
 Run using node:
