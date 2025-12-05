@@ -77,7 +77,7 @@ describe('Image Search Export', () => {
     it('should use imgTstamp field for date extraction', () => {
         const result = exportImageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow[0]).toBe(2020); // year from imgTstamp
         expect(dataRow[1]).toBe('March'); // month from imgTstamp
         expect(dataRow[2]).toBe(15); // day from imgTstamp
@@ -86,7 +86,7 @@ describe('Image Search Export', () => {
     it('should include all image-specific fields', () => {
         const result = exportImageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain('600'); // imgHeight
         expect(dataRow).toContain('800'); // imgWidth
         expect(dataRow).toContain('http://example.com/image.jpg'); // imgSrc
@@ -100,7 +100,7 @@ describe('Image Search Export', () => {
     it('should include page information fields', () => {
         const result = exportImageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain('20200315120000'); // pageTstamp
         expect(dataRow).toContain('http://example.com/page.html'); // pageURL
         expect(dataRow).toContain('http://arquivo.pt/wayback/20200315120000/http://example.com/page.html'); // pageLinkToArchive
