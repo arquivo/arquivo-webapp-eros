@@ -66,7 +66,7 @@ describe('Image Search Export', () => {
         expect(result.length).toBeGreaterThan(10);
         
         // Check last row has image data
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain(2020); // year
         expect(dataRow).toContain('March'); // month
         expect(dataRow).toContain(15); // day
@@ -144,8 +144,8 @@ describe('Image Search Export', () => {
         const result = exportImageSearch(apiRequestData, apiReplyData, translateFunction);
 
         // Should have 2 data rows
-        const firstDataRow = result[result.length - 2];
-        const secondDataRow = result[result.length - 1];
+        const firstDataRow = result.at(-2);
+        const secondDataRow = result.at(-1);
 
         expect(firstDataRow).toContain('http://first.com/img1.jpg');
         expect(secondDataRow).toContain('http://second.com/img2.png');
@@ -189,7 +189,7 @@ describe('Image Search Export', () => {
 
         const result = exportImageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain('1080');
         expect(dataRow).toContain('1920');
     });

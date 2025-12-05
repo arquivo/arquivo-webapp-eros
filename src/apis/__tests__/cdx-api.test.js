@@ -3,7 +3,7 @@ jest.mock('config');
 
 const CDXSearchApiRequest = require('../cdx-api');
 const config = require('config');
-const http = require('http');
+const http = require('node:http');
 
 /**
  * CDXSearchApiRequest Test Suite

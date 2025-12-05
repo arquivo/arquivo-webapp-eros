@@ -3,7 +3,7 @@ jest.mock('config');
 
 const SuggestionApiRequest = require('../suggestion-api');
 const config = require('config');
-const http = require('http');
+const http = require('node:http');
 
 /**
  * SuggestionApiRequest Test Suite

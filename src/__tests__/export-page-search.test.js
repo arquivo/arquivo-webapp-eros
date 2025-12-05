@@ -58,7 +58,7 @@ describe('Page Search Export', () => {
         expect(result.length).toBeGreaterThan(10);
         
         // Check last row has page data
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain(2020); // year
         expect(dataRow).toContain('March'); // month
         expect(dataRow).toContain(15); // day
@@ -69,7 +69,7 @@ describe('Page Search Export', () => {
     it('should use tstamp field for date extraction', () => {
         const result = exportPageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow[0]).toBe(2020); // year from tstamp
         expect(dataRow[1]).toBe('March'); // month from tstamp
         expect(dataRow[2]).toBe(15); // day from tstamp
@@ -78,7 +78,7 @@ describe('Page Search Export', () => {
     it('should include all page-specific fields', () => {
         const result = exportPageSearch(apiRequestData, apiReplyData, translateFunction);
 
-        const dataRow = result[result.length - 1];
+        const dataRow = result.at(-1);
         expect(dataRow).toContain('http://arquivo.pt/wayback/20200315120000/http://example.com');
         expect(dataRow).toContain('http://arquivo.pt/screenshot/20200315120000/http://example.com');
         expect(dataRow).toContain('http://arquivo.pt/text/20200315120000/http://example.com');
@@ -117,8 +117,8 @@ describe('Page Search Export', () => {
         const result = exportPageSearch(apiRequestData, apiReplyData, translateFunction);
 
         // Should have 2 data rows
-        const firstDataRow = result[result.length - 2];
-        const secondDataRow = result[result.length - 1];
+        const firstDataRow = result.at(-2);
+        const secondDataRow = result.at(-1);
 
         expect(firstDataRow).toContain('http://first.com');
         expect(secondDataRow).toContain('http://second.com');

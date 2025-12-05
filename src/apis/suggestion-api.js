@@ -78,8 +78,8 @@ class SuggestionApiRequest extends BaseApiRequest {
             callback(result);
         });
         
-        const https = require('https');
-        const http = require('http');
+        const https = require('node:https');
+        const http = require('node:http');
         const request = this.apiUrl.startsWith('https') ? https.request : http.request;
 
         try {
@@ -152,8 +152,9 @@ class SuggestionApiRequest extends BaseApiRequest {
         apiRes.on('end', () => {
             // Extract suggestion from HTML: <div id="correction"><em>SUGGESTION</em></div>
             const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
-            if (suggestionRegex.test(apiReply)) {
-                const suggestion = apiReply.match(suggestionRegex)[1];
+            const match = suggestionRegex.exec(apiReply);
+            if (match) {
+                const suggestion = match[1];
                 safeCallback(suggestion);
             } else {
                 // No suggestion found, return original query

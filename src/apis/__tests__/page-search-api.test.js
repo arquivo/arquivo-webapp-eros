@@ -3,7 +3,7 @@ jest.mock('config');
 
 const PageSearchApiRequest = require('../page-search-api');
 const config = require('config');
-const http = require('http');
+const http = require('node:http');
 
 /**
  * PageSearchApiRequest Test Suite

@@ -1,5 +1,5 @@
-const https = require('https');
-const http = require('http');
+const https = require('node:https');
+const http = require('node:http');
 const logger = require('../logger');
 
 /**

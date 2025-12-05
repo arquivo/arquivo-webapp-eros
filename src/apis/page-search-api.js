@@ -47,7 +47,7 @@ class PageSearchApiRequest extends ApiRequest {
         ['site', 'type', 'collection','safe','size'].forEach(inlineParam => {
             const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
             if (apiRequestData.has(requestParam)) {
-                const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)
+                const regex = new RegExp(String.raw`\s*${inlineParam}:${apiRequestData.get(requestParam)}\s*`)
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
             }
         });

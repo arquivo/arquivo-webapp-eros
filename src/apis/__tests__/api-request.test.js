@@ -1,5 +1,5 @@
-const http = require('http');
-const https = require('https');
+const http = require('node:http');
+const https = require('node:https');
 const ApiRequest = require('../../../src/apis/api-request');
 
 // Mock the logger
