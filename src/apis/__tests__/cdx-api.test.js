@@ -34,52 +34,94 @@ const http = require('node:http');
  * 2. Make CDXSearchApiRequest standalone (recommended - special streaming needs)
  * 3. Add extensibility back to ApiRequest (more complex)
  */
+
+/**
+ * Route handler for mock CDX API server
+ */
+function getMockResponse(requestedUrl) {
+    if (requestedUrl === 'http://example.com/single') {
+        return '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc123"}';
+    }
+    if (requestedUrl === 'http://example.com/multiple') {
+        return '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc123"}\n{"url":"http://example.com","timestamp":"20230102120000","status":"200","digest":"def456"}\n{"url":"http://example.com","timestamp":"20230103120000","status":"200","digest":"ghi789"}';
+    }
+    if (requestedUrl === 'http://example.com/invalid') {
+        return '{"url":"incomplete"';
+    }
+    if (requestedUrl === 'http://example.com/mixed') {
+        return '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc"}\n{malformed\n{"url":"http://example.com","timestamp":"20230102120000","status":"200","digest":"def"}';
+    }
+    if (requestedUrl === 'http://example.com/empty') {
+        return '';
+    }
+    return '{"url":"http://default.com","timestamp":"20230101120000","status":"200","digest":"default"}';
+}
+
+/**
+ * Handle streaming response with delays
+ */
+function handleStreamingRequest(res) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write('{"url":"http://example.com/1","timestamp":"20230101120000","status":"200","digest":"aaa"}');
+    setTimeout(() => {
+        res.write('\n{"url":"http://example.com/2","timestamp":"20230102120000","status":"200","digest":"bbb"}');
+        setTimeout(() => {
+            res.end('\n{"url":"http://example.com/3","timestamp":"20230103120000","status":"200","digest":"ccc"}');
+        }, 10);
+    }, 10);
+}
+
+/**
+ * Request handler for mock server
+ */
+function handleMockRequest(req, res, mockServerPort) {
+    const url = new URL(req.url, `http://localhost:${mockServerPort}`);
+    const requestedUrl = url.searchParams.get('url');
+    
+    if (requestedUrl === 'http://example.com/streaming') {
+        handleStreamingRequest(res);
+        return;
+    }
+    
+    const mockResponse = getMockResponse(requestedUrl);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(mockResponse);
+}
+
+/**
+ * Request handler for CDX field parsing tests
+ */
+function handleCDXFieldRequest(req, res, cdxMockServerPort) {
+    const url = new URL(req.url, `http://localhost:${cdxMockServerPort}`);
+    const fields = url.searchParams.get('fields');
+
+    const mockData = {
+        url: 'http://arquivo.pt',
+        timestamp: '20231201120000',
+        status: '200',
+        digest: 'SHA1:ABCDEF123456'
+    };
+
+    let response = mockData;
+    if (fields) {
+        response = {};
+        fields.split(',').forEach(field => {
+            if (mockData[field] !== undefined) {
+                response[field] = mockData[field];
+            }
+        });
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(response));
+}
+
 describe('CDXSearchApiRequest', () => {
     let mockServer;
     let mockServerPort;
 
     beforeAll((done) => {
-        // Create a mock HTTP server for testing
-        mockServer = http.createServer((req, res) => {
-            const url = new URL(req.url, `http://localhost:${mockServerPort}`);
-            const requestedUrl = url.searchParams.get('url');
-            
-            let mockResponse;
-            
-            // Route based on requested URL
-            if (requestedUrl === 'http://example.com/single') {
-                // Single JSON object
-                mockResponse = '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc123"}';
-            } else if (requestedUrl === 'http://example.com/multiple') {
-                // Multiple JSON objects separated by newlines
-                mockResponse = '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc123"}\n{"url":"http://example.com","timestamp":"20230102120000","status":"200","digest":"def456"}\n{"url":"http://example.com","timestamp":"20230103120000","status":"200","digest":"ghi789"}';
-            } else if (requestedUrl === 'http://example.com/streaming') {
-                // Simulate streaming response with delays
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.write('{"url":"http://example.com/1","timestamp":"20230101120000","status":"200","digest":"aaa"}');
-                setTimeout(() => {
-                    res.write('\n{"url":"http://example.com/2","timestamp":"20230102120000","status":"200","digest":"bbb"}');
-                    setTimeout(() => {
-                        res.end('\n{"url":"http://example.com/3","timestamp":"20230103120000","status":"200","digest":"ccc"}');
-                    }, 10);
-                }, 10);
-                return;
-            } else if (requestedUrl === 'http://example.com/invalid') {
-                mockResponse = '{"url":"incomplete"';
-            } else if (requestedUrl === 'http://example.com/mixed') {
-                // Mix of valid and invalid JSON - valid, invalid, valid
-                mockResponse = '{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc"}\n{malformed\n{"url":"http://example.com","timestamp":"20230102120000","status":"200","digest":"def"}';
-            } else if (requestedUrl === 'http://example.com/empty') {
-                mockResponse = '';
-            } else {
-                // Default response
-                mockResponse = '{"url":"http://default.com","timestamp":"20230101120000","status":"200","digest":"default"}';
-            }
-
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(mockResponse);
-        });
-
+        mockServer = http.createServer((req, res) => handleMockRequest(req, res, mockServerPort));
         mockServer.listen(0, () => {
             mockServerPort = mockServer.address().port;
             done();
@@ -307,35 +349,7 @@ describe('CDXSearchApiRequest', () => {
 
         beforeEach((done) => {
             api = new CDXSearchApiRequest();
-
-            // Create specialized mock server for CDX responses
-            cdxMockServer = http.createServer((req, res) => {
-                const url = new URL(req.url, `http://localhost:${cdxMockServerPort}`);
-                const fields = url.searchParams.get('fields');
-
-                // Simulate CDX API response with requested fields
-                const mockData = {
-                    url: 'http://arquivo.pt',
-                    timestamp: '20231201120000',
-                    status: '200',
-                    digest: 'SHA1:ABCDEF123456'
-                };
-
-                // Only include requested fields if specified
-                let response = mockData;
-                if (fields) {
-                    response = {};
-                    fields.split(',').forEach(field => {
-                        if (mockData[field] !== undefined) {
-                            response[field] = mockData[field];
-                        }
-                    });
-                }
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(response));
-            });
-
+            cdxMockServer = http.createServer((req, res) => handleCDXFieldRequest(req, res, cdxMockServerPort));
             cdxMockServer.listen(0, () => {
                 cdxMockServerPort = cdxMockServer.address().port;
                 api.apiUrl = `http://localhost:${cdxMockServerPort}`;
