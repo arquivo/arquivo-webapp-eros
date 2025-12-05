@@ -104,13 +104,13 @@ function createSafeCallback(callback, context = 'callback') {
     let invoked = false;
     
     return (...args) => {
-        if (!invoked) {
-            invoked = true;
-            callback(...args);
-        } else {
+        if (invoked) {
             // Log warning but don't throw - prevents cascading errors
             logger.warn(`${context} attempted to be called multiple times. Ignoring subsequent call.`);
+            return;
         }
+        invoked = true;
+        callback(...args);
     };
 }
 
