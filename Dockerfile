@@ -21,11 +21,11 @@ FROM base AS dependencies
 # --chmod=555: Directories are read-only + executable (r-xr-xr-x) - allows traversal but not modification
 # --chown=node:node: Ensures files are owned by non-root user
 COPY --chown=node:node --chmod=444 server.js ./
-COPY --chown=node:node --chmod=555 config/ ./config/
-COPY --chown=node:node --chmod=555 public/ ./public/
-COPY --chown=node:node --chmod=555 src/ ./src/
-COPY --chown=node:node --chmod=555 translations/ ./translations/
-COPY --chown=node:node --chmod=555 views/ ./views/
+COPY --chown=node:node --chmod=555 config ./config
+COPY --chown=node:node --chmod=555 public ./public
+COPY --chown=node:node --chmod=555 src ./src
+COPY --chown=node:node --chmod=555 translations ./translations
+COPY --chown=node:node --chmod=555 views ./views
 
 # Create writable directories for application runtime needs
 # chmod 755: Owner can write, others can read/execute (rwxr-xr-x)
@@ -69,7 +69,7 @@ ENV NODE_ENV=production
 
 # Copy production dependencies from production-deps stage
 # Use --chown to ensure correct ownership when copying
-COPY --from=production-deps --chown=node:node /home/node/app/node_modules ./node_modules
+COPY --from=production-deps --chown=node:node --chmod=555 /home/node/app/node_modules ./node_modules
 
 # Switch to non-root user
 USER node
