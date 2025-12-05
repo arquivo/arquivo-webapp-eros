@@ -25,6 +25,11 @@
     "yallist": "^4.0.0"
   },
   "scripts": {
-    "prestart": "npm i"
+    "prestart": "npm i",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

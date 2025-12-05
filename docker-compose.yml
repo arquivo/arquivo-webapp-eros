@@ -4,9 +4,8 @@ services:
       image: "node:jod-alpine3.21"
       working_dir: /home/node/app
       environment:
-        - NODE_ENV=production
+        - NODE_ENV=development
       volumes:
         - ./:/home/node/app
-      command: sh -c 'npm start'
+      command: sh -c 'npm run dev'
       network_mode: host
-      restart: on-failure
