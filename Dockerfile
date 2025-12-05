@@ -63,7 +63,8 @@ FROM dependencies AS production
 ENV NODE_ENV=production
 
 # Copy production dependencies from production-deps stage
-COPY --from=production-deps /home/node/app/node_modules ./node_modules
+# Use --chown to ensure correct ownership when copying
+COPY --from=production-deps --chown=node:node /home/node/app/node_modules ./node_modules
 
 # Switch to non-root user
 USER node
