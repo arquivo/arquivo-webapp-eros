@@ -20,26 +20,88 @@ const http = require('node:http');
  * - Edge cases: empty responses, malformed HTML, special characters, unicode, large payloads
  * - Query parameter handling: special chars, URL encoding, long queries, newlines
  */
+
+/**
+ * Handler for main mock server
+ */
+function handleMainMockRequest(req, res, mockServerPort, mockServerDelay) {
+    const url = new URL(req.url, `http://localhost:${mockServerPort}`);
+    const query = url.searchParams.get('query');
+    
+    setTimeout(() => {
+        const mockResponse = `<div id="correction"><em>${query} suggestion</em></div>`;
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(mockResponse);
+    }, mockServerDelay);
+}
+
+/**
+ * Handler for error mock server
+ */
+function handleErrorMockRequest(req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.write('<div id="correction">');
+    res.destroy(new Error('Response stream error'));
+}
+
+/**
+ * Handler for error status mock server
+ */
+function handleErrorStatusRequest(req, res, errorStatusMockServerPort) {
+    const url = new URL(req.url, `http://localhost:${errorStatusMockServerPort}`);
+    const query = url.searchParams.get('query');
+    
+    if (query === '404-test') {
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+        res.end('Not Found');
+    } else if (query === '500-test') {
+        res.writeHead(500, { 'Content-Type': 'text/html' });
+        res.end('Internal Server Error');
+    } else if (query === '301-test') {
+        res.writeHead(301, { 'Content-Type': 'text/html', 'Location': 'http://example.com' });
+        res.end();
+    } else {
+        res.writeHead(503, { 'Content-Type': 'text/html' });
+        res.end('Service Unavailable');
+    }
+}
+
+/**
+ * Handler for edge case mock server
+ */
+function handleEdgeCaseRequest(req, res, edgeCaseMockServerPort) {
+    const url = new URL(req.url, `http://localhost:${edgeCaseMockServerPort}`);
+    const query = url.searchParams.get('query');
+    
+    if (query === 'empty-response') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('');
+    } else if (query === 'malformed-html') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<div id="correction"><em>unclosed tag');
+    } else if (query === 'special-chars') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<div id="correction"><em>special & chars < > "</em></div>');
+    } else if (query === 'unicode') {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<div id="correction"><em>português 日本語 emoji 🎉</em></div>');
+    } else if (query === 'very-large') {
+        const largeData = 'x'.repeat(100000);
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(`<div id="correction"><em>${largeData}</em></div>`);
+    } else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<div id="correction"><em>default</em></div>');
+    }
+}
+
 describe('SuggestionApiRequest', () => {
     let mockServer;
     let mockServerPort;
     let mockServerDelay = 0;
 
     beforeAll((done) => {
-        // Create a mock HTTP server for testing
-        mockServer = http.createServer((req, res) => {
-            const url = new URL(req.url, `http://localhost:${mockServerPort}`);
-            const query = url.searchParams.get('query');
-            
-            setTimeout(() => {
-                // Mock suggestion response with HTML format
-                const mockResponse = `<div id="correction"><em>${query} suggestion</em></div>`;
-
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(mockResponse);
-            }, mockServerDelay);
-        });
-
+        mockServer = http.createServer((req, res) => handleMainMockRequest(req, res, mockServerPort, mockServerDelay));
         mockServer.listen(0, () => {
             mockServerPort = mockServer.address().port;
             done();
@@ -338,15 +400,7 @@ describe('SuggestionApiRequest', () => {
         let api;
 
         beforeAll((done) => {
-            // Create a mock server that simulates response errors
-            errorMockServer = http.createServer((req, res) => {
-                // Send partial response then emit error
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.write('<div id="correction">');
-                // Force a response stream error
-                res.destroy(new Error('Response stream error'));
-            });
-
+            errorMockServer = http.createServer((req, res) => handleErrorMockRequest(req, res));
             errorMockServer.listen(0, () => {
                 errorMockServerPort = errorMockServer.address().port;
                 done();
@@ -426,27 +480,7 @@ describe('SuggestionApiRequest', () => {
         let api;
 
         beforeAll((done) => {
-            // Create a mock server that returns various HTTP error codes
-            errorStatusMockServer = http.createServer((req, res) => {
-                const url = new URL(req.url, `http://localhost:${errorStatusMockServerPort}`);
-                const query = url.searchParams.get('query');
-                
-                // Return different status codes based on query
-                if (query === '404-test') {
-                    res.writeHead(404, { 'Content-Type': 'text/html' });
-                    res.end('Not Found');
-                } else if (query === '500-test') {
-                    res.writeHead(500, { 'Content-Type': 'text/html' });
-                    res.end('Internal Server Error');
-                } else if (query === '301-test') {
-                    res.writeHead(301, { 'Content-Type': 'text/html', 'Location': 'http://example.com' });
-                    res.end();
-                } else {
-                    res.writeHead(503, { 'Content-Type': 'text/html' });
-                    res.end('Service Unavailable');
-                }
-            });
-
+            errorStatusMockServer = http.createServer((req, res) => handleErrorStatusRequest(req, res, errorStatusMockServerPort));
             errorStatusMockServer.listen(0, () => {
                 errorStatusMockServerPort = errorStatusMockServer.address().port;
                 done();
@@ -541,34 +575,7 @@ describe('SuggestionApiRequest', () => {
         let api;
 
         beforeAll((done) => {
-            // Create a mock server for edge case responses
-            edgeCaseMockServer = http.createServer((req, res) => {
-                const url = new URL(req.url, `http://localhost:${edgeCaseMockServerPort}`);
-                const query = url.searchParams.get('query');
-                
-                if (query === 'empty-response') {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end('');
-                } else if (query === 'malformed-html') {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end('<div id="correction"><em>unclosed tag');
-                } else if (query === 'special-chars') {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end('<div id="correction"><em>special & chars < > "</em></div>');
-                } else if (query === 'unicode') {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end('<div id="correction"><em>português 日本語 emoji 🎉</em></div>');
-                } else if (query === 'very-large') {
-                    // Simulate a very large response
-                    const largeData = 'x'.repeat(100000);
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(`<div id="correction"><em>${largeData}</em></div>`);
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end('<div id="correction"><em>default</em></div>');
-                }
-            });
-
+            edgeCaseMockServer = http.createServer((req, res) => handleEdgeCaseRequest(req, res, edgeCaseMockServerPort));
             edgeCaseMockServer.listen(0, () => {
                 edgeCaseMockServerPort = edgeCaseMockServer.address().port;
                 done();

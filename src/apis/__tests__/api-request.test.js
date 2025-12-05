@@ -41,33 +41,35 @@ jest.mock('../../../src/logger', () => {
  * document incompatibilities with classes that require custom response processing.
  */
 
+/**
+ * Mock server request handler
+ */
+function handleMockApiRequest(req, res, serverPort) {
+  const url = new URL(req.url, `http://localhost:${serverPort}`);
+  
+  if (url.pathname === '/success') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok', data: 'test' }));
+  } else if (url.pathname === '/error') {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+  } else if (url.pathname === '/invalid-json') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end('invalid json{');
+  } else if (url.pathname === '/timeout') {
+    setTimeout(() => {
+      res.writeHead(200);
+      res.end('{}');
+    }, 5000);
+  }
+}
+
 describe('ApiRequest', () => {
   let mockServer;
   let serverPort;
 
   beforeAll((done) => {
-    // Create a mock HTTP server for testing
-    mockServer = http.createServer((req, res) => {
-      const url = new URL(req.url, `http://localhost:${serverPort}`);
-      
-      if (url.pathname === '/success') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ status: 'ok', data: 'test' }));
-      } else if (url.pathname === '/error') {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Internal Server Error' }));
-      } else if (url.pathname === '/invalid-json') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end('invalid json{');
-      } else if (url.pathname === '/timeout') {
-        // Don't respond to simulate timeout
-        setTimeout(() => {
-          res.writeHead(200);
-          res.end('{}');
-        }, 5000);
-      }
-    });
-
+    mockServer = http.createServer((req, res) => handleMockApiRequest(req, res, serverPort));
     mockServer.listen(0, () => {
       serverPort = mockServer.address().port;
       done();
