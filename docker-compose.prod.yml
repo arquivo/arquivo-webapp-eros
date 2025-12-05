@@ -3,12 +3,9 @@ services:
       build:
         context: .
         dockerfile: Dockerfile
-        target: development
+        target: production
       environment:
-        - NODE_ENV=development
-      volumes:
-        - ./:/home/node/app
-        - /home/node/app/node_modules
+        - NODE_ENV=production
       ports:
         - "3000:3000"
       healthcheck:
@@ -18,3 +15,12 @@ services:
         retries: 3
         start_period: 40s
       restart: unless-stopped
+      # Optional: Resource limits for production
+      # deploy:
+      #   resources:
+      #     limits:
+      #       cpus: '1'
+      #       memory: 512M
+      #     reservations:
+      #       cpus: '0.5'
+      #       memory: 256M
