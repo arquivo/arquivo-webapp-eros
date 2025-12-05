@@ -71,13 +71,18 @@ class SuggestionApiRequest {
      * @param {Function} callback - Callback function(suggestion) with suggestion string
      */
     get(requestData, callback) {
+        // Validate callback
+        if (typeof callback !== 'function') {
+            return;
+        }
+
         // Local variables for memory safety
         let apiReply = '';
         let callbackInvoked = false;
         const originalQuery = requestData.get('query') || '';
 
         const safeCallback = (data) => {
-            if (!callbackInvoked) {
+            if (!callbackInvoked && typeof callback === 'function') {
                 callbackInvoked = true;
                 callback(data);
             }
@@ -125,6 +130,11 @@ class SuggestionApiRequest {
             // Handle request errors - return original query
             apiReq.on('error', (e) => {
                 this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                // Destroy request to clean up resources
+                // Note: DNS lookups may still leave handles temporarily in tests
+                if (!apiReq.destroyed) {
+                    apiReq.destroy();
+                }
                 safeCallback(originalQuery);
             });
 

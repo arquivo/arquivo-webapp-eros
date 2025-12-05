@@ -8,27 +8,17 @@ const http = require('http');
 /**
  * SuggestionApiRequest Test Suite
  * 
- * CURRENT STATUS: 19/23 tests passing (4 failing - 17% failure rate)
- * 
- * ROOT CAUSE OF FAILURES:
- * The SuggestionApiRequest class relies on custom response handlers (dataFunction, endFunction)
- * that are NOT supported by the refactored ApiRequest class. These handlers were used to:
- * 1. Accumulate HTML response and strip newlines
- * 2. Parse HTML to extract suggestions from <div id="correction"><em>...</em></div>
- * 3. Fall back to original query if no suggestion found
- * 
- * FAILING TESTS:
- * - HTML Parsing - endFunction (3 tests)
- * - Timeout Handling (1 test)
- * 
- * These failures document the incompatibility between SuggestionApiRequest's custom
- * processing needs and the refactored ApiRequest implementation that removed extensibility
- * hooks to fix memory leaks and callback safety issues.
- * 
- * DECISION NEEDED:
- * 1. Revert ApiRequest refactor (reintroduces bugs)
- * 2. Make SuggestionApiRequest standalone (recommended - separates concerns)
- * 3. Add extensibility back to ApiRequest (more complex)
+ * Comprehensive test coverage for the suggestion API including:
+ * - Constructor initialization and configuration
+ * - Enabled/disabled state behavior
+ * - HTML parsing and suggestion extraction
+ * - Timeout handling
+ * - HTTP error status codes (4xx, 5xx, 3xx)
+ * - Request and response errors
+ * - Exception handling
+ * - Callback safety (single invocation, null/undefined handling)
+ * - Edge cases: empty responses, malformed HTML, special characters, unicode, large payloads
+ * - Query parameter handling: special chars, URL encoding, long queries, newlines
  */
 describe('SuggestionApiRequest', () => {
     let mockServer;
@@ -339,6 +329,343 @@ describe('SuggestionApiRequest', () => {
 
             const sanitized = api.sanitizeRequestData(requestData);
             expect(sanitized.get('l')).toBe('pt');
+        });
+    });
+
+    describe('Error Handling - Response Errors', () => {
+        let errorMockServer;
+        let errorMockServerPort;
+        let api;
+
+        beforeAll((done) => {
+            // Create a mock server that simulates response errors
+            errorMockServer = http.createServer((req, res) => {
+                // Send partial response then emit error
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write('<div id="correction">');
+                // Force a response stream error
+                res.destroy(new Error('Response stream error'));
+            });
+
+            errorMockServer.listen(0, () => {
+                errorMockServerPort = errorMockServer.address().port;
+                done();
+            });
+        });
+
+        afterAll((done) => {
+            errorMockServer.close(done);
+        });
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${errorMockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should handle response errors and return original query', (done) => {
+            api.getSuggestion('test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('test');
+                done();
+            });
+        });
+    });
+
+    describe('Error Handling - Request Errors', () => {
+        let api;
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.enabled = true;
+        });
+
+        it('should handle request errors (invalid host) and return original query', (done) => {
+            // Use an invalid host to trigger request error
+            api.apiUrl = 'http://invalid-host-that-does-not-exist-12345.local';
+            
+            api.getSuggestion('test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('test');
+                done();
+            });
+        }, 5000);
+
+        it('should handle request errors (connection refused) and return original query', (done) => {
+            // Use a port that's not listening to trigger connection refused
+            api.apiUrl = 'http://localhost:1';
+            
+            api.getSuggestion('test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('test');
+                done();
+            });
+        }, 5000);
+    });
+
+    describe('Error Handling - Exception in get()', () => {
+        let api;
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${mockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should handle exceptions in get() and return original query', (done) => {
+            // Force an exception by making apiUrl invalid after construction
+            api.apiUrl = 'not-a-valid-url';
+            
+            api.getSuggestion('test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('test');
+                done();
+            });
+        });
+    });
+
+    describe('Error Handling - Non-2xx Status Codes', () => {
+        let errorStatusMockServer;
+        let errorStatusMockServerPort;
+        let api;
+
+        beforeAll((done) => {
+            // Create a mock server that returns various HTTP error codes
+            errorStatusMockServer = http.createServer((req, res) => {
+                const url = new URL(req.url, `http://localhost:${errorStatusMockServerPort}`);
+                const query = url.searchParams.get('query');
+                
+                // Return different status codes based on query
+                if (query === '404-test') {
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.end('Not Found');
+                } else if (query === '500-test') {
+                    res.writeHead(500, { 'Content-Type': 'text/html' });
+                    res.end('Internal Server Error');
+                } else if (query === '301-test') {
+                    res.writeHead(301, { 'Content-Type': 'text/html', 'Location': 'http://example.com' });
+                    res.end();
+                } else {
+                    res.writeHead(503, { 'Content-Type': 'text/html' });
+                    res.end('Service Unavailable');
+                }
+            });
+
+            errorStatusMockServer.listen(0, () => {
+                errorStatusMockServerPort = errorStatusMockServer.address().port;
+                done();
+            });
+        });
+
+        afterAll((done) => {
+            errorStatusMockServer.close(done);
+        });
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${errorStatusMockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should handle 404 status code and return original query', (done) => {
+            api.getSuggestion('404-test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('404-test');
+                done();
+            });
+        });
+
+        it('should handle 500 status code and return original query', (done) => {
+            api.getSuggestion('500-test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('500-test');
+                done();
+            });
+        });
+
+        it('should handle 3xx redirect status code and return original query', (done) => {
+            api.getSuggestion('301-test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('301-test');
+                done();
+            });
+        });
+
+        it('should handle 503 status code and return original query', (done) => {
+            api.getSuggestion('unavailable-test', 'pt', (suggestion) => {
+                expect(suggestion).toBe('unavailable-test');
+                done();
+            });
+        });
+    });
+
+    describe('Edge Cases - Callback Safety', () => {
+        let api;
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${mockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should call callback only once even with response error', (done) => {
+            let callCount = 0;
+            
+            // Use invalid host to trigger error
+            api.apiUrl = 'http://localhost:1';
+            
+            api.getSuggestion('test', 'pt', (suggestion) => {
+                callCount++;
+                expect(callCount).toBe(1);
+                expect(suggestion).toBe('test');
+                
+                // Small delay to ensure no double callback
+                setTimeout(() => {
+                    expect(callCount).toBe(1);
+                    done();
+                }, 100);
+            });
+        });
+
+        it('should handle missing callback gracefully', () => {
+            // Should not throw when callback is undefined
+            expect(() => {
+                api.getSuggestion('test', 'pt');
+            }).not.toThrow();
+        });
+
+        it('should handle null callback gracefully', () => {
+            // Should not throw when callback is null
+            expect(() => {
+                api.getSuggestion('test', 'pt', null);
+            }).not.toThrow();
+        });
+    });
+
+    describe('Edge Cases - Response Data', () => {
+        let edgeCaseMockServer;
+        let edgeCaseMockServerPort;
+        let api;
+
+        beforeAll((done) => {
+            // Create a mock server for edge case responses
+            edgeCaseMockServer = http.createServer((req, res) => {
+                const url = new URL(req.url, `http://localhost:${edgeCaseMockServerPort}`);
+                const query = url.searchParams.get('query');
+                
+                if (query === 'empty-response') {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end('');
+                } else if (query === 'malformed-html') {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end('<div id="correction"><em>unclosed tag');
+                } else if (query === 'special-chars') {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end('<div id="correction"><em>special & chars < > "</em></div>');
+                } else if (query === 'unicode') {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end('<div id="correction"><em>português 日本語 emoji 🎉</em></div>');
+                } else if (query === 'very-large') {
+                    // Simulate a very large response
+                    const largeData = 'x'.repeat(100000);
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(`<div id="correction"><em>${largeData}</em></div>`);
+                } else {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end('<div id="correction"><em>default</em></div>');
+                }
+            });
+
+            edgeCaseMockServer.listen(0, () => {
+                edgeCaseMockServerPort = edgeCaseMockServer.address().port;
+                done();
+            });
+        });
+
+        afterAll((done) => {
+            edgeCaseMockServer.close(done);
+        });
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${edgeCaseMockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should handle empty response body and return original query', (done) => {
+            api.getSuggestion('empty-response', 'pt', (suggestion) => {
+                expect(suggestion).toBe('empty-response');
+                done();
+            });
+        });
+
+        it('should handle malformed HTML and return original query when no match', (done) => {
+            api.getSuggestion('malformed-html', 'pt', (suggestion) => {
+                // When HTML is malformed and no proper <em> tag found, return original
+                expect(suggestion).toBe('malformed-html');
+                done();
+            });
+        });
+
+        it('should handle special HTML characters in suggestion', (done) => {
+            api.getSuggestion('special-chars', 'pt', (suggestion) => {
+                expect(suggestion).toBe('special & chars < > "');
+                done();
+            });
+        });
+
+        it('should handle unicode and emoji in suggestion', (done) => {
+            api.getSuggestion('unicode', 'pt', (suggestion) => {
+                expect(suggestion).toBe('português 日本語 emoji 🎉');
+                done();
+            });
+        });
+
+        it('should handle very large response', (done) => {
+            api.getSuggestion('very-large', 'pt', (suggestion) => {
+                expect(suggestion.length).toBeGreaterThan(90000);
+                expect(suggestion).toMatch(/^x+$/);
+                done();
+            });
+        }, 10000);
+    });
+
+    describe('Edge Cases - Query Parameters', () => {
+        let api;
+
+        beforeEach(() => {
+            api = new SuggestionApiRequest();
+            api.apiUrl = `http://localhost:${mockServerPort}`;
+            api.enabled = true;
+        });
+
+        it('should handle query with special characters', (done) => {
+            api.getSuggestion('test & query = value', 'pt', (suggestion) => {
+                expect(suggestion).toContain('suggestion');
+                done();
+            });
+        });
+
+        it('should handle query with URL-encoded characters', (done) => {
+            api.getSuggestion('test%20query', 'pt', (suggestion) => {
+                expect(suggestion).toContain('suggestion');
+                done();
+            });
+        });
+
+        it('should handle very long query', (done) => {
+            const longQuery = 'a'.repeat(1000);
+            api.getSuggestion(longQuery, 'pt', (suggestion) => {
+                expect(typeof suggestion).toBe('string');
+                done();
+            });
+        });
+
+        it('should handle query with newlines', (done) => {
+            api.getSuggestion('test\nquery\nwith\nnewlines', 'pt', (suggestion) => {
+                expect(suggestion).toContain('suggestion');
+                done();
+            });
+        });
+
+        it('should handle unsupported language code', (done) => {
+            api.getSuggestion('test', 'invalid-lang', (suggestion) => {
+                expect(typeof suggestion).toBe('string');
+                done();
+            });
         });
     });
 });
