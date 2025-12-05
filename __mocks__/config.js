@@ -2,6 +2,7 @@
 const mockConfig = {
   'backend.url': 'https://preprod.arquivo.pt',
   'wayback.url': 'https://preprod.arquivo.pt/wayback',
+  'services.archivepagenow.url': 'https://preprod.arquivo.pt/services/save/',
   'image.search.api': 'https://preprod.arquivo.pt/imagesearch',
   'query.suggestion.api': 'https://preprod.arquivo.pt/spellchecker/checker',
   'query.suggestion.api_enabled': false,
