@@ -15,8 +15,8 @@
     <h3><%= t('page-search.accessibility.title') %></h3>    
     <%- include("../templates/fragments/search-estimated-results", {
         numResults:(''+apiData.estimated_nr_results).replace(/\B(?=(\d{3})+(?!\d))/g,"."),
-        from: apiData.request_parameters.from.slice(0,4),
-        to: apiData.request_parameters.to.slice(0,4)
+        from: apiData.request_parameters?.from?.slice(0,4) || '',
+        to: apiData.request_parameters?.to?.slice(0,4) || ''
     }) %>
 
     <% apiData.response_items.forEach((element,index) => { %>
