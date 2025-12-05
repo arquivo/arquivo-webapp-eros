@@ -58,7 +58,7 @@ class CDXSearchApiRequest extends BaseApiRequest {
                     apiData.push(currentData);
                 } catch (e) {
                     // Log and skip malformed JSON, continue processing
-                    this.logger.error('Failed to parse following JSON object: ' + currentJson);
+                    this.logger.error(`Failed to parse JSON object: ${currentJson}. Error: ${e.message}`);
                 }
                 apiReply = apiReply.slice(endIndex + 1);
                 endIndex = apiReply.indexOf('}') + 1;

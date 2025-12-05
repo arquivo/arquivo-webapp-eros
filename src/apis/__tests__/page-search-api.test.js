@@ -110,7 +110,7 @@ describe('PageSearchApiRequest', () => {
 
         beforeEach(() => {
             // Override config to use mock server
-            const originalApiUrl = config.get('text.search.api.default');
+            config.get('text.search.api.default');
             api = new PageSearchApiRequest();
             api.apiUrl = `http://localhost:${mockServerPort}`;
         });

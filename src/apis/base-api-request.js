@@ -28,12 +28,12 @@ class BaseApiRequest {
      * @param {string} loggerName - Logger name for this API client
      * @param {Object} options - HTTP request options (method, timeout, etc.)
      */
-    constructor(apiUrl, defaultApiParams = {}, defaultApiReply = {}, loggerName = 'BaseApiRequest', options = { method: 'GET' }) {
+    constructor(apiUrl, defaultApiParams = {}, defaultApiReply = {}, loggerName = 'BaseApiRequest', options = null) {
         this.apiUrl = apiUrl;
         this.defaultApiParams = defaultApiParams;
         this.defaultApiReply = defaultApiReply;
         this.logger = logger(loggerName);
-        this.options = options;
+        this.options = options || { method: 'GET' };
     }
 
     /**

@@ -8,41 +8,41 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/cdx-api');
 jest.mock('../filter-cdx');
 
+/**
+ * Helper function to setup mocks for replay-nav tests
+ * @param {Object} options - Configuration options
+ * @param {string} options.url - URL to use in request data
+ * @param {Array} options.apiData - Data returned by API
+ * @param {Array} options.filteredData - Data returned by filter (defaults to apiData)
+ * @returns {Object} - Mock objects { req, res, apiRequest, requestData }
+ */
+function setupMocks({ url = 'http://example.com', apiData = [], filteredData = null } = {}) {
+    jest.clearAllMocks();
+
+    const mockReq = {
+        query: { url }
+    };
+
+    const mockRes = {
+        render: jest.fn()
+    };
+
+    const mockRequestData = new URLSearchParams({ url });
+    sanitizeInputs.mockReturnValue(mockRequestData);
+
+    const mockApiRequest = {
+        get: jest.fn((params, callback) => {
+            callback(apiData);
+        })
+    };
+    CDXSearchApiRequest.mockImplementation(() => mockApiRequest);
+
+    cdxFilter.mockImplementation((data) => filteredData === null ? data : filteredData);
+
+    return { req: mockReq, res: mockRes, apiRequest: mockApiRequest, requestData: mockRequestData };
+}
+
 describe('replay-nav', () => {
-    /**
-     * Helper function to setup mocks for replay-nav tests
-     * @param {Object} options - Configuration options
-     * @param {string} options.url - URL to use in request data
-     * @param {Array} options.apiData - Data returned by API
-     * @param {Array} options.filteredData - Data returned by filter (defaults to apiData)
-     * @returns {Object} - Mock objects { req, res, apiRequest, requestData }
-     */
-    function setupMocks({ url = 'http://example.com', apiData = [], filteredData = null } = {}) {
-        jest.clearAllMocks();
-
-        const mockReq = {
-            query: { url }
-        };
-
-        const mockRes = {
-            render: jest.fn()
-        };
-
-        const mockRequestData = new URLSearchParams({ url });
-        sanitizeInputs.mockReturnValue(mockRequestData);
-
-        const mockApiRequest = {
-            get: jest.fn((params, callback) => {
-                callback(apiData);
-            })
-        };
-        CDXSearchApiRequest.mockImplementation(() => mockApiRequest);
-
-        cdxFilter.mockImplementation((data) => filteredData !== null ? filteredData : data);
-
-        return { req: mockReq, res: mockRes, apiRequest: mockApiRequest, requestData: mockRequestData };
-    }
-
     it('should create CDXSearchApiRequest instance', () => {
         const { req, res } = setupMocks();
         replayNav(req, res);

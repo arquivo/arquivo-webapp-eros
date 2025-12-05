@@ -75,7 +75,7 @@ describe('Export Results Utility', () => {
         });
 
         it('should add column headers based on displayFields', () => {
-            const result = exportResults(apiRequestData, [], translateFunction, 'tstamp', ['title', 'url']);
+            exportResults(apiRequestData, [], translateFunction, 'tstamp', ['title', 'url']);
 
             // Headers are translated with 'exports.' prefix
             expect(translateFunction).toHaveBeenCalledWith('exports.title');
