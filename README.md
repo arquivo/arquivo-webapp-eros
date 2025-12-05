@@ -47,7 +47,7 @@ Run optimized production build:
 docker compose -f docker-compose.prod.yml up --build
 
 # Run in detached mode
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d --build
 
 # View logs
 docker compose -f docker-compose.prod.yml logs -f
