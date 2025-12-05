@@ -25,14 +25,22 @@ class SuggestionApiRequest extends ApiRequest {
 
         } };
         this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(e); callback(requestData.get('query') || ''); } };
+
+        this.enabled = config.has('query.suggestion.api_enabled') && config.get('query.suggestion.api_enabled') === true;
     }
 
     getSuggestion (query, lang, callback) {
-        const requestData = new URLSearchParams({
-            query: query,
-            l: lang,
-        });
-        this.get(requestData,callback);
+        if (this.enabled) {
+            const requestData = new URLSearchParams({
+                query: query,
+                l: lang,
+            });
+            this.get(requestData,callback);
+        } else {
+            process.nextTick(() => {
+                callback(query);
+            });
+        }
     }
 }
 
