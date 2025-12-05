@@ -16,8 +16,13 @@ COPY package*.json ./
 # Stage 2: Dependencies layer (shared between dev and prod)
 FROM base AS dependencies
 
-# Copy application source (needed for both dev and prod)
-COPY . .
+# Copy application source (only required files for runtime)
+COPY server.js ./
+COPY config/ ./config/
+COPY public/ ./public/
+COPY src/ ./src/
+COPY translations/ ./translations/
+COPY views/ ./views/
 
 # Create non-root user directories
 RUN mkdir -p logs uploads && \
