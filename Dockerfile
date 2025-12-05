@@ -10,22 +10,28 @@ RUN apk add --no-cache dumb-init curl
 # Set working directory
 WORKDIR /home/node/app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files with read-only permissions
+COPY --chown=node:node --chmod=444 package*.json ./
 
 # Stage 2: Dependencies layer (shared between dev and prod)
 FROM base AS dependencies
 
 # Security: Copy application source as read-only to prevent tampering
-# --chmod=444: Files are read-only (r--r--r--) - prevents modification of source code
-# --chmod=555: Directories are read-only + executable (r-xr-xr-x) - allows traversal but not modification
+# Files will be set to 444 (r--r--r--) and directories to 555 (r-xr-xr-x)
+# This prevents modification while allowing execution/traversal
 # --chown=node:node: Ensures files are owned by non-root user
-COPY --chown=node:node --chmod=444 server.js ./
-COPY --chown=node:node --chmod=555 config ./config
-COPY --chown=node:node --chmod=555 public ./public
-COPY --chown=node:node --chmod=555 src ./src
-COPY --chown=node:node --chmod=555 translations ./translations
-COPY --chown=node:node --chmod=555 views ./views
+COPY --chown=node:node server.js ./
+COPY --chown=node:node config ./config
+COPY --chown=node:node public ./public
+COPY --chown=node:node src ./src
+COPY --chown=node:node translations ./translations
+COPY --chown=node:node views ./views
+
+# Recursively set read-only permissions on all copied resources
+# Files: 444 (r--r--r--) - no write permission
+# Directories: 555 (r-xr-xr-x) - no write permission, executable for traversal
+RUN find /home/node/app -type f -not -path "*/node_modules/*" -exec chmod 444 {} \; && \
+    find /home/node/app -type d -not -path "*/node_modules/*" -exec chmod 555 {} \;
 
 # Create writable directories for application runtime needs
 # chmod 755: Owner can write, others can read/execute (rwxr-xr-x)
@@ -69,7 +75,11 @@ ENV NODE_ENV=production
 
 # Copy production dependencies from production-deps stage
 # Use --chown to ensure correct ownership when copying
-COPY --from=production-deps --chown=node:node --chmod=555 /home/node/app/node_modules ./node_modules
+COPY --from=production-deps --chown=node:node /home/node/app/node_modules ./node_modules
+
+# Set read-only permissions on node_modules recursively
+RUN find /home/node/app/node_modules -type f -exec chmod 444 {} \; && \
+    find /home/node/app/node_modules -type d -exec chmod 555 {} \;
 
 # Switch to non-root user
 USER node
