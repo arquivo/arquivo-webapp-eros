@@ -6,12 +6,15 @@ module.exports = function (req, res) {
     const requestData = sanitizeInputs(req, res);
     const apiRequest = new CDXSearchApiRequest();
 
-    apiRequest.get({ url: requestData.get('url') },
-        (apiData) => {
-            res.render('partials/replay-nav', {
-                requestData: requestData,
-                apiData: cdxFilter(apiData),
-            });
+    const cdxRequestData = new URLSearchParams({
+        url: requestData.get('url')
+    });
+
+    apiRequest.get(cdxRequestData, (apiData) => {
+        res.render('partials/replay-nav', {
+            requestData: requestData,
+            apiData: cdxFilter(apiData),
         });
+    });
 }
 
