@@ -1,13 +1,11 @@
-const https = require('https');
-const http = require('http');
-const logger = require('../logger');
+const BaseApiRequest = require('./base-api-request');
 const config = require('config');
 
 /**
- * SuggestionApiRequest - Standalone HTTP client for query suggestion API with HTML parsing
+ * SuggestionApiRequest - HTTP client for query suggestion API with HTML parsing
  * 
- * This class is standalone (does not extend ApiRequest) because it requires special
- * HTML response parsing to extract query suggestions from specific div elements.
+ * Extends BaseApiRequest with special HTML response parsing to extract
+ * query suggestions from specific div elements.
  * 
  * Features:
  * - HTML parsing to extract suggestions from <div id="correction"><em>...</em></div>
@@ -18,18 +16,21 @@ const config = require('config');
  * - Safe callback invocation (prevents multiple calls)
  * 
  * @class
+ * @extends BaseApiRequest
  */
-class SuggestionApiRequest {
+class SuggestionApiRequest extends BaseApiRequest {
     constructor() {
-        this.apiUrl = config.get('query.suggestion.api');
-        this.defaultApiParams = {
+        const apiUrl = config.get('query.suggestion.api');
+        const defaultApiParams = {
             query: '',
             l: 'pt',
         };
-        this.defaultApiReply = '';
-        this.logger = logger('SuggestionApiRequest');
+        const defaultApiReply = '';
         // Short timeout - suggestions are not critical, service is sometimes down
-        this.options = { method: 'GET', timeout: 1000 };
+        const options = { method: 'GET', timeout: 1000 };
+        
+        super(apiUrl, defaultApiParams, defaultApiReply, 'SuggestionApiRequest', options);
+        
         this.enabled = config.has('query.suggestion.api_enabled') && 
                       config.get('query.suggestion.api_enabled') === true;
     }
@@ -61,11 +62,7 @@ class SuggestionApiRequest {
 
     /**
      * Performs a GET request with HTML parsing
-     * 
-     * Extracts suggestion from HTML response using regex to find:
-     * <div id="correction"><em>SUGGESTION_TEXT</em></div>
-     * 
-     * Falls back to original query if no suggestion is found.
+     * Overrides parent to return original query on errors instead of defaultApiReply
      * 
      * @param {URLSearchParams} requestData - Query parameters
      * @param {Function} callback - Callback function(suggestion) with suggestion string
@@ -76,18 +73,13 @@ class SuggestionApiRequest {
             return;
         }
 
-        // Local variables for memory safety
-        let apiReply = '';
-        let callbackInvoked = false;
         const originalQuery = requestData.get('query') || '';
-
-        const safeCallback = (data) => {
-            if (!callbackInvoked && typeof callback === 'function') {
-                callbackInvoked = true;
-                callback(data);
-            }
-        };
-
+        const { safeCallback } = this.createSafeCallback((result) => {
+            callback(result);
+        });
+        
+        const https = require('https');
+        const http = require('http');
         const request = this.apiUrl.startsWith('https') ? https.request : http.request;
 
         try {
@@ -102,36 +94,13 @@ class SuggestionApiRequest {
                     return;
                 }
 
-                // Accumulate HTML response, strip newlines
-                apiRes.on('data', (chunk) => {
-                    apiReply += chunk.toString().split("\n").join('');
-                });
-
-                // Parse complete HTML response
-                apiRes.on('end', () => {
-                    // Extract suggestion from HTML: <div id="correction"><em>SUGGESTION</em></div>
-                    const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
-                    if (suggestionRegex.test(apiReply)) {
-                        const suggestion = apiReply.match(suggestionRegex)[1];
-                        safeCallback(suggestion);
-                    } else {
-                        // No suggestion found, return original query
-                        safeCallback(originalQuery);
-                    }
-                });
-
-                // Handle response errors - return original query
-                apiRes.on('error', (e) => {
-                    this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-                    safeCallback(originalQuery);
-                });
+                // Delegate response processing to processResponse
+                this.processResponse(apiRes, safeCallback, requestData);
             });
 
             // Handle request errors - return original query
             apiReq.on('error', (e) => {
                 this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
-                // Destroy request to clean up resources
-                // Note: DNS lookups may still leave handles temporarily in tests
                 if (!apiReq.destroyed) {
                     apiReq.destroy();
                 }
@@ -145,7 +114,7 @@ class SuggestionApiRequest {
                 safeCallback(originalQuery);
             });
 
-            // Configure timeout
+            // Configure timeout if specified
             if (this.options.timeout) {
                 apiReq.setTimeout(this.options.timeout);
             }
@@ -159,20 +128,44 @@ class SuggestionApiRequest {
     }
 
     /**
-     * Sanitizes and merges request parameters with defaults
+     * Process HTTP response with HTML parsing
      * 
-     * @param {URLSearchParams} requestData - Request-specific parameters
-     * @returns {URLSearchParams} Sanitized and merged parameters
+     * Extracts suggestion from HTML response using regex to find:
+     * <div id="correction"><em>SUGGESTION_TEXT</em></div>
+     * 
+     * Falls back to original query if no suggestion is found.
+     * 
+     * @param {http.IncomingMessage} apiRes - HTTP response object
+     * @param {Function} safeCallback - Safe callback to invoke with suggestion
+     * @param {URLSearchParams} requestData - Original request parameters (for fallback)
      */
-    sanitizeRequestData(requestData) {
-        const apiRequestData = new URLSearchParams();
-        
-        // Merge defaultApiParams with requestData
-        Object.keys(this.defaultApiParams)
-            .filter(key => this.defaultApiParams[key] !== null || requestData.has(key))
-            .forEach(key => apiRequestData.set(key, requestData.get(key) ?? this.defaultApiParams[key]));
-            
-        return apiRequestData;
+    processResponse(apiRes, safeCallback, requestData) {
+        let apiReply = '';
+        const originalQuery = requestData.get('query') || '';
+
+        // Accumulate HTML response, strip newlines
+        apiRes.on('data', (chunk) => {
+            apiReply += chunk.toString().split("\n").join('');
+        });
+
+        // Parse complete HTML response
+        apiRes.on('end', () => {
+            // Extract suggestion from HTML: <div id="correction"><em>SUGGESTION</em></div>
+            const suggestionRegex = /<div\s+id=['"]correction['"]><em>(.*)<\/em><\/div>/;
+            if (suggestionRegex.test(apiReply)) {
+                const suggestion = apiReply.match(suggestionRegex)[1];
+                safeCallback(suggestion);
+            } else {
+                // No suggestion found, return original query
+                safeCallback(originalQuery);
+            }
+        });
+
+        // Handle response errors - return original query
+        apiRes.on('error', (e) => {
+            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
+            safeCallback(originalQuery);
+        });
     }
 }
 
