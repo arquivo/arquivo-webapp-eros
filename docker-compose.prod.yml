@@ -15,6 +15,27 @@ services:
         retries: 3
         start_period: 40s
       restart: unless-stopped
+      # Security hardening options
+      security_opt:
+        # Prevents container processes from gaining additional privileges
+        - no-new-privileges:true
+      # Makes container filesystem read-only (prevents tampering with files)
+      read_only: true
+      # Temporary filesystem in memory for /tmp (required for Node.js operations)
+      # noexec: Cannot execute binaries from /tmp (prevents malicious code execution)
+      # nosuid: Ignores setuid/setgid bits (prevents privilege escalation)
+      # size: Limits tmpfs to appropriate size for each mount
+      tmpfs:
+        - /tmp:noexec,nosuid,size=64m
+        - /home/node/.npm:noexec,nosuid,size=128m
+        - /home/node/app/logs:noexec,nosuid,size=64m
+        - /home/node/app/uploads:noexec,nosuid,size=128m
+      # Drop all Linux capabilities (defense in depth)
+      cap_drop:
+        - ALL
+      # Only add back the specific capability needed to bind to port 3000
+      cap_add:
+        - NET_BIND_SERVICE
       # Optional: Resource limits for production
       # deploy:
       #   resources:

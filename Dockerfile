@@ -16,17 +16,22 @@ COPY package*.json ./
 # Stage 2: Dependencies layer (shared between dev and prod)
 FROM base AS dependencies
 
-# Copy application source (only required files for runtime)
-COPY server.js ./
-COPY config/ ./config/
-COPY public/ ./public/
-COPY src/ ./src/
-COPY translations/ ./translations/
-COPY views/ ./views/
+# Security: Copy application source as read-only to prevent tampering
+# --chmod=444: Files are read-only (r--r--r--) - prevents modification of source code
+# --chmod=555: Directories are read-only + executable (r-xr-xr-x) - allows traversal but not modification
+# --chown=node:node: Ensures files are owned by non-root user
+COPY --chown=node:node --chmod=444 server.js ./
+COPY --chown=node:node --chmod=555 config/ ./config/
+COPY --chown=node:node --chmod=555 public/ ./public/
+COPY --chown=node:node --chmod=555 src/ ./src/
+COPY --chown=node:node --chmod=555 translations/ ./translations/
+COPY --chown=node:node --chmod=555 views/ ./views/
 
-# Create non-root user directories
+# Create writable directories for application runtime needs
+# chmod 755: Owner can write, others can read/execute (rwxr-xr-x)
 RUN mkdir -p logs uploads && \
-    chown -R node:node /home/node/app
+    chown -R node:node /home/node/app/logs /home/node/app/uploads && \
+    chmod 755 /home/node/app/logs /home/node/app/uploads
 
 # Stage 3: Development image (extends dependencies)
 FROM dependencies AS development
