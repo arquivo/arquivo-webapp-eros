@@ -253,6 +253,28 @@ describe('CDXSearchApiRequest', () => {
             });
         });
 
+        it('should log error details for malformed JSON', (done) => {
+            const requestData = new URLSearchParams({
+                url: 'http://example.com/mixed'
+            });
+
+            // Spy on logger.error
+            const errorSpy = jest.spyOn(api.logger, 'error');
+
+            api.get(requestData, (data) => {
+                // Should have logged error with both JSON and error message
+                expect(errorSpy).toHaveBeenCalled();
+                const errorCall = errorSpy.mock.calls.find(call => 
+                    call[0].includes('Failed to parse JSON object')
+                );
+                expect(errorCall).toBeDefined();
+                expect(errorCall[0]).toMatch(/Error:/);
+                
+                errorSpy.mockRestore();
+                done();
+            });
+        });
+
         it('should handle empty response', (done) => {
             const requestData = new URLSearchParams({
                 url: 'http://example.com/empty'
