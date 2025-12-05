@@ -18,6 +18,14 @@ class PageSearchApiRequest extends ApiRequest {
             metadata: null,
             trackingId: null,
         }
+        const defaultApiReply = {
+            estimated_nr_results: 0,
+            response_items: [],
+            request_parameters: {
+                from: defaultApiParams.from,
+                to: defaultApiParams.to
+            }
+        };
         let apiEndpoint;
         switch (backend) {
             case 'solr':
@@ -30,7 +38,7 @@ class PageSearchApiRequest extends ApiRequest {
                 apiEndpoint = config.get('text.search.api.default');
                 break;
         }
-        super(apiEndpoint,defaultApiParams);
+        super(apiEndpoint,defaultApiParams,defaultApiReply);
     }
 
     sanitizeRequestData(requestData) {
