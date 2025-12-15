@@ -113,6 +113,9 @@ npm test
 
 # Run tests with coverage
 npm run test:coverage
+
+# Run tests inside the development container
+docker compose -f docker-compose.yml run node npm run test
 ```
 
 ## Health Check
