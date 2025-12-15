@@ -6,6 +6,9 @@ services:
         target: development
       environment:
         - NODE_ENV=development
+      dns:
+        - 8.8.8.8
+        - 8.8.4.4
       volumes:
         - ./:/home/node/app
         - /home/node/app/node_modules

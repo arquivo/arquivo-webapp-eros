@@ -33,7 +33,15 @@ class BaseApiRequest {
         this.defaultApiParams = defaultApiParams;
         this.defaultApiReply = defaultApiReply;
         this.logger = logger(loggerName);
-        this.options = options || { method: 'GET' };
+        this.options = options || { 
+            method: 'GET',
+            timeout: 30000,
+            maxRetries: process.env.NODE_ENV === 'test' ? 0 : 2,
+            retryDelay: 500,
+            headers: {
+                'Connection': 'close'
+            }
+        };
     }
 
     /**
@@ -62,8 +70,9 @@ class BaseApiRequest {
      * 
      * @param {URLSearchParams} requestData - Query parameters for the request
      * @param {Function} callback - Callback function invoked with response data
+     * @param {number} attempt - Current retry attempt (internal use)
      */
-    get(requestData, callback) {
+    get(requestData, callback, attempt = 0) {
         // Validate callback
         if (typeof callback !== 'function') {
             return;
@@ -90,11 +99,30 @@ class BaseApiRequest {
 
             // Handle request errors
             apiReq.on('error', (e) => {
-                this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
-                if (!apiReq.destroyed) {
-                    apiReq.destroy();
+                // Retry on DNS failures (EAI_AGAIN) or connection resets
+                const isRetryableError = e.code === 'EAI_AGAIN' || 
+                                        e.code === 'ECONNRESET' || 
+                                        e.code === 'ENOTFOUND' ||
+                                        e.code === 'ETIMEDOUT';
+                
+                // Only retry if we haven't exceeded max retries
+                const shouldRetry = isRetryableError && attempt < this.options.maxRetries;
+                
+                if (shouldRetry) {
+                    this.logger.warn(`${this.apiUrl} : ${e.message} (attempt ${attempt + 1}/${this.options.maxRetries + 1})`);
+                    if (!apiReq.destroyed) {
+                        apiReq.destroy();
+                    }
+                    setTimeout(() => {
+                        this.get(requestData, callback, attempt + 1);
+                    }, this.options.retryDelay * (attempt + 1)); // Exponential backoff
+                } else {
+                    this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                    if (!apiReq.destroyed) {
+                        apiReq.destroy();
+                    }
+                    safeCallback(this.defaultApiReply);
                 }
-                safeCallback(this.defaultApiReply);
             });
 
             // Handle timeout

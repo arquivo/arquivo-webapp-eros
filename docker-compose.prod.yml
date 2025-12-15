@@ -6,6 +6,9 @@ services:
         target: production
       environment:
         - NODE_ENV=production
+      dns:
+        - 8.8.8.8
+        - 8.8.4.4
       ports:
         - "3000:3000"
       healthcheck:
@@ -15,6 +18,9 @@ services:
         retries: 3
         start_period: 40s
       restart: unless-stopped
+      # hosts file entries
+      # extra_hosts:
+      #   - "arquivo.pt:194.210.235.20"
       # Security hardening options
       security_opt:
         # Prevents container processes from gaining additional privileges

@@ -40,16 +40,25 @@ class ApiRequest {
         this.defaultApiParams = defaultApiParams;
         this.defaultApiReply = defaultApiReply;
         this.logger = logger('ApiRequest');
-        this.options = { method: 'GET' };
+        this.options = { 
+            method: 'GET',
+            timeout: 30000, // 30 second timeout
+            maxRetries: process.env.NODE_ENV === 'test' ? 0 : 2, // Disable retries in test environment
+            retryDelay: 500, // 500ms between retries
+            headers: {
+                'Connection': 'close' // Prevent keep-alive issues
+            }
+        };
     }
 
     /**
-     * Performs a GET request to the configured API URL
+     * Performs a GET request to the configured API URL with retry logic
      * 
      * @param {URLSearchParams} requestData - Query parameters for the request
      * @param {Function} callback - Callback function(data) invoked with response data
+     * @param {number} attempt - Current retry attempt (internal use)
      */
-    get(requestData, callback) {
+    get(requestData, callback, attempt = 0) {
         let apiReply = '';
         let callbackInvoked = false;
 
@@ -94,15 +103,38 @@ class ApiRequest {
             });
 
             apiReq.on('error', (e) => {
-                this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
-                safeCallback(this.defaultApiReply);
+                // Retry on DNS failures (EAI_AGAIN) or connection resets
+                const isRetryableError = e.code === 'EAI_AGAIN' || 
+                                        e.code === 'ECONNRESET' || 
+                                        e.code === 'ENOTFOUND' ||
+                                        e.code === 'ETIMEDOUT';
+                
+                // Only retry if not already retrying and retries are enabled
+                const shouldRetry = isRetryableError && 
+                                   attempt < this.options.maxRetries && 
+                                   !callbackInvoked;
+                
+                if (shouldRetry) {
+                    this.logger.warn(`${this.apiUrl} : ${e.message} (attempt ${attempt + 1}/${this.options.maxRetries + 1})`);
+                    setTimeout(() => {
+                        this.get(requestData, callback, attempt + 1);
+                    }, this.options.retryDelay * (attempt + 1)); // Exponential backoff
+                } else {
+                    this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                    safeCallback(this.defaultApiReply);
+                }
             });
 
             apiReq.on('timeout', () => {
-                this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout || 120000} ms)`);
+                this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout}ms)`);
                 apiReq.destroy();
                 safeCallback(this.defaultApiReply);
             });
+
+            // Set the timeout on the request
+            if (this.options.timeout) {
+                apiReq.setTimeout(this.options.timeout);
+            }
 
             apiReq.end();
 
