@@ -115,7 +115,7 @@ class ApiRequest {
                                    !callbackInvoked;
                 
                 if (shouldRetry) {
-                    this.logger.warn(`${this.apiUrl} : ${e.message} (attempt ${attempt + 1}/${this.options.maxRetries + 1})`);
+                    this.logger.info(`${this.apiUrl} : Retrying after ${e.message} (attempt ${attempt + 1}/${this.options.maxRetries + 1})`);
                     setTimeout(() => {
                         this.get(requestData, callback, attempt + 1);
                     }, this.options.retryDelay * (attempt + 1)); // Exponential backoff
