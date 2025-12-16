@@ -13,7 +13,7 @@ class ApiRequest {
         this.closeFunction = (requestData, callback) => { return () => { callback(this.apiData); } };
         this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(this.apiUrl + ' : ' + e); callback(this.defaultApiReply); } };
         this.logger = logger('ApiRequest');
-        this.options = {method:'GET'};
+        this.options = { timeout:120000, method:'GET' };
     }
 
     get(requestData, callback) {
@@ -38,7 +38,7 @@ class ApiRequest {
                 }
             });
             apiReq.on('error', this.errorFunction(requestData, callback));
-            apiReq.on('timeout', () => { apiReq.destroy( 'Timeout (' + (this.options.timeout || '120000') + ' ms)') });
+            apiReq.on('timeout', () => { apiReq.destroy( 'Timeout (' + this.options.timeout + ' ms)') });
             apiReq.end();
 
         } catch (e) {

@@ -24,7 +24,7 @@ class SuggestionApiRequest extends ApiRequest {
             }
 
         } };
-        this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(e); callback(requestData.get('query') || ''); } };
+        this.errorFunction = (requestData, callback) => { return (e) => { this.logger.error(this.apiUrl + ' : ' + e); callback(requestData.get('query') || ''); } };
     }
 
     getSuggestion (query, lang, callback) {
