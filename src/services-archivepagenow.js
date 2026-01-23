@@ -1,4 +1,19 @@
 
+/**
+ * Archive Page Now Service
+ * 
+ * Handles requests to archive a web page immediately. This service:
+ * 1. Validates the submitted URL
+ * 2. Renders success page with links to:
+ *    - The archiving service URL
+ *    - The recorded version in Wayback (with current timestamp)
+ *    - The original live URL
+ * 3. Logs the archiving request to backend with user-agent and IP
+ * 
+ * On validation failure, renders error page and logs the failed attempt.
+ * All logging includes user-agent and IP for tracking purposes.
+ */
+
 const fetch = require('node-fetch');
 const https = require('https');
 const config = require('config');

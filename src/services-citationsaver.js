@@ -1,3 +1,20 @@
+/**
+ * Citation Saver Service
+ * 
+ * Handles user submissions of citations/references in three formats:
+ * 1. File uploads (PDF, TXT, HTML) - validates, stores with random filename
+ * 2. URLs - validates accessibility, creates .link file with URL content
+ * 3. Plain text - saves as .txt file
+ * 
+ * All submissions are:
+ * - Validated for type and size constraints
+ * - Stored in configured upload folder with random names
+ * - Logged to Google Spreadsheet for administrative tracking
+ * 
+ * Each entry includes: date, timestamp, email, type, original name, filename, path
+ * 
+ * Response format: { status: boolean, message: string, data?: object }
+ */
 
 const fetch = require('node-fetch');
 const https = require('https');

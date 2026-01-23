@@ -1,3 +1,22 @@
+/**
+ * Export Results Utility
+ * 
+ * Converts API request/response data into a structured array format for export.
+ * Creates a table-like structure with:
+ * - Query parameters section (query, dates, offset, maxItems, etc.)
+ * - Empty separator line
+ * - Results section header
+ * - Column headers (translated field names)
+ * - Data rows with extracted year/month/day from timestamp
+ * 
+ * @param {URLSearchParams} apiRequestData - Search parameters from the request
+ * @param {Array} apiResponseItems - Result items from API response
+ * @param {Function} translateFunction - i18n translation function
+ * @param {string} timstampField - Field name containing timestamp (e.g., 'tstamp', 'imgTstamp')
+ * @param {Array<string>} displayFields - List of fields to include in export
+ * @returns {Array<Array>} 2D array suitable for CSV/JSON export
+ */
+
 //makes export json from Api request and reply
 module.exports = function (apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
     exportObject = []

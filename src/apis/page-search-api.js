@@ -18,6 +18,14 @@ class PageSearchApiRequest extends ApiRequest {
             metadata: null,
             trackingId: null,
         }
+        const defaultApiReply = {
+            estimated_nr_results: 0,
+            response_items: [],
+            request_parameters: {
+                from: defaultApiParams.from,
+                to: defaultApiParams.to
+            }
+        };
         let apiEndpoint;
         switch (backend) {
             case 'solr':
@@ -30,7 +38,7 @@ class PageSearchApiRequest extends ApiRequest {
                 apiEndpoint = config.get('text.search.api.default');
                 break;
         }
-        super(apiEndpoint,defaultApiParams);
+        super(apiEndpoint,defaultApiParams,defaultApiReply);
     }
 
     sanitizeRequestData(requestData) {
@@ -39,7 +47,7 @@ class PageSearchApiRequest extends ApiRequest {
         ['site', 'type', 'collection','safe','size'].forEach(inlineParam => {
             const requestParam = ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
             if (apiRequestData.has(requestParam)) {
-                const regex = new RegExp(`\\s*${inlineParam}:${apiRequestData.get(requestParam)}\\s*`)
+                const regex = new RegExp(String.raw`\s*${inlineParam}:${apiRequestData.get(requestParam)}\s*`)
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
             }
         });

@@ -4,3 +4,5 @@ logs
 scripts
 config/service_account.json
 uploads
+coverage
+*.log
