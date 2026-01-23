@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "config": "^3.3.6",
+    "config": "^3.3.12",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^2.0.0",
     "datetime-periods": "^1.2.0",
