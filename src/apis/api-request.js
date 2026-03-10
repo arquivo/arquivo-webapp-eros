@@ -44,10 +44,7 @@ class ApiRequest {
             method: 'GET',
             timeout: 30000, // 30 second timeout
             maxRetries: process.env.NODE_ENV === 'test' ? 0 : 2, // Disable retries in test environment
-            retryDelay: 500, // 500ms between retries
-            headers: {
-                'Connection': 'close' // Prevent keep-alive issues
-            }
+            retryDelay: 500
         };
     }
 

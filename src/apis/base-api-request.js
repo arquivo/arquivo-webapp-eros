@@ -37,10 +37,7 @@ class BaseApiRequest {
             method: 'GET',
             timeout: 30000,
             maxRetries: process.env.NODE_ENV === 'test' ? 0 : 2,
-            retryDelay: 500,
-            headers: {
-                'Connection': 'close'
-            }
+            retryDelay: 500
         };
     }
 
