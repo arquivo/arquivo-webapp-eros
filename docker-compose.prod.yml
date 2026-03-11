@@ -27,15 +27,6 @@ services:
         - no-new-privileges:true
       # Makes container filesystem read-only (prevents tampering with files)
       read_only: true
-      # Temporary filesystem in memory for /tmp (required for Node.js operations)
-      # noexec: Cannot execute binaries from /tmp (prevents malicious code execution)
-      # nosuid: Ignores setuid/setgid bits (prevents privilege escalation)
-      # size: Limits tmpfs to appropriate size for each mount
-      tmpfs:
-        - /tmp:noexec,nosuid,size=64m
-        - /home/node/.npm:noexec,nosuid,size=128m
-        - /home/node/app/logs:noexec,nosuid,size=64m
-        - /home/node/app/uploads:noexec,nosuid,size=128m
       # Drop all Linux capabilities (defense in depth)
       cap_drop:
         - ALL
@@ -51,3 +42,11 @@ services:
       #     reservations:
       #       cpus: '0.5'
       #       memory: 256M
+      #
+      
+      # Run the container as a non-root user for better security
+      # forcing using user wayback:tomba
+      user: 653:504
+      # On ansible we still require this volume because we add logs and upload folders bellow
+      volumes:
+        - ./:/home/node/app
