@@ -47,6 +47,7 @@ services:
       # Run the container as a non-root user for better security
       # forcing using user wayback:tomba
       user: 653:504
+      # On ansible we still require this volume because we add logs and upload folders bellow
       volumes:
         - ./logs:/home/node/app/logs
         - ./uploads:/home/node/app/uploads
