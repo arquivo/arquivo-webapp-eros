@@ -42,20 +42,17 @@ class ApiRequest {
         this.logger = logger('ApiRequest');
         this.options = { 
             method: 'GET',
-            timeout: 30000, // 30 second timeout
-            maxRetries: process.env.NODE_ENV === 'test' ? 0 : 2, // Disable retries in test environment
-            retryDelay: 500
+            timeout: 180000 // 3 minutes
         };
     }
 
     /**
-     * Performs a GET request to the configured API URL with retry logic
+     * Performs a GET request to the configured API URL
      * 
      * @param {URLSearchParams} requestData - Query parameters for the request
      * @param {Function} callback - Callback function(data) invoked with response data
-     * @param {number} attempt - Current retry attempt (internal use)
      */
-    get(requestData, callback, attempt = 0) {
+    get(requestData, callback) {
         let apiReply = '';
         let callbackInvoked = false;
 
@@ -100,26 +97,8 @@ class ApiRequest {
             });
 
             apiReq.on('error', (e) => {
-                // Retry on DNS failures (EAI_AGAIN) or connection resets
-                const isRetryableError = e.code === 'EAI_AGAIN' || 
-                                        e.code === 'ECONNRESET' || 
-                                        e.code === 'ENOTFOUND' ||
-                                        e.code === 'ETIMEDOUT';
-                
-                // Only retry if not already retrying and retries are enabled
-                const shouldRetry = isRetryableError && 
-                                   attempt < this.options.maxRetries && 
-                                   !callbackInvoked;
-                
-                if (shouldRetry) {
-                    this.logger.info(`${this.apiUrl} : Retrying after ${e.message} (attempt ${attempt + 1}/${this.options.maxRetries + 1})`);
-                    setTimeout(() => {
-                        this.get(requestData, callback, attempt + 1);
-                    }, this.options.retryDelay * (attempt + 1)); // Exponential backoff
-                } else {
-                    this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
-                    safeCallback(this.defaultApiReply);
-                }
+                this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                safeCallback(this.defaultApiReply);
             });
 
             apiReq.on('timeout', () => {
