@@ -6,12 +6,14 @@ on:
     branches:
       - main
       - master
+      - development
     tags:
       - '*'
   pull_request:
     branches:
       - main
       - master
+      - development
 
 jobs:
   build-and-push:
@@ -42,7 +44,7 @@ jobs:
             arquivo/arquivo-webapp
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/development' }}
             type=schedule
             type=ref,event=branch
             type=ref,event=pr
