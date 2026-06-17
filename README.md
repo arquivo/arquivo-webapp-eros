@@ -114,6 +114,9 @@ npm test
 # Run tests with coverage
 npm run test:coverage
 
+# Run accessibility tests (WCAG 2.1 AA — no external APIs needed)
+npm run test:a11y
+
 # Run tests inside the development container
 docker compose -f docker-compose.yml run node npm run test
 ```
