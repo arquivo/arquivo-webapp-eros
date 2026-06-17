@@ -51,9 +51,6 @@ try {
     createParentPath: true
   }));
 
-  // const morgan = require('morgan')
-  // app.use(morgan('combined'))
-
   app.use((req,res,next) => {
     // clear language headers to prevent auto-detect browser language
     let requestLanguage = '';
