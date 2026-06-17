@@ -21,6 +21,7 @@ FROM base AS dependencies
 # This prevents modification while allowing execution/traversal
 # --chown=node:node: Ensures files are owned by non-root user
 COPY --chown=node:node server.js ./
+COPY --chown=node:node bin ./bin
 COPY --chown=node:node config ./config
 COPY --chown=node:node public ./public
 COPY --chown=node:node src ./src
@@ -65,6 +66,9 @@ CMD ["npm", "run", "dev"]
 # Stage 4: Production dependencies (separate layer for optimization)
 FROM base AS production-deps
 ENV NODE_ENV=production
+
+# Copy bin/ so the postinstall script is available during npm ci
+COPY --chown=node:node bin ./bin
 
 # Install only production dependencies
 RUN npm ci --only=production
