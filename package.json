@@ -30,7 +30,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:a11y": "jest --testPathPattern=accessibility"
+    "test:a11y": "jest --config jest.a11y.config.js --testPathPattern=accessibility"
   },
   "devDependencies": {
     "jest": "^29.7.0",

@@ -115,73 +115,28 @@ async function getHtml(url) {
     return res.text;
 }
 
+async function testA11y(url) {
+    const results = await axe(await getHtml(url), WCAG_OPTIONS);
+    expect(results).toHaveNoViolations();
+}
+
 describe('Accessibility – WCAG 2.1 AA', () => {
     describe('Pages (no API dependency)', () => {
-        it('/ – homepage', async () => {
-            const results = await axe(await getHtml('/'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/pages – page search landing', async () => {
-            const results = await axe(await getHtml('/pages'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/images – image search landing', async () => {
-            const results = await axe(await getHtml('/images'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/page/search – results page shell', async () => {
-            const results = await axe(await getHtml('/page/search?q=portugal'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/image/search – results page shell', async () => {
-            const results = await axe(await getHtml('/image/search?q=portugal'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/url/search – URL history page shell', async () => {
-            const results = await axe(await getHtml('/url/search?q=arquivo.pt'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/page/advanced/search – advanced page search', async () => {
-            const results = await axe(await getHtml('/page/advanced/search'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/image/advanced/search – advanced image search', async () => {
-            const results = await axe(await getHtml('/image/advanced/search'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/services/archivepagenow – archive page now form', async () => {
-            const results = await axe(await getHtml('/services/archivepagenow'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/services/citationsaver – citation saver form', async () => {
-            const results = await axe(await getHtml('/services/citationsaver'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
+        it('/ – homepage',                          () => testA11y('/'));
+        it('/pages – page search landing',           () => testA11y('/pages'));
+        it('/images – image search landing',         () => testA11y('/images'));
+        it('/page/search – results page shell',      () => testA11y('/page/search?q=portugal'));
+        it('/image/search – results page shell',     () => testA11y('/image/search?q=portugal'));
+        it('/url/search – URL history page shell',   () => testA11y('/url/search?q=arquivo.pt'));
+        it('/page/advanced/search – advanced page search',  () => testA11y('/page/advanced/search'));
+        it('/image/advanced/search – advanced image search', () => testA11y('/image/advanced/search'));
+        it('/services/archivepagenow – archive page now form', () => testA11y('/services/archivepagenow'));
+        it('/services/citationsaver – citation saver form',    () => testA11y('/services/citationsaver'));
     });
 
     describe('Partials (mocked API responses)', () => {
-        it('/partials/pages-search-results – page search results', async () => {
-            const results = await axe(await getHtml('/partials/pages-search-results?q=portugal'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/partials/images-search-results – image search results', async () => {
-            const results = await axe(await getHtml('/partials/images-search-results?q=portugal'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
-
-        it('/partials/url-search-results – URL search results', async () => {
-            const results = await axe(await getHtml('/partials/url-search-results?q=arquivo.pt'), WCAG_OPTIONS);
-            expect(results).toHaveNoViolations();
-        });
+        it('/partials/pages-search-results – page search results',  () => testA11y('/partials/pages-search-results?q=portugal'));
+        it('/partials/images-search-results – image search results', () => testA11y('/partials/images-search-results?q=portugal'));
+        it('/partials/url-search-results – URL search results',      () => testA11y('/partials/url-search-results?q=arquivo.pt'));
     });
 });
