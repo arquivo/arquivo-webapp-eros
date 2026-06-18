@@ -35,6 +35,23 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Smoke test (boot the app and verify it serves)
+        run: |
+          node server.js &
+          APP_PID=$!
+          ok=0
+          for i in $(seq 1 20); do
+            if curl -sf -o /dev/null http://localhost:3000/; then
+              echo "App responded on / (attempt $i)"; ok=1; break
+            fi
+            sleep 1
+          done
+          kill "$APP_PID" 2>/dev/null || true
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::App failed to serve / on :3000 — boot smoke test failed"
+            exit 1
+          fi
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
