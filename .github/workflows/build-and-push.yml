@@ -55,6 +55,7 @@ jobs:
           fi
 
       - name: SonarCloud analysis
+        if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
         uses: SonarSource/sonarcloud-github-action@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
