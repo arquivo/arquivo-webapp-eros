@@ -22,19 +22,24 @@ const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const serviceAccountConfigs = require('../config/service_account.json');
+const serviceAccountAuth = new JWT({
+    email: serviceAccountConfigs.client_email,
+    key: serviceAccountConfigs.private_key,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
 const logger = require('./logger')('CitationSaver');
 
 
 // Initialize the sheet - doc ID is the long id in the sheets URL
 async function addToSpreadsheet(row) {
     try {
-        const doc = new GoogleSpreadsheet(googleSheetId);
-        await doc.useServiceAccountAuth(serviceAccountConfigs)
+        const doc = new GoogleSpreadsheet(googleSheetId, serviceAccountAuth);
 
         await doc.loadInfo();
         const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
