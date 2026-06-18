@@ -1,7 +1,7 @@
 
 const PageSearchApiRequest = require('./apis/page-search-api');
 
-module.exports = function (req, res) {
+module.exports = function replayTechnicalDetails(req, res) {
     const requestData = req.utils.sanitizeInputs(req, res);
 
     //Api request for technical details.

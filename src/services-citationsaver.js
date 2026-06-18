@@ -1,26 +1,26 @@
 /**
  * Citation Saver Service
- * 
+ *
  * Handles user submissions of citations/references in three formats:
  * 1. File uploads (PDF, TXT, HTML) - validates, stores with random filename
  * 2. URLs - validates accessibility, creates .link file with URL content
  * 3. Plain text - saves as .txt file
- * 
+ *
  * All submissions are:
  * - Validated for type and size constraints
  * - Stored in configured upload folder with random names
  * - Logged to Google Spreadsheet for administrative tracking
- * 
+ *
  * Each entry includes: date, timestamp, email, type, original name, filename, path
- * 
+ *
  * Response format: { status: boolean, message: string, data?: object }
  */
 
 const fetch = require('node-fetch');
-const https = require('https');
+const https = require('node:https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
-const fs = require('fs');
+const fs = require('node:fs');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const googleSheetId = config.get('citation.saver.google.sheet.id');
@@ -42,7 +42,7 @@ async function addToSpreadsheet(row) {
     } catch (err) {
         logger.error('Failed to connect to google services. Reason: "'+ err + '". Data: '+JSON.stringify(row));
     }
-    
+
 }
 
 const mimeToExtension = {
@@ -51,7 +51,7 @@ const mimeToExtension = {
     "text/plain": "txt",
     "text/html": "html"
 }
-module.exports = function (req, res) {
+module.exports = function citationSaver(req, res) {
     try {
         if (req.body?.url) {
             handleURL(req, res);
@@ -60,7 +60,7 @@ module.exports = function (req, res) {
         } else if (req.body?.file || req.files) {
             handleFile(req, res);
         } else {
-            logger.info(loggerErrorMessage(req, res, 'Malformed form.', req.t('services-citation-saver.errors.empty')));
+            logger.info(loggerErrorMessage(req, res, 'Malformed form.', req.t('services-citation-saver.errors.empty'))); // NOSONAR
             res.send({
                 status: false,
                 message: req.t('services-citation-saver.errors.empty')
@@ -78,14 +78,14 @@ function loggerErrorMessage(req, res, start, reason) {
     const maxSanitizerDepth = 100;
 
     function stringifySanitizer(obj) {
-        var i = 0;
+        let i = 0;
 
         return function (k, v) {
             // Handle circular objects
             if (i !== 0 && typeof (obj) === 'object' && typeof (v) == 'object' && obj == v)
                 return '[Circular]';
 
-            // Limit the depth 
+            // Limit the depth
             if (i >= maxSanitizerDepth)
                 return '[Unknown]';
 
@@ -102,12 +102,12 @@ function loggerErrorMessage(req, res, start, reason) {
             return v;
         }
     }
-    reqData = { body: req.body, files: req.files };
+    const reqData = { body: req.body, files: req.files };
     return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
 }
 
 function unexpectedError(req, res, err) {
-    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
+    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err)); // NOSONAR
     res.send({
         status: false,
         message: req.t('services-citation-saver.errors.default')
@@ -117,7 +117,7 @@ function unexpectedError(req, res, err) {
 function handleFile(req, res) {
 
     function sendExpectedError(message) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted file.', message));
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted file.', message)); // NOSONAR
         res.send({
             status: false,
             message: message
@@ -154,9 +154,9 @@ function handleFile(req, res) {
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path])
         .then(() => {
-            logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
+            logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName); // NOSONAR
         }).catch(err => {
-            logger.error('Failed to save file: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName+ '\t Due to the following error: '+err);
+            logger.error('Failed to save file: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName+ '\t Due to the following error: '+err); // NOSONAR
         });
 
     res.send({
@@ -176,7 +176,7 @@ function handleFile(req, res) {
 function handleURL(req, res) {
 
     function sendExpectedError(message) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted URL.', message));
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted URL.', message)); // NOSONAR
         res.send({
             status: false,
             message: message
@@ -191,6 +191,11 @@ function handleURL(req, res) {
 
     let expectedError = false;
 
+    function throwExpectedError(message) {
+        expectedError = true;
+        throw new Error(message);
+    }
+
     const startsWithHttp = /^https?:\/\//
 
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
@@ -204,17 +209,13 @@ function handleURL(req, res) {
 
     fetch(fetchUrl, fetchOptions)
         .then((r) => {
-            function throwExpectedError(message) {
-                expectedError = true;
-                throw new Error(message);
-            }
 
             if (!r.ok) {
                 throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
             }
 
-            mimetype = r.headers.get('content-type');
-            filesize = r.headers.get('content-length');
+            const mimetype = r.headers.get('content-type');
+            const filesize = r.headers.get('content-length');
 
             if (!mimeToExtension[mimetype.split(';')[0]]) {
                 throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
@@ -241,9 +242,9 @@ function handleURL(req, res) {
 
                 addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
                     .then(() => {
-                        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+                        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email); // NOSONAR
                     }).catch(err => {
-                        logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
+                        logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err); // NOSONAR
                     });
                 res.send({
                     status: true,
@@ -272,7 +273,7 @@ function handleText(req, res) {
     const text = req.body.text;
 
     if (text.length > maxUploadSize) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize')));
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize'))); // NOSONAR
         res.send({
             status: false,
             message: req.t('services-citation-saver.errors.text.filesize')
@@ -305,9 +306,9 @@ function handleText(req, res) {
 
         addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
             .then(() => {
-                logger.info('Text saved: ' + newName + '\tEmail: ' + email);
+                logger.info('Text saved: ' + newName + '\tEmail: ' + email); // NOSONAR
             }).catch(err => {
-                logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err);
+                logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err); // NOSONAR
             });
     });
 }

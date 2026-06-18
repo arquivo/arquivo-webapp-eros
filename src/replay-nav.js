@@ -11,7 +11,7 @@ const cdxFilter = require('./filter-cdx')
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-module.exports = function (req, res) {
+module.exports = function replayNav(req, res) {
     const requestData = sanitizeInputs(req, res);
     const apiRequest = new CDXSearchApiRequest();
 

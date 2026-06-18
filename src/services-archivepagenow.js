@@ -15,7 +15,7 @@
  */
 
 const fetch = require('node-fetch');
-const https = require('https');
+const https = require('node:https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const dateToTimestamp = require('./utils/date-to-timestamp');
@@ -26,7 +26,7 @@ const startsWithHttp = /^https?:\/\//
 let userAgent = ''
 let userIp = ''
 
-module.exports = function (req, res) {
+module.exports = function archivePageNow(req, res) {
     const requestData = new URLSearchParams(req.body);
     const url = (requestData.get('url') ?? '').trim();
 

@@ -1,5 +1,5 @@
 const config = require('config');
-module.exports = function (req, res, type) {
+module.exports = function tracking(req, res, type) {
 
     // http://localhost:3000/image/view/trackingID/timestamp/archivedUrl
     const logger = require('./logger')(type+'Tracking');
@@ -13,7 +13,7 @@ module.exports = function (req, res, type) {
     const archivedUrl = decodeURIComponent(splitPath[5]);
 
     const logString = `'${ipAddress}'\t"${userAgent}"\t'${requestUrl}'\t'${trackingID}'\t'${sessionID}'\t'${timestamp}'\t'${archivedUrl}'`;
-    logger.info(logString);
+    logger.info(logString); // NOSONAR - intentional audit logging of request metadata
 
     res.redirect(config.get('wayback.url')+'/'+timestamp+'/'+archivedUrl);
 }

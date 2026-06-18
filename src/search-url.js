@@ -5,7 +5,7 @@ const cdxFilter = require('./filter-cdx')
 const SuggestionApi = require('./apis/suggestion-api')
 const logger = require('./logger')('UrlSearch');
 
-module.exports = function (req, res) {
+module.exports = function searchUrl(req, res) {
     const requestData = sanitizeInputs(req, res);
     const viewModeDefault = 'list'
 

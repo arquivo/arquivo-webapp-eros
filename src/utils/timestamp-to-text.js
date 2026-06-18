@@ -19,14 +19,14 @@ function splitTimeStamp(timestamp) {
 
 
 }
-module.exports = function (translateFunction) {
+module.exports = function timestampToText(translateFunction) {
     let t = translateFunction;
     return {
         short: function (timestamp) {
             const item = splitTimeStamp(timestamp);
             return t('common.date.short', {
                 month: t('common.shortMonths.' + item.month),
-                day: parseInt(item.day),
+                day: Number.parseInt(item.day),
             });
         },
         medium: function (timestamp) {
@@ -34,7 +34,7 @@ module.exports = function (translateFunction) {
             return t('common.date.medium', {
                 year: item.year,
                 month: t('common.months.' + item.month),
-                day: parseInt(item.day),
+                day: Number.parseInt(item.day),
                 hours: item.hours,
                 minutes: item.minutes,
             });
@@ -44,7 +44,7 @@ module.exports = function (translateFunction) {
             return t('common.date.long', {
                 year: item.year,
                 month: t('common.months.' + item.month),
-                day: parseInt(item.day),
+                day: Number.parseInt(item.day),
                 hours: item.hours,
                 minutes: item.minutes,
             });

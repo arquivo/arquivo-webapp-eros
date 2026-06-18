@@ -15,7 +15,7 @@
 //makes export json from Api request and reply
 const exportResults = require('./export-results');
 
-module.exports = function (apiRequestData, apiReplyData, translateFunction) {
+module.exports = function exportPageSearch(apiRequestData, apiReplyData, translateFunction) {
     return exportResults(apiRequestData,apiReplyData.response_items,translateFunction,'tstamp',[
         'year',
         'month',

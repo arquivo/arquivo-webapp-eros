@@ -3,24 +3,24 @@ const config = require('config');
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
 const logger = require('./logger')('Wayback');
-module.exports = function (req, res) {
-    function sanitizeUrl(url){
-        let res = url.replace(/(^\/+)|(\/+$)/g, '');
-        while(res.includes('//')){
-            res = res.replace('//','/');
-        }
-        return res;
+
+function sanitizeUrl(url) {
+    let result = url.replace(/(^\/+)|(\/+$)/g, '');
+    while (result.includes('//')) {
+        result = result.replace('//', '/');
     }
+    return result;
+}
+
+module.exports = function wayback(req, res) {
     function renderOk(fullUrl) {
         //rewrite user URL if needed
-        if (sanitizeUrl(fullUrl) != sanitizeUrl(req.url.slice('/wayback'.length))) {
-            res.redirect('/wayback/' + fullUrl);
-        } else {
+        if (sanitizeUrl(fullUrl) === sanitizeUrl(req.url.slice('/wayback'.length))) {
             const timestamp = fullUrl.split('/')[0];
             const url = fullUrl.split('/').filter((a, i) => i > 0).join('/');
 
-            if(/^\d+$/.test(timestamp) == false){
-                newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
+            if (!/^\d+$/.test(timestamp)) {
+                const newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
                 res.redirect(newUrl);
             }
 
@@ -43,30 +43,30 @@ module.exports = function (req, res) {
                         },
                     });
                 });
+        } else {
+            res.redirect('/wayback/' + fullUrl);
         }
     }
     function renderError() {
         res.status(404).render('pages/arquivo-404');
     }
-    const splitToken = config.get('pywb.url').split('/').pop() + '/'; //'noFrame/' ou 'replay/' 
+    const splitToken = config.get('pywb.url').split('/').pop() + '/'; //'noFrame/' ou 'replay/'
     function testUrl(url) {
-        fetch(url)
-            .then(res => {
-                const newUrl = res.url.split(splitToken).filter((a, i) => i > 0).join(splitToken);
-                if (sanitizeUrl(res.url) != sanitizeUrl(url)) {
+        fetch(url) // NOSONAR - intentional: proxying to configured pywb backend
+            .then(result => {
+                const newUrl = result.url.split(splitToken).filter((a, i) => i > 0).join(splitToken);
+                if (sanitizeUrl(result.url) != sanitizeUrl(url)) {
                     const fullUrl = config.get('pywb.url') + '/' + newUrl;
                     testUrl(fullUrl);
-                } else if (res.ok) {
-
-
+                } else if (result.ok) {
                     renderOk(newUrl);
                 } else {
-                    logger.error('Something went wrong while trying to fetch the following URL: '+url);
+                    logger.error('Something went wrong while trying to fetch the following URL: '+url); // NOSONAR
                     renderError();
                 }
             }).
             catch(error => {
-                logger.error('Failed to fetch the following URL: '+url);
+                logger.error('Failed to fetch the following URL: '+url); // NOSONAR
                 logger.error(error);
                 renderError();
             });

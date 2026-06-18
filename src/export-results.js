@@ -1,6 +1,6 @@
 /**
  * Export Results Utility
- * 
+ *
  * Converts API request/response data into a structured array format for export.
  * Creates a table-like structure with:
  * - Query parameters section (query, dates, offset, maxItems, etc.)
@@ -8,7 +8,7 @@
  * - Results section header
  * - Column headers (translated field names)
  * - Data rows with extracted year/month/day from timestamp
- * 
+ *
  * @param {URLSearchParams} apiRequestData - Search parameters from the request
  * @param {Array} apiResponseItems - Result items from API response
  * @param {Function} translateFunction - i18n translation function
@@ -17,51 +17,46 @@
  * @returns {Array<Array>} 2D array suitable for CSV/JSON export
  */
 
+function exportSERPSaveLine(exportObject, ...args) {
+    exportObject.push(args);
+    return args;
+}
+
 //makes export json from Api request and reply
-module.exports = function (apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
-    exportObject = []
-    const exportSERPSaveLine = function () {
-        let line = [];
-        for (var i = 0; i < arguments.length; i++) {
-            var a = arguments[i];
-            line.push(a);
-        }
-        exportObject.push(line);
-        return line;
-    }
-    exportSERPSaveLine(translateFunction('exports.queryArgument'), translateFunction('exports.queryValue'));
-    exportSERPSaveLine(translateFunction('exports.query'), apiRequestData.get('q'));
-    exportSERPSaveLine(translateFunction('exports.from'), apiRequestData.get('from'));
-    exportSERPSaveLine(translateFunction('exports.to'), apiRequestData.get('to'));
-    exportSERPSaveLine(translateFunction('exports.offset'), apiRequestData.get('offset'));
-    exportSERPSaveLine(translateFunction('exports.maxItems'), apiRequestData.get('maxItems'));
-    exportSERPSaveLine(translateFunction('exports.siteSearch'), apiRequestData.get('siteSearch'));
-    exportSERPSaveLine(translateFunction('exports.type'), apiRequestData.get('type'));
-    exportSERPSaveLine(translateFunction('exports.collection'), apiRequestData.get('collection'));
-    exportSERPSaveLine(); // Add an empty line after all the arguments
+module.exports = function exportResults(apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
+    const exportObject = [];
+    const saveLine = (...args) => exportSERPSaveLine(exportObject, ...args);
 
-    exportSERPSaveLine(translateFunction('exports.results'));
+    saveLine(translateFunction('exports.queryArgument'), translateFunction('exports.queryValue'));
+    saveLine(translateFunction('exports.query'), apiRequestData.get('q'));
+    saveLine(translateFunction('exports.from'), apiRequestData.get('from'));
+    saveLine(translateFunction('exports.to'), apiRequestData.get('to'));
+    saveLine(translateFunction('exports.offset'), apiRequestData.get('offset'));
+    saveLine(translateFunction('exports.maxItems'), apiRequestData.get('maxItems'));
+    saveLine(translateFunction('exports.siteSearch'), apiRequestData.get('siteSearch'));
+    saveLine(translateFunction('exports.type'), apiRequestData.get('type'));
+    saveLine(translateFunction('exports.collection'), apiRequestData.get('collection'));
+    saveLine(); // Add an empty line after all the arguments
 
+    saveLine(translateFunction('exports.results'));
 
-
-    exportSERPSaveLine(
+    saveLine(
         ...displayFields.map(field => translateFunction('exports.'+field))
     );
-
 
     (apiResponseItems ?? [])
         .map(d => ({...d})) //clone elements to avoid changing original data
         .forEach(currentDocument => {
-        if (typeof currentDocument === 'undefined' || !currentDocument) {
+        if (!currentDocument) {
             return;
         }
 
-        currentDocument.year = parseInt(currentDocument[timstampField].substring(0, 4));
+        currentDocument.year = Number.parseInt(currentDocument[timstampField].substring(0, 4));
         currentDocument.month = translateFunction('common.months.' + currentDocument[timstampField].substring(4, 6));
-        currentDocument.day = parseInt(currentDocument[timstampField].substring(6, 8));
+        currentDocument.day = Number.parseInt(currentDocument[timstampField].substring(6, 8));
 
         // append result so it can be exported
-        exportSERPSaveLine(
+        saveLine(
             ...displayFields.map(field => currentDocument[field])
         );
     });

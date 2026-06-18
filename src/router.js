@@ -293,10 +293,10 @@ router.get('/services/archivepagenow', function (req, res) {
  */
 router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
-    if (!requestData.has('logging')) {
-        archivePageNow(req, res);
-    } else {
+    if (requestData.has('logging')) {
         res.end();
+    } else {
+        archivePageNow(req, res);
     }
 });
 

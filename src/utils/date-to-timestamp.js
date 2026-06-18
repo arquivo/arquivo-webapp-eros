@@ -2,7 +2,7 @@ function addZero(str){
     return ('0' + str).slice(-2);
 }
 
-module.exports = function (date) {
+module.exports = function dateToTimestamp(date) {
     return [
         date.getFullYear(), 
         addZero(date.getMonth()+1), 

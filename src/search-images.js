@@ -4,7 +4,7 @@ const ImageSearchApiRequest = require('./apis/image-search-api');
 const makeExportObject = require('./export-image-search');
 const logger = require('./logger')('ImageSearch');
 
-module.exports = function (req, res) {
+module.exports = function searchImages(req, res) {
     
     const requestData = sanitizeInputs(req, res);
     const apiRequest = new ImageSearchApiRequest(); 

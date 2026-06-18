@@ -20,7 +20,7 @@ if(loggerType == 'daily'){
     transports.push(new winston.transports.Console());
 }
 
-module.exports = (label='-') => ({
+const getDefaults = (label='-') => ({
     transports: transports,
     format: winston.format.combine(
         winston.format.timestamp({format:'dd/MMM/YYYY:HH:mm:ss'}),
@@ -31,3 +31,5 @@ module.exports = (label='-') => ({
     ),
     colorize: false // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
   })
+
+module.exports = getDefaults;

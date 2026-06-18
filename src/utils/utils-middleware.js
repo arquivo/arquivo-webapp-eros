@@ -5,7 +5,7 @@ const utils = {
     dateToTimestamp: require('./date-to-timestamp'),
     timestampToText: require('./timestamp-to-text')
 }
-module.exports = function (req, res, next) {
+module.exports = function addUtils(req, res, next) {
     req.utils = utils;
     res.locals.utils = utils;
     next();

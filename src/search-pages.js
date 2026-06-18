@@ -4,7 +4,7 @@ const SuggestionApi = require('./apis/suggestion-api');
 const PageSearchApiRequest = require('./apis/page-search-api');
 const logger = require('./logger')('PageSearch');
 
-module.exports = function (req, res) {
+module.exports = function searchPages(req, res) {
     const requestData = sanitizeInputs(req, res);
     const apiRequest = new PageSearchApiRequest(requestData.get('api'));
     const suggestionRequest = new SuggestionApi();
