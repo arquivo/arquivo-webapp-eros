@@ -23,13 +23,15 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:a11y": "jest --config jest.a11y.config.js --testPathPattern=accessibility"
+    "test:a11y": "jest --config jest.a11y.config.js --testPathPattern=accessibility",
+    "sonar": "sonar-scanner"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "nodemon": "^3.0.1",
+    "sonarqube-scanner": "^4.3.6",
     "supertest": "^6.3.3"
   }
 }
