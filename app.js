@@ -7,6 +7,9 @@ const cookies = require('cookie-parser');
 const path = require('path');
 const router = require('./src/router');
 const trafficLogger = require('./src/logger/traffic-logger');
+const { validateSessionSecret } = require('./src/utils/session-secret-validator');
+
+validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 
 const app = express();
 
