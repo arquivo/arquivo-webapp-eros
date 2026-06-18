@@ -17,7 +17,8 @@
  */
 
 const fetch = require('node-fetch');
-const https = require('https');
+const dns = require('dns');
+const net = require('net');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -25,6 +26,47 @@ const addToSpreadsheet = require('./spreadsheet-client');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
+
+
+function isPrivateIp(ip) {
+    if (net.isIPv4(ip)) {
+        const parts = ip.split('.').map(Number);
+        return (
+            parts[0] === 127 ||
+            parts[0] === 10 ||
+            (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) ||
+            (parts[0] === 192 && parts[1] === 168) ||
+            (parts[0] === 169 && parts[1] === 254)
+        );
+    }
+    if (net.isIPv6(ip)) {
+        if (ip === '::1') return true;
+        const firstGroup = parseInt(ip.split(':')[0] || '0', 16);
+        return (firstGroup & 0xfe00) === 0xfc00;
+    }
+    return false;
+}
+
+function isSsrfTarget(urlString) {
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(urlString);
+    } catch (e) {
+        return Promise.resolve(true);
+    }
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        return Promise.resolve(true);
+    }
+    const hostname = parsedUrl.hostname;
+    if (net.isIP(hostname)) {
+        return Promise.resolve(isPrivateIp(hostname));
+    }
+    return new Promise((resolve) => {
+        dns.lookup(hostname, (err, address) => {
+            resolve(err ? true : isPrivateIp(address));
+        });
+    });
+}
 
 const mimeToExtension = {
     // "application/msword": "doc",
@@ -179,71 +221,75 @@ function handleURL(req, res) {
         method: 'HEAD'
     };
 
-    https.globalAgent = new https.Agent({
-        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
-    });
+    isSsrfTarget(fetchUrl).then((isSsrf) => {
+        if (isSsrf) {
+            sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+            return;
+        }
 
-    fetch(fetchUrl, fetchOptions)
-        .then((r) => {
-            function throwExpectedError(message) {
-                expectedError = true;
-                throw new Error(message);
-            }
-
-            if (!r.ok) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
-            }
-
-            mimetype = r.headers.get('content-type');
-            filesize = r.headers.get('content-length');
-
-            if (!mimeToExtension[mimetype.split(';')[0]]) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
-            }
-
-            if (Number(filesize) > maxUploadSize) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
-            }
-
-        }).then(() => {
-
-            const outExtension = 'link';
-            const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
-            const date = (new Date()).toLocaleDateString('en-CA');
-            const timestamp = Date.now();
-            const email = req.body?.email ?? '';
-            const path = uploadFolderPath + '/' + newName;
-
-            fs.writeFile(path, url, err => {
-                if (err) {
-                    fs.unlink(path);
-                    throw err;
+        return fetch(fetchUrl, fetchOptions)
+            .then((r) => {
+                function throwExpectedError(message) {
+                    expectedError = true;
+                    throw new Error(message);
                 }
 
-                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
-                    .then(() => {
-                        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
-                    }).catch(err => {
-                        logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
-                    });
-                res.send({
-                    status: true,
-                    message: 'Link uploaded',
-                    data: {
-                        name: url,
-                        mimetype: '',
-                        size: url.length
-                    }
-                });
+                if (!r.ok) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+                }
 
+                mimetype = r.headers.get('content-type');
+                filesize = r.headers.get('content-length');
+
+                if (!mimeToExtension[mimetype.split(';')[0]]) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
+                }
+
+                if (Number(filesize) > maxUploadSize) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
+                }
+
+            }).then(() => {
+
+                const outExtension = 'link';
+                const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+                const date = (new Date()).toLocaleDateString('en-CA');
+                const timestamp = Date.now();
+                const email = req.body?.email ?? '';
+                const path = uploadFolderPath + '/' + newName;
+
+                fs.writeFile(path, url, err => {
+                    if (err) {
+                        fs.unlink(path);
+                        throw err;
+                    }
+
+                    addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
+                        .then(() => {
+                            logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+                        }).catch(err => {
+                            logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
+                        });
+                    res.send({
+                        status: true,
+                        message: 'Link uploaded',
+                        data: {
+                            name: url,
+                            mimetype: '',
+                            size: url.length
+                        }
+                    });
+
+                });
             });
-        }).catch((err) => {
-            if (expectedError) {
-                sendExpectedError(err.message);
-            } else {
-                unexpectedError(req, res, err);
-            }
-        });
+
+    }).catch((err) => {
+        if (expectedError) {
+            sendExpectedError(err.message);
+        } else {
+            unexpectedError(req, res, err);
+        }
+    });
 
 
 
