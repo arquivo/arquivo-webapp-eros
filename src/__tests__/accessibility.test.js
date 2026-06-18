@@ -66,7 +66,7 @@ const imageSearchFixture = {
 // Timestamps must be older than 1 year to pass the embargo filter in cdxFilter
 const cdxSearchFixture = [
     {
-        url: 'http://arquivo.pt/',
+        url: 'http://arquivo.pt/', // NOSONAR — fixture data, not a real request
         timestamp: '20200101120000',
         status: '200',
         digest: 'sha1:ABCDEF1234567890ABCDEF',
