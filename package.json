@@ -9,7 +9,6 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.4.0",
     "express-winston": "^4.2.0",
-    "font-awesome": "4.7.0",
     "google-spreadsheet": "^3.2.0",
     "i18n-node-yaml": "^1.0.4",
     "inputmask": "~3.3",

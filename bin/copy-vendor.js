@@ -53,10 +53,6 @@ copy('inputmask/dist/jquery.inputmask.bundle.js', 'public/vendor/js/jquery.input
 // SheetJS
 copy('xlsx/dist/xlsx.full.min.js', 'public/vendor/js/xlsx.full.min.js');
 
-// Font Awesome 4 — CSS + webfonts (fontawesome.css uses ../fonts/ relative path)
-copy('font-awesome/css/font-awesome.css', 'public/vendor/css/fontawesome.css');
-copyDir('font-awesome/fonts', 'public/vendor/fonts');
-
 // Roboto via Fontsource — CSS files alongside their files/ directory
 mkdir('public/vendor/fonts/roboto');
 for (const weight of ['300', '400', '500', '700']) {
