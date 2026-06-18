@@ -6,4 +6,5 @@ config/service_account.json
 uploads
 coverage
 *.log
+.claude/
 .scannerwork
