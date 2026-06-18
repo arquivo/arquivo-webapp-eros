@@ -21,6 +21,7 @@ const wayback = require('./wayback');
 const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
 const replayTechnicalDetails = require('./replay-technical-details');
+const isValidUrl = require('./utils/is-valid-url');
 const express = require('express');
 const router = express.Router();
 
@@ -278,8 +279,9 @@ router.get('/services/savepagenow', function (req, res) {
 /** Archive Page Now - Display submission form */
 router.get('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
+    const rawUrl = (requestData.get('url') ?? '').trim();
     res.render('pages/services-archivepagenow', {
-        url: (requestData.get('url') ?? '').trim(),
+        url: isValidUrl(rawUrl) ? rawUrl : '',
         error: false
     });
 });
@@ -305,7 +307,8 @@ router.post('/services/archivepagenow', function (req, res) {
 /** Complete Page Service - Display patched page reconstruction */
 router.get('/services/complete-page', function (req, res) {
     const requestData = new URLSearchParams(req.query);
-    requestData.set('url', decodeURIComponent(requestData.get('url')));
+    const rawUrl = decodeURIComponent(requestData.get('url') ?? '');
+    requestData.set('url', isValidUrl(rawUrl) ? rawUrl : '');
     res.render('pages/services-complete-page', {
         requestData: requestData,
     });
