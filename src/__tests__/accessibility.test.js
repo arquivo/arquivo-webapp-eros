@@ -73,7 +73,7 @@ const cdxSearchFixture = [
         mimetype: 'text/html',
     },
     {
-        url: 'http://arquivo.pt/sobre',
+        url: 'http://arquivo.pt/sobre', // NOSONAR — fixture data, not a real request
         timestamp: '20210601080000',
         status: '200',
         digest: 'sha1:BCDEF1234567890ABCDEF0',
