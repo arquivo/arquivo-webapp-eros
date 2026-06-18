@@ -12,6 +12,7 @@
     "js-datepicker": "^5.18.0",
     "lightpick": "^1.6.2",
     "node-fetch": "^2.7.0",
+    "properties": "^1.2.1",
     "simplepicker": "^2.0.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.5"
