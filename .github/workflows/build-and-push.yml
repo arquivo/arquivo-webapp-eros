@@ -52,6 +52,12 @@ jobs:
             exit 1
           fi
 
+      - name: SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
