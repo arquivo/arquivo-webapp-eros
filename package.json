@@ -7,7 +7,7 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.4.0",
     "express-winston": "^4.2.0",
-    "google-spreadsheet": "^3.2.0",
+    "google-spreadsheet": "^5.3.0",
     "i18n-node-yaml": "^1.0.4",
     "js-datepicker": "^5.18.0",
     "lightpick": "^1.6.2",
