@@ -51,7 +51,7 @@ router.get('/', function (req, res) {
 router.get('/page/search', function (req, res) {
     const requestData = req.utils.sanitizeInputs(req, res);
 
-    if (!requestData.has('q') || requestData.get('q') == '') {
+    if (!requestData.has('q') || requestData.get('q') === '') {
         res.render('pages/home');
     } else if (req.utils.isValidUrl(requestData.get('q'))) {
         res.redirect('/url/search?' + requestData.toString())
@@ -79,7 +79,7 @@ router.get('/url/search', function (req, res) {
  */
 router.get('/image/search', function (req, res) {
     const requestData = req.utils.sanitizeInputs(req, res);
-    if (!requestData.has('q') || requestData.get('q') == '') {
+    if (!requestData.has('q') || requestData.get('q') === '') {
         res.render('pages/home', { searchType: 'images' });
     } else {
         if (req.utils.isValidUrl(requestData.get('q'))) {
@@ -192,7 +192,7 @@ router.get('/switchlang', function (req, res) {
         
         // Toggle to the other available locale
         let currentLocale = req.getLocale();
-        let newLocale = req.getLocales().find(l => l!=currentLocale);
+        let newLocale = req.getLocales().find(l => l!==currentLocale);
         
         // Update language cookie
         res.clearCookie('i18n');
@@ -243,22 +243,22 @@ router.post('/services/citationsaver', function (req, res) {
  */
 router.get('/partials/:id', function (req, res) {
     // Search results partials
-    if (req.params.id == 'pages-search-results') {
+    if (req.params.id === 'pages-search-results') {
         searchPages(req, res);
-    } else if (req.params.id == 'images-search-results') {
+    } else if (req.params.id === 'images-search-results') {
         searchImages(req, res);
-    } else if (req.params.id == 'url-search-results') {
+    } else if (req.params.id === 'url-search-results') {
         searchUrl(req, res);
-    } 
+    }
     // Wayback replay partials
-    else if (req.params.id == 'replay-nav') {
+    else if (req.params.id === 'replay-nav') {
         replayNav(req, res);
-    } else if (req.params.id == 'replay-technical-details') {
+    } else if (req.params.id === 'replay-technical-details') {
         replayTechnicalDetails(req, res);
-    } 
-    // Generic partial template
+    }
+    // Unknown partial — reject to prevent path traversal
     else {
-        res.render('partials/' + req.params.id, { layout: false });
+        res.status(404).end();
     }
 });
 

@@ -9,11 +9,11 @@ module.exports = function filterCdx(apiData) {
         // Sanity check
         .filter((item) => (item.status && item.timestamp && item.digest && item.url))
         // Only 200 and 300 requests are accepted
-        .filter(item => (item.status[0] == '2' || item.status[0] == '3'))
+        .filter(item => (item.status[0] === '2' || item.status[0] === '3'))
         // Filter out redirects to itself
         .filter((item, index, array) => {
             // all with status 200 automatically pass
-            if (item.status[0] == '2') {
+            if (item.status[0] === '2') {
                 prevKnown200Index = index;
                 return true;
             }
@@ -24,7 +24,7 @@ module.exports = function filterCdx(apiData) {
             // find the next item with 200 status
             if(nextKnown200Index < index){
                 nextKnown200Index = index+1;
-                while (nextKnown200Index < array.length && array[nextKnown200Index].status[0] != '2'){
+                while (nextKnown200Index < array.length && array[nextKnown200Index].status[0] !== '2'){
                     nextKnown200Index++;
                 }
             }
@@ -39,7 +39,7 @@ module.exports = function filterCdx(apiData) {
         .sort(sortByDigest)
         // On status 200 duplicates (same digest) on the same day, show only the oldest version
         .filter((item, index, array) => {
-            return (index == 0 || item.status[0] != '2' || item.digest != array[index - 1].digest || item.timestamp.substring(6, 8) != array[index - 1].timestamp.substring(6, 8))
+            return (index === 0 || item.status[0] !== '2' || item.digest !== array[index - 1].digest || item.timestamp.substring(6, 8) !== array[index - 1].timestamp.substring(6, 8))
         })
         // Embargo: don't display versions younger than 1 year old
         .filter(item => getDateFromTimestamp(item.timestamp) < (new Date()).setFullYear(currentYear-1))

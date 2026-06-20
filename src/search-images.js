@@ -14,7 +14,7 @@ module.exports = function searchImages(req, res) {
         (suggestion) => {
             apiRequest.get(requestData,
                 (apiData) => {
-                    if(!apiData.responseItems || apiData.responseItems.length == 0){
+                    if(!apiData.responseItems || apiData.responseItems.length === 0){
                         logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
                     }
                     res.render('partials/images-search-results', {

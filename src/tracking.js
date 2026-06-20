@@ -1,4 +1,5 @@
 const config = require('config');
+const isValidUrl = require('./utils/is-valid-url');
 module.exports = function tracking(req, res, type) {
 
     // http://localhost:3000/image/view/trackingID/timestamp/archivedUrl
@@ -14,6 +15,11 @@ module.exports = function tracking(req, res, type) {
 
     const logString = `'${ipAddress}'\t"${userAgent}"\t'${requestUrl}'\t'${trackingID}'\t'${sessionID}'\t'${timestamp}'\t'${archivedUrl}'`;
     logger.info(logString); // NOSONAR - intentional audit logging of request metadata
+
+    if (!isValidUrl(archivedUrl)) {
+        res.status(400).end();
+        return;
+    }
 
     res.redirect(config.get('wayback.url')+'/'+timestamp+'/'+archivedUrl);
 }

@@ -55,7 +55,7 @@ module.exports = function wayback(req, res) {
         fetch(url) // NOSONAR - intentional: proxying to configured pywb backend
             .then(result => {
                 const newUrl = result.url.split(splitToken).filter((a, i) => i > 0).join(splitToken);
-                if (sanitizeUrl(result.url) != sanitizeUrl(url)) {
+                if (sanitizeUrl(result.url) !== sanitizeUrl(url)) {
                     const fullUrl = config.get('pywb.url') + '/' + newUrl;
                     testUrl(fullUrl);
                 } else if (result.ok) {

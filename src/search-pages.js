@@ -13,7 +13,7 @@ module.exports = function searchPages(req, res) {
         (suggestion) => {
             apiRequest.get(requestData,
                 (apiData) => {
-                    if(!apiData.response_items || apiData.response_items.length == 0){
+                    if(!apiData.response_items || apiData.response_items.length === 0){
                         logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
                     }
                     res.render('partials/pages-search-results', {

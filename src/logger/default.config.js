@@ -6,7 +6,7 @@ const loggerType = config.get('logger.type');
 
 let transports = [];
 
-if(loggerType == 'daily'){
+if(loggerType === 'daily'){
     transports.push(new winston.transports.DailyRotateFile({
         dirname: config.get('logger.dir'),
         filename: 'arquivo-webapp.log.%DATE%',
@@ -14,7 +14,7 @@ if(loggerType == 'daily'){
         zippedArchive: false,
         maxSize: '100m',
       }));
-} else if(loggerType == 'file'){
+} else if(loggerType === 'file'){
     transports.push(new winston.transports.File({ filename: config.get('logger.dir')+'arquivo-webapp.log' }));
 } else { //assume console
     transports.push(new winston.transports.Console());

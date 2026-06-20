@@ -1,7 +1,7 @@
 const logger = require('../logger')('TimestampToText');
 function splitTimeStamp(timestamp) {
     const requiredLength = 14;
-    if(typeof timestamp != 'string'){
+    if(typeof timestamp !== 'string'){
         logger.error(`Expected input to be 'string' but got '${typeof timestamp}': ${timestamp}`)
         timestamp='';
     }

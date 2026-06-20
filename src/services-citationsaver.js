@@ -82,7 +82,7 @@ function loggerErrorMessage(req, res, start, reason) {
 
         return function (k, v) {
             // Handle circular objects
-            if (i !== 0 && typeof (obj) === 'object' && typeof (v) == 'object' && obj == v)
+            if (i !== 0 && typeof (obj) === 'object' && typeof (v) === 'object' && obj === v)
                 return '[Circular]';
 
             // Limit the depth
@@ -92,11 +92,11 @@ function loggerErrorMessage(req, res, start, reason) {
             ++i; // so we know we aren't using the original object anymore
 
             // Truncate big strings
-            if (typeof v == 'string' && v.length > maxLogEntryStringLength) {
+            if (typeof v === 'string' && v.length > maxLogEntryStringLength) {
                 return v.substring(0, maxLogEntryStringLength / 2) + '[Truncated]' + v.substring(v.length - maxLogEntryStringLength / 2);
             }
             // Truncate big arrays
-            if (typeof v == 'object' && Array.isArray(v) && v.length > maxLogEntryArrayLength) {
+            if (typeof v === 'object' && Array.isArray(v) && v.length > maxLogEntryArrayLength) {
                 return [...v.filter((x, i) => i <= maxLogEntryArrayLength / 2), '[Truncated]', ...v.filter((x, i) => i > v.length - maxLogEntryArrayLength / 2)];
             }
             return v;
@@ -200,12 +200,9 @@ function handleURL(req, res) {
 
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
     const fetchOptions = {
-        method: 'HEAD'
+        method: 'HEAD',
+        agent: new https.Agent({ rejectUnauthorized: false }), // NOSONAR - intentional: checking URL existence only; SSL validity is irrelevant for archival citation references
     };
-
-    https.globalAgent = new https.Agent({
-        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
-    });
 
     fetch(fetchUrl, fetchOptions)
         .then((r) => {

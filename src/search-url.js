@@ -14,7 +14,7 @@ module.exports = function searchUrl(req, res) {
     if (!(['table', 'list'].includes(viewMode))) {
         viewMode = viewModeDefault;
     }
-    if (viewMode != viewModeDefault) {
+    if (viewMode !== viewModeDefault) {
         requestData.set('viewMode', viewModeDefault);
     }
     const apiRequest = new CDXSearchApiRequest();
@@ -24,7 +24,7 @@ module.exports = function searchUrl(req, res) {
         (suggestion) => {
             apiRequest.get(requestData,
                 (apiData) => {
-                    if(apiData.length == 0) {
+                    if(apiData.length === 0) {
                         logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
                     }
                     res.render('partials/url-' + viewMode + '-results', {
