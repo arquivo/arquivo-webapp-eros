@@ -9,7 +9,7 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.4.0",
     "express-winston": "^4.2.0",
-    "google-spreadsheet": "^3.2.0",
+    "google-spreadsheet": "^5.3.0",
     "i18n-node-yaml": "^1.0.4",
     "inputmask": "~3.3",
     "js-datepicker": "^5.18.0",
@@ -40,7 +40,7 @@
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "nodemon": "^3.0.1",
-    "sonarqube-scanner": "^4.3.6",
+    "sonarqube-scanner": "^4.3.8",
     "supertest": "^6.3.3"
   }
 }
