@@ -5,11 +5,13 @@ jest.mock('node-fetch');
 jest.mock('fs');
 jest.mock('../spreadsheet-client');
 jest.mock('../utils/is-valid-url');
+jest.mock('dns');
 
 const servicesCitationSaver = require('../services-citationsaver');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const addToSpreadsheet = require('../spreadsheet-client');
+const dns = require('dns');
 const isValidUrl = require('../utils/is-valid-url');
 
 const flushPromises = async () => {
@@ -49,6 +51,9 @@ describe('Citation Saver Service', () => {
 
         isValidUrl.mockReturnValue(true);
         addToSpreadsheet.mockResolvedValue();
+
+        // Resolve to a public IP so isSsrfTarget() passes by default
+        dns.lookup.mockImplementation((hostname, cb) => cb(null, '93.184.216.34'));
     });
 
     describe('File upload handling', () => {
@@ -212,6 +217,19 @@ describe('Citation Saver Service', () => {
             req.body = { url: 'not a valid url', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('rejects URL resolving to a private IP (SSRF)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '192.168.1.1'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: false,
