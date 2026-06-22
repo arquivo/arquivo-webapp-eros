@@ -13,10 +13,10 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 50,
-      functions: 50,
-      lines: 50,
-      statements: 50
+      branches: 65,
+      functions: 65,
+      lines: 65,
+      statements: 65
     }
   },
   testPathIgnorePatterns: ['/node_modules/', 'accessibility'],
