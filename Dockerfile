@@ -21,6 +21,7 @@ FROM base AS dependencies
 # This prevents modification while allowing execution/traversal
 # --chown=node:node: Ensures files are owned by non-root user
 COPY --chown=node:node server.js ./
+COPY --chown=node:node app.js ./
 COPY --chown=node:node --chmod=444 bin ./bin
 COPY --chown=node:node config ./config
 COPY --chown=node:node public ./public
