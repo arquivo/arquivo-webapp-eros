@@ -68,8 +68,9 @@ function isSsrfTarget(urlString) {
         return Promise.resolve(isPrivateIp(hostname));
     }
     return new Promise((resolve) => {
-        dns.lookup(hostname, (err, address) => {
-            resolve(err ? true : isPrivateIp(address));
+        dns.lookup(hostname, { all: true }, (err, addresses) => {
+            if (err) return resolve(true);
+            resolve(addresses.some(a => isPrivateIp(a.address)));
         });
     });
 }

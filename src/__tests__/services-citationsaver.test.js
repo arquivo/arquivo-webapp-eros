@@ -53,7 +53,7 @@ describe('Citation Saver Service', () => {
         addToSpreadsheet.mockResolvedValue();
 
         // Resolve to a public IP so isSsrfTarget() passes by default
-        dns.lookup.mockImplementation((hostname, cb) => cb(null, '93.184.216.34'));
+        dns.lookup.mockImplementation((hostname, opts, cb) => cb(null, [{ address: '93.184.216.34', family: 4 }]));
     });
 
     describe('File upload handling', () => {
@@ -225,7 +225,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('rejects URL resolving to a private IP (SSRF)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '192.168.1.1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '192.168.1.1', family: 4 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -479,6 +479,22 @@ describe('Citation Saver Service', () => {
     });
 
     describe('SSRF protection — isSsrfTarget branches', () => {
+        it('blocks when any resolved address is private (multi-address DNS)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [
+                { address: '93.184.216.34', family: 4 },
+                { address: '10.0.0.1', family: 4 }
+            ]));
+            req.body = { url: 'http://split-horizon.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
         it('blocks URL with non-http/https scheme (file://) via isValidUrl', async () => {
             isValidUrl.mockReturnValueOnce(false);
             req.body = { url: 'file:///etc/passwd', email: 'test@example.com' };
@@ -493,7 +509,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks when DNS lookup returns an error', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(new Error('ENOTFOUND')));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(new Error('ENOTFOUND')));
             req.body = { url: 'http://nonexistent.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -567,7 +583,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks URL with IPv6 loopback (::1)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '::1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '::1', family: 6 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -580,7 +596,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks URL with IPv6 ULA address (fc00::/7)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, 'fc00::1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: 'fc00::1', family: 6 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -593,7 +609,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('allows URL with public IPv6 address', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '2001:4860:4860::8888'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '2001:4860:4860::8888', family: 6 }]));
             req.body = { url: 'http://ipv6.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -607,7 +623,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks DNS resolving to 127.x.x.x', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '127.0.0.1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '127.0.0.1', family: 4 }]));
             req.body = { url: 'http://loopback.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -620,7 +636,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks DNS resolving to 10.x.x.x', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '10.1.2.3'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '10.1.2.3', family: 4 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -633,7 +649,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks DNS resolving to 169.254.x.x (cloud metadata)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '169.254.169.254'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '169.254.169.254', family: 4 }]));
             req.body = { url: 'http://metadata.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -645,7 +661,7 @@ describe('Citation Saver Service', () => {
             });
         });
         it('blocks DNS resolving to IPv4-mapped IPv6 private address (::ffff:192.168.1.1)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '::ffff:192.168.1.1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: '::ffff:192.168.1.1', family: 6 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
@@ -658,7 +674,7 @@ describe('Citation Saver Service', () => {
         });
 
         it('blocks DNS resolving to IPv6 link-local address (fe80::/10)', async () => {
-            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, 'fe80::1'));
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, [{ address: 'fe80::1', family: 6 }]));
             req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
