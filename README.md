@@ -44,7 +44,7 @@ Run optimized production build:
 
 ```bash
 # Build and start production container
-docker compose -f docker-compose.prod.yml up --build
+SESSION_SECRET=$(openssl rand -hex 32) docker compose -f docker-compose.prod.yml up --build
 
 # Run in detached mode
 docker compose -f docker-compose.prod.yml up -d --build
