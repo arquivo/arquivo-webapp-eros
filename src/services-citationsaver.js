@@ -46,7 +46,9 @@ function isPrivateIp(ip) {
     if (net.isIPv6(ip)) {
         if (ip === '::1') return true;
         const firstGroup = parseInt(ip.split(':')[0] || '0', 16);
-        return (firstGroup & 0xfe00) === 0xfc00;
+        if ((firstGroup & 0xfe00) === 0xfc00) return true; // fc00::/7 ULA
+        if ((firstGroup & 0xffc0) === 0xfe80) return true; // fe80::/10 link-local
+        return false;
     }
     return false;
 }

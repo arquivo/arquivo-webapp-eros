@@ -657,6 +657,19 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it('blocks DNS resolving to IPv6 link-local address (fe80::/10)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, 'fe80::1'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
     });
 
     describe('Spreadsheet logging', () => {
