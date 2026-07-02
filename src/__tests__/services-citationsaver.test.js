@@ -237,6 +237,18 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it('disables redirect following to prevent redirect-to-private bypass', async () => {
+            req.body = { url: 'http://example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                expect.any(String),
+                expect.objectContaining({ redirect: 'error' })
+            );
+        });
+
         it('validates URL accessibility with HEAD request', async () => {
             req.body = { url: 'http://example.com', email: 'test@example.com' };
 

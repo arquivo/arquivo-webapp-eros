@@ -218,7 +218,8 @@ function handleURL(req, res) {
 
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
     const fetchOptions = {
-        method: 'HEAD'
+        method: 'HEAD',
+        redirect: 'error'
     };
 
     isSsrfTarget(fetchUrl).then((isSsrf) => {
