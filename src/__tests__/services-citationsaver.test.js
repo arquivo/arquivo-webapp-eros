@@ -466,6 +466,174 @@ describe('Citation Saver Service', () => {
         });
     });
 
+    describe('SSRF protection — isSsrfTarget branches', () => {
+        it('blocks URL with non-http/https scheme (file://) via isValidUrl', async () => {
+            isValidUrl.mockReturnValueOnce(false);
+            req.body = { url: 'file:///etc/passwd', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks when DNS lookup returns an error', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(new Error('ENOTFOUND')));
+            req.body = { url: 'http://nonexistent.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks URL with IP literal resolving to loopback (127.0.0.1)', async () => {
+            req.body = { url: 'http://127.0.0.1/secret', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks URL with IP literal in 10.x.x.x range', async () => {
+            req.body = { url: 'http://10.0.0.1/secret', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks URL with IP literal in 172.16.x.x range', async () => {
+            req.body = { url: 'http://172.16.0.1/secret', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks URL with cloud metadata IP (169.254.169.254)', async () => {
+            req.body = { url: 'http://169.254.169.254/latest/meta-data', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('allows URL with public IP literal (8.8.8.8)', async () => {
+            req.body = { url: 'http://8.8.8.8/', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: true,
+                message: 'Link uploaded',
+                data: expect.any(Object)
+            });
+        });
+
+        it('blocks URL with IPv6 loopback (::1)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '::1'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks URL with IPv6 ULA address (fc00::/7)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, 'fc00::1'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('allows URL with public IPv6 address', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '2001:4860:4860::8888'));
+            req.body = { url: 'http://ipv6.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: true,
+                message: 'Link uploaded',
+                data: expect.any(Object)
+            });
+        });
+
+        it('blocks DNS resolving to 127.x.x.x', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '127.0.0.1'));
+            req.body = { url: 'http://loopback.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks DNS resolving to 10.x.x.x', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '10.1.2.3'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
+        it('blocks DNS resolving to 169.254.x.x (cloud metadata)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '169.254.169.254'));
+            req.body = { url: 'http://metadata.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+    });
+
     describe('Spreadsheet logging', () => {
         it('attempts to log file upload to spreadsheet', async () => {
             req.body = { email: 'test@example.com' };

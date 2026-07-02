@@ -125,7 +125,7 @@ function loggerErrorMessage(req, res, start, reason) {
             return v;
         }
     }
-    reqData = { body: req.body, files: req.files };
+    const reqData = { body: req.body, files: req.files };
     return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
 }
 
