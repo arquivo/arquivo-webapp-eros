@@ -644,6 +644,19 @@ describe('Citation Saver Service', () => {
                 message: 'services-citation-saver.errors.URL.invalid'
             });
         });
+        it('blocks DNS resolving to IPv4-mapped IPv6 private address (::ffff:192.168.1.1)', async () => {
+            dns.lookup.mockImplementationOnce((hostname, cb) => cb(null, '::ffff:192.168.1.1'));
+            req.body = { url: 'http://internal.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+        });
+
     });
 
     describe('Spreadsheet logging', () => {

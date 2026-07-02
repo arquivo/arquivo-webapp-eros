@@ -29,6 +29,10 @@ const logger = require('./logger')('CitationSaver');
 
 
 function isPrivateIp(ip) {
+    if (ip.startsWith('::ffff:') || ip.startsWith('::FFFF:')) {
+        const v4part = ip.slice(7);
+        if (net.isIPv4(v4part)) return isPrivateIp(v4part);
+    }
     if (net.isIPv4(ip)) {
         const parts = ip.split('.').map(Number);
         return (
