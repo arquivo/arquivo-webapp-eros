@@ -44,7 +44,7 @@ Run optimized production build:
 
 ```bash
 # Build and start production container
-docker compose -f docker-compose.prod.yml up --build
+SESSION_SECRET=$(openssl rand -hex 32) docker compose -f docker-compose.prod.yml up --build
 
 # Run in detached mode
 docker compose -f docker-compose.prod.yml up -d --build
@@ -113,6 +113,9 @@ npm test
 
 # Run tests with coverage
 npm run test:coverage
+
+# Run accessibility tests (WCAG 2.1 AA — no external APIs needed)
+npm run test:a11y
 
 # Run tests inside the development container
 docker compose -f docker-compose.yml run node npm run test

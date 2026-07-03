@@ -6,6 +6,7 @@ services:
         target: production
       environment:
         - NODE_ENV=production
+        - SESSION_SECRET  # Required: set this in the host shell or a secrets manager; app refuses to start if unset
       ports:
         - "3000:3000"
       healthcheck:

@@ -6,3 +6,5 @@ config/service_account.json
 uploads
 coverage
 *.log
+.scannerwork
+public/vendor/

@@ -1,0 +1,124 @@
+name: CI
+description: Run quality checks for pull requests and branch updates
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - development
+  pull_request:
+    branches:
+      - main
+      - master
+      - development
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test:coverage
+
+      - name: Smoke test (boot the app and verify it serves)
+        run: |
+          node server.js &
+          APP_PID=$!
+          ok=0
+          for i in $(seq 1 20); do
+            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
+              echo "App responded on / (attempt $i)"; ok=1; break
+            fi
+            sleep 1
+          done
+          kill "$APP_PID" 2>/dev/null || true
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::App failed to serve / on :3000 — boot smoke test failed"
+            exit 1
+          fi
+
+      - name: SonarCloud analysis
+        if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
+        uses: SonarSource/sonarqube-scan-action@v8.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  compose-smoke-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Boot development stack
+        run: docker compose -f docker-compose.yml up -d --build
+
+      - name: Wait for app to serve /
+        run: |
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
+              echo "Dev stack responded on attempt $i"; ok=1; break
+            fi
+            sleep 2
+          done
+          if [ "$ok" -ne 1 ]; then
+            docker compose -f docker-compose.yml logs
+            echo "::error::docker-compose.yml failed to serve / within 60s"
+            exit 1
+          fi
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f docker-compose.yml down
+
+  compose-smoke-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate SESSION_SECRET for CI
+        run: echo "SESSION_SECRET=$(openssl rand -hex 32)" >> $GITHUB_ENV
+
+      - name: Create runtime mount directories
+        run: mkdir -p logs uploads && chmod 777 logs uploads
+
+      - name: Boot production stack
+        run: docker compose -f docker-compose.prod.yml up -d --build
+
+      - name: Wait for app to serve /
+        run: |
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
+              echo "Prod stack responded on attempt $i"; ok=1; break
+            fi
+            sleep 2
+          done
+          if [ "$ok" -ne 1 ]; then
+            docker compose -f docker-compose.prod.yml logs
+            echo "::error::docker-compose.prod.yml failed to serve / within 60s"
+            exit 1
+          fi
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f docker-compose.prod.yml down
