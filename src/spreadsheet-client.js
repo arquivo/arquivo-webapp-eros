@@ -5,11 +5,10 @@ const googleSheetId = config.get('citation.saver.google.sheet.id');
 const serviceAccountConfigs = require('../config/service_account.json');
 const logger = require('./logger')('CitationSaver');
 
-// google-spreadsheet v5+ is ESM-only; use dynamic import() to load it from CJS
+// google-spreadsheet v5+ is ESM-only; _importDeps is extracted so tests can stub it
 async function addToSpreadsheet(row) {
     try {
-        const { GoogleSpreadsheet } = await import('google-spreadsheet');
-        const { JWT } = await import('google-auth-library');
+        const { GoogleSpreadsheet, JWT } = await module.exports._importDeps();
         const auth = new JWT({
             email: serviceAccountConfigs.client_email,
             key: serviceAccountConfigs.private_key,
@@ -25,3 +24,8 @@ async function addToSpreadsheet(row) {
 }
 
 module.exports = addToSpreadsheet;
+module.exports._importDeps = async function () {
+    const { GoogleSpreadsheet } = await import('google-spreadsheet');
+    const { JWT } = await import('google-auth-library');
+    return { GoogleSpreadsheet, JWT };
+};
