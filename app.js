@@ -29,7 +29,7 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'"],
             fontSrc: ["'self'"],
             imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com'],
-            frameSrc: ["'self'", arquivoOrigin, backendOrigin],
+            frameSrc: ["'self'", arquivoOrigin, backendOrigin, 'https://www.youtube.com'],
             connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', contameOrigin, backendOrigin],
             objectSrc: ["'none'"],
             frameAncestors: ["'self'"],
