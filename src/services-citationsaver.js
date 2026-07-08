@@ -28,28 +28,26 @@ const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
 
 
+function isPrivateIpv4(ip) {
+    const [a, b, c] = ip.split('.').map(Number);
+    return a === 127
+        || a === 10
+        || (a === 172 && b >= 16 && b <= 31)
+        || (a === 192 && b === 168)
+        || (a === 169 && b === 254);
+}
+
+function isPrivateIpv6(ip) {
+    if (ip === '::1') return true;
+    const firstGroup = parseInt(ip.split(':')[0] || '0', 16);
+    return (firstGroup & 0xfe00) === 0xfc00 || (firstGroup & 0xffc0) === 0xfe80;
+}
+
 function isPrivateIp(ip) {
-    if (ip.startsWith('::ffff:') || ip.startsWith('::FFFF:')) {
-        const v4part = ip.slice(7);
-        if (net.isIPv4(v4part)) return isPrivateIp(v4part);
-    }
-    if (net.isIPv4(ip)) {
-        const parts = ip.split('.').map(Number);
-        return (
-            parts[0] === 127 ||
-            parts[0] === 10 ||
-            (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) ||
-            (parts[0] === 192 && parts[1] === 168) ||
-            (parts[0] === 169 && parts[1] === 254)
-        );
-    }
-    if (net.isIPv6(ip)) {
-        if (ip === '::1') return true;
-        const firstGroup = parseInt(ip.split(':')[0] || '0', 16);
-        if ((firstGroup & 0xfe00) === 0xfc00) return true; // fc00::/7 ULA
-        if ((firstGroup & 0xffc0) === 0xfe80) return true; // fe80::/10 link-local
-        return false;
-    }
+    const v4mapped = (ip.startsWith('::ffff:') || ip.startsWith('::FFFF:')) ? ip.slice(7) : null;
+    if (v4mapped && net.isIPv4(v4mapped)) return isPrivateIpv4(v4mapped);
+    if (net.isIPv4(ip)) return isPrivateIpv4(ip);
+    if (net.isIPv6(ip)) return isPrivateIpv6(ip);
     return false;
 }
 
