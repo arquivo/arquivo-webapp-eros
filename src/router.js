@@ -187,7 +187,7 @@ router.get('/switchlang', function (req, res) {
             (new URL(config.get('backend.url'))).hostname
         ]
         if(!validHosts.includes(parsedUrl.hostname)){
-            res.redirect('/');
+            return res.redirect('/');
         }
         
         // Toggle to the other available locale
