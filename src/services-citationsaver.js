@@ -17,8 +17,8 @@
  */
 
 const fetch = require('node-fetch');
-const dns = require('dns');
-const net = require('net');
+const dns = require('node:dns');
+const net = require('node:net');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -29,7 +29,7 @@ const logger = require('./logger')('CitationSaver');
 
 
 function isPrivateIpv4(ip) {
-    const [a, b, c] = ip.split('.').map(Number);
+    const [a, b] = ip.split('.').map(Number);
     return a === 127
         || a === 10
         || (a === 172 && b >= 16 && b <= 31)
@@ -39,7 +39,7 @@ function isPrivateIpv4(ip) {
 
 function isPrivateIpv6(ip) {
     if (ip === '::1') return true;
-    const firstGroup = parseInt(ip.split(':')[0] || '0', 16);
+    const firstGroup = Number.parseInt(ip.split(':')[0] || '0', 16);
     return (firstGroup & 0xfe00) === 0xfc00 || (firstGroup & 0xffc0) === 0xfe80;
 }
 
@@ -55,7 +55,7 @@ function isSsrfTarget(urlString) {
     let parsedUrl;
     try {
         parsedUrl = new URL(urlString);
-    } catch (e) {
+    } catch {
         return Promise.resolve(true);
     }
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
@@ -210,6 +210,29 @@ function handleURL(req, res) {
             message: message
         });
     }
+
+    function saveLink(path, url, newName, date, timestamp, email, err) {
+        if (err) {
+            fs.unlink(path);
+            throw err;
+        }
+        addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
+            .then(() => {
+                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+            }).catch(e => {
+                logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: ' + e);
+            });
+        res.send({
+            status: true,
+            message: 'Link uploaded',
+            data: {
+                name: url,
+                mimetype: '',
+                size: url.length
+            }
+        });
+    }
+
     const url = req.body.url
 
     if (!isValidUrl(url)) {
@@ -264,29 +287,7 @@ function handleURL(req, res) {
                 const email = req.body?.email ?? '';
                 const path = uploadFolderPath + '/' + newName;
 
-                fs.writeFile(path, url, err => {
-                    if (err) {
-                        fs.unlink(path);
-                        throw err;
-                    }
-
-                    addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
-                        .then(() => {
-                            logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
-                        }).catch(err => {
-                            logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
-                        });
-                    res.send({
-                        status: true,
-                        message: 'Link uploaded',
-                        data: {
-                            name: url,
-                            mimetype: '',
-                            size: url.length
-                        }
-                    });
-
-                });
+                fs.writeFile(path, url, (err) => saveLink(path, url, newName, date, timestamp, email, err));
             });
 
     }).catch((err) => {

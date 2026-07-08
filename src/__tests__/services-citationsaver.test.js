@@ -5,13 +5,13 @@ jest.mock('node-fetch');
 jest.mock('fs');
 jest.mock('../spreadsheet-client');
 jest.mock('../utils/is-valid-url');
-jest.mock('dns');
+jest.mock('node:dns');
 
 const servicesCitationSaver = require('../services-citationsaver');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const addToSpreadsheet = require('../spreadsheet-client');
-const dns = require('dns');
+const dns = require('node:dns');
 const isValidUrl = require('../utils/is-valid-url');
 
 const flushPromises = async () => {
