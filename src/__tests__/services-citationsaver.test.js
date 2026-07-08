@@ -3,21 +3,22 @@
 jest.mock('config');
 jest.mock('node-fetch');
 jest.mock('fs');
-jest.mock('google-spreadsheet');
+jest.mock('../spreadsheet-client');
 jest.mock('../utils/is-valid-url');
 
 const servicesCitationSaver = require('../services-citationsaver');
 const fetch = require('node-fetch');
 const fs = require('fs');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
+const addToSpreadsheet = require('../spreadsheet-client');
 const isValidUrl = require('../utils/is-valid-url');
 
-const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+const flushPromises = async () => {
+    for (let i = 0; i < 5; i++) await new Promise(resolve => setImmediate(resolve));
+};
 
 describe('Citation Saver Service', () => {
     let req, res;
     let mockFetch;
-    let mockGoogleSheet;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -42,21 +43,12 @@ describe('Citation Saver Service', () => {
         });
         fetch.mockImplementation(mockFetch);
 
-        // Mock GoogleSpreadsheet
-        mockGoogleSheet = {
-            useServiceAccountAuth: jest.fn().mockResolvedValue(),
-            loadInfo: jest.fn().mockResolvedValue(),
-            sheetsByIndex: [{
-                addRow: jest.fn().mockResolvedValue()
-            }]
-        };
-        GoogleSpreadsheet.mockImplementation(() => mockGoogleSheet);
-
         // Mock fs
         fs.writeFile.mockImplementation((path, data, cb) => cb(null));
         fs.unlink.mockImplementation((path, cb) => cb && cb(null));
 
         isValidUrl.mockReturnValue(true);
+        addToSpreadsheet.mockResolvedValue();
     });
 
     describe('File upload handling', () => {
@@ -457,7 +449,7 @@ describe('Citation Saver Service', () => {
     });
 
     describe('Spreadsheet logging', () => {
-        it('attempts to log file upload to spreadsheet', () => {
+        it('attempts to log file upload to spreadsheet', async () => {
             req.body = { email: 'test@example.com' };
             req.files = {
                 file: {
@@ -469,9 +461,9 @@ describe('Citation Saver Service', () => {
             };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
-            // Spreadsheet logging happens asynchronously
-            expect(GoogleSpreadsheet).toHaveBeenCalled();
+            expect(addToSpreadsheet).toHaveBeenCalled();
         });
 
         it('logs URL submission to spreadsheet', async () => {
@@ -480,7 +472,7 @@ describe('Citation Saver Service', () => {
             servicesCitationSaver(req, res);
             await flushPromises();
 
-            expect(GoogleSpreadsheet).toHaveBeenCalled();
+            expect(addToSpreadsheet).toHaveBeenCalled();
         });
     });
 });

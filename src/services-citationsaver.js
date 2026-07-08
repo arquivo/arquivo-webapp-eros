@@ -1,18 +1,18 @@
 /**
  * Citation Saver Service
- * 
+ *
  * Handles user submissions of citations/references in three formats:
  * 1. File uploads (PDF, TXT, HTML) - validates, stores with random filename
  * 2. URLs - validates accessibility, creates .link file with URL content
  * 3. Plain text - saves as .txt file
- * 
+ *
  * All submissions are:
  * - Validated for type and size constraints
  * - Stored in configured upload folder with random names
  * - Logged to Google Spreadsheet for administrative tracking
- * 
+ *
  * Each entry includes: date, timestamp, email, type, original name, filename, path
- * 
+ *
  * Response format: { status: boolean, message: string, data?: object }
  */
 
@@ -21,29 +21,10 @@ const https = require('https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-
-const googleSheetId = config.get('citation.saver.google.sheet.id');
+const addToSpreadsheet = require('./spreadsheet-client');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
-const serviceAccountConfigs = require('../config/service_account.json');
 const logger = require('./logger')('CitationSaver');
-
-
-// Initialize the sheet - doc ID is the long id in the sheets URL
-async function addToSpreadsheet(row) {
-    try {
-        const doc = new GoogleSpreadsheet(googleSheetId);
-        await doc.useServiceAccountAuth(serviceAccountConfigs)
-
-        await doc.loadInfo();
-        const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-        await sheet.addRow(row);
-    } catch (err) {
-        logger.error('Failed to connect to google services. Reason: "'+ err + '". Data: '+JSON.stringify(row));
-    }
-    
-}
 
 const mimeToExtension = {
     // "application/msword": "doc",
