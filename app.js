@@ -16,8 +16,10 @@ const app = express();
 
 app.set('trust proxy', 1);
 
-const backendOrigin = (new URL(config.get('backend.url'))).origin;
+const backendUrl = new URL(config.get('backend.url'));
+const backendOrigin = backendUrl.origin;
 const contameOrigin = (new URL(config.get('contame.historias.url'))).origin;
+const arquivoOrigin = 'https://arquivo.pt';
 
 app.use(helmet({
     contentSecurityPolicy: {
@@ -27,7 +29,7 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'"],
             fontSrc: ["'self'"],
             imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com'],
-            frameSrc: ["'self'", 'https://arquivo.pt', backendOrigin],
+            frameSrc: ["'self'", arquivoOrigin, backendOrigin],
             connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', contameOrigin, backendOrigin],
             objectSrc: ["'none'"],
             frameAncestors: ["'self'"],
