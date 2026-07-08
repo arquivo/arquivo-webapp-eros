@@ -25,12 +25,12 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://www.google-analytics.com', "'unsafe-inline'"],
+            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://www.google-analytics.com', 'https://www.youtube.com', "'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
             fontSrc: ["'self'"],
-            imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com'],
+            imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com', 'https://www.youtube.com'],
             frameSrc: ["'self'", arquivoOrigin, backendOrigin, 'https://www.youtube.com'],
-            connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', contameOrigin, backendOrigin],
+            connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', contameOrigin, backendOrigin],
             objectSrc: ["'none'"],
             frameAncestors: ["'self'"],
         },
