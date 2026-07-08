@@ -1,6 +1,7 @@
 const { resolveInclude } = require('ejs');
 const fileUpload = require('express-fileupload');
 const express = require('express');
+const helmet = require('helmet');
 const config = require('config');
 const session = require('cookie-session');
 const cookies = require('cookie-parser');
@@ -12,6 +13,31 @@ const { validateSessionSecret } = require('./src/utils/session-secret-validator'
 validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 
 const app = express();
+
+app.set('trust proxy', 1);
+
+const backendOrigin = (new URL(config.get('backend.url'))).origin;
+const contameOrigin = (new URL(config.get('contame.historias.url'))).origin;
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://www.google-analytics.com', "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            fontSrc: ["'self'"],
+            imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com'],
+            frameSrc: ["'self'", 'https://arquivo.pt', backendOrigin],
+            connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', contameOrigin, backendOrigin],
+            objectSrc: ["'none'"],
+            frameAncestors: ["'self'"],
+        },
+    },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+    },
+}));
 
 app.use((err, req, res, next) => {
     require('./src/logger')('UnhandledException').error(err.stack);
