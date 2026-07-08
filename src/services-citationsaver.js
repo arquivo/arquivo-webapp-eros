@@ -17,7 +17,8 @@
  */
 
 const fetch = require('node-fetch');
-const https = require('https');
+const dns = require('node:dns');
+const net = require('node:net');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -25,6 +26,52 @@ const addToSpreadsheet = require('./spreadsheet-client');
 const maxUploadSize = config.get('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
+
+
+function isPrivateIpv4(ip) {
+    const [a, b] = ip.split('.').map(Number);
+    return a === 127
+        || a === 10
+        || (a === 172 && b >= 16 && b <= 31)
+        || (a === 192 && b === 168)
+        || (a === 169 && b === 254);
+}
+
+function isPrivateIpv6(ip) {
+    if (ip === '::1') return true;
+    const firstGroup = Number.parseInt(ip.split(':')[0] || '0', 16);
+    return (firstGroup & 0xfe00) === 0xfc00 || (firstGroup & 0xffc0) === 0xfe80;
+}
+
+function isPrivateIp(ip) {
+    const v4mapped = (ip.startsWith('::ffff:') || ip.startsWith('::FFFF:')) ? ip.slice(7) : null;
+    if (v4mapped && net.isIPv4(v4mapped)) return isPrivateIpv4(v4mapped);
+    if (net.isIPv4(ip)) return isPrivateIpv4(ip);
+    if (net.isIPv6(ip)) return isPrivateIpv6(ip);
+    return false;
+}
+
+function isSsrfTarget(urlString) {
+    let parsedUrl;
+    try {
+        parsedUrl = new URL(urlString);
+    } catch {
+        return Promise.resolve(true);
+    }
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        return Promise.resolve(true);
+    }
+    const hostname = parsedUrl.hostname;
+    if (net.isIP(hostname)) {
+        return Promise.resolve(isPrivateIp(hostname));
+    }
+    return new Promise((resolve) => {
+        dns.lookup(hostname, { all: true }, (err, addresses) => {
+            if (err) return resolve(true);
+            resolve(addresses.some(a => isPrivateIp(a.address)));
+        });
+    });
+}
 
 const mimeToExtension = {
     // "application/msword": "doc",
@@ -83,7 +130,7 @@ function loggerErrorMessage(req, res, start, reason) {
             return v;
         }
     }
-    reqData = { body: req.body, files: req.files };
+    const reqData = { body: req.body, files: req.files };
     return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
 }
 
@@ -163,6 +210,29 @@ function handleURL(req, res) {
             message: message
         });
     }
+
+    function saveLink(path, url, newName, date, timestamp, email, err) {
+        if (err) {
+            fs.unlink(path);
+            throw err;
+        }
+        addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
+            .then(() => {
+                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+            }).catch(e => {
+                logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: ' + e);
+            });
+        res.send({
+            status: true,
+            message: 'Link uploaded',
+            data: {
+                name: url,
+                mimetype: '',
+                size: url.length
+            }
+        });
+    }
+
     const url = req.body.url
 
     if (!isValidUrl(url)) {
@@ -176,74 +246,57 @@ function handleURL(req, res) {
 
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
     const fetchOptions = {
-        method: 'HEAD'
+        method: 'HEAD',
+        redirect: 'error'
     };
 
-    https.globalAgent = new https.Agent({
-        rejectUnauthorized: false, // Ignore SSL errors, we're just using looking for URLs.
-    });
+    isSsrfTarget(fetchUrl).then((isSsrf) => {
+        if (isSsrf) {
+            sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+            return;
+        }
 
-    fetch(fetchUrl, fetchOptions)
-        .then((r) => {
-            function throwExpectedError(message) {
-                expectedError = true;
-                throw new Error(message);
-            }
-
-            if (!r.ok) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
-            }
-
-            mimetype = r.headers.get('content-type');
-            filesize = r.headers.get('content-length');
-
-            if (!mimeToExtension[mimetype.split(';')[0]]) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
-            }
-
-            if (Number(filesize) > maxUploadSize) {
-                throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
-            }
-
-        }).then(() => {
-
-            const outExtension = 'link';
-            const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
-            const date = (new Date()).toLocaleDateString('en-CA');
-            const timestamp = Date.now();
-            const email = req.body?.email ?? '';
-            const path = uploadFolderPath + '/' + newName;
-
-            fs.writeFile(path, url, err => {
-                if (err) {
-                    fs.unlink(path);
-                    throw err;
+        return fetch(fetchUrl, fetchOptions)
+            .then((r) => {
+                function throwExpectedError(message) {
+                    expectedError = true;
+                    throw new Error(message);
                 }
 
-                addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
-                    .then(() => {
-                        logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
-                    }).catch(err => {
-                        logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: '+err);
-                    });
-                res.send({
-                    status: true,
-                    message: 'Link uploaded',
-                    data: {
-                        name: url,
-                        mimetype: '',
-                        size: url.length
-                    }
-                });
+                if (!r.ok) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+                }
 
+                mimetype = r.headers.get('content-type');
+                filesize = r.headers.get('content-length');
+
+                if (!mimeToExtension[mimetype.split(';')[0]]) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
+                }
+
+                if (Number(filesize) > maxUploadSize) {
+                    throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
+                }
+
+            }).then(() => {
+
+                const outExtension = 'link';
+                const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+                const date = (new Date()).toLocaleDateString('en-CA');
+                const timestamp = Date.now();
+                const email = req.body?.email ?? '';
+                const path = uploadFolderPath + '/' + newName;
+
+                fs.writeFile(path, url, (err) => saveLink(path, url, newName, date, timestamp, email, err));
             });
-        }).catch((err) => {
-            if (expectedError) {
-                sendExpectedError(err.message);
-            } else {
-                unexpectedError(req, res, err);
-            }
-        });
+
+    }).catch((err) => {
+        if (expectedError) {
+            sendExpectedError(err.message);
+        } else {
+            unexpectedError(req, res, err);
+        }
+    });
 
 
 
