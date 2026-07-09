@@ -25,15 +25,22 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://www.google-analytics.com', 'https://www.youtube.com', "'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            fontSrc: ["'self'"],
-            imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com', 'https://www.youtube.com'],
+            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://www.youtube.com', "'unsafe-inline'"],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc: ["'self'", 'https://ka-f.fontawesome.com', "'unsafe-inline'"],
+            fontSrc: ["'self'", 'https://ka-f.fontawesome.com'],
+            imgSrc: ["'self'", 'data:', 'https://*.google-analytics.com', 'https://www.youtube.com'],
             frameSrc: ["'self'", arquivoOrigin, backendOrigin, 'https://www.youtube.com'],
-            connectSrc: ["'self'", 'https://www.google-analytics.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', contameOrigin, backendOrigin],
+            connectSrc: ["'self'", 'https://*.google-analytics.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://ka-f.fontawesome.com', contameOrigin, backendOrigin],
             objectSrc: ["'none'"],
             frameAncestors: ["'self'"],
         },
+    },
+    permissionsPolicy: {
+        pictureInPicture: ['self', 'https://www.youtube.com'],
+        accelerometer: ['https://www.youtube.com'],
+        autoplay: ['https://www.youtube.com'],
+        gyroscope: ['https://www.youtube.com'],
     },
     hsts: {
         maxAge: 31536000,
