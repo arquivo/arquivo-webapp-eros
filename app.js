@@ -13,6 +13,8 @@ validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 
 const app = express();
 
+app.disable('x-powered-by');
+
 app.use((err, req, res, next) => {
     require('./src/logger')('UnhandledException').error(err.stack);
     next(err);
