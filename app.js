@@ -1,6 +1,7 @@
 const { resolveInclude } = require('ejs');
 const fileUpload = require('express-fileupload');
 const express = require('express');
+const helmet = require('helmet');
 const config = require('config');
 const session = require('cookie-session');
 const cookies = require('cookie-parser');
@@ -12,6 +13,40 @@ const { validateSessionSecret } = require('./src/utils/session-secret-validator'
 validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 
 const app = express();
+
+app.set('trust proxy', 1);
+
+const backendUrl = new URL(config.get('backend.url'));
+const backendOrigin = backendUrl.origin;
+const contameOrigin = (new URL(config.get('contame.historias.url'))).origin;
+const arquivoOrigin = 'https://arquivo.pt';
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://www.youtube.com', "'unsafe-inline'"],
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc: ["'self'", 'https://ka-f.fontawesome.com', "'unsafe-inline'"],
+            fontSrc: ["'self'", 'https://ka-f.fontawesome.com'],
+            imgSrc: ["'self'", 'data:', 'https://*.google-analytics.com', 'https://www.youtube.com'],
+            frameSrc: ["'self'", arquivoOrigin, backendOrigin, 'https://www.youtube.com'],
+            connectSrc: ["'self'", 'https://*.google-analytics.com', 'https://www.googletagmanager.com', 'https://www.youtube.com', 'https://ka-f.fontawesome.com', contameOrigin, backendOrigin],
+            objectSrc: ["'none'"],
+            frameAncestors: ["'self'"],
+        },
+    },
+    permissionsPolicy: {
+        pictureInPicture: ['self', 'https://www.youtube.com'],
+        accelerometer: ['https://www.youtube.com'],
+        autoplay: ['https://www.youtube.com'],
+        gyroscope: ['https://www.youtube.com'],
+    },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+    },
+}));
 
 app.use((err, req, res, next) => {
     require('./src/logger')('UnhandledException').error(err.stack);
