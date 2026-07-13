@@ -60,4 +60,9 @@ for (const weight of ['300', '400', '500', '700']) {
 }
 copyDir('@fontsource/roboto/files', 'public/vendor/fonts/roboto/files');
 
+// Font Awesome 6 Free — CSS + webfonts (served locally, no CDN kit)
+mkdir('public/vendor/webfonts');
+copy('@fortawesome/fontawesome-free/css/all.min.css', 'public/vendor/css/fontawesome-all.min.css');
+copyDir('@fortawesome/fontawesome-free/webfonts', 'public/vendor/webfonts');
+
 console.log('vendor assets copied to public/vendor/');
