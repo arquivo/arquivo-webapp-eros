@@ -275,9 +275,9 @@ class ArquivoReplay {
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
-                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
-                    replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
-                    gtag("event", 'page_view');
+                if ( ['load', 'replace-url'].includes(e[key].wb_type) ) {
+                    replay.setUrlAndTimestamp(e[key].url,e[key].ts,true);
+                    if (typeof gtag !== 'undefined') gtag("event", 'page_view');
                 }
                 if ( e[key].wb_type == 'not-found' ) {
                     $('#replay-in-iframe').hide();
