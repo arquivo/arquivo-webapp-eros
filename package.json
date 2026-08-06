@@ -14,7 +14,7 @@
     "i18n-node-yaml": "^1.0.4",
     "inputmask": "~3.3",
     "js-datepicker": "^5.18.0",
-    "jquery": "1.12.4",
+    "jquery": "4.0.0",
     "jquery-modal": "0.9.1",
     "jquery-ui-dist": "1.12.1",
     "jquery-ui-touch-punch": "0.2.3",
