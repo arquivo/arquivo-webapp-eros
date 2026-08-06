@@ -35,10 +35,10 @@ SuggestionApi.mockImplementation(() => ({
 const app = require('../../app');
 
 describe('Static Assets Smoke Test', () => {
-    describe('GET /vendor/js/', () => {
-        it('serves font_awesome.js with 200 status', async () => {
+    describe('GET /vendor/css/', () => {
+        it('serves fontawesome-all.min.css with 200 status', async () => {
             const res = await request(app)
-                .get('/vendor/js/font_awesome.js');
+                .get('/vendor/css/fontawesome-all.min.css');
             expect(res.status).toBe(200);
         });
     });
