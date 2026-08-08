@@ -10,4 +10,5 @@ coverage
 public/vendor/
 playwright-report/
 test-results/
-.sauce/
+.sauce/*
+!.sauce/config.yml

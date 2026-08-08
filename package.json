@@ -36,6 +36,7 @@
     "test:a11y": "jest --config jest.a11y.config.js --testPathPattern=accessibility",
     "test:e2e": "playwright test",
     "test:e2e:live": "E2E_MODE=live playwright test",
+    "test:e2e:sauce": "saucectl run",
     "sonar": "sonar-scanner"
   },
   "devDependencies": {
