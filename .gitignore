@@ -8,3 +8,6 @@ coverage
 *.log
 .scannerwork
 public/vendor/
+playwright-report/
+test-results/
+.sauce/
