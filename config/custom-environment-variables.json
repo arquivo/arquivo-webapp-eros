@@ -1,5 +1,36 @@
 {
   "session": {
     "secret": "SESSION_SECRET"
+  },
+  "backend": {
+    "url": "BACKEND_URL"
+  },
+  "wayback": {
+    "url": "WAYBACK_URL"
+  },
+  "pywb": {
+    "url": "PYWB_URL"
+  },
+  "text": {
+    "search": {
+      "api": {
+        "solr": "TEXT_SEARCH_API_SOLR",
+        "nutchwax": "TEXT_SEARCH_API_NUTCHWAX",
+        "default": "TEXT_SEARCH_API_DEFAULT"
+      }
+    }
+  },
+  "image": {
+    "search": {
+      "api": "IMAGE_SEARCH_API"
+    }
+  },
+  "cdx": {
+    "api": "CDX_API"
+  },
+  "services": {
+    "archivepagenow": {
+      "url": "SERVICES_ARCHIVEPAGENOW_URL"
+    }
   }
 }
