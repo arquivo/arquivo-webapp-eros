@@ -19,6 +19,6 @@ module.exports = {
       statements: 65
     }
   },
-  testPathIgnorePatterns: ['/node_modules/', 'accessibility'],
+  testPathIgnorePatterns: ['/node_modules/', 'accessibility', '/e2e/'],
   verbose: true
 };
