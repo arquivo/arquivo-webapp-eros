@@ -1,34 +1,37 @@
-name: E2E Sauce Labs
-description: Cross-browser Playwright run via Sauce Labs (live mode, real preprod)
-
-on:
-  workflow_dispatch: {}
-  schedule:
-    # Placeholder daily schedule (05:00 UTC) mirroring the old Jenkins cron
-    # job for arquivo/functional-tests' Sauce Labs run. The exact Jenkins
-    # schedule isn't visible from this repo (no Jenkinsfile / job config
-    # checked in) — align this with the real cadence once known.
-    - cron: '0 5 * * *'
-
-jobs:
-  sauce:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Playwright tests on Sauce Labs
-        uses: saucelabs/saucectl-run-action@v4
-        env:
-          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+# Disabled: requires SAUCE_USERNAME/SAUCE_ACCESS_KEY secrets to be added to
+# the repo before this can run. Uncomment once those are configured.
+#
+# name: E2E Sauce Labs
+# description: Cross-browser Playwright run via Sauce Labs (live mode, real preprod)
+#
+# on:
+#   workflow_dispatch: {}
+#   schedule:
+#     # Placeholder daily schedule (05:00 UTC) mirroring the old Jenkins cron
+#     # job for arquivo/functional-tests' Sauce Labs run. The exact Jenkins
+#     # schedule isn't visible from this repo (no Jenkinsfile / job config
+#     # checked in) — align this with the real cadence once known.
+#     - cron: '0 5 * * *'
+#
+# jobs:
+#   sauce:
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+#
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
+#
+#       - name: Install dependencies
+#         run: npm install
+#
+#       - name: Run Playwright tests on Sauce Labs
+#         uses: saucelabs/saucectl-run-action@v4
+#         env:
+#           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+#           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
