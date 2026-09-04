@@ -8,3 +8,7 @@ coverage
 *.log
 .scannerwork
 public/vendor/
+playwright-report/
+test-results/
+.sauce/*
+!.sauce/config.yml
