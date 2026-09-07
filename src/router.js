@@ -12,6 +12,7 @@
  */
 
 const backendRoutes = require('./backend-routes');
+const healthcheckRoutes = require('./healthcheck-routes');
 const searchPages = require('./search-pages.js');
 const searchImages = require('./search-images.js');
 const searchUrl = require('./search-url.js');
@@ -29,6 +30,11 @@ const router = express.Router();
 // Backend Routes - PyWb proxy redirects (must be registered first)
 // ============================================================================
 backendRoutes(router);
+
+// ============================================================================
+// Healthcheck Routes - backend connectivity check for rolling deploys
+// ============================================================================
+healthcheckRoutes(router);
 
 // ============================================================================
 // Homepage
