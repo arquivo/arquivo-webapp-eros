@@ -24,8 +24,8 @@ function buildPingUrl(baseUrl, params) {
     return `${baseUrl}?${new URLSearchParams(params)}`;
 }
 
-module.exports = function (router) {
-    router.get('/healthcheck', async function (req, res) {
+module.exports = function registerHealthcheckRoutes(router) {
+    router.get('/healthcheck', async function healthcheckHandler(req, res) {
         const targets = {
             pageSearch: buildPingUrl(config.get('text.search.api.default'), { q: 'arquivo', maxItems: '1' }),
             imageSearch: buildPingUrl(config.get('image.search.api'), { q: 'arquivo', maxItems: '1' }),
