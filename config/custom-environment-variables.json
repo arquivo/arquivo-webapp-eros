@@ -1,5 +1,12 @@
 {
   "session": {
     "secret": "SESSION_SECRET"
+  },
+  "google": {
+    "tagmanager": {
+      "id": "GOOGLE_TAGMANAGER_ID",
+      "auth": "GOOGLE_TAGMANAGER_AUTH",
+      "preview": "GOOGLE_TAGMANAGER_PREVIEW"
+    }
   }
 }

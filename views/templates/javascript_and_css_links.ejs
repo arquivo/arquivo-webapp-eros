@@ -77,19 +77,15 @@
 <script src="/js/modal-image-result.js"></script>
 <% } %>
 
-<!-- starts Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=<%- config.get('google.analytics.token') %>"></script>
-
-<script>
-
-window.dataLayer = window.dataLayer || [];
-function ga4(){dataLayer.push(arguments);}
-ga4('js', new Date());
-ga4('config', '<%- config.get('google.analytics.token') %>');
-
-</script>
-<!-- ends Google Analytics 4-->
+<!-- starts Google Tag Manager -->
+<% const gtmAuth = config.get('google.tagmanager.auth'); %>
+<% const gtmPreview = config.get('google.tagmanager.preview'); %>
+<% const gtmEnvParams = (gtmAuth && gtmPreview) ? `&gtm_auth=${gtmAuth}&gtm_preview=${gtmPreview}&gtm_cookies_win=x` : ''; %>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl+'<%- gtmEnvParams %>';f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','<%- config.get('google.tagmanager.id') %>');</script>
+<!-- ends Google Tag Manager -->
 
 <!-- ends javascript scripts and links -->
-
-<!-- Nova property google analytics:  -->

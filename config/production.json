@@ -1,1 +1,8 @@
-{}
+{
+  "google": {
+    "tagmanager": {
+      "auth": "",
+      "preview": ""
+    }
+  }
+}
