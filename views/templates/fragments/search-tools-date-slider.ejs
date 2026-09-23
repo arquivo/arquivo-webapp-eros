@@ -43,6 +43,12 @@
         <div id="slider-range"></div>
         <!-- ends slider handles -->
 
+        <% if (typeof showImpactGraph !== 'undefined' && showImpactGraph) { %>
+        <!-- starts search impact timeline bars -->
+        <div id="search-impact-graph" aria-hidden="true"></div>
+        <!-- ends search impact timeline bars -->
+        <% } %>
+
         <!-- starts right calendar icon -->
         
         <ul id="date-container-end">

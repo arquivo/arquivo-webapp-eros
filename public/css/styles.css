@@ -1773,6 +1773,46 @@ body#homepage #slider-range-container {
 
 }
 
+#search-impact-graph {
+  position: absolute;
+  left: 76px;
+  right: 76px;
+  top: 10px;
+  height: 22px;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  pointer-events: none;
+}
+
+#search-impact-graph .impact-bar {
+  flex: 1;
+  min-height: 1px;
+  background-color: darkgray;
+  opacity: 0.6;
+  pointer-events: auto;
+}
+
+#search-impact-graph .impact-bar-spacer {
+  flex: 1;
+}
+
+#search-impact-graph .impact-bar-tooltip {
+  position: absolute;
+  /* bottom: -100%; */
+  top: 150%;
+  margin-bottom: 4px;
+  transform: translateX(-50%);
+  background-color: #1c75c0;
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 2px 6px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 3;
+}
+
 .ui-slider .ui-slider-handle {
   position: absolute;
   z-index: 2 !important;
