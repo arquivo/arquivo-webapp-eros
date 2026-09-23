@@ -100,7 +100,8 @@ describe('PageSearchApiRequest', () => {
             expect(api.defaultApiReply).toMatchObject({
                 estimated_nr_results: 0,
                 response_items: [],
-                request_parameters: expect.any(Object)
+                request_parameters: expect.any(Object),
+                timeline: { impact: {} }
             });
         });
     });

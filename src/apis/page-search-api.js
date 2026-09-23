@@ -20,6 +20,7 @@ class PageSearchApiRequest extends ApiRequest {
             metadata: null,
             trackingId: null,
             yearBalance: yearBalanceEnabled ? true : null,
+            timeline: true,
         }
         const defaultApiReply = {
             estimated_nr_results: 0,
@@ -27,6 +28,9 @@ class PageSearchApiRequest extends ApiRequest {
             request_parameters: {
                 from: defaultApiParams.from,
                 to: defaultApiParams.to
+            },
+            timeline: {
+                impact: {}
             }
         };
         let apiEndpoint;
