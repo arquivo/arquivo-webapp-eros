@@ -2,6 +2,8 @@ const ApiRequest = require('./api-request');
 const config = require('config');
 class PageSearchApiRequest extends ApiRequest {
     constructor(backend=null) {
+        const yearBalanceEnabled = config.has('text.search.api.yearBalance_enabled') &&
+                                  config.get('text.search.api.yearBalance_enabled') === true;
         const defaultApiParams = {
             q: null,
             from: config.get('search.start.date'),
@@ -17,6 +19,7 @@ class PageSearchApiRequest extends ApiRequest {
             prettyPrint: false,
             metadata: null,
             trackingId: null,
+            yearBalance: yearBalanceEnabled ? true : null,
         }
         const defaultApiReply = {
             estimated_nr_results: 0,

@@ -17,6 +17,7 @@ const mockConfig = {
   'text.search.api.solr': 'https://preprod.arquivo.pt/textsearch',
   'text.search.api.nutchwax': 'https://preprod.arquivo.pt/textsearchnutchwax',
   'text.search.api.default': 'https://preprod.arquivo.pt/textsearch',
+  'text.search.api.yearBalance_enabled': false,
   'cdx.api': 'https://preprod.arquivo.pt/wayback/cdx',
   'search.start.date': '19910806',
   'text.results.per.page': 10,

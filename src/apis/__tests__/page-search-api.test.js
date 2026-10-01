@@ -105,6 +105,30 @@ describe('PageSearchApiRequest', () => {
         });
     });
 
+    describe('yearBalance feature toggle', () => {
+        afterEach(() => {
+            config.set('text.search.api.yearBalance_enabled', false);
+        });
+
+        it('should not include yearBalance param when disabled', () => {
+            config.set('text.search.api.yearBalance_enabled', false);
+            const api = new PageSearchApiRequest();
+
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'test query' }));
+
+            expect(sanitized.has('yearBalance')).toBe(false);
+        });
+
+        it('should include yearBalance=true param when enabled', () => {
+            config.set('text.search.api.yearBalance_enabled', true);
+            const api = new PageSearchApiRequest();
+
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'test query' }));
+
+            expect(sanitized.get('yearBalance')).toBe('true');
+        });
+    });
+
     describe('sanitizeRequestData', () => {
         let api;
 
