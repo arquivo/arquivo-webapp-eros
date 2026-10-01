@@ -17,7 +17,7 @@ if (typeof searchType !== 'undefined' && searchType == 'images') {
     <form action="?">
         <% newRequestData.set('offset', Math.max(currentOffset-maxItems,0) ); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
-        <button type="submit" class="previous-page" aria-hidden="true" value="previous page" onclick="gtag('event', '<%= event %>', {'type': 'Previous page', 'value': document.location.href });">
+        <button type="submit" class="previous-page" aria-hidden="true" value="previous page" onclick="window.dataLayer = window.dataLayer || []; window.dataLayer.push({'event': 'pagination_click', 'event_category': '<%= event %>', 'event_action': 'Previous page', 'event_label': document.location.href});">
             &larr; <%= t('navigation.pagination.previous')%>
         </button>
     </form>
@@ -29,7 +29,7 @@ if (typeof searchType !== 'undefined' && searchType == 'images') {
     <form action="?">
         <% newRequestData.set('offset',currentOffset+maxItems); %>
         <%- include('hidden-search-inputs',{requestData: newRequestData}) %>
-        <button type="submit" class="next-page" aria-hidden="true" value="next page" onclick="gtag('event', '<%= event %>', {'type': 'Next page', 'value': document.location.href } );">
+        <button type="submit" class="next-page" aria-hidden="true" value="next page" onclick="window.dataLayer = window.dataLayer || []; window.dataLayer.push({'event': 'pagination_click', 'event_category': '<%= event %>', 'event_action': 'Next page', 'event_label': document.location.href});">
             <%= t('navigation.pagination.next')%> &rarr;
         </button>
     </form>

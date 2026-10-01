@@ -4,10 +4,12 @@ $(function(){
     // ContaMeHistorias monitoring
     $('#search-tools-narrative-button').click(() => {
         $('#search-form-narrative input[name=query]').val($('#submit-search-input').val());
-        gtag("event", 'contameHistorias', {
-            "type": 'Pressed', 
-            "query": $('#submit-search-input').val() || '<empty>' 
-        } );
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            "event": 'contame_historias',
+            "event_category": 'Pressed',
+            "event_label": $('#submit-search-input').val() || '<empty>'
+        });
         $('#confirm-narrative-modal').modal();
     });
     $('#search-form-narrative').submit(function (e) {
@@ -15,10 +17,12 @@ $(function(){
             $('#search-form-narrative input[name=query]').remove();
             $('#search-form-narrative').attr('action', contaMeHistoriasURL); // URL filled in javascript_and_css_links.ejs, it's contame.historias.url property
         }
-        gtag("event", 'contameHistorias', {
-            "type": 'Searched', 
-            "query": $('#submit-search-input').val() || '<empty>' 
-        } );
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            "event": 'contame_historias',
+            "event_category": 'Searched',
+            "event_label": $('#submit-search-input').val() || '<empty>'
+        });
         return true;
     });
 

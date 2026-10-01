@@ -38,10 +38,12 @@ $(function () {
         const filename = "arquivo_pt_" + type + "_" + jsDateToTimetamp(new Date()) + "." + outputFileExtension;
         XLSX.writeFile(wb, filename);
 
-        gtag("event", 'exportSERP', {
-            "type": type, 
-            "outputFileExtension": outputFileExtension 
-        } );
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            "event": 'export_serp',
+            "event_category": type,
+            "event_label": outputFileExtension
+        });
     }
 
     // To be called after a search have been finished.
