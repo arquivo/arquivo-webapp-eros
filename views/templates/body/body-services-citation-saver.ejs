@@ -5,6 +5,18 @@
 
     <p style="margin-top: 20px;"><%- t('services-citation-saver.description.1') %></p>
     <p><%- t('services-citation-saver.description.2') %> <a class="learn-more" href="<%- t('services-citation-saver.learn-more.href') %>"><%- t('services-citation-saver.learn-more.text') %></a></p>
+
+    <div class="citation-saver-consent">
+        <div class="citation-saver-consent-item">
+            <input type="checkbox" name="consent-protection" id="consent-protection" required>
+            <label for="consent-protection"><%- t('services-citation-saver.consent.protection.checkbox.before') %><a class="learn-more" href="<%- t('services-citation-saver.consent.protection.link.href') %>" target="_blank" rel="noopener"><%- t('services-citation-saver.consent.protection.link.text') %></a><%- t('services-citation-saver.consent.protection.checkbox.after') %></label>
+        </div>
+        <div class="citation-saver-consent-item">
+            <input type="checkbox" name="consent-processing" id="consent-processing" required>
+            <label for="consent-processing"><%- t('services-citation-saver.consent.processing.checkbox') %></label>
+        </div>
+    </div>
+
     <p><%- t('services-citation-saver.description.3') %></p>
 
     <div class="citation-saver-input-selection">

@@ -1,12 +1,35 @@
 $(() => {
+    var $consentFields = $('.citation-saver-input-selection .input-tab input, .citation-saver-input-selection .input-tab textarea, .citation-saver-input-selection .input-tab button');
+
+    function updateConsentGate() {
+        var granted = document.getElementById('consent-protection').checked
+            && document.getElementById('consent-processing').checked;
+        $consentFields.prop('disabled', !granted);
+    }
+
+    updateConsentGate();
+    $('#consent-protection, #consent-processing').on('change', updateConsentGate);
+
     $(".citation-saver-input-selection form").submit(function (e) {
 
         e.preventDefault();
 
+        var consentProtection = document.getElementById('consent-protection');
+        var consentProcessing = document.getElementById('consent-processing');
+
+        if (!consentProtection.checkValidity()) {
+            consentProtection.reportValidity();
+            return;
+        }
+        if (!consentProcessing.checkValidity()) {
+            consentProcessing.reportValidity();
+            return;
+        }
+
         var form = $(this);
         var actionUrl = form.attr('action');
 
-        
+
         $('#modal #citation-saver-progress-bar').show();
         $('#modal #citation-saver-modal').hide();
         $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });

@@ -31,6 +31,30 @@ learn-more:
   href:
     en: https://sobre.arquivo.pt/en/new-citationsaver-service-preserves-cited-web-content/
     pt: https://sobre.arquivo.pt/pt/novo-servico-citationsaver-preserva-conteudos-web-citados/
+consent:
+  protection:
+    link:
+      text:
+        en: "data protection terms"
+        pt: 'termos da proteção de dados'
+      href:
+        en: https://sobre.arquivo.pt/en/about/privacy-policy/data-protection-for-the-suggest-websites-form/
+        pt: https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/protecao-de-dados-formulario-sugerir-sites/
+    checkbox:
+      before:
+        en: "I have read and understood the "
+        pt: 'Li e compreendi os '
+      after:
+        en: "."
+        pt: '.'
+  processing:
+    checkbox:
+      en: "These data are processed for the purpose of enabling the submission of content to the CitationSaver service, as well as sending information regarding the outcome of the preservation of the submitted content."
+      pt: 'Estes dados são tratados com a finalidade de permitir a submissão de conteúdos no serviço CitationSaver, bem como para o envio de informação relativa ao resultado da preservação dos conteúdos submetidos.'
+  errors:
+    required:
+      en: "Please read and accept the data protection terms to continue."
+      pt: 'Por favor leia e aceite os termos de proteção de dados para continuar.'
 url:
     en: "Insert the URL to the document:"
     pt: 'Insira o URL do documento:'

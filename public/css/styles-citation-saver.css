@@ -116,6 +116,13 @@ input[type="radio"]:checked+label+div+input+label{
     font-size: 14px;
 }
 
+.citation-saver-input-selection .input-tab input:disabled,
+.citation-saver-input-selection .input-tab textarea:disabled,
+.citation-saver-input-selection .input-tab button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .citation-saver-input-selection .input-tab button[type="submit"] {
     margin-top: 14px;        
     font-size: 18px;
@@ -222,6 +229,35 @@ section#citation-saver-modal form button {
 
 a.learn-more {
     color: #1c75c0;
+}
+
+.citation-saver-consent {
+    max-width: 900px;
+    min-width: 80%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.citation-saver-consent-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.citation-saver-consent-item input[type="checkbox"] {
+    margin: 3px 8px 0 0;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+}
+
+.citation-saver-consent-item label {
+    visibility: initial;
+    height: auto;
+    width: auto;
+    flex: 1;
+    font-size: 16px;
+    line-height: 24px;
 }
 
 #input-file-text {
