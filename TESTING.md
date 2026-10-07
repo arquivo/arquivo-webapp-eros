@@ -122,6 +122,48 @@ The `--` passes the remaining arguments through `npm run` to `playwright test`. 
 test ...` you can drop it. Some specs call `test.skip(isMobile, ...)` because the mobile date picker is
 a different widget, so the mobile projects report more skipped tests. That is expected.
 
+### Running every desktop and mobile combination locally
+
+The five projects are the full browser matrix Playwright can run on one machine:
+
+|          | Desktop    | Mobile                 |
+|----------|------------|------------------------|
+| Chromium | `chromium` | `Mobile Chrome` (Pixel 7)    |
+| Firefox  | `firefox`  | — (not available, see below) |
+| WebKit   | `webkit`   | `Mobile Safari` (iPhone 14)  |
+
+There is no mobile Firefox project because Playwright's Firefox does not support mobile emulation
+(`isMobile`). Pixel 7 and iPhone 14 cover Android/Chromium and iOS/WebKit.
+
+Combine the matrix with both [modes](#end-to-end-tests-playwright) to run everything:
+
+```bash
+# 1. Once per machine: all three engines plus their system libraries
+npx playwright install --with-deps
+
+# 2. Mocked mode on all 5 projects (205 tests, every spec except @live)
+npm run test:e2e -- --retries=2
+
+# 3. Live mode on all 5 projects (@live specs only, needs network access to preprod.arquivo.pt)
+PLAYWRIGHT_HTML_OUTPUT_DIR=playwright-report-live npm run test:e2e:live -- --retries=2
+```
+
+- Both commands run every project because neither passes `--project`. Expect a couple of minutes
+  for the mocked run, depending on how many CPU cores Playwright uses as workers.
+- `--retries=2` matches CI and absorbs the occasional flaky run. Use it rather than `CI=1`, which
+  also stops Playwright from reusing a server already listening on port 3000, so a running
+  `npm start` would make the run fail.
+- Each run overwrites `playwright-report/`. Setting `PLAYWRIGHT_HTML_OUTPUT_DIR` for the live run
+  keeps both reports. Open one with `npx playwright show-report playwright-report-live`.
+- To cover another device (a tablet, a landscape phone, an older iPhone), add a project to
+  `playwright.config.js` using one of Playwright's device descriptors, e.g.
+  `{ name: 'Tablet Safari', use: { ...devices['iPad Pro 11'] } }`. List the available names with
+  `node -e "console.log(Object.keys(require('@playwright/test').devices).join('\n'))"`.
+
+Locally you always test Playwright's own browser builds on your OS. Branded Google Chrome or
+Microsoft Edge, Apple's Safari, and Windows/macOS hosts are not part of the local matrix. Those are
+what the Sauce Labs run below is for.
+
 A cross-browser run on real Windows/macOS browsers via Sauce Labs is configured in
 `.sauce/config.yml` and `.github/workflows/e2e-sauce.yml`. That workflow is currently **disabled**
 (commented out) until the `SAUCE_USERNAME`/`SAUCE_ACCESS_KEY` repo secrets are added. Once you have
