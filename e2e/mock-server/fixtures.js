@@ -13,6 +13,9 @@
  *   depend on real archived content.
  * - Any url-search / replay-nav CDX lookup returns a fixed set of 5
  *   old (pre-2020) snapshots for whatever url was requested.
+ * - Page searches sent with timeline=true (as the app always does) also get
+ *   MOCK_TIMELINE back, so the impact bars above the date slider render
+ *   deterministically: 4 bars, every other year has no impact.
  */
 
 // Must not look like a URL/domain (no dot) — the app's /page/search route
@@ -29,6 +32,17 @@ const TOTAL_IMAGE_RESULTS = 47;
 // in network-restricted environments (CI, sandboxes).
 const MOCK_SERVER_PORT = process.env.MOCK_SERVER_PORT || 4100;
 const MOCK_ORIGIN = `http://localhost:${MOCK_SERVER_PORT}`;
+
+// Impact shares sum to 1, so each bar's tooltip percentage is exactly its
+// impact * 100. The first/last years sit near the slider's edges so specs can
+// check the tooltip stays on screen; the last one tracks the current year.
+// Those two are kept tall on purpose: on narrow screens the slider handles
+// cover the bottom of the outermost bars, so a short one there can't be hovered.
+const MOCK_TIMELINE_LAST_YEAR = new Date().getFullYear() - 1;
+const MOCK_TIMELINE = {
+    impact: { 1996: 0.25, 2005: 0.1, 2010: 0.4, 2015: 0, [MOCK_TIMELINE_LAST_YEAR]: 0.25 },
+    counts: { 1996: 120, 2005: 8634, 2010: 38433441, 2015: 0, [MOCK_TIMELINE_LAST_YEAR]: 57 },
+};
 
 function isNoResultsQuery(q) {
     return !q || q.includes(NO_RESULTS_QUERY);
@@ -50,7 +64,7 @@ function buildPageResponseItem(index, query) {
     };
 }
 
-function buildPageSearchResults({ q, from, to, offset, maxItems }) {
+function buildPageSearchResults({ q, from, to, offset, maxItems, timeline }) {
     const query = q ?? '';
     const start = parseInt(offset ?? '0', 10) || 0;
     const size = parseInt(maxItems ?? '10', 10) || 10;
@@ -72,6 +86,7 @@ function buildPageSearchResults({ q, from, to, offset, maxItems }) {
         estimated_nr_results: TOTAL_PAGE_RESULTS,
         response_items: items,
         request_parameters: { from: from ?? '', to: to ?? '' },
+        ...(timeline === 'true' && { timeline: MOCK_TIMELINE }),
     };
 }
 
@@ -157,6 +172,8 @@ module.exports = {
     NO_RESULTS_QUERY,
     TOTAL_PAGE_RESULTS,
     TOTAL_IMAGE_RESULTS,
+    MOCK_TIMELINE,
+    MOCK_TIMELINE_LAST_YEAR,
     isNoResultsQuery,
     buildPageSearchResults,
     buildMetadataResult,
