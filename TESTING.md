@@ -67,10 +67,6 @@ not run `apt` through `npx`, install the packages listed in the error message (e
 # Run the full suite (mocked mode, all browser projects — requires all browsers installed)
 npm run test:e2e
 
-# Run a single browser project (matches the CI job)
-npm run test:e2e -- --project=chromium
-# other projects: firefox, webkit, "Mobile Chrome", "Mobile Safari"
-
 # Run a single spec file
 npx playwright test e2e/webapp/pagesearch/PageSearchTest.spec.js --project=chromium
 
@@ -79,11 +75,59 @@ npm run test:e2e:live
 
 # Interactive UI mode, useful while writing/debugging specs
 npx playwright test --ui
+
+# Open the HTML report of the last run
+npx playwright show-report
 ```
 
-A cross-browser run (Windows/macOS × Chrome/Firefox/Safari) is also wired up via Sauce Labs
-(`.sauce/config.yml`), triggered manually or on a daily schedule — see
-`.github/workflows/e2e-sauce.yml`.
+### Running specific browsers
+
+Each browser is a Playwright *project* defined in `playwright.config.js`. Without `--project`, all
+of them run.
+
+| Project         | Engine   | Emulated device | Install with                            |
+|-----------------|----------|-----------------|-----------------------------------------|
+| `chromium`      | Chromium | Desktop Chrome  | `npx playwright install --with-deps chromium` |
+| `firefox`       | Firefox  | Desktop Firefox | `npx playwright install --with-deps firefox`  |
+| `webkit`        | WebKit   | Desktop Safari  | `npx playwright install --with-deps webkit`   |
+| `Mobile Chrome` | Chromium | Pixel 7         | `npx playwright install --with-deps chromium` |
+| `Mobile Safari` | WebKit   | iPhone 14       | `npx playwright install --with-deps webkit`   |
+
+The mobile projects reuse the desktop engines with a mobile viewport, user agent and touch, so you
+only ever need the three engines. "Safari" here means Playwright's WebKit build, not Apple's Safari.
+
+```bash
+# One project (chromium is what CI runs)
+npm run test:e2e -- --project=chromium
+
+# Several projects: repeat the flag; quote names that contain spaces
+npm run test:e2e -- --project=firefox --project=webkit
+npm run test:e2e -- --project="Mobile Chrome" --project="Mobile Safari"
+
+# All desktop or all mobile projects (--project accepts wildcards)
+npm run test:e2e -- --project=chromium --project=firefox --project=webkit
+npm run test:e2e -- --project="Mobile*"
+
+# One spec on one browser, with a visible browser window
+npm run test:e2e -- e2e/webapp/menu/MenuPagesNewSearchHomepageTest.spec.js --project=firefox --headed
+
+# Step through a spec in the Playwright inspector
+npm run test:e2e -- e2e/webapp/menu/MenuPagesNewSearchHomepageTest.spec.js --project=webkit --debug
+
+# Behave like CI (2 retries, test.only forbidden)
+CI=1 npm run test:e2e -- --project=chromium
+```
+
+The `--` passes the remaining arguments through `npm run` to `playwright test`. With `npx playwright
+test ...` you can drop it. Some specs call `test.skip(isMobile, ...)` because the mobile date picker is
+a different widget, so the mobile projects report more skipped tests. That is expected.
+
+A cross-browser run on real Windows/macOS browsers via Sauce Labs is configured in
+`.sauce/config.yml` and `.github/workflows/e2e-sauce.yml`. That workflow is currently **disabled**
+(commented out) until the `SAUCE_USERNAME`/`SAUCE_ACCESS_KEY` repo secrets are added. Once you have
+credentials, you can start it locally with `npm run test:e2e:sauce`, which needs the
+[`saucectl`](https://docs.saucelabs.com/dev/cli/saucectl/) CLI installed (it is not an npm dependency
+of this project).
 
 ## Local SonarQube Analysis
 
