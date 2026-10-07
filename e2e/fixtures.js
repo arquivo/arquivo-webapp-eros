@@ -8,6 +8,8 @@ const { ReplayOptionsMenu } = require('./pages/ReplayOptionsMenu');
 const { TechnicalDetailsModal } = require('./pages/TechnicalDetailsModal');
 const { UrlSearchPage } = require('./pages/UrlSearchPage');
 
+const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
+
 /**
  * Custom test object wiring page objects as fixtures, and exposing which
  * mode (mocked/live) the suite is running under so specs can branch or
@@ -27,10 +29,23 @@ const test = base.test.extend({
     // this sandbox) and throws, aborting the handler it's called from. This
     // is a real app bug (flagged separately), independent of stubbing gtag
     // here, which is standard e2e practice regardless.
-    page: async ({ page }, use) => {
+    //
+    // In mocked mode, every request that isn't to the local app/mock server
+    // is fulfilled with an empty 200 so runs stay hermetic. Otherwise the
+    // homepage's arquivo.pt/YouTube embed iframes (views/templates/body/
+    // body-home.ejs) can stall the `load` event that page.goto() waits for,
+    // timing tests out intermittently on CI, and GTM/GA receive real hits
+    // from every run. Live mode is left untouched.
+    page: async ({ page, mode }, use) => {
         await page.addInitScript(() => {
             window.gtag = window.gtag || function () {};
         });
+        if (mode === 'mocked') {
+            await page.route(
+                (url) => !LOCAL_HOSTS.has(url.hostname),
+                (route) => route.fulfill({ status: 200, body: '' }),
+            );
+        }
         await use(page);
     },
     searchBar: async ({ page }, use) => {
