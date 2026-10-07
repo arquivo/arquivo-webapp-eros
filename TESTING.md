@@ -31,11 +31,40 @@ replay, menus, url search, etc.). They run in two modes:
   that need genuine archived content (search relevance, spam/dedup, spell-suggestion, real replay
   snapshots). Not run in CI by default.
 
-```bash
-# First-time setup: install browser binaries
-npx playwright install --with-deps chromium
+### First-time setup
 
-# Run the full suite (mocked mode, all browser projects)
+`npm ci` only installs the `@playwright/test` package — it does **not** download the browser binaries
+or the OS libraries they need. Install those once per machine (and again after upgrading
+`@playwright/test`):
+
+```bash
+# All browser projects (needed for a plain `npm run test:e2e`)
+npx playwright install --with-deps
+
+# Or just Chromium, if you only run the CI-equivalent project
+npx playwright install --with-deps chromium
+```
+
+`--with-deps` installs the system libraries via `apt` and will prompt for `sudo`.
+
+If you skip this step, or install only Chromium and then run every project, the run fails with:
+
+```
+Error: browserType.launch:
+Host system is missing dependencies to run browsers.
+Please install them with the following command:
+    sudo npx playwright install-deps
+```
+
+(or `Executable doesn't exist at ~/.cache/ms-playwright/...` when the browser binary itself is missing).
+To fix it, run the `install --with-deps` command above for the projects you want to run. If you'd rather
+not run `apt` through `npx`, install the packages listed in the error message (e.g.
+`sudo apt-get install libavif16`, which WebKit needs on Ubuntu 24.04).
+
+### Running
+
+```bash
+# Run the full suite (mocked mode, all browser projects — requires all browsers installed)
 npm run test:e2e
 
 # Run a single browser project (matches the CI job)
