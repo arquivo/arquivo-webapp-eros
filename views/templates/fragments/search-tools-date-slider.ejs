@@ -45,7 +45,10 @@
 
         <% if (typeof showImpactGraph !== 'undefined' && showImpactGraph) { %>
         <!-- starts search impact timeline bars -->
-        <div id="search-impact-graph" aria-hidden="true"></div>
+        <div id="search-impact-graph" aria-hidden="true"
+             data-locale="<%= getLanguage() %>"
+             data-impact-label="<%= t('page-search.impact-timeline.impact') %>"
+             data-results-label="<%= t('page-search.impact-timeline.results') %>"></div>
         <!-- ends search impact timeline bars -->
         <% } %>
 

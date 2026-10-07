@@ -1797,11 +1797,9 @@ body#homepage #slider-range-container {
   flex: 1;
 }
 
-#search-impact-graph .impact-bar-tooltip {
+/* appended to <body>, positioned in page coordinates by search-impact-graph.js */
+.impact-bar-tooltip {
   position: absolute;
-  /* bottom: -100%; */
-  top: 150%;
-  margin-bottom: 4px;
   transform: translateX(-50%);
   background-color: #1c75c0;
   color: #fff;
@@ -1810,7 +1808,7 @@ body#homepage #slider-range-container {
   padding: 2px 6px;
   border-radius: 3px;
   pointer-events: none;
-  z-index: 3;
+  z-index: 100000;
 }
 
 .ui-slider .ui-slider-handle {

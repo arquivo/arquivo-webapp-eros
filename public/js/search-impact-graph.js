@@ -1,7 +1,8 @@
-//Pure data transform: impact map (year -> raw score) -> per-year bar descriptors.
+//Pure data transform: timeline ({impact, counts}, both year -> number) -> per-year bar descriptors.
 //Kept free of jQuery/DOM so it can be unit tested directly under Node.
-function calculateImpactBars(impact, minYear, maxYear) {
-    impact = impact || {};
+function calculateImpactBars(timeline, minYear, maxYear) {
+    const impact = (timeline && timeline.impact) || {};
+    const counts = (timeline && timeline.counts) || {};
 
     const years = [];
     for (let year = minYear; year <= maxYear; year++) {
@@ -24,9 +25,10 @@ function calculateImpactBars(impact, minYear, maxYear) {
         const isZero = value <= 0;
         const percentage = percentages[index];
         const heightPercent = !isZero && maxPercentage > 0 ? (percentage / maxPercentage) * 100 : 0;
-        const label = isZero ? null : year + ': ' + (percentage * 100).toFixed(2) + '%';
+        const percentageText = isZero ? null : (percentage * 100).toFixed(2) + '%';
+        const count = Number(counts[year]) || 0;
 
-        return { year, value, percentage, heightPercent, label, isZero };
+        return { year, value, percentage, heightPercent, percentageText, count, isZero };
     });
 }
 
@@ -46,12 +48,30 @@ if (typeof $ !== 'undefined') {
         const minYear = 1991;
         const maxYear = new Date().getFullYear();
 
-        const tooltip = $('<div>').addClass('impact-bar-tooltip');
+        const impactLabel = container.attr('data-impact-label');
+        const resultsLabel = container.attr('data-results-label');
+        const numberFormat = new Intl.NumberFormat(container.attr('data-locale') || undefined);
 
-        const showTooltip = function (bar) {
-            tooltip.text(bar.attr('data-label'));
-            tooltip.css('left', bar.position().left + bar.outerWidth() / 2);
-            tooltip.appendTo(container).show();
+        //Lives on <body> so the slider's stacking context (z-index: 0) can't hide it behind other elements
+        const tooltip = $('<div>').addClass('impact-bar-tooltip').hide().appendTo('body');
+
+        //One line each: year, impact share and number of matching documents
+        const tooltipLines = function (bar) {
+            return [
+                String(bar.year),
+                impactLabel + ' ' + bar.percentageText,
+                resultsLabel + ' ' + numberFormat.format(bar.count)
+            ];
+        };
+
+        const showTooltip = function (element, bar) {
+            tooltip.empty();
+            tooltipLines(bar).forEach((line) => $('<div>').text(line).appendTo(tooltip));
+            const offset = element.offset();
+            tooltip.css({
+                left: offset.left + element.outerWidth() / 2,
+                top: offset.top + element.outerHeight() + 4
+            }).show();
         };
 
         const hideTooltip = function () {
@@ -67,14 +87,14 @@ if (typeof $ !== 'undefined') {
                 return;
             }
 
-            let impact;
+            let timeline;
             try {
-                impact = JSON.parse(dataElement.text() || '{}');
+                timeline = JSON.parse(dataElement.text() || '{}');
             } catch (e) {
                 return;
             }
 
-            const bars = calculateImpactBars(impact, minYear, maxYear);
+            const bars = calculateImpactBars(timeline, minYear, maxYear);
             if (!bars) {
                 return;
             }
@@ -89,10 +109,9 @@ if (typeof $ !== 'undefined') {
                 $('<div>')
                     .addClass('impact-bar')
                     .css('height', bar.heightPercent + '%')
-                    .attr('aria-label', bar.label)
-                    .attr('data-label', bar.label)
+                    .attr('aria-label', tooltipLines(bar).join(', '))
                     .on('mouseenter', function () {
-                        showTooltip($(this));
+                        showTooltip($(this), bar);
                     })
                     .on('mouseleave', hideTooltip)
                     .appendTo(container);
