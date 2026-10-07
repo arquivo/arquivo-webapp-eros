@@ -68,3 +68,12 @@ not-found:
       fourth:
         en: <a href="//web.archive.org/web/*/${url}">Search other web archives</a>
         pt: <a href="//web.archive.org/web/*/${url}">Pesquise outros arquivos web</a>
+
+#translations for the impact timeline bars tooltip
+impact-timeline:
+  impact:
+    pt: 'impacto no ano:'
+    en: 'year impact:'
+  results:
+    pt: 'nº de resultados:'
+    en: 'no. of results:'

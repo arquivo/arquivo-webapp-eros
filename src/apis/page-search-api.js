@@ -30,7 +30,8 @@ class PageSearchApiRequest extends ApiRequest {
                 to: defaultApiParams.to
             },
             timeline: {
-                impact: {}
+                impact: {},
+                counts: {}
             }
         };
         let apiEndpoint;

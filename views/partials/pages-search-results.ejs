@@ -39,13 +39,13 @@
     <% } %>
 
     <!-- starts the search impact timeline in hidden json format -->
-    <% let impactJson = JSON.stringify(apiData.timeline?.impact || {})
+    <% let timelineJson = JSON.stringify(apiData.timeline || {})
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;"); %>
-    <div style="display:none" id="search-impact-timeline-json"><%- impactJson %></div>
+    <div style="display:none" id="search-impact-timeline-json"><%- timelineJson %></div>
     <!-- ends the search impact timeline in hidden json format -->
 
     <!-- starts navigation tools --> 
