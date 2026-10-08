@@ -20,7 +20,7 @@ div.citation-saver-input-selection {
     font-size: 15px;
     line-height: 18px;
     background-color: rgba(205, 206, 207, 1);
-    color: #0F0F0F80;
+    color: #575858; /* WCAG AA 4.5:1 on #cdcecf */
 
     border-left: 1px solid rgb(234 235 238); 
     width: calc(100%/3 - 2px/3 - 28px);

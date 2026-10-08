@@ -1922,7 +1922,7 @@ section.form-container select:focus {
 section.form-container small {
   margin-bottom: 30px;
   font-size: small;
-  color: #a7a5a5;
+  color: #777676; /* WCAG AA 4.5:1 on white */
 }
 
 form {
