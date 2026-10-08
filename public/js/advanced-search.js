@@ -30,8 +30,4 @@ $(() => {
             allCheckbox.prop("checked",true);
         }
     });
-    
-    $('table#table-format label').click(function(e){
-        $(e.target).closest('td').prev().find('input').click();
-    })
 });
