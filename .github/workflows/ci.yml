@@ -32,25 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test:coverage
+      - name: Run tests (npm run ci)
+        run: npm run ci
 
       - name: Smoke test (boot the app and verify it serves)
-        run: |
-          node server.js &
-          APP_PID=$!
-          ok=0
-          for i in $(seq 1 20); do
-            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
-              echo "App responded on / (attempt $i)"; ok=1; break
-            fi
-            sleep 1
-          done
-          kill "$APP_PID" 2>/dev/null || true
-          if [ "$ok" -ne 1 ]; then
-            echo "::error::App failed to serve / on :3000 — boot smoke test failed"
-            exit 1
-          fi
+        run: npm run test:smoke
 
       - name: SonarCloud analysis
         if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
