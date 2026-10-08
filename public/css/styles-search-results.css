@@ -628,7 +628,7 @@ section#images-results a.results-url {
 
 section#images-results ul>li>ul>li a {
     padding-top: 10px;
-    color: teal;
+    color: #007d7d; /* teal, darkened for WCAG AA 4.5:1 on #f5f5f5 */
     text-decoration: none;
     text-overflow: ellipsis;
     overflow: hidden;

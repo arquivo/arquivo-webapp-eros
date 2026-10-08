@@ -43,7 +43,7 @@ body#archivepagenow small#archivepagenow-example {
     font-size: 12px;
     font-style: normal;
     line-height: 1.4em;
-    color: rgb(141 141 141)
+    color: #767676; /* WCAG AA 4.5:1 on white */
 }
 
 body#archivepagenow p#save-page-url-message-error {
