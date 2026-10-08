@@ -33,16 +33,16 @@ if(typeof requestData != 'undefined'){
 <fieldset>
   <legend><%= t('advanced-image-search.accessibility.legend') %></legend> 
    <!-- With these words -->
-   <label for="adv_and"><%- t('advanced-image-search.fieldset.with.label') %></label>
-   <input type="text" name="adv_and" value="<%= values.adv_and %>">
+   <label for="words"><%- t('advanced-image-search.fieldset.with.label') %></label>
+   <input id="words" type="text" name="adv_and" value="<%= values.adv_and %>">
    <small><%= t('advanced-image-search.fieldset.with.example') %></small>
    <!-- With this phrase -->
-   <label for="adv_phr"><%- t('advanced-image-search.fieldset.phrase.label') %></label>
-   <input type="text" name="adv_phr" value="<%= values.adv_phr %>">
+   <label for="phrase"><%- t('advanced-image-search.fieldset.phrase.label') %></label>
+   <input id="phrase" type="text" name="adv_phr" value="<%= values.adv_phr %>">
    <small><%= t('advanced-image-search.fieldset.phrase.example') %></small>
    <!-- Any of these words -->
-   <label for="adv_not"><%- t('advanced-image-search.fieldset.without.label') %></label>
-   <input type="text" name="adv_not" value="<%= values.adv_not %>">
+   <label for="without"><%- t('advanced-image-search.fieldset.without.label') %></label>
+   <input id="without" type="text" name="adv_not" value="<%= values.adv_not %>">
    <small><%= t('advanced-image-search.fieldset.without.example') %></small>   
    <!-- Between these dates -->
   <label><%- t('advanced-image-search.fieldset.date.label') %></label> 
@@ -53,30 +53,30 @@ if(typeof requestData != 'undefined'){
     <table id="table-format">
       <tbody>
         <tr>
-          <td><input type="checkbox" format="all" <%= checkTypeFor('all') %>></td>
-          <td><label><strong><%= t('advanced-image-search.fieldset.format.option.all') %></strong></label></td>
+          <td><input type="checkbox" id="format-all" format="all" <%= checkTypeFor('all') %>></td>
+          <td><label for="format-all"><strong><%= t('advanced-image-search.fieldset.format.option.all') %></strong></label></td>
       
-          <td><input type="checkbox" format="gif" <%= checkTypeFor('gif') %>></td>
-          <td><label>Graphics Interchange Format (.gif)</label></td>
+          <td><input type="checkbox" id="format-gif" format="gif" <%= checkTypeFor('gif') %>></td>
+          <td><label for="format-gif">Graphics Interchange Format (.gif)</label></td>
         </tr>
         <tr>
-          <td><input type="checkbox" format="jpg" <%= checkTypeFor('jpg') %>></td>
-          <td><label>Joint Photographic Experts Group (.jpg)</label></td>
+          <td><input type="checkbox" id="format-jpg" format="jpg" <%= checkTypeFor('jpg') %>></td>
+          <td><label for="format-jpg">Joint Photographic Experts Group (.jpg)</label></td>
       
-          <td><input type="checkbox" format="bmp" <%= checkTypeFor('bmp') %>></td>
-          <td><label>Bitmap Image File (.bmp)</label></td>
+          <td><input type="checkbox" id="format-bmp" format="bmp" <%= checkTypeFor('bmp') %>></td>
+          <td><label for="format-bmp">Bitmap Image File (.bmp)</label></td>
         </tr>
         <tr>
-          <td><input type="checkbox" format="png" <%= checkTypeFor('png') %>></td>
-          <td><label>Portable Network Graphics (.png)</label></td>
+          <td><input type="checkbox" id="format-png" format="png" <%= checkTypeFor('png') %>></td>
+          <td><label for="format-png">Portable Network Graphics (.png)</label></td>
       
-          <td><input type="checkbox" format="webp" <%= checkTypeFor('webp') %>></td>
-          <td><label>WEBP (.webp)</label></td>
+          <td><input type="checkbox" id="format-webp" format="webp" <%= checkTypeFor('webp') %>></td>
+          <td><label for="format-webp">WEBP (.webp)</label></td>
         </tr>
       </tbody>
     </table>
    <!-- words -->
-   <label for="size"><%- t('advanced-image-search.fieldset.size.label') %></label>
+   <label for="image-size"><%- t('advanced-image-search.fieldset.size.label') %></label>
     <select id="image-size" name="size" class="">
      <option value="all" <%= selectFor('size','all') %>><%= t('advanced-image-search.fieldset.size.option.all') %></option>
      <option value="sm" <%= selectFor('size','sm') %>><%= t('advanced-image-search.fieldset.size.option.small') %></option>
@@ -90,7 +90,7 @@ if(typeof requestData != 'undefined'){
     <option value="off" <%= selectFor('safeSearch','off') %>><%= t('advanced-image-search.fieldset.safeSearch.option.all') %></option>
    </select>  
 
-   <label for="siteSearch"><%- t('advanced-image-search.fieldset.website.label') %></label>
+   <label for="website"><%- t('advanced-image-search.fieldset.website.label') %></label>
    <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
    <small class="last-margin"><%= t('advanced-image-search.fieldset.website.example') %></small> 
     
