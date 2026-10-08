@@ -19,6 +19,6 @@ module.exports = {
       statements: 65
     }
   },
-  testPathIgnorePatterns: ['/node_modules/', 'accessibility', '/e2e/'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src/__tests__/accessibility.test.js', '<rootDir>/e2e/'],
   verbose: true
 };
