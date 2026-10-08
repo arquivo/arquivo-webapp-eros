@@ -64,7 +64,7 @@ if (typeof pageData != 'undefined'){
 
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
-        <a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link"></a>
+        <li><a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link" aria-label="<%= resultTitle %> (<%= day %> <%= month %> <%= year %>)"></a></li>
         <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%= filteredURL %></a></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
