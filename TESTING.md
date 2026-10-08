@@ -18,7 +18,15 @@ npm run test:coverage
 ```bash
 # Run accessibility tests (also run in CI by .github/workflows/accessibility.yml)
 npm run test:a11y
+
+# Run colour-contrast checks in a real browser (part of the E2E suite in CI)
+npm run test:a11y:contrast
 ```
+
+`test:a11y` runs `jest-axe` in jsdom, which has no layout or computed styles, so it can't evaluate colour
+contrast (SC 1.4.3). `test:a11y:contrast` covers that with `@axe-core/playwright`
+(`e2e/webapp/accessibility/ColorContrastTest.spec.js`), auditing each page after its results are rendered.
+It needs the Playwright setup described below.
 
 ## End-to-End Tests (Playwright)
 
