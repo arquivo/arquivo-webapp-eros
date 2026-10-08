@@ -5,11 +5,12 @@
 Two npm scripts bundle the suites below, so you don't have to remember each one:
 
 ```bash
-# The basic checks, run on every push/PR by .github/workflows/ci.yml: unit tests with coverage thresholds
+# The basic checks, run on every push/PR by .github/workflows/ci.yml:
+# unit tests with coverage thresholds, then the jest-axe accessibility suite
 npm run ci
 
-# Everything that runs locally: `ci`, accessibility (jest-axe), the boot smoke test,
-# and the E2E suite on every browser project (which includes the colour-contrast checks)
+# Everything that runs locally: `ci`, the boot smoke test, and the E2E suite on every
+# browser project (which includes the colour-contrast checks)
 npm run ci:all
 ```
 
@@ -19,8 +20,9 @@ both start the app there.
 
 | Script                          | What it runs                                                       |
 |---------------------------------|--------------------------------------------------------------------|
-| `npm run ci`                    | `test:coverage`                                                    |
-| `npm run ci:all`                | `ci`, `test:a11y`, `test:smoke`, `test:e2e`                        |
+| `npm run ci`                    | `test:coverage`, `test:a11y`                                       |
+| `npm run ci:all`                | `ci`, `test:smoke`, `test:e2e`                                     |
+| `npm run test:a11y:contrast`    | Colour-contrast checks only, on `chromium`                         |
 | `npm run test:smoke`            | Starts the app and checks that `/` responds, then stops it         |
 | `npm run test:e2e`              | E2E suite on all 5 browser projects                                |
 | `npm run test:e2e:desktop`      | E2E on `chromium`, `firefox`, `webkit`                             |
@@ -46,10 +48,10 @@ npm run test:coverage
 ## Accessibility Tests (WCAG 2.1 AA)
 
 ```bash
-# Run accessibility tests (also run in CI by .github/workflows/accessibility.yml)
+# Run accessibility tests (part of `npm run ci`, so run in CI by .github/workflows/ci.yml)
 npm run test:a11y
 
-# Run colour-contrast checks in a real browser (part of the E2E suite in CI)
+# Run colour-contrast checks in a real browser (the a11y-contrast job in .github/workflows/ci.yml)
 npm run test:a11y:contrast
 ```
 
