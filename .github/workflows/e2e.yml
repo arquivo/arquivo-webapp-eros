@@ -34,7 +34,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests (mocked mode, chromium)
-        run: npm run test:e2e -- --project=chromium
+        run: npm run test:e2e:chromium-desktop
 
       - name: Upload Playwright report
         if: failure()
