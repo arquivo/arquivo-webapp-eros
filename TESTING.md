@@ -1,5 +1,35 @@
 # Testing Documentation
 
+## Quick Reference
+
+Two npm scripts bundle the suites below, so you don't have to remember each one:
+
+```bash
+# The basic checks, run on every push/PR by .github/workflows/ci.yml: unit tests with coverage thresholds
+npm run ci
+
+# Everything that runs locally: `ci`, accessibility (jest-axe), the boot smoke test,
+# and the E2E suite on every browser project (which includes the colour-contrast checks)
+npm run ci:all
+```
+
+`ci:all` stops at the first failing step. It needs the Playwright browsers installed (see
+[First-time setup](#first-time-setup)) and port 3000 free, because the smoke test and the E2E suite
+both start the app there.
+
+| Script                          | What it runs                                                       |
+|---------------------------------|--------------------------------------------------------------------|
+| `npm run ci`                    | `test:coverage`                                                    |
+| `npm run ci:all`                | `ci`, `test:a11y`, `test:smoke`, `test:e2e`                        |
+| `npm run test:smoke`            | Starts the app and checks that `/` responds, then stops it         |
+| `npm run test:e2e`              | E2E suite on all 5 browser projects                                |
+| `npm run test:e2e:desktop`      | E2E on `chromium`, `firefox`, `webkit`                             |
+| `npm run test:e2e:mobile`       | E2E on `Mobile Chrome`, `Mobile Safari`                            |
+| `npm run test:e2e:<browser>-<desktop\|mobile>` | E2E on one project, see [Running specific browsers](#running-specific-browsers) |
+
+Not covered by `ci:all`: the Docker Compose smoke tests (need Docker, CI only), live-mode E2E
+(`test:e2e:live`), Sauce Labs (`test:e2e:sauce`, needs credentials) and SonarQube (`sonar`, needs a token).
+
 ## Running Tests
 
 ```bash
@@ -104,16 +134,28 @@ of them run.
 The mobile projects reuse the desktop engines with a mobile viewport, user agent and touch, so you
 only ever need the three engines. "Safari" here means Playwright's WebKit build, not Apple's Safari.
 
+Each project has its own `test:e2e:<browser>-<desktop|mobile>` script:
+
+| Script                              | Project         |
+|-------------------------------------|-----------------|
+| `npm run test:e2e:chromium-desktop` | `chromium` (what CI runs) |
+| `npm run test:e2e:firefox-desktop`  | `firefox`       |
+| `npm run test:e2e:webkit-desktop`   | `webkit`        |
+| `npm run test:e2e:chromium-mobile`  | `Mobile Chrome` |
+| `npm run test:e2e:webkit-mobile`    | `Mobile Safari` |
+
+`npm run test:e2e:desktop` and `npm run test:e2e:mobile` run the three desktop or the two mobile
+projects. Arguments after `--` are passed through to Playwright:
+
 ```bash
 # One project (chromium is what CI runs)
-npm run test:e2e -- --project=chromium
+npm run test:e2e:chromium-desktop
 
-# Several projects: repeat the flag; quote names that contain spaces
+# One spec on one project
+npm run test:e2e:firefox-desktop -- e2e/webapp/pagesearch/PageSearchTest.spec.js
+
+# Any other combination: pass --project to test:e2e, repeating the flag; quote names that contain spaces
 npm run test:e2e -- --project=firefox --project=webkit
-npm run test:e2e -- --project="Mobile Chrome" --project="Mobile Safari"
-
-# All desktop or all mobile projects (--project accepts wildcards)
-npm run test:e2e -- --project=chromium --project=firefox --project=webkit
 npm run test:e2e -- --project="Mobile*"
 
 # One spec on one browser, with a visible browser window
@@ -206,9 +248,8 @@ npm run sonar
 ## Coverage Thresholds
 
 The project requires minimum coverage thresholds (configured in jest.config.js).
-- Statements: 50%
-- Branches: 50%
-- Functions: 50%
-- Lines: 50%
-
-Current overall coverage is below these thresholds. Add more tests to increase coverage!
+`npm run test:coverage`, and so `npm run ci`, fails if any of them is not met.
+- Statements: 65%
+- Branches: 65%
+- Functions: 65%
+- Lines: 65%
