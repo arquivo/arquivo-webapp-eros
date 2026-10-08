@@ -1,5 +1,6 @@
 <% if (typeof suggestionType == 'undefined') { suggestionType = 'page'; } %>
-<% 
+<% if (suggestion) { %>
+<%
 let suggestionRequestData = new URLSearchParams()
 
 if(typeof requestData != 'undefined'){ 
@@ -23,3 +24,4 @@ if(typeof requestData != 'undefined'){
     <!-- ends suggestion message -->
 
 </section>
+<% } %>
