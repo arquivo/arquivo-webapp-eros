@@ -1,0 +1,34 @@
+name: Accessibility
+description: Run the WCAG 2.1 AA (jest-axe) accessibility suite for pull requests and branch updates
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - development
+  pull_request:
+    branches:
+      - main
+      - master
+      - development
+
+jobs:
+  a11y:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run accessibility tests (WCAG 2.1 AA)
+        run: npm run test:a11y

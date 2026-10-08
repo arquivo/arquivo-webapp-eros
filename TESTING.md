@@ -16,7 +16,7 @@ npm run test:coverage
 ## Accessibility Tests (WCAG 2.1 AA)
 
 ```bash
-# Run accessibility tests (7 pass / 6 fail until violations #68–#70 are fixed)
+# Run accessibility tests (also run in CI by .github/workflows/accessibility.yml)
 npm run test:a11y
 ```
 
