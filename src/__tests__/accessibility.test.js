@@ -4,10 +4,12 @@
 
 'use strict';
 
-// jsdom does not ship TextEncoder/TextDecoder; polyfill before any require that needs them
+// jsdom does not ship TextEncoder/TextDecoder or setImmediate (used by express/serve-static);
+// polyfill before any require that needs them
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+global.setImmediate = global.setImmediate || ((fn, ...args) => setTimeout(fn, 0, ...args));
 
 const request = require('supertest');
 const { axe, toHaveNoViolations } = require('jest-axe');
@@ -95,8 +97,9 @@ CDXSearchApiRequest.mockImplementation(() => ({
     get: (requestData, callback) => callback(cdxSearchFixture),
 }));
 
+// Return a suggestion that differs from the query so the "did you mean" block is rendered and audited
 SuggestionApi.mockImplementation(() => ({
-    getSuggestion: (query, lang, callback) => callback(null),
+    getSuggestion: (query, lang, callback) => callback(`${query} sugestão`),
 }));
 
 expect.extend(toHaveNoViolations);
