@@ -4,21 +4,12 @@ const wayback = require('../wayback');
 
 // Mock dependencies — config uses __mocks__/config.js automatically
 jest.mock('config');
-jest.mock('node-fetch');
 jest.mock('../apis/page-search-api');
 
-const fetch = require('node-fetch');
 const PageSearchApiRequest = require('../apis/page-search-api');
-
-// Helper to flush microtasks
-const flushPromises = () => new Promise(resolve => setImmediate(resolve));
-
-// Values from __mocks__/config.js
-const PYWB_URL = 'https://preprod.arquivo.pt/noFrame/replay';
 
 describe('wayback handler', () => {
     let req, res;
-    let mockFetch;
     let mockApiRequest;
 
     beforeEach(() => {
@@ -35,15 +26,6 @@ describe('wayback handler', () => {
             status: jest.fn().mockReturnThis()
         };
 
-        // Mock fetch
-        mockFetch = jest.fn().mockResolvedValue({
-            ok: true,
-            url: 'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com',
-            headers: new Map()
-        });
-        fetch.mockImplementation(mockFetch);
-
-        // Mock API request
         mockApiRequest = {
             get: jest.fn((params, callback) => {
                 callback({ response_items: [{ title: 'Example' }] });
@@ -52,18 +34,8 @@ describe('wayback handler', () => {
         PageSearchApiRequest.mockImplementation(() => mockApiRequest);
     });
 
-    it('fetches the wayback URL', async () => {
+    it('renders replay page for a valid timestamp and url', () => {
         wayback(req, res);
-        await flushPromises();
-
-        expect(mockFetch).toHaveBeenCalledWith(
-            'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com'
-        );
-    });
-
-    it('renders replay page on successful fetch', async () => {
-        wayback(req, res);
-        await flushPromises();
 
         expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
             requestedPage: {
@@ -74,145 +46,107 @@ describe('wayback handler', () => {
         }));
     });
 
-    it('renders 404 page when fetch fails', async () => {
-        mockFetch.mockRejectedValueOnce(new Error('Network error'));
+    it('renders replay page for a url with path segments', () => {
+        req.url = '/wayback/20230101120000/example.com/path/to/page';
 
         wayback(req, res);
-        await flushPromises();
+
+        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+            requestedPage: {
+                fullUrl: '20230101120000/example.com/path/to/page',
+                url: 'example.com/path/to/page',
+                timestamp: '20230101120000'
+            }
+        }));
+    });
+
+    it('renders 404 when the url segment is missing', () => {
+        req.url = '/wayback/20230101120000';
+
+        wayback(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.render).toHaveBeenCalledWith('pages/arquivo-404');
+        expect(PageSearchApiRequest).not.toHaveBeenCalled();
+    });
+
+    it('renders 404 when the path is empty', () => {
+        req.url = '/wayback/';
+
+        wayback(req, res);
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.render).toHaveBeenCalledWith('pages/arquivo-404');
     });
 
-    it('renders 404 page when response is not ok', async () => {
-        mockFetch.mockResolvedValueOnce({
-            ok: false,
-            url: 'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com',
-            headers: new Map()
-        });
+    it('renders 404 when there is no path at all', () => {
+        req.url = '/wayback';
 
         wayback(req, res);
-        await flushPromises();
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.render).toHaveBeenCalledWith('pages/arquivo-404');
     });
 
-    it('requests API metadata for rendering', async () => {
+    it('redirects to a clean timestamp when the pywb modifier is present', () => {
+        req.url = '/wayback/20220907152857mp_/example.com';
+
         wayback(req, res);
-        await flushPromises();
+
+        expect(res.redirect).toHaveBeenCalledWith('/wayback/20220907152857/example.com');
+        expect(res.render).not.toHaveBeenCalled();
+        expect(PageSearchApiRequest).not.toHaveBeenCalled();
+    });
+
+    it('requests API metadata with the url/timestamp before rendering', () => {
+        wayback(req, res);
 
         expect(PageSearchApiRequest).toHaveBeenCalled();
         expect(mockApiRequest.get).toHaveBeenCalledWith(
             expect.any(URLSearchParams),
             expect.any(Function)
         );
+        const params = mockApiRequest.get.mock.calls[0][0];
+        expect(params.get('metadata')).toBe('example.com/20230101120000');
     });
 
-    it('sanitizes URL with leading/trailing slashes', async () => {
-        req.url = '/wayback/20230101120000///example.com////';
-        mockFetch.mockResolvedValueOnce({
-            ok: true,
-            url: 'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com',
-            headers: new Map()
-        });
-
+    it('passes the first response item as apiData', () => {
         wayback(req, res);
-        await flushPromises();
 
         expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
-            requestedPage: expect.objectContaining({
-                timestamp: '20230101120000',
-                url: 'example.com'
-            })
+            apiData: { title: 'Example' }
         }));
     });
 
-    it('sanitizes URL with double slashes', async () => {
-        req.url = '/wayback/20230101120000/example.com//path//to//page';
-        mockFetch.mockResolvedValueOnce({
-            ok: true,
-            url: 'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com/path/to/page',
-            headers: new Map()
-        });
-
-        wayback(req, res);
-        await flushPromises();
-
-        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.any(Object));
-    });
-
-    it('redirects from renderOk when pywb normalizes URL differently than req.url', async () => {
-        // pywb redirects example.com → www.example.com (two fetches)
-        // After recursion, renderOk is called with www.example.com,
-        // which differs from the original req.url → triggers redirect
-        req.url = '/wayback/20230101120000/example.com';
-
-        mockFetch
-            .mockResolvedValueOnce({
-                ok: true,
-                url: `${PYWB_URL}/20230101120000/www.example.com`,
-                headers: new Map()
-            })
-            .mockResolvedValueOnce({
-                ok: true,
-                url: `${PYWB_URL}/20230101120000/www.example.com`,
-                headers: new Map()
-            });
-
-        wayback(req, res);
-        await flushPromises();
-
-        expect(res.redirect).toHaveBeenCalledWith('/wayback/20230101120000/www.example.com');
-    });
-
-    it('renders replay when fetch returns normalized URL', async () => {
-        req.url = '/wayback/20230101120000//example.com/';
-        mockFetch.mockResolvedValueOnce({
-            ok: true,
-            url: 'https://preprod.arquivo.pt/noFrame/replay/20230101120000/example.com',
-            headers: new Map()
-        });
-
-        wayback(req, res);
-        await flushPromises();
-
-        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.any(Object));
-    });
-
-    it('attaches language to rendered requestData', async () => {
-        wayback(req, res);
-        await flushPromises();
-
-        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
-            requestData: expect.any(URLSearchParams)
-        }));
-        const renderArgs = res.render.mock.calls[0][1];
-        expect(renderArgs.requestData.get('l')).toBe('pt');
-    });
-
-    it('handles empty API response items', async () => {
-        mockApiRequest.get.mockImplementationOnce((params, callback) => {
-            callback({ response_items: [] });
-        });
-
-        wayback(req, res);
-        await flushPromises();
-
-        // empty array is truthy → response_items[0] = undefined
-        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
-            apiData: undefined
-        }));
-    });
-
-    it('handles null API response', async () => {
+    it('passes an empty apiData object when response_items is null', () => {
         mockApiRequest.get.mockImplementationOnce((params, callback) => {
             callback({ response_items: null });
         });
 
         wayback(req, res);
-        await flushPromises();
 
-        expect(res.render).toHaveBeenCalled();
+        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+            apiData: {}
+        }));
+    });
+
+    it('passes undefined apiData when response_items is an empty array', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [] });
+        });
+
+        wayback(req, res);
+
+        expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+            apiData: undefined
+        }));
+    });
+
+    it('attaches language to rendered requestData', () => {
+        wayback(req, res);
+
+        const renderArgs = res.render.mock.calls[0][1];
+        expect(renderArgs.requestData).toBeInstanceOf(URLSearchParams);
+        expect(renderArgs.requestData.get('l')).toBe('pt');
     });
 });
