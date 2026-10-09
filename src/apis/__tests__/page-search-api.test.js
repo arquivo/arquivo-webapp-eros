@@ -181,6 +181,18 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).toContain('query');
         });
 
+        it('should remove every collection: term and send them in the collection parameter', () => {
+            const requestData = new URLSearchParams({
+                q: 'teste collection:EAWP6 collection:EAWP8 query',
+                collection: 'EAWP6,EAWP8'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('teste query');
+            expect(sanitized.get('collection')).toBe('EAWP6,EAWP8');
+        });
+
         it('should remove safe: inline parameter (safeSearch) from query', () => {
             const requestData = new URLSearchParams({
                 q: 'test safe:on query',

@@ -45,6 +45,11 @@ module.exports = function (req, res) {
     transformParameterName(requestData, 'site', 'siteSearch', (v) => v.split(/\s/).join(''));
     transformParameterName(requestData, 'hitsPerDup', 'dedupValue');
 
+    // a comma separated list of collections, with or without spaces after the commas
+    if (requestData.has('collection')) {
+        requestData.set('collection', requestData.get('collection').split(/\s/).join(''));
+    }
+
     const defaultRequestParameters = {
         from: config.get('search.start.date'),
         to: (new Date()).toLocaleDateString('en-CA').split('-').join('')
@@ -109,7 +114,13 @@ module.exports = function (req, res) {
                 const queryRegEx = new RegExp(regexString);
                 const requestParam = ['site','safe'].includes(t) ? t+'Search' : t;
                 if (!requestData.has(requestParam) && queryRegEx.test(adv_and)) {
-                    requestData.set(requestParam, adv_and.match(queryRegEx)[2])
+                    if (t == 'collection') {
+                        // "collection:A collection:B" is the same as "collection:A,B"
+                        const allCollectionsRegEx = new RegExp(regexString, 'g');
+                        requestData.set(requestParam, [...adv_and.matchAll(allCollectionsRegEx)].map(m => m[2]).join(','));
+                    } else {
+                        requestData.set(requestParam, adv_and.match(queryRegEx)[2])
+                    }
                 }
             })
 
