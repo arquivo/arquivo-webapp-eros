@@ -44,6 +44,17 @@ body#images-advanced-search section.form-container small.last-margin {
     margin-bottom: 0px;
 }
 
+/* links in the field examples, links are white by default (styles.css) for the dark backgrounds */
+section.form-container small a {
+    color: #1c75c0; /* WCAG AA 4.8:1 on white */
+    text-decoration: underline;
+}
+
+section.form-container small a:hover,
+section.form-container small a:focus {
+    color: #00294c;
+}
+
 body#pages-advanced-search main#main-content,
 body#images-advanced-search main#main-content {
     margin-bottom: 80px;
