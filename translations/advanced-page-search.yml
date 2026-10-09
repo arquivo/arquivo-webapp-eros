@@ -47,6 +47,47 @@ fieldset:
     example:
       pt: 'ex. www.fccn.pt, www.fct.pt'
       en: 'e.g. www.fccn.pt, www.fct.pt'
+  language:
+    label:
+      pt: '<strong>Idioma</strong>:'
+      en: '<strong>Language</strong>:'
+    example:
+      pt: 'Para filtrar por idioma indique: <code>pt</code> para Português, <code>en</code> para Inglês, <code>es</code> para Espanhol. Usamos o formato de 2 caracteres <a href="https://pt.wikipedia.org/wiki/ISO_639-1" target="_blank" rel="noopener noreferrer">ISO 639-1</a> - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes" target="_blank" rel="noopener noreferrer">lista completa</a>.'
+      en: 'To filter by language add: <code>pt</code> for Portuguese, <code>en</code> for English, <code>es</code> for Spanish. We use the <a href="https://en.wikipedia.org/wiki/ISO_639-1" target="_blank" rel="noopener noreferrer">ISO 639-1</a> 2 characters format - <a href="https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes" target="_blank" rel="noopener noreferrer">complete list</a>.'
+  minLanguageConfidence:
+    label:
+      pt: '<strong>Confiança mínima</strong> na deteção do idioma:'
+      en: '<strong>Minimum confidence</strong> of the language detection:'
+    example:
+      pt: 'Uma confiança mais baixa inclui também os resultados de confiança mais alta.'
+      en: 'A lower confidence also includes the results with a higher confidence.'
+    option:
+      default:
+        pt: Predefinida
+        en: Default
+      high:
+        pt: Alta
+        en: High
+      medium:
+        pt: Média
+        en: Medium
+      low:
+        pt: Baixa
+        en: Low
+  yearBalance:
+    label:
+      pt: '<strong>Equilíbrio entre anos</strong>:'
+      en: '<strong>Year balance</strong>:'
+    example:
+      pt: 'Valoriza as páginas dos anos com menos conteúdo arquivado. De 0 (sem efeito) a 1 (efeito máximo).'
+      en: 'Favours pages from the years with less archived content. From 0 (no effect) to 1 (strongest effect).'
+    option:
+      none:
+        pt: Desligado
+        en: 'Off'
+      default:
+        pt: Ligado
+        en: 'On'
   results:
     label:
       pt: '<strong>Número de resultados</strong>:'

@@ -20,6 +20,8 @@ class PageSearchApiRequest extends ApiRequest {
             metadata: null,
             trackingId: null,
             yearBalance: yearBalanceEnabled ? true : null,
+            language: null,
+            minLanguageConfidence: null,
         }
         const defaultApiReply = {
             estimated_nr_results: 0,
@@ -52,6 +54,13 @@ class PageSearchApiRequest extends ApiRequest {
             if (apiRequestData.has(requestParam)) {
                 const regex = new RegExp(String.raw`\s*${inlineParam}:${apiRequestData.get(requestParam)}\s*`)
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
+            }
+        });
+        // these are always removed, even when their value was dropped as invalid, so they never reach the API as search terms
+        ['yearBalance', 'language', 'minLanguageConfidence'].forEach(inlineParam => {
+            if (apiRequestData.has('q')) {
+                const regex = new RegExp(String.raw`(?:^|\s+)${inlineParam}:\S+\s*`, 'g');
+                apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' ').trim());
             }
         });
         return super.sanitizeRequestData(apiRequestData);

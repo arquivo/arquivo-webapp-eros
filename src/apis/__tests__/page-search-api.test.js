@@ -225,6 +225,53 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).toContain('query');
         });
 
+        it('should send yearBalance, language and minLanguageConfidence as their own parameters', () => {
+            const requestData = new URLSearchParams({
+                q: 'test yearBalance:0.25 language:pt minLanguageConfidence:MEDIUM query',
+                yearBalance: '0.25',
+                language: 'pt',
+                minLanguageConfidence: 'MEDIUM'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test query');
+            expect(sanitized.get('yearBalance')).toBe('0.25');
+            expect(sanitized.get('language')).toBe('pt');
+            expect(sanitized.get('minLanguageConfidence')).toBe('MEDIUM');
+        });
+
+        it('should remove yearBalance, language and minLanguageConfidence terms dropped as invalid', () => {
+            const requestData = new URLSearchParams({
+                q: 'yearBalance:2 test language:portuguese minLanguageConfidence:NONE'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test');
+            expect(sanitized.has('yearBalance')).toBe(false);
+            expect(sanitized.has('language')).toBe(false);
+            expect(sanitized.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should not remove words that only contain an inline term name', () => {
+            const requestData = new URLSearchParams({ q: 'mylanguage:pt test' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('mylanguage:pt test');
+        });
+
+        it('should let a requested yearBalance override the enabled default', () => {
+            config.set('text.search.api.yearBalance_enabled', true);
+            const enabledApi = new PageSearchApiRequest();
+            config.set('text.search.api.yearBalance_enabled', false);
+
+            const sanitized = enabledApi.sanitizeRequestData(new URLSearchParams({ q: 'test', yearBalance: 'false' }));
+
+            expect(sanitized.get('yearBalance')).toBe('false');
+        });
+
         it('should handle query without inline parameters', () => {
             const requestData = new URLSearchParams({
                 q: 'simple test query'

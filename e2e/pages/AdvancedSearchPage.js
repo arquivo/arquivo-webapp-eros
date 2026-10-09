@@ -13,6 +13,9 @@ class AdvancedSearchPage {
         this.withPhrase = this.form.locator('[name=adv_phr]');
         this.withoutWords = this.form.locator('[name=adv_not]');
         this.siteSearch = this.form.locator('[name=siteSearch]');
+        this.language = this.form.locator('[name=language]');
+        this.minLanguageConfidence = this.form.locator('[name=minLanguageConfidence]');
+        this.yearBalance = this.form.locator('[name=yearBalance]');
         this.submitButton = this.form.locator('button[type=submit], .search-form-advanced-button');
     }
 
