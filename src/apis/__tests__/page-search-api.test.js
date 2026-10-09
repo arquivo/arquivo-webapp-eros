@@ -101,7 +101,7 @@ describe('PageSearchApiRequest', () => {
                 estimated_nr_results: 0,
                 response_items: [],
                 request_parameters: expect.any(Object),
-                timeline: { impact: {}, counts: {} }
+                timeline: { impact: {} }
             });
         });
     });

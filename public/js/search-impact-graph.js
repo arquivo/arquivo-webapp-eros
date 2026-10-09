@@ -1,8 +1,7 @@
-//Pure data transform: timeline ({impact, counts}, both year -> number) -> per-year bar descriptors.
+//Pure data transform: impact map (year -> number) -> per-year bar descriptors.
 //Kept free of jQuery/DOM so it can be unit tested directly under Node.
-function calculateImpactBars(timeline, minYear, maxYear) {
-    const impact = (timeline && timeline.impact) || {};
-    const counts = (timeline && timeline.counts) || {};
+function calculateImpactBars(impact, minYear, maxYear) {
+    impact = impact || {};
 
     const years = [];
     for (let year = minYear; year <= maxYear; year++) {
@@ -26,9 +25,8 @@ function calculateImpactBars(timeline, minYear, maxYear) {
         const percentage = percentages[index];
         const heightPercent = !isZero && maxPercentage > 0 ? (percentage / maxPercentage) * 100 : 0;
         const percentageText = isZero ? null : (percentage * 100).toFixed(2) + '%';
-        const count = Number(counts[year]) || 0;
 
-        return { year, value, percentage, heightPercent, percentageText, count, isZero };
+        return { year, value, percentage, heightPercent, percentageText, isZero };
     });
 }
 
@@ -48,25 +46,15 @@ if (typeof $ !== 'undefined') {
         const minYear = 1991;
         const maxYear = new Date().getFullYear();
 
-        const impactLabel = container.attr('data-impact-label');
-        const resultsLabel = container.attr('data-results-label');
-        const numberFormat = new Intl.NumberFormat(container.attr('data-locale') || undefined);
-
         //Lives on <body> so the slider's stacking context (z-index: 0) can't hide it behind other elements
         const tooltip = $('<div>').addClass('impact-bar-tooltip').hide().appendTo('body');
 
-        //One line each: year, impact share and number of matching documents
-        const tooltipLines = function (bar) {
-            return [
-                String(bar.year),
-                impactLabel + ' ' + bar.percentageText,
-                resultsLabel + ' ' + numberFormat.format(bar.count)
-            ];
+        const tooltipText = function (bar) {
+            return bar.year + ': ' + bar.percentageText;
         };
 
         const showTooltip = function (element, bar) {
-            tooltip.empty();
-            tooltipLines(bar).forEach((line) => $('<div>').text(line).appendTo(tooltip));
+            tooltip.text(tooltipText(bar));
             const offset = element.offset();
             tooltip.css({
                 left: offset.left + element.outerWidth() / 2,
@@ -87,14 +75,14 @@ if (typeof $ !== 'undefined') {
                 return;
             }
 
-            let timeline;
+            let impact;
             try {
-                timeline = JSON.parse(dataElement.text() || '{}');
+                impact = JSON.parse(dataElement.text() || '{}');
             } catch (e) {
                 return;
             }
 
-            const bars = calculateImpactBars(timeline, minYear, maxYear);
+            const bars = calculateImpactBars(impact, minYear, maxYear);
             if (!bars) {
                 return;
             }
@@ -109,7 +97,7 @@ if (typeof $ !== 'undefined') {
                 $('<div>')
                     .addClass('impact-bar')
                     .css('height', bar.heightPercent + '%')
-                    .attr('aria-label', tooltipLines(bar).join(', '))
+                    .attr('aria-label', tooltipText(bar))
                     .on('mouseenter', function () {
                         showTooltip($(this), bar);
                     })

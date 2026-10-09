@@ -39,7 +39,7 @@
     <% } %>
 
     <!-- starts the search impact timeline in hidden json format -->
-    <% let timelineJson = JSON.stringify(apiData.timeline || {})
+    <% let timelineJson = JSON.stringify((apiData.timeline || {}).impact || {})
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")

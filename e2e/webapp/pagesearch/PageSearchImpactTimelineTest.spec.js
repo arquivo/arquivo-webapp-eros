@@ -8,11 +8,6 @@ const { MOCK_TIMELINE_LAST_YEAR, NO_RESULTS_QUERY } = require('../../mock-server
 
 const QUERY = 'lisboa';
 
-const LOCALES = [
-    { locale: 'pt', lines: ['2010', 'impacto no ano: 40.00%', 'nº de resultados: 38.433.441'] },
-    { locale: 'en', lines: ['2010', 'year impact: 40.00%', 'no. of results: 38,433,441'] },
-];
-
 test('draws one bar per year with impact, none for years without it', async ({ pageSearchPage }) => {
     await pageSearchPage.goto(QUERY);
 
@@ -34,17 +29,15 @@ test('scales the year with the most impact to the full graph height', async ({ p
     expect.soft(smaller.height / tallest.height).toBeCloseTo(1 / 4, 1);
 });
 
-for (const { locale, lines } of LOCALES) {
-    test(`shows year, impact and number of results on hover for ${locale}`, async ({ pageSearchPage }) => {
-        await pageSearchPage.goto(QUERY, { locale });
+test('shows the year and its impact percentage on hover', async ({ pageSearchPage }) => {
+    await pageSearchPage.goto(QUERY);
 
-        await expect(pageSearchPage.impactTooltip).toBeHidden();
-        await pageSearchPage.hoverImpactBar(2010);
+    await expect(pageSearchPage.impactTooltip).toBeHidden();
+    await pageSearchPage.hoverImpactBar(2010);
 
-        await expect(pageSearchPage.impactTooltip).toBeVisible();
-        await expect.soft(pageSearchPage.impactTooltip.locator('div')).toHaveText(lines);
-    });
-}
+    await expect(pageSearchPage.impactTooltip).toBeVisible();
+    await expect.soft(pageSearchPage.impactTooltip).toHaveText('2010: 40.00%');
+});
 
 test('hides the tooltip once the pointer leaves the bar', async ({ page, pageSearchPage }) => {
     await pageSearchPage.goto(QUERY);
