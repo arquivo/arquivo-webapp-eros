@@ -82,6 +82,10 @@ fieldset:
     example:
       pt: 'ex. www.fccn.pt, www.fct.pt'
       en: 'e.g. www.fccn.pt, www.fct.pt'
+  results:
+    label:
+      pt: '<strong>Número de resultados</strong>:'
+      en: '<strong>Number of results</strong>:'
   search:
     en: Search
     pt: Pesquisar
