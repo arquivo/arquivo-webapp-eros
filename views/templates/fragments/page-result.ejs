@@ -22,11 +22,11 @@ if (typeof pageData != 'undefined'){
     const mime = pageData.mimeType.split('/');
 
     const searchTerms = query
-        // removes "site" "type" and "collection" special queries
+        // removes "site" "type" "collection" "yearBalance" "language" and "minLanguageConfidence" special queries
         .split(' ')
         .reduce((acc,cur) => {
             const pair = cur.split(':');
-            if(pair.length == 2 && ['site','type','collection'].includes(pair[0])){
+            if(pair.length == 2 && ['site','type','collection','yearBalance','language','minLanguageConfidence'].includes(pair[0])){
                 return acc;
             }
             return acc+' '+cur;

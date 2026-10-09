@@ -1,6 +1,14 @@
 const config = require('config');
 const { request } = require('express');
 
+// Inline query terms (e.g. "collection:FCCN") that are extracted into their own request parameter
+const specialTerms = ['site', 'type', 'collection', 'safe', 'size', 'yearBalance', 'language', 'minLanguageConfidence'];
+
+// Values the text search API accepts, anything else makes it reply with an error
+const isValidYearBalance = (v) => ['true', 'false'].includes(v) || (/^\d*\.?\d+$/.test(v) && parseFloat(v) <= 1);
+const isValidLanguage = (v) => /^[a-zA-Z]{2}$/.test(v);
+const isValidMinLanguageConfidence = (v) => ['HIGH', 'MEDIUM', 'LOW'].includes(v);
+
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
 
@@ -91,12 +99,12 @@ module.exports = function (req, res) {
 
         adv_and = adv_and.trim();
 
-        //Handling special terms (type, site and collection)
-        const specialParamsRegEx = /(?:\s|^)(?:site|type|collection|safe|size):(?:[^\s]+)/
+        //Handling special terms (type, site, collection, ...)
+        const specialParamsRegEx = new RegExp(String.raw`(?:\s|^)(?:${specialTerms.join('|')}):(?:[^\s]+)`);
         if(specialParamsRegEx.test(adv_and)){
 
-            // putting "site","type" and "collection" on API params if needed.
-            ['site', 'type', 'collection','safe','size'].forEach(t => {
+            // putting "site","type", "collection", ... on API params if needed.
+            specialTerms.forEach(t => {
                 const regexString = '(\\s|^)' + t + ':([^\\s]+)';
                 const queryRegEx = new RegExp(regexString);
                 const requestParam = ['site','safe'].includes(t) ? t+'Search' : t;
@@ -120,6 +128,17 @@ module.exports = function (req, res) {
 
     }
 
+    // drop values the text search API would reject
+    [
+        ['yearBalance', isValidYearBalance],
+        ['language', isValidLanguage],
+        ['minLanguageConfidence', isValidMinLanguageConfidence],
+    ].forEach(([param, isValid]) => {
+        if (requestData.has(param) && !isValid(requestData.get(param))) {
+            requestData.delete(param);
+        }
+    });
+
     // remove default settings
     if (requestData.get('type') == 'all') {
         requestData.delete('type');
@@ -142,6 +161,9 @@ module.exports = function (req, res) {
            [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
            [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
            [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
+           [requestData.get('yearBalance') ?? '']       .filter(t => t != '').map(t => `yearBalance:${t}`).join(''),
+           [requestData.get('language') ?? '']          .filter(t => t != '').map(t => `language:${t}`).join(''),
+           [requestData.get('minLanguageConfidence') ?? ''].filter(t => t != '').map(t => `minLanguageConfidence:${t}`).join(''),
        ]
         requestData.set('q', fullquery.filter(t => t!='').join(' '));
     }
