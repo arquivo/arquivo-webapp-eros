@@ -5,13 +5,16 @@ const searchImages = require('../search-images');
 // Mock dependencies
 jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/image-search-api');
-jest.mock('../apis/suggestion-api');
+jest.mock('../apis/page-search-api');
 jest.mock('../export-image-search');
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const ImageSearchApiRequest = require('../apis/image-search-api');
-const SuggestionApi = require('../apis/suggestion-api');
+const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-image-search');
+
+// The handler renders once both API calls have resolved (Promise.all)
+const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
 
 describe('search-images handler', () => {
     let req, res;
@@ -50,11 +53,11 @@ describe('search-images handler', () => {
         ImageSearchApiRequest.mockImplementation(() => mockApiRequest);
 
         mockSuggestionRequest = {
-            getSuggestion: jest.fn((query, lang, callback) => {
+            suggest: jest.fn((requestData, callback) => {
                 callback('suggested term');
             })
         };
-        SuggestionApi.mockImplementation(() => mockSuggestionRequest);
+        PageSearchApiRequest.mockImplementation(() => mockSuggestionRequest);
 
         makeExportObject.mockReturnValue({ export: 'image data' });
     });
@@ -71,33 +74,42 @@ describe('search-images handler', () => {
         expect(ImageSearchApiRequest).toHaveBeenCalled();
     });
 
-    it('creates SuggestionApi instance', () => {
+    it('creates a default-backend PageSearchApiRequest with a short timeout for the suggestion', () => {
         searchImages(req, res);
 
-        expect(SuggestionApi).toHaveBeenCalled();
+        expect(PageSearchApiRequest).toHaveBeenCalledWith(null, { timeout: 3000 });
     });
 
-    it('requests suggestion with query and language', () => {
+    it('requests the suggestion and the images in parallel', () => {
+        mockSuggestionRequest.suggest.mockImplementationOnce(() => {});
+        mockApiRequest.get.mockImplementationOnce(() => {});
+
         searchImages(req, res);
 
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
-            expect.any(Function)
-        );
+        expect(mockSuggestionRequest.suggest).toHaveBeenCalledWith(mockRequestData, expect.any(Function));
+        expect(mockApiRequest.get).toHaveBeenCalledWith(mockRequestData, expect.any(Function));
     });
 
-    it('requests API with sanitized request data', () => {
-        searchImages(req, res);
+    it('waits for both the suggestion and the images before rendering', async () => {
+        let resolveSuggestion;
+        mockSuggestionRequest.suggest.mockImplementationOnce((requestData, callback) => {
+            resolveSuggestion = callback;
+        });
 
-        expect(mockApiRequest.get).toHaveBeenCalledWith(
-            mockRequestData,
-            expect.any(Function)
-        );
+        searchImages(req, res);
+        await flushPromises();
+        expect(res.render).not.toHaveBeenCalled();
+
+        resolveSuggestion('late suggestion');
+        await flushPromises();
+        expect(res.render).toHaveBeenCalledWith('partials/images-search-results', expect.objectContaining({
+            suggestion: 'late suggestion'
+        }));
     });
 
-    it('renders partials/images-search-results with results data', () => {
+    it('renders partials/images-search-results with results data', async () => {
         searchImages(req, res);
+        await flushPromises();
 
         expect(res.render).toHaveBeenCalledWith('partials/images-search-results', {
             requestData: mockRequestData,
@@ -107,8 +119,9 @@ describe('search-images handler', () => {
         });
     });
 
-    it('creates export object with sanitized request data', () => {
+    it('creates export object with sanitized request data', async () => {
         searchImages(req, res);
+        await flushPromises();
 
         expect(makeExportObject).toHaveBeenCalledWith(
             mockRequestData,
@@ -117,12 +130,13 @@ describe('search-images handler', () => {
         );
     });
 
-    it('handles empty results from API', () => {
+    it('handles empty results from API', async () => {
         mockApiRequest.get.mockImplementationOnce((params, callback) => {
             callback({ responseItems: [] });
         });
 
         searchImages(req, res);
+        await flushPromises();
 
         expect(res.render).toHaveBeenCalledWith('partials/images-search-results', {
             requestData: mockRequestData,
@@ -132,29 +146,25 @@ describe('search-images handler', () => {
         });
     });
 
-    it('handles null responseItems from API', () => {
+    it('passes errors to the express error handler instead of hanging the request', async () => {
+        const next = jest.fn();
+        const error = new Error('render failed');
+        res.render.mockImplementationOnce(() => { throw error; });
+
+        searchImages(req, res, next);
+        await flushPromises();
+
+        expect(next).toHaveBeenCalledWith(error);
+    });
+
+    it('handles null responseItems from API', async () => {
         mockApiRequest.get.mockImplementationOnce((params, callback) => {
             callback({ responseItems: null });
         });
 
         searchImages(req, res);
+        await flushPromises();
 
         expect(res.render).toHaveBeenCalled();
-    });
-
-    it('uses default language when language is not provided', () => {
-        mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: undefined };
-            return map[key];
-        });
-        sanitizeInputs.mockReturnValue(mockRequestData);
-
-        searchImages(req, res);
-
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
-            expect.any(Function)
-        );
     });
 });
