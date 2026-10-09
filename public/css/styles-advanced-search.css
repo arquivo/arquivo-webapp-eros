@@ -40,10 +40,6 @@ body#images-advanced-search label {
     width: auto;
 }
 
-body#images-advanced-search section.form-container small.last-margin {
-    margin-bottom: 0px;
-}
-
 /* links in the field examples, links are white by default (styles.css) for the dark backgrounds */
 section.form-container small a {
     color: #1c75c0; /* WCAG AA 4.8:1 on white */
