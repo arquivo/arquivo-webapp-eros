@@ -195,6 +195,26 @@ describe('sanitizeSearchParams', () => {
             expect(result.get('adv_and')).toBe('test');
         });
 
+        it('should join several collection: terms into one comma separated collection parameter', () => {
+            mockReq.query = { q: 'teste collection:EAWP6 collection:EAWP8 collection:EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+            expect(result.get('adv_and')).toBe('teste');
+        });
+
+        it('should keep a comma separated collection: term', () => {
+            mockReq.query = { q: 'teste collection:EAWP6,EAWP8,EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+        });
+
+        it('should remove the spaces from the collection parameter', () => {
+            mockReq.query = { adv_and: 'teste', collection: 'EAWP6, EAWP8 ,EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+            expect(result.get('q')).toBe('teste collection:EAWP6,EAWP8,EAWP15');
+        });
+
         it('should extract safe: term to safeSearch parameter', () => {
             mockReq.query = { q: 'test safe:off' };
             const result = sanitizeSearchParams(mockReq, mockRes);

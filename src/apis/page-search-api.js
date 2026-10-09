@@ -143,11 +143,12 @@ class PageSearchApiRequest extends ApiRequest {
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
             }
         });
-        // these are always removed, even when their value was dropped as invalid, so they never reach the API as search terms
-        ['yearBalance', 'language', 'minLanguageConfidence'].forEach(inlineParam => {
+        // these are always removed, so they never reach the API as search terms: their value may have been dropped
+        // as invalid, and several collection terms are all sent together in the collection parameter
+        ['collection', 'yearBalance', 'language', 'minLanguageConfidence'].forEach(inlineParam => {
             if (apiRequestData.has('q')) {
-                const regex = new RegExp(String.raw`(?:^|\s+)${inlineParam}:\S+\s*`, 'g');
-                apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' ').trim());
+                const regex = new RegExp(String.raw`(?:^|\s+)${inlineParam}:\S+`, 'g');
+                apiRequestData.set('q', apiRequestData.get('q').replace(regex, '').trim());
             }
         });
         return super.sanitizeRequestData(apiRequestData);
