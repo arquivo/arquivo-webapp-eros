@@ -41,7 +41,6 @@ const MOCK_ORIGIN = `http://localhost:${MOCK_SERVER_PORT}`;
 const MOCK_TIMELINE_LAST_YEAR = new Date().getFullYear() - 1;
 const MOCK_TIMELINE = {
     impact: { 1996: 0.25, 2005: 0.1, 2010: 0.4, 2015: 0, [MOCK_TIMELINE_LAST_YEAR]: 0.25 },
-    counts: { 1996: 120, 2005: 8634, 2010: 38433441, 2015: 0, [MOCK_TIMELINE_LAST_YEAR]: 57 },
 };
 
 function isNoResultsQuery(q) {

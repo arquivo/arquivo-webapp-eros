@@ -33,7 +33,7 @@ class PageSearchPage {
 
     // Bars carry no year attribute of their own, but their aria-label starts with it
     impactBar(year) {
-        return this.impactGraph.locator(`.impact-bar[aria-label^="${year},"]`);
+        return this.impactGraph.locator(`.impact-bar[aria-label^="${year}:"]`);
     }
 
     // Hover near the top of the bar: on narrow screens the slider handles
