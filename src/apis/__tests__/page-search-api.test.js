@@ -48,9 +48,15 @@ describe('PageSearchApiRequest', () => {
                 request_parameters: {
                     q: url.searchParams.get('q'),
                     from: url.searchParams.get('from'),
-                    to: url.searchParams.get('to')
+                    to: url.searchParams.get('to'),
+                    offset: url.searchParams.get('offset'),
+                    maxItems: url.searchParams.get('maxItems'),
+                    fields: url.searchParams.get('fields')
                 }
             };
+            if ((url.searchParams.get('fields') ?? '').split(',').includes('spellcheck')) {
+                mockResponse.suggested_query = url.searchParams.get('q').trim() === 'Lizboa' ? 'lisboa ' : '';
+            }
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(mockResponse));
@@ -126,6 +132,175 @@ describe('PageSearchApiRequest', () => {
             const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'test query' }));
 
             expect(sanitized.get('yearBalance')).toBe('true');
+        });
+    });
+
+    describe('spellcheck', () => {
+        afterEach(() => {
+            config.set('text.search.api.spellcheck_enabled', true);
+        });
+
+        describe('withSpellcheck', () => {
+            it('should add spellcheck to the requested fields', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa' }));
+
+                expect(requestData.get('fields')).toBe('spellcheck');
+                expect(requestData.get('q')).toBe('Lizboa');
+            });
+
+            it('should keep other requested fields', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa', fields: 'title, originalURL' }));
+
+                expect(requestData.get('fields')).toBe('title,originalURL,spellcheck');
+            });
+
+            it('should not repeat spellcheck if already requested', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa', fields: 'spellcheck' }));
+
+                expect(requestData.get('fields')).toBe('spellcheck');
+            });
+
+            it('should not modify the original request data', () => {
+                const api = new PageSearchApiRequest();
+                const original = new URLSearchParams({ q: 'Lizboa' });
+
+                api.withSpellcheck(original);
+
+                expect(original.has('fields')).toBe(false);
+            });
+
+            it('should leave request data unchanged when disabled', () => {
+                config.set('text.search.api.spellcheck_enabled', false);
+                const api = new PageSearchApiRequest();
+                const original = new URLSearchParams({ q: 'Lizboa' });
+
+                expect(api.withSpellcheck(original)).toBe(original);
+            });
+        });
+
+        describe('getSuggestion', () => {
+            const params = (q, extra = {}) => new URLSearchParams({ q, ...extra });
+
+            it('should return the suggested query', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, params('Lizboa'))).toBe('lisboa');
+            });
+
+            it('should return the original query when the suggestion is empty', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: '' }, params('Lisboa'))).toBe('Lisboa');
+                expect(api.getSuggestion({ suggested_query: ' ' }, params('Lisboa'))).toBe('Lisboa');
+            });
+
+            it('should return the original query when there is no suggestion', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ response_items: [] }, params('Lisboa'))).toBe('Lisboa');
+                expect(api.getSuggestion(undefined, params('Lisboa'))).toBe('Lisboa');
+            });
+
+            it('should trim the suggested query', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: 'ronaldo ' }, params('Ronaldi'))).toBe('ronaldo');
+            });
+
+            it('should add back the inline terms the API did not spellcheck, as typed', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Ronaldi collection:Roteiro', { collection: 'Roteiro' });
+
+                expect(api.getSuggestion({ suggested_query: 'ronaldo ' }, requestData)).toBe('ronaldo collection:Roteiro');
+            });
+
+            it('should add back every inline term, whatever their position in the query', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('site:www.publico.pt Lizboa type:pdf -futebol', {
+                    siteSearch: 'www.publico.pt',
+                    type: 'pdf',
+                });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa -futebol' }, requestData))
+                    .toBe('lisboa -futebol site:www.publico.pt type:pdf');
+            });
+
+            it('should not add terms that are only parameters, not typed in the query', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Lizboa', { collection: 'Roteiro', siteSearch: 'www.publico.pt' });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, requestData)).toBe('lisboa');
+            });
+        });
+
+        describe('suggest', () => {
+            let api;
+
+            beforeEach(() => {
+                api = new PageSearchApiRequest();
+                api.apiUrl = `http://localhost:${mockServerPort}`;
+            });
+
+            it('should return the suggested query', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('lisboa');
+                    done();
+                });
+            });
+
+            it('should keep the inline terms in the suggested query', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lizboa size:lg', size: 'lg' }), (suggestion) => {
+                    expect(suggestion).toBe('lisboa size:lg');
+                    done();
+                });
+            });
+
+            it('should return the original query when there is no suggestion', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lisboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lisboa');
+                    done();
+                });
+            });
+
+            it('should request spellcheck without results', (done) => {
+                const getSpy = jest.spyOn(api, 'get');
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa', offset: '50', maxItems: '25' }), () => {
+                    const requestData = getSpy.mock.calls[0][0];
+                    expect(requestData.get('fields')).toBe('spellcheck');
+                    expect(requestData.get('maxItems')).toBe('0');
+                    expect(requestData.get('offset')).toBe('0');
+                    done();
+                });
+            });
+
+            it('should return the original query when the API fails', (done) => {
+                api.apiUrl = 'http://localhost:1';
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lizboa');
+                    done();
+                });
+            });
+
+            it('should return the original query without calling the API when disabled', (done) => {
+                config.set('text.search.api.spellcheck_enabled', false);
+                api = new PageSearchApiRequest();
+                const getSpy = jest.spyOn(api, 'get');
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lizboa');
+                    expect(getSpy).not.toHaveBeenCalled();
+                    done();
+                });
+            });
+        });
+
+        it('should apply custom request options', () => {
+            const api = new PageSearchApiRequest(null, { timeout: 3000 });
+            expect(api.options).toMatchObject({ method: 'GET', timeout: 3000 });
         });
     });
 

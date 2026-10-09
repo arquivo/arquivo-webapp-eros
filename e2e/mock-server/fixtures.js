@@ -8,6 +8,10 @@
  *   pagination (next/previous/last page) deterministic regardless of query.
  * - NO_RESULTS_QUERY (or any query containing it) always returns zero
  *   results, for "no results found" specs.
+ * - When a page search asks for `fields=spellcheck`, MISSPELLED_QUERY gets
+ *   SPELLCHECKED_QUERY as `suggested_query` and any other query gets '' (no
+ *   suggestion), like the real text search API. Image search uses the same
+ *   page search call (with maxItems=0) for its suggestion.
  * - Any /wayback/<timestamp>/<url> visit succeeds (mocked pywb + a canned
  *   metadata record), so replay-toolbar/menu/technical-details specs don't
  *   depend on real archived content.
@@ -18,6 +22,9 @@
 // Must not look like a URL/domain (no dot) — the app's /page/search route
 // redirects URL-shaped queries to /url/search before it ever reaches here.
 const NO_RESULTS_QUERY = 'ddadfcfe qwzxjk nosuchresult';
+// Same pair as a real misspelling on preprod, so specs work in live mode too.
+const MISSPELLED_QUERY = 'Lizboa';
+const SPELLCHECKED_QUERY = 'lisboa';
 const TOTAL_PAGE_RESULTS = 47;
 const TOTAL_IMAGE_RESULTS = 47;
 
@@ -50,16 +57,27 @@ function buildPageResponseItem(index, query) {
     };
 }
 
-function buildPageSearchResults({ q, from, to, offset, maxItems }) {
+function buildSpellcheck(query, fields) {
+    if (!(fields ?? '').split(',').includes('spellcheck')) {
+        return {};
+    }
+    // The app sends the query without its inline terms (e.g. 'Lizboa collection:X' -> 'Lizboa '),
+    // and the real API keeps that trailing space in its suggestion
+    return { suggested_query: query.trim() === MISSPELLED_QUERY ? query.replace(MISSPELLED_QUERY, SPELLCHECKED_QUERY) : '' };
+}
+
+function buildPageSearchResults({ q, from, to, offset, maxItems, fields }) {
     const query = q ?? '';
     const start = parseInt(offset ?? '0', 10) || 0;
-    const size = parseInt(maxItems ?? '10', 10) || 10;
+    // maxItems=0 is a valid request (spellcheck only), so don't fall back to 10 for it
+    const size = maxItems === '0' ? 0 : parseInt(maxItems ?? '10', 10) || 10;
 
     if (isNoResultsQuery(query)) {
         return {
             estimated_nr_results: 0,
             response_items: [],
             request_parameters: { from: from ?? '', to: to ?? '' },
+            ...buildSpellcheck(query, fields),
         };
     }
 
@@ -72,6 +90,7 @@ function buildPageSearchResults({ q, from, to, offset, maxItems }) {
         estimated_nr_results: TOTAL_PAGE_RESULTS,
         response_items: items,
         request_parameters: { from: from ?? '', to: to ?? '' },
+        ...buildSpellcheck(query, fields),
     };
 }
 
@@ -155,6 +174,8 @@ function buildCdxResults(url) {
 
 module.exports = {
     NO_RESULTS_QUERY,
+    MISSPELLED_QUERY,
+    SPELLCHECKED_QUERY,
     TOTAL_PAGE_RESULTS,
     TOTAL_IMAGE_RESULTS,
     isNoResultsQuery,

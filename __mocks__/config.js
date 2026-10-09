@@ -18,6 +18,7 @@ const mockConfig = {
   'text.search.api.nutchwax': 'https://preprod.arquivo.pt/textsearchnutchwax',
   'text.search.api.default': 'https://preprod.arquivo.pt/textsearch',
   'text.search.api.yearBalance_enabled': false,
+  'text.search.api.spellcheck_enabled': true,
   'cdx.api': 'https://preprod.arquivo.pt/wayback/cdx',
   'search.start.date': '19910806',
   'text.results.per.page': 10,

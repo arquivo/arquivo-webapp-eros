@@ -247,12 +247,12 @@ router.post('/services/citationsaver', function (req, res) {
  * Routes partial template requests to appropriate handlers or renders generic partial
  * Used for AJAX content loading without full page refresh
  */
-router.get('/partials/:id', function (req, res) {
+router.get('/partials/:id', function (req, res, next) {
     // Search results partials
     if (req.params.id == 'pages-search-results') {
         searchPages(req, res);
     } else if (req.params.id == 'images-search-results') {
-        searchImages(req, res);
+        searchImages(req, res, next);
     } else if (req.params.id == 'url-search-results') {
         searchUrl(req, res);
     } 
