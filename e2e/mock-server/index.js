@@ -41,6 +41,7 @@ function handleTextSearch(query, res) {
         to: query.get('to'),
         offset: query.get('offset'),
         maxItems: query.get('maxItems'),
+        fields: query.get('fields'),
     }));
 }
 

@@ -5,19 +5,17 @@ const searchPages = require('../search-pages');
 // Mock dependencies
 jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
-jest.mock('../apis/suggestion-api');
 jest.mock('../export-page-search');
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const PageSearchApiRequest = require('../apis/page-search-api');
-const SuggestionApi = require('../apis/suggestion-api');
 const makeExportObject = require('../export-page-search');
 
 describe('search-pages handler', () => {
     let req, res;
     let mockRequestData;
+    let mockSpellcheckRequestData;
     let mockApiRequest;
-    let mockSuggestionRequest;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -30,6 +28,7 @@ describe('search-pages handler', () => {
             const map = { q: 'test query', l: 'pt', api: 'solr' };
             return map[key];
         });
+        mockSpellcheckRequestData = new URLSearchParams({ q: 'test query', fields: 'spellcheck' });
 
         req = {
             t: jest.fn((key) => key)
@@ -43,18 +42,13 @@ describe('search-pages handler', () => {
 
         mockApiRequest = {
             get: jest.fn((params, callback) => {
-                callback({ response_items: [{ title: 'Result 1' }] });
+                callback({ response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' });
             }),
+            withSpellcheck: jest.fn(() => mockSpellcheckRequestData),
+            getSuggestion: jest.fn((apiData, requestData) => apiData.suggested_query || requestData.get('q')),
             sanitizeRequestData: jest.fn((data) => data)
         };
         PageSearchApiRequest.mockImplementation(() => mockApiRequest);
-
-        mockSuggestionRequest = {
-            getSuggestion: jest.fn((query, lang, callback) => {
-                callback('suggested term');
-            })
-        };
-        SuggestionApi.mockImplementation(() => mockSuggestionRequest);
 
         makeExportObject.mockReturnValue({ export: 'data' });
     });
@@ -71,28 +65,22 @@ describe('search-pages handler', () => {
         expect(PageSearchApiRequest).toHaveBeenCalledWith('solr');
     });
 
-    it('creates SuggestionApi instance', () => {
+    it('requests API with spellcheck added to the sanitized request data', () => {
         searchPages(req, res);
 
-        expect(SuggestionApi).toHaveBeenCalled();
-    });
-
-    it('requests suggestion with query and language', () => {
-        searchPages(req, res);
-
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
+        expect(mockApiRequest.withSpellcheck).toHaveBeenCalledWith(mockRequestData);
+        expect(mockApiRequest.get).toHaveBeenCalledWith(
+            mockSpellcheckRequestData,
             expect.any(Function)
         );
     });
 
-    it('requests API with sanitized request data', () => {
+    it('takes the suggestion from the same API reply as the results', () => {
         searchPages(req, res);
 
-        expect(mockApiRequest.get).toHaveBeenCalledWith(
-            mockRequestData,
-            expect.any(Function)
+        expect(mockApiRequest.getSuggestion).toHaveBeenCalledWith(
+            { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
+            mockRequestData
         );
     });
 
@@ -101,32 +89,45 @@ describe('search-pages handler', () => {
 
         expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', {
             requestData: mockRequestData,
-            apiData: { response_items: [{ title: 'Result 1' }] },
+            apiData: { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             suggestion: 'suggested term',
             exportObject: { export: 'data' }
         });
     });
 
-    it('creates export object with sanitized request data', () => {
+    it('renders the original query as suggestion when the API has none', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [{ title: 'Result 1' }], suggested_query: '' });
+        });
+
         searchPages(req, res);
 
+        expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', expect.objectContaining({
+            suggestion: 'test query'
+        }));
+    });
+
+    it('creates export object with the request data without spellcheck', () => {
+        searchPages(req, res);
+
+        expect(mockApiRequest.sanitizeRequestData).toHaveBeenCalledWith(mockRequestData);
         expect(makeExportObject).toHaveBeenCalledWith(
             mockRequestData,
-            { response_items: [{ title: 'Result 1' }] },
+            { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             req.t
         );
     });
 
     it('handles empty results from API', () => {
         mockApiRequest.get.mockImplementationOnce((params, callback) => {
-            callback({ response_items: [] });
+            callback({ response_items: [], suggested_query: 'suggested term' });
         });
 
         searchPages(req, res);
 
         expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', {
             requestData: mockRequestData,
-            apiData: { response_items: [] },
+            apiData: { response_items: [], suggested_query: 'suggested term' },
             suggestion: 'suggested term',
             exportObject: { export: 'data' }
         });
@@ -140,21 +141,5 @@ describe('search-pages handler', () => {
         searchPages(req, res);
 
         expect(res.render).toHaveBeenCalled();
-    });
-
-    it('uses default language when language is not provided', () => {
-        mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: undefined, api: 'solr' };
-            return map[key];
-        });
-        sanitizeInputs.mockReturnValue(mockRequestData);
-
-        searchPages(req, res);
-
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
-            expect.any(Function)
-        );
     });
 });

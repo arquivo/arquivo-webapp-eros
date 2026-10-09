@@ -9,6 +9,10 @@ if(typeof requestData != 'undefined'){
  
  suggestionRequestData.set('q',suggestion);
  suggestionRequestData.delete('trackingId');
+ // Derived from q on every search, so they'd only be stale copies of the original query
+ ['adv_and','adv_phr','adv_not'].forEach(key => suggestionRequestData.delete(key));
+ // A new query starts on its first page of results
+ suggestionRequestData.delete('offset');
  suggestionRequestData.set('spellchecked','true')
  %> 
 <section id="search-suggestion-container" class="search-suggestion-container-cl">
@@ -16,10 +20,7 @@ if(typeof requestData != 'undefined'){
     <!-- starts suggestion message --> 
     <section id="search-suggestion-message">
      <h4><%= t('page-search.search-suggestion.accessibility.message') %></h4> 
-     <p id="term-suggested" >&rarr; <%= t('page-search.search-suggestion.did-you-mean') %> <a href="javascript:$('#search-suggestion-form').submit();"><%= suggestion %></a></p>
-     <form action="/<%= suggestionType %>/search" id="search-suggestion-form" style="display: none;">
-        <%- include('hidden-search-inputs', {requestData:suggestionRequestData}) %>
-    </form>
+     <p id="term-suggested" >&rarr; <%= t('page-search.search-suggestion.did-you-mean') %> <a href="/<%= suggestionType %>/search?<%= suggestionRequestData.toString() %>"><%= suggestion %></a></p>
     </section> 
     <!-- ends suggestion message -->
 

@@ -68,7 +68,7 @@ replay, menus, url search, etc.). They run in two modes:
 - **Mocked mode (default)** — boots a fixture HTTP server plus the app itself, so tests run against
   canned data: fast, deterministic, no dependency on real archived content. This is what CI runs on every PR.
 - **Live mode** — points at real `preprod.arquivo.pt`. Used only for the handful of specs tagged `@live`
-  that need genuine archived content (search relevance, spam/dedup, spell-suggestion, real replay
+  that need genuine archived content (search relevance, spam/dedup, real replay
   snapshots). Not run in CI by default.
 
 ### First-time setup
@@ -193,7 +193,7 @@ Combine the matrix with both [modes](#end-to-end-tests-playwright) to run everyt
 # 1. Once per machine: all three engines plus their system libraries
 npx playwright install --with-deps
 
-# 2. Mocked mode on all 5 projects (205 tests, every spec except @live)
+# 2. Mocked mode on all 5 projects (270 tests, every spec except @live)
 npm run test:e2e -- --retries=2
 
 # 3. Live mode on all 5 projects (@live specs only, needs network access to preprod.arquivo.pt)

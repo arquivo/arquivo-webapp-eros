@@ -83,8 +83,12 @@ const cdxSearchFixture = [
     },
 ];
 
+// Return a suggestion that differs from the query so the "did you mean" block is rendered and audited
 PageSearchApiRequest.mockImplementation(() => ({
     get: (requestData, callback) => callback(pageSearchFixture),
+    withSpellcheck: (data) => data,
+    getSuggestion: (apiData, requestData) => `${requestData.get('q')} sugestão`,
+    suggest: (requestData, callback) => callback(`${requestData.get('q')} sugestão`),
     sanitizeRequestData: (data) => data,
 }));
 
@@ -97,7 +101,6 @@ CDXSearchApiRequest.mockImplementation(() => ({
     get: (requestData, callback) => callback(cdxSearchFixture),
 }));
 
-// Return a suggestion that differs from the query so the "did you mean" block is rendered and audited
 SuggestionApi.mockImplementation(() => ({
     getSuggestion: (query, lang, callback) => callback(`${query} sugestão`),
 }));
@@ -115,6 +118,8 @@ const WCAG_OPTIONS = {
 
 async function getHtml(url) {
     const res = await request(app).get(url);
+    // Otherwise an error page (e.g. from a stale API mock) would be audited instead
+    expect(res.status).toBe(200);
     return res.text;
 }
 
