@@ -34,9 +34,19 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;"); %>
-        <div style="display:none" id="options-export-json"><%- exportJson %></div> 
+        <div style="display:none" id="options-export-json"><%- exportJson %></div>
         <!-- ends the results in json format -->
     <% } %>
+
+    <!-- starts the search impact timeline in hidden json format -->
+    <% let timelineJson = JSON.stringify((apiData.timeline || {}).impact || {})
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;"); %>
+    <div style="display:none" id="search-impact-timeline-json"><%- timelineJson %></div>
+    <!-- ends the search impact timeline in hidden json format -->
 
     <!-- starts navigation tools --> 
     <%- include("../templates/fragments/navigation-tools", {estimatedResults: apiData.estimated_nr_results}) -%>            

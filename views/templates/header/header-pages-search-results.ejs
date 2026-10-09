@@ -50,7 +50,7 @@
       <!-- ends search bar -->
 
       <!-- starts range slider block -->
-      <%- include('../fragments/search-tools-date-slider') %>
+      <%- include('../fragments/search-tools-date-slider', { showImpactGraph: searchType === 'pages' }) %>
       <!-- ends range slider block -->
 
     </form>
