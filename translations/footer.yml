@@ -13,6 +13,74 @@ about:
     url:
       pt: 'https://sobre.arquivo.pt/pt/ajuda/o-que-e-o-arquivo-pt/'
       en: 'https://sobre.arquivo.pt/en/help/what-is-arquivo-pt/'
+  source:
+    text:
+      pt: 'API & Código-aberto'
+      en: 'API & Open-source'
+    url:
+      pt: 'https://arquivo.pt/api'
+      en: 'https://arquivo.pt/api'
+  mooc:
+    text:
+      pt: 'MOOC'
+      en: 'MOOC'
+    url:
+      pt: 'https://arquivo.pt/mooc'
+      en: 'https://arquivo.pt/mooc'
+  terms:
+    text:
+      pt: 'Termos e Condições'
+      en: 'Terms and Conditions'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/acerca/termos-e-condicoes/'
+      en: 'https://sobre.arquivo.pt/en/about/terms-and-conditions/'
+  privacy:
+    text:
+      pt: 'Política de Privacidade'
+      en: 'Privacy Policy'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/'
+      en: 'https://sobre.arquivo.pt/en/about/privacy-policy/'
+  cookies:
+    text:
+      pt: 'Política de Cookies'
+      en: 'Cookie Policy'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/politica-de-cookies-arquivo-pt/'
+      en: 'https://sobre.arquivo.pt/en/about/privacy-policy/cookie-policy-arquivo-pt/'
+  contact:
+    text:
+      pt: 'Contacto'
+      en: 'Contact'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/contacto/'
+      en: 'https://sobre.arquivo.pt/en/contact/'
+
+news:
+  header:
+    pt: 'Notícias'
+    en: 'News'
+  mailing-list:
+    text:
+      pt: 'Subscrever lista de email'
+      en: 'Subscribe mailing list'
+    url:
+      pt: 'https://arquivo.pt/inscrever'
+      en: 'https://arquivo.pt/subscribe'
+  channels:
+    text:
+      pt: 'Canais de comunicação'
+      en: 'Communication channels'
+    url:
+      pt: 'https://sobre.arquivo.pt/pt/noticias/canais/'
+      en: 'https://sobre.arquivo.pt/en/news/channels/'
+  latest:
+    text:
+      pt: 'Últimas novidades'
+      en: 'Latest news'
+    url:
+      pt: 'https://arquivo.pt/noticias'
+      en: 'https://arquivo.pt/news'
   publications:
     text:
       pt: 'Publicações'
@@ -34,67 +102,6 @@ about:
     url:
       pt: 'https://arquivo.pt/imprensa'
       en: 'https://arquivo.pt/press'
-  source:
-    text:
-      pt: 'API & Código-aberto'
-      en: 'API & Open-source'
-    url:
-      pt: 'https://arquivo.pt/api'
-      en: 'https://arquivo.pt/api'
-  open-data:
-    text:
-      pt: 'Dados abertos'
-      en: 'Open datasets'
-    url:
-      pt: 'https://arquivo.pt/dadosabertos'
-      en: 'https://arquivo.pt/opendata'
-  terms:
-    text:
-      pt: 'Termos e Condições'
-      en: 'Terms and Conditions'
-    url:
-      pt: 'https://sobre.arquivo.pt/pt/acerca/termos-e-condicoes/'
-      en: 'https://sobre.arquivo.pt/en/about/terms-and-conditions/'
-
-news:
-  header:
-    pt: 'Notícias'
-    en: 'News'
-  mailing-list: 
-    text:
-      pt: 'Subscrever lista de email'
-      en: 'Subscribe mailing list'
-    url:
-      pt: 'https://arquivo.pt/inscrever'
-      en: 'https://arquivo.pt/subscribe'
-  latest:
-    text:
-      pt: 'Últimas novidades'
-      en: 'Latest news'
-    url:
-      pt: 'https://arquivo.pt/noticias'
-      en: 'https://arquivo.pt/news'
-  twitter:
-    text:
-      pt: 'Twitter'
-      en: 'Twitter'
-    url:
-      pt: 'https://twitter.com/ArquivoWeb_PT'
-      en: 'https://twitter.com/PT_WebArchive'
-  facebook:
-    text:
-      pt: 'Facebook'
-      en: 'Facebook'
-    url:
-      pt: 'https://www.facebook.com/Arquivo.pt'
-      en: 'https://www.facebook.com/PortugueseWebArchive/'
-  videos:
-    text:
-      pt: 'Vídeos'
-      en: 'Videos'
-    url:
-      pt: 'https://arquivo.pt/videos'
-      en: 'https://arquivo.pt/videos'
   dissemination:
     text:
       pt: 'Material de Divulgação'
@@ -102,7 +109,7 @@ news:
     url:
       pt: 'https://arquivo.pt/divulgar'
       en: 'https://arquivo.pt/disseminate'
-  
+
 collaborate:
   header:
     pt: 'Colabore'
@@ -134,14 +141,7 @@ collaborate:
       en: 'Memorial'
     url:
       pt: 'https://arquivo.pt/memorial'
-      en: 'https:///arquivo.pt/memorialen'
-  publish:
-    text:
-      pt: 'Recomendações'
-      en: 'Recommendations'
-    url:
-      pt: 'https://arquivo.pt/recomenda'
-      en: 'https://arquivo.pt/recommendations'
+      en: 'https://arquivo.pt/memorialen'
   donate: # <-- No longer used!
     text:
       pt: 'Forneça conteúdos históricos'
@@ -155,14 +155,21 @@ collaborate:
       en: Archive webpages
     url:
       pt: https://arquivo.pt/archivepagenow
-      en: https://arquivo.pt/archivepagenow?l=en  
+      en: https://arquivo.pt/archivepagenow?l=en
   citationsaver:
     text:
       pt: Preserve citações
       en: Preserve citations
     url:
       pt: https://arquivo.pt/citationsaver
-      en: https://arquivo.pt/citationsaver?l=en  
+      en: https://arquivo.pt/citationsaver?l=en
+  open-data:
+    text:
+      pt: 'Dados abertos'
+      en: 'Open datasets'
+    url:
+      pt: 'https://arquivo.pt/dadosabertos'
+      en: 'https://arquivo.pt/opendata'
   rnd: #<--- No longer used!
     text:
       pt: 'Investigação'
@@ -175,7 +182,7 @@ help:
   header:
     pt: 'Ajuda'
     en: 'Help'
-  page-search: 
+  page-search:
     text:
       pt: 'Pesquisa de páginas'
       en: 'Page search'
@@ -217,13 +224,13 @@ help:
     url:
       pt: 'https://arquivo.pt/catalogo'
       en: 'https://arquivo.pt/catalog'
-  contact:
+  sitemap:
     text:
-      pt: 'Contacto'
-      en: 'Contact'
+      pt: 'Mapa do site'
+      en: 'Site map'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/contacto/'
-      en: 'https://sobre.arquivo.pt/en/contact/'
+      pt: 'https://sobre.arquivo.pt/pt/mapa-do-sitio/'
+      en: 'https://sobre.arquivo.pt/en/site-map/'
 
 institutional:
   header:
