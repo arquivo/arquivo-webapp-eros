@@ -42,6 +42,7 @@ function handleTextSearch(query, res) {
         offset: query.get('offset'),
         maxItems: query.get('maxItems'),
         timeline: query.get('timeline'),
+        fields: query.get('fields'),
     }));
 }
 
