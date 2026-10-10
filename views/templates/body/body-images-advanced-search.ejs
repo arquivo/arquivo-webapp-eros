@@ -6,8 +6,12 @@ let values = {
   type: 'all',
   size: 'all',
   safeSearch: 'on',
+  collection: '',
   siteSearch: '',
+  maxItems: config.get('image.results.per.page'),
 }
+// the image search API returns at most 200 images per request
+const maxItemsOptions = [...new Set([parseInt(config.get('image.results.per.page')), 50, 100, 200])].sort((a, b) => a - b);
 
 let selectFor = function(key,value){
   return (value == values[key]) ? 'selected' : '';
@@ -75,6 +79,16 @@ if(typeof requestData != 'undefined'){
         </tr>
       </tbody>
     </table>
+   <!-- Websites -->
+   <label for="website"><%- t('advanced-image-search.fieldset.website.label') %></label>
+   <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
+   <small><%= t('advanced-image-search.fieldset.website.example') %></small>
+
+   <!-- Collections -->
+   <label for="collection"><%- t('advanced-image-search.fieldset.collection.label') %></label>
+   <input id="collection" type="text" name="collection" autocomplete="off" aria-describedby="collection-example" value="<%= values.collection %>">
+   <small id="collection-example"><%- t('advanced-image-search.fieldset.collection.example') %></small>
+
    <!-- words -->
    <label for="image-size"><%- t('advanced-image-search.fieldset.size.label') %></label>
     <select id="image-size" name="size" class="">
@@ -90,9 +104,13 @@ if(typeof requestData != 'undefined'){
     <option value="off" <%= selectFor('safeSearch','off') %>><%= t('advanced-image-search.fieldset.safeSearch.option.all') %></option>
    </select>  
 
-   <label for="website"><%- t('advanced-image-search.fieldset.website.label') %></label>
-   <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
-   <small class="last-margin"><%= t('advanced-image-search.fieldset.website.example') %></small> 
+   <!-- Number of results: images -->
+   <label for="number-of-results-images"><%- t('advanced-image-search.fieldset.results.label') %></label>
+   <select id="number-of-results-images" name="maxItems">
+    <% maxItemsOptions.forEach(n => { %>
+    <option value="<%= n %>" <%= selectFor('maxItems', n) %>><%= n %></option>
+    <% }) %>
+   </select>
     
   <!-- starts advanced search navigation -->
   <section class="navigation-tools">

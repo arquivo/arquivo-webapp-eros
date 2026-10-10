@@ -181,6 +181,18 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).toContain('query');
         });
 
+        it('should remove every collection: term and send them in the collection parameter', () => {
+            const requestData = new URLSearchParams({
+                q: 'teste collection:EAWP6 collection:EAWP8 query',
+                collection: 'EAWP6,EAWP8'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('teste query');
+            expect(sanitized.get('collection')).toBe('EAWP6,EAWP8');
+        });
+
         it('should remove safe: inline parameter (safeSearch) from query', () => {
             const requestData = new URLSearchParams({
                 q: 'test safe:on query',
@@ -223,6 +235,53 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).not.toContain('type:pdf');
             expect(queryParam).toContain('test');
             expect(queryParam).toContain('query');
+        });
+
+        it('should send yearBalance, language and minLanguageConfidence as their own parameters', () => {
+            const requestData = new URLSearchParams({
+                q: 'test yearBalance:0.25 language:pt minLanguageConfidence:MEDIUM query',
+                yearBalance: '0.25',
+                language: 'pt',
+                minLanguageConfidence: 'MEDIUM'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test query');
+            expect(sanitized.get('yearBalance')).toBe('0.25');
+            expect(sanitized.get('language')).toBe('pt');
+            expect(sanitized.get('minLanguageConfidence')).toBe('MEDIUM');
+        });
+
+        it('should remove yearBalance, language and minLanguageConfidence terms dropped as invalid', () => {
+            const requestData = new URLSearchParams({
+                q: 'yearBalance:2 test language:portuguese minLanguageConfidence:NONE'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test');
+            expect(sanitized.has('yearBalance')).toBe(false);
+            expect(sanitized.has('language')).toBe(false);
+            expect(sanitized.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should not remove words that only contain an inline term name', () => {
+            const requestData = new URLSearchParams({ q: 'mylanguage:pt test' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('mylanguage:pt test');
+        });
+
+        it('should let a requested yearBalance override the enabled default', () => {
+            config.set('text.search.api.yearBalance_enabled', true);
+            const enabledApi = new PageSearchApiRequest();
+            config.set('text.search.api.yearBalance_enabled', false);
+
+            const sanitized = enabledApi.sanitizeRequestData(new URLSearchParams({ q: 'test', yearBalance: 'false' }));
+
+            expect(sanitized.get('yearBalance')).toBe('false');
         });
 
         it('should handle query without inline parameters', () => {

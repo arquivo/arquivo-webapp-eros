@@ -68,6 +68,13 @@ fieldset:
       all:
         pt: Mostrar todas
         en: Show all
+  collection:
+    label:
+      pt: '<strong>Coleções,</strong> separadas por vírgulas:'
+      en: '<strong>Collections,</strong> separated by commas:'
+    example:
+      pt: 'ex. EAWP6 ou EAWP6,EAWP8,EAWP15 - <a href="https://arquivo.pt/colecoes" target="_blank" rel="noopener noreferrer">lista completa de coleções</a>'
+      en: 'e.g. EAWP6 or EAWP6,EAWP8,EAWP15 - <a href="https://arquivo.pt/collections" target="_blank" rel="noopener noreferrer">full list of collections</a>'
   website:
     label:
       pt: '<strong>Sítios Web,</strong> separados por vírgulas:'
@@ -75,6 +82,10 @@ fieldset:
     example:
       pt: 'ex. www.fccn.pt, www.fct.pt'
       en: 'e.g. www.fccn.pt, www.fct.pt'
+  results:
+    label:
+      pt: '<strong>Número de resultados</strong>:'
+      en: '<strong>Number of results</strong>:'
   search:
     en: Search
     pt: Pesquisar

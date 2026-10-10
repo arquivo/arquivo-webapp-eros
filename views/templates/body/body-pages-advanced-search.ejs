@@ -4,8 +4,12 @@ let values = {
   adv_phr: '',
   adv_not: '',
   type: 'all',
+  collection: '',
   siteSearch: '',
   maxItems: '',
+  yearBalance: '',
+  language: '',
+  minLanguageConfidence: '',
 }
 
 let checkTypeFor = function(type){
@@ -13,6 +17,9 @@ let checkTypeFor = function(type){
 }
 let selectMaxItemsFor = function(n){
   return (n == values.maxItems) ? 'selected' : '';
+}
+let selectedFor = function(key, value){
+  return (value == values[key]) ? 'selected' : '';
 }
 if(typeof requestData != 'undefined'){
   Object.keys(values)
@@ -85,6 +92,42 @@ if(typeof requestData != 'undefined'){
   <label for="website"><%- t('advanced-page-search.fieldset.website.label') %></label>
   <input id="website" type="text" name="siteSearch" value="<%= values.siteSearch %>">
   <small><%- t('advanced-page-search.fieldset.website.example') %></small>
+
+  <!-- Collections -->
+  <label for="collection"><%- t('advanced-page-search.fieldset.collection.label') %></label>
+  <input id="collection" type="text" name="collection" autocomplete="off" aria-describedby="collection-example" value="<%= values.collection %>">
+  <small id="collection-example"><%- t('advanced-page-search.fieldset.collection.example') %></small>
+
+  <!-- Language -->
+  <label for="language"><%- t('advanced-page-search.fieldset.language.label') %></label>
+  <input id="language" type="text" name="language" maxlength="2" autocomplete="off" aria-describedby="language-example" value="<%= values.language %>">
+  <small id="language-example"><%- t('advanced-page-search.fieldset.language.example') %></small>
+
+  <!-- Minimum language confidence -->
+  <label for="min-language-confidence"><%- t('advanced-page-search.fieldset.minLanguageConfidence.label') %></label>
+  <select id="min-language-confidence" name="minLanguageConfidence" aria-describedby="min-language-confidence-example">
+    <option value="" <%= selectedFor('minLanguageConfidence', '') %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.default') %></option>
+    <% ['HIGH', 'MEDIUM', 'LOW'].forEach(level => { %>
+    <option value="<%= level %>" <%= selectedFor('minLanguageConfidence', level) %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.' + level.toLowerCase()) %></option>
+    <% }) %>
+  </select>
+  <small id="min-language-confidence-example"><%- t('advanced-page-search.fieldset.minLanguageConfidence.example') %></small>
+
+  <!-- Year balance -->
+  <label for="year-balance"><%- t('advanced-page-search.fieldset.yearBalance.label') %></label>
+  <select id="year-balance" name="yearBalance" aria-describedby="year-balance-example">
+    <option value="" <%= selectedFor('yearBalance', '') %>><%- t('advanced-page-search.fieldset.yearBalance.option.none') %></option>
+    <option value="true" <%= selectedFor('yearBalance', 'true') %>><%- t('advanced-page-search.fieldset.yearBalance.option.default') %></option>
+    <% const yearBalanceStrengths = ['0.25', '0.5', '0.75', '1'];
+       // keeps a strength typed directly in the query (e.g. "yearBalance:0.3") selectable
+       if (values.yearBalance != '' && values.yearBalance != 'true' && values.yearBalance != 'false' && !yearBalanceStrengths.includes(values.yearBalance)) {
+         yearBalanceStrengths.push(values.yearBalance);
+       } %>
+    <% yearBalanceStrengths.forEach(strength => { %>
+    <option value="<%= strength %>" <%= selectedFor('yearBalance', strength) %>><%= strength %></option>
+    <% }) %>
+  </select>
+  <small id="year-balance-example"><%- t('advanced-page-search.fieldset.yearBalance.example') %></small>
 
   <!-- Number of results: pages -->
   <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
