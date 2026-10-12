@@ -7,7 +7,7 @@ const logger = require('./logger')('ImageSearch');
 // Suggestions are not critical, so don't hold the image results back for long waiting for one
 const SUGGESTION_TIMEOUT = 3000;
 
-module.exports = function (req, res, next) {
+module.exports = function searchImages(req, res, next) {
     
     const requestData = sanitizeInputs(req, res);
     const apiRequest = new ImageSearchApiRequest(); 
