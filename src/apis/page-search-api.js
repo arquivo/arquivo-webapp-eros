@@ -104,11 +104,11 @@ class PageSearchApiRequest extends ApiRequest {
      * @returns {string[]} Inline terms, as typed in the query
      */
     getInlineTerms(requestData) {
-        const queryTerms = (requestData.get('q') ?? '').split(/\s+/);
+        const queryTerms = new Set((requestData.get('q') ?? '').split(/\s+/));
         return INLINE_PARAMS
             .filter(inlineParam => requestData.has(inlineParamRequestName(inlineParam)))
             .map(inlineParam => `${inlineParam}:${requestData.get(inlineParamRequestName(inlineParam))}`)
-            .filter(term => queryTerms.includes(term));
+            .filter(term => queryTerms.has(term));
     }
 
     /**
