@@ -5,7 +5,7 @@ const { request } = require('express');
 const specialTerms = ['site', 'type', 'collection', 'safe', 'size', 'yearBalance', 'language', 'minLanguageConfidence'];
 
 // Values the text search API accepts, anything else makes it reply with an error
-const isValidYearBalance = (v) => ['true', 'false'].includes(v) || (/^\d*\.?\d+$/.test(v) && parseFloat(v) <= 1);
+const isValidYearBalance = (v) => ['true', 'false'].includes(v) || (/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(v) && Number.parseFloat(v) <= 1);
 const isValidLanguage = (v) => /^[a-zA-Z]{2}$/.test(v);
 const isValidMinLanguageConfidence = (v) => ['HIGH', 'MEDIUM', 'LOW'].includes(v);
 
@@ -47,7 +47,7 @@ module.exports = function (req, res) {
 
     // a comma separated list of collections, with or without spaces after the commas
     if (requestData.has('collection')) {
-        requestData.set('collection', requestData.get('collection').split(/\s/).join(''));
+        requestData.set('collection', requestData.get('collection').replaceAll(/\s/g, ''));
     }
 
     const defaultRequestParameters = {
