@@ -38,8 +38,8 @@ consent:
         en: "data protection terms"
         pt: 'termos da proteção de dados'
       href:
-        en: https://sobre.arquivo.pt/en/about/privacy-policy/data-protection-for-the-suggest-websites-form/
-        pt: https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/protecao-de-dados-formulario-sugerir-sites/
+        en: https://arquivo.pt/citationsaver-privacy
+        pt: https://arquivo.pt/citationsaver-privacidade
     checkbox:
       before:
         en: "I have read and understood the "
