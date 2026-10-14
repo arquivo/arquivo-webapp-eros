@@ -32,29 +32,29 @@ about:
       pt: 'Termos e Condições'
       en: 'Terms and Conditions'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/acerca/termos-e-condicoes/'
-      en: 'https://sobre.arquivo.pt/en/about/terms-and-conditions/'
+      pt: 'https://arquivo.pt/termos-e-condicoes'
+      en: 'https://arquivo.pt/terms-and-conditions'
   privacy:
     text:
       pt: 'Política de Privacidade'
       en: 'Privacy Policy'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/'
-      en: 'https://sobre.arquivo.pt/en/about/privacy-policy/'
+      pt: 'https://arquivo.pt/politica-privacidade'
+      en: 'https://arquivo.pt/privacy-policy'
   cookies:
     text:
       pt: 'Política de Cookies'
       en: 'Cookie Policy'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/acerca/politica-de-privacidade/politica-de-cookies-arquivo-pt/'
-      en: 'https://sobre.arquivo.pt/en/about/privacy-policy/cookie-policy-arquivo-pt/'
+      pt: 'https://arquivo.pt/cookies-politica'
+      en: 'https://arquivo.pt/cookies-policy'
   contact:
     text:
       pt: 'Contacto'
       en: 'Contact'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/contacto/'
-      en: 'https://sobre.arquivo.pt/en/contact/'
+      pt: 'https://arquivo.pt/contacto'
+      en: 'https://arquivo.pt/contact'
 
 news:
   header:
