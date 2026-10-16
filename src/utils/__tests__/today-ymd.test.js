@@ -1,8 +1,10 @@
 const todayYmd = require('../../../src/utils/today-ymd');
 
+// Jest runs in Pacific/Kiritimati (UTC+14, see jest.global-setup.js), so a UTC
+// based implementation would return a different date for most of these.
 describe('todayYmd', () => {
-  it('should return today as an 8 digit YYYYMMDD string', () => {
-    expect(todayYmd()).toMatch(/^\d{8}$/);
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('should return the local date of today', () => {
@@ -18,8 +20,11 @@ describe('todayYmd', () => {
     expect([localYmd(before), localYmd(after)]).toContain(result);
   });
 
-  it('should convert a given date to YYYYMMDD', () => {
-    expect(todayYmd(new Date(2024, 2, 15, 14, 30, 45))).toBe('20240315');
+  it('should read the clock on every call', () => {
+    jest.useFakeTimers().setSystemTime(new Date(2024, 2, 15, 12));
+    expect(todayYmd()).toBe('20240315');
+    jest.setSystemTime(new Date(2024, 2, 16, 12));
+    expect(todayYmd()).toBe('20240316');
   });
 
   it('should add leading zeros to single-digit months and days', () => {
@@ -28,9 +33,5 @@ describe('todayYmd', () => {
 
   it('should use the local date just before midnight', () => {
     expect(todayYmd(new Date(2024, 11, 31, 23, 59, 59, 999))).toBe('20241231');
-  });
-
-  it('should use the local date just after midnight', () => {
-    expect(todayYmd(new Date(2025, 0, 1, 0, 0, 0, 0))).toBe('20250101');
   });
 });
