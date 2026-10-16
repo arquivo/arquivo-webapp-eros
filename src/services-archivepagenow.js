@@ -23,28 +23,44 @@ const logger = require('./logger')('ArchivePageNow');
 const maxHops = 16; //limit to redirects
 const startsWithHttp = /^https?:\/\//
 
-let userAgent = ''
-let userIp = ''
+/**
+ * Builds the backend URL that logs an archiving attempt.
+ *
+ * The backend answers this request with an empty body: what gets logged is the
+ * raw request line. Values are encoded with encodeURIComponent (space -> %20,
+ * `( ) ! ~ *` kept literal) and not with URLSearchParams#toString (space -> +,
+ * `( ) ! ~` escaped), so the logged query string stays byte-for-byte the same.
+ * The URL is then normalised by `URL`, exactly as node-fetch does before sending.
+ */
+const buildLoggingUrl = function (params) {
+    const loggingUrl = new URL(config.get('backend.url') + '/services/archivepagenow');
+    loggingUrl.search = Object.entries(params)
+        .map(([name, value]) => name + '=' + encodeURIComponent(value))
+        .join('&');
+    return loggingUrl.href;
+}
 
 module.exports = function (req, res) {
     const requestData = new URLSearchParams(req.body);
     const url = (requestData.get('url') ?? '').trim();
 
-    // Logging info:
-    userAgent = req.get('user-agent');
-    userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // Logging info, scoped to this request:
+    const userAgent = req.get('user-agent');
+    const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
+    const logRequest = function (success) {
+        fetch(buildLoggingUrl({ url, success, logging: true, 'user-agent': userAgent, ip: userIp }), { method: 'POST' })
+            .catch(error => {
+                logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
+            });
+    }
     const renderError = function (errorType = 'default') {
         res.render('pages/services-archivepagenow', {
             url: url,
             error: true,
             errorType: errorType
         });
-        fetch(config.get('backend.url') + '/services/archivepagenow?url=' + encodeURIComponent(url) + '&success=false&logging=true'
-            + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
-            .catch(error => {
-                logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-            });
+        logRequest(false);
     }
     const renderOk = function () {
         res.render('pages/services-archivepagenow-save', {
@@ -52,11 +68,7 @@ module.exports = function (req, res) {
             recordingUrl: config.get('wayback.url') + '/' + dateToTimestamp(new Date()) + '/' + url,
             liveUrl: url
         });
-        fetch(config.get('backend.url') + '/services/archivepagenow?url=' + encodeURIComponent(url) + '&success=true&logging=true'
-            + '&user-agent=' + encodeURIComponent(userAgent) + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
-            .catch(error => {
-                logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-            });
+        logRequest(true);
     }
     const processUrl = function (url) {
         if (isValidUrl(url)) {
