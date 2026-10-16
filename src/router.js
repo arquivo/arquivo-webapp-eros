@@ -243,27 +243,31 @@ router.post('/services/citationsaver', function (req, res) {
 // ============================================================================
 
 /**
+ * Partial handlers keyed by partial id.
+ * A Map (not a plain object) so ids like 'constructor' or '__proto__'
+ * never resolve to prototype properties.
+ */
+const partialHandlers = new Map([
+    // Search results partials
+    ['pages-search-results', (req, res) => searchPages(req, res)],
+    ['images-search-results', (req, res, next) => searchImages(req, res, next)],
+    ['url-search-results', (req, res) => searchUrl(req, res)],
+    // Wayback replay partials
+    ['replay-nav', (req, res) => replayNav(req, res)],
+    ['replay-technical-details', (req, res) => replayTechnicalDetails(req, res)],
+]);
+
+/**
  * Dynamic Partials Router
  * Routes partial template requests to appropriate handlers or renders generic partial
  * Used for AJAX content loading without full page refresh
  */
 router.get('/partials/:id', function (req, res, next) {
-    // Search results partials
-    if (req.params.id == 'pages-search-results') {
-        searchPages(req, res);
-    } else if (req.params.id == 'images-search-results') {
-        searchImages(req, res, next);
-    } else if (req.params.id == 'url-search-results') {
-        searchUrl(req, res);
-    } 
-    // Wayback replay partials
-    else if (req.params.id == 'replay-nav') {
-        replayNav(req, res);
-    } else if (req.params.id == 'replay-technical-details') {
-        replayTechnicalDetails(req, res);
-    } 
-    // Generic partial template
-    else {
+    const handler = partialHandlers.get(req.params.id);
+    if (handler) {
+        handler(req, res, next);
+    } else {
+        // Generic partial template
         res.render('partials/' + req.params.id, { layout: false });
     }
 });
