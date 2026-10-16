@@ -109,5 +109,20 @@ describe('timestampToText', () => {
       const result = formatter.short('');
       expect(result).toBeDefined();
     });
+
+    it('should treat non-string input as an empty (fully zero-padded) timestamp', () => {
+      const formatter = timestampToText(mockTranslate);
+      expect(formatter.short(12345678901234)).toBe('Jan 0');
+      expect(formatter.short(undefined)).toBe('Jan 0');
+      expect(formatter.short(null)).toBe('Jan 0');
+    });
+  });
+
+  describe('partial timestamps', () => {
+    it('should zero-pad the missing time of a date only timestamp', () => {
+      const formatter = timestampToText(mockTranslate);
+      expect(formatter.medium('20240215')).toBe('15 February 2024, 00:00');
+      expect(formatter.long('20241231')).toBe('31 de December de 2024, 00:00');
+    });
   });
 });

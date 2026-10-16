@@ -218,6 +218,25 @@ describe('Export Results Utility', () => {
             }).toThrow();
         });
 
+        it('should parse year/month/day at the end of a year', () => {
+            const apiResponseItems = [{ tstamp: '20201231235959', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            expect(result[12]).toEqual([2020, 'December', 31]);
+        });
+
+        it('should not zero-pad a partial timestamp into a valid date', () => {
+            const apiResponseItems = [{ tstamp: '2020', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            // Unlike timestampToText, '2020' must not become month '00' / day 0
+            expect(result[12][0]).toBe(2020);
+            expect(result[12][2]).not.toBe(0);
+            expect(translateFunction).not.toHaveBeenCalledWith('common.months.00');
+        });
+
         it('should handle missing request parameters', () => {
             const minimalRequest = new URLSearchParams({ q: 'test' });
 

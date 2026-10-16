@@ -1,3 +1,4 @@
+const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 /**
  * Export Results Utility
  * 
@@ -56,9 +57,10 @@ module.exports = function (apiRequestData, apiResponseItems, translateFunction, 
             return;
         }
 
-        currentDocument.year = parseInt(currentDocument[timstampField].substring(0, 4));
-        currentDocument.month = translateFunction('common.months.' + currentDocument[timstampField].substring(4, 6));
-        currentDocument.day = parseInt(currentDocument[timstampField].substring(6, 8));
+        const { year, month, day } = parseArchiveTimestamp(currentDocument[timstampField]);
+        currentDocument.year = parseInt(year);
+        currentDocument.month = translateFunction('common.months.' + month);
+        currentDocument.day = parseInt(day);
 
         // append result so it can be exported
         exportSERPSaveLine(
