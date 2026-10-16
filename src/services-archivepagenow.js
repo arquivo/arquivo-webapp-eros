@@ -30,7 +30,9 @@ const startsWithHttp = /^https?:\/\//
  * raw request line. Values are encoded with encodeURIComponent (space -> %20,
  * `( ) ! ~ *` kept literal) and not with URLSearchParams#toString (space -> +,
  * `( ) ! ~` escaped), so the logged query string stays byte-for-byte the same.
- * The URL is then normalised by `URL`, exactly as node-fetch does before sending.
+ * `URL` only normalises the result (e.g. `'` -> `%27`), exactly as node-fetch
+ * does before sending; it does no joining or encoding. It throws synchronously
+ * on a malformed backend.url, so callers must catch.
  */
 const buildLoggingUrl = function (params) {
     const loggingUrl = new URL(config.get('backend.url') + '/services/archivepagenow');
@@ -48,11 +50,19 @@ module.exports = function (req, res) {
     const userAgent = req.get('user-agent');
     const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
+    const logError = function (error) {
+        logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
+    }
+    // Logging is fail-safe: it runs after the page has been rendered, so neither
+    // a rejected fetch nor a synchronous throw (e.g. `new URL` on a malformed
+    // backend.url) may escape to Express; both go to the app logger instead.
     const logRequest = function (success) {
-        fetch(buildLoggingUrl({ url, success, logging: true, 'user-agent': userAgent, ip: userIp }), { method: 'POST' })
-            .catch(error => {
-                logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
-            });
+        try {
+            fetch(buildLoggingUrl({ url, success, logging: true, 'user-agent': userAgent, ip: userIp }), { method: 'POST' })
+                .catch(logError);
+        } catch (error) {
+            logError(error);
+        }
     }
     const renderError = function (errorType = 'default') {
         res.render('pages/services-archivepagenow', {

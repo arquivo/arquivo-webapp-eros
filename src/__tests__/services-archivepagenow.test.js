@@ -1,9 +1,15 @@
 // Mock dependencies before requiring the module
 jest.mock('config');
 jest.mock('node-fetch');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn(), error: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const archivePageNow = require('../services-archivepagenow');
 const fetch = require('node-fetch');
+const config = require('config');
+const logger = require('../logger')();
 
 describe('Archive Page Now Service', () => {
     let req, res;
@@ -206,6 +212,36 @@ describe('Archive Page Now Service', () => {
             );
         });
 
+        describe('with a malformed backend.url', () => {
+            beforeEach(() => {
+                const realGet = config.get;
+                jest.spyOn(config, 'get').mockImplementation(key =>
+                    key === 'backend.url' ? 'not a url' : realGet(key));
+            });
+            afterEach(() => config.get.mockRestore());
+
+            it('should render the page and send the error to the app logger instead of throwing', () => {
+                req.body = { url: 'http://example.com' };
+
+                expect(() => archivePageNow(req, res)).not.toThrow();
+
+                expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow-save',
+                    expect.any(Object));
+                expect(mockFetch).not.toHaveBeenCalled();
+                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+            });
+
+            it('should also log the error on the invalid-url branch', () => {
+                req.body = { url: 'not a valid url' };
+
+                expect(() => archivePageNow(req, res)).not.toThrow();
+
+                expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow',
+                    expect.objectContaining({ error: true }));
+                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+            });
+        });
+
         it('should handle special characters in URL', () => {
             req.body = { url: 'http://example.com/path?query=test&value=123' };
 
@@ -306,8 +342,8 @@ describe('Archive Page Now Service', () => {
 
             archivePageNow(req, res);
 
-            // node-fetch 2.x sends `new URL(input).href`, which escapes ' in the query
-            expect(new URL(loggedUrl()).href).toBe(endpoint
+            // `URL` escapes ' in the query, the same normalisation node-fetch 2.x applies
+            expect(loggedUrl()).toBe(endpoint
                 + '?url=http%3A%2F%2Fexample.com%2Fit%27s(1)!~*'
                 + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
         });
