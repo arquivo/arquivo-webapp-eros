@@ -70,6 +70,45 @@ section#archivepagenow-description p {
     margin-bottom: 8px;
 }
 
+/* GDPR consent checkboxes (mirrors CitationSaver) */
+
+.archivepagenow-consent {
+    max-width: 900px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.archivepagenow-consent-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.archivepagenow-consent-item input[type="checkbox"] {
+    margin: 3px 8px 0 0;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+}
+
+.archivepagenow-consent-item label {
+    visibility: initial;
+    height: auto;
+    width: auto;
+    flex: 1;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.archivepagenow-consent-item a.learn-more {
+    color: #1c75c0;
+}
+
+body#archivepagenow form#search-form input#submit-search-input:disabled,
+body#archivepagenow form#search-form button#submit-search:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 body#archivepagenow li#menu-copy-link {
     display: none;
 }

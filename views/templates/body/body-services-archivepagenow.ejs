@@ -13,12 +13,23 @@
     </h4>
 
     <section id="search-tools">
+        <div class="archivepagenow-consent">
+            <div class="archivepagenow-consent-item">
+                <input type="checkbox" name="consent-protection" id="consent-protection" form="search-form" required autofocus>
+                <label for="consent-protection"><%- t('services-archivepagenow.consent.protection.checkbox.before') %><a class="learn-more" href="<%- t('services-archivepagenow.consent.protection.link.href') %>" target="_blank" rel="noopener"><%- t('services-archivepagenow.consent.protection.link.text') %></a><%- t('services-archivepagenow.consent.protection.checkbox.after') %></label>
+            </div>
+            <div class="archivepagenow-consent-item">
+                <input type="checkbox" name="consent-processing" id="consent-processing" form="search-form" required>
+                <label for="consent-processing"><%- t('services-archivepagenow.consent.processing.checkbox') %></label>
+            </div>
+        </div>
+
         <form id="search-form" role="form" action="/services/archivepagenow?l=<%= getLanguage() %>" method="POST">
             <span class="search-input-button">
                 <input id="submit-search-input" type="search" placeholder="<%= t('services-archivepagenow.form.label') %>"
-                    autocapitalize="off" autocomplete="off" autofocus onmouseout="removeSearchBoxShadow()" name="url"
+                    autocapitalize="off" autocomplete="off" disabled onmouseout="removeSearchBoxShadow()" name="url"
                     aria-label="<%= t('services-archivepagenow.form.label') %>" value="<%= url %>">
-                <button id="submit-search" type="submit" class="fas fa-video" value="search menu button"><span
+                <button id="submit-search" type="submit" class="fas fa-video" value="search menu button" disabled><span
                         class="button-title">
                         <%= t('services-archivepagenow.form.button') %>
                     </span></button>
@@ -27,6 +38,26 @@
         </form>
 
         <script>
+            (function () {
+                var consentProtection = document.getElementById('consent-protection');
+                var consentProcessing = document.getElementById('consent-processing');
+                var urlInput = document.getElementById('submit-search-input');
+                var submitButton = document.getElementById('submit-search');
+
+                function updateConsentGate(event) {
+                    var granted = consentProtection.checked && consentProcessing.checked;
+                    urlInput.disabled = !granted;
+                    submitButton.disabled = !granted;
+                    if (granted && event) {
+                        urlInput.focus();
+                    }
+                }
+
+                updateConsentGate();
+                consentProtection.addEventListener('change', updateConsentGate);
+                consentProcessing.addEventListener('change', updateConsentGate);
+            })();
+
             $('#search-form').submit(function (event) {
                 if (!isValidUrl($("#submit-search-input").val())) {
                     event.preventDefault();
