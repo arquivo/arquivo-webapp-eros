@@ -70,8 +70,8 @@ fieldset:
       en: 'A lower confidence also includes the results with a higher confidence.'
     option:
       default:
-        pt: Predefinida
-        en: Default
+        pt: Alta
+        en: High
       high:
         pt: Alta
         en: High
@@ -92,13 +92,13 @@ fieldset:
       none:
         pt: Desligado
         en: 'Off'
-      default:
-        pt: Ligado
-        en: 'On'
   results:
     label:
       pt: '<strong>Número de resultados</strong>:'
       en: '<strong>Number of results</strong>:'
+  default:
+    pt: (predefinição)
+    en: (default)
   search:
     en: Search
     pt: Pesquisar

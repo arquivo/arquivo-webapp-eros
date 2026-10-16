@@ -23,7 +23,8 @@ test('fills the fields back in from the inline query terms', async ({ page, adva
     await expect(advancedSearchPage.withWords).toHaveValue('fccn');
     await expect(advancedSearchPage.language).toHaveValue('en');
     await expect(advancedSearchPage.minLanguageConfidence).toHaveValue('LOW');
-    await expect(advancedSearchPage.yearBalance).toHaveValue('true');
+    // yearBalance:true is the same as a strength of 0.5 in the API
+    await expect(advancedSearchPage.yearBalance).toHaveValue('0.5');
 });
 
 test('does not add the terms when the fields are left at their defaults', async ({ searchBar, advancedSearchPage }) => {
