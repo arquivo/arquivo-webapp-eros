@@ -11,8 +11,8 @@ about:
       pt: 'O que é o Arquivo.pt?'
       en: 'What is Arquivo.pt?'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/o-que-e-o-arquivo-pt/'
-      en: 'https://sobre.arquivo.pt/en/help/general-informations/'
+      pt: 'https://arquivo.pt/informacoes-gerais'
+      en: 'https://arquivo.pt/general-information'
   source:
     text:
       pt: 'API & Código-aberto'
@@ -30,21 +30,21 @@ about:
   terms:
     text:
       pt: 'Termos e Condições'
-      en: 'Terms and Conditions'
+      en: 'Terms and conditions'
     url:
       pt: 'https://arquivo.pt/termos-e-condicoes'
       en: 'https://arquivo.pt/terms-and-conditions'
   privacy:
     text:
       pt: 'Política de Privacidade'
-      en: 'Privacy Policy'
+      en: 'Privacy policy'
     url:
       pt: 'https://arquivo.pt/politica-privacidade'
       en: 'https://arquivo.pt/privacy-policy'
   cookies:
     text:
       pt: 'Política de Cookies'
-      en: 'Cookie Policy'
+      en: 'Cookies policy'
     url:
       pt: 'https://arquivo.pt/cookies-politica'
       en: 'https://arquivo.pt/cookies-policy'
@@ -70,10 +70,10 @@ news:
   channels:
     text:
       pt: 'Canais de comunicação'
-      en: 'Communication channels'
+      en: 'Channels'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/noticias/canais/'
-      en: 'https://sobre.arquivo.pt/en/news/channels/'
+      pt: 'https://arquivo.pt/canais'
+      en: 'https://arquivo.pt/channels'
   latest:
     text:
       pt: 'Últimas novidades'
@@ -104,7 +104,7 @@ news:
       en: 'https://arquivo.pt/press'
   dissemination:
     text:
-      pt: 'Material de Divulgação'
+      pt: 'Material de divulgação'
       en: 'Dissemination material'
     url:
       pt: 'https://arquivo.pt/divulgar'
@@ -117,7 +117,7 @@ collaborate:
   awards:
     text:
       pt: 'Prémios Arquivo.pt'
-      en: 'Arquivo.pt Awards'
+      en: 'Arquivo.pt awards'
     url:
       pt: 'https://arquivo.pt/premios'
       en: 'https://arquivo.pt/awards'
@@ -152,7 +152,7 @@ collaborate:
   archivepagenow:
     text:
       pt: Arquive páginas
-      en: Archive webpages
+      en: Archive page now
     url:
       pt: https://arquivo.pt/archivepagenow
       en: https://arquivo.pt/archivepagenow?l=en
@@ -166,7 +166,7 @@ collaborate:
   open-data:
     text:
       pt: 'Dados abertos'
-      en: 'Open datasets'
+      en: 'Open data sets'
     url:
       pt: 'https://arquivo.pt/dadosabertos'
       en: 'https://arquivo.pt/opendata'
@@ -187,29 +187,29 @@ help:
       pt: 'Pesquisa de páginas'
       en: 'Page search'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/pesquisa/'
-      en: 'https://sobre.arquivo.pt/en/help/search-2/'
+      pt: 'https://arquivo.pt/pesquisa-paginas'
+      en: 'https://arquivo.pt/page-search'
   image-search:
     text:
       pt: 'Pesquisa de imagens'
       en: 'Image search'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/ajuda-acerca-da-pesquisa-de-imagens/'
-      en: 'https://sobre.arquivo.pt/en/help/help-about-image-search/'
+      pt: 'https://arquivo.pt/pesquisa-imagens'
+      en: 'https://arquivo.pt/image-search'
   crawling:
     text:
       pt: 'Recolha'
       en: 'Crawling'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/recolha-e-arquivo-de-conteudos/'
-      en: 'https://arquivo.pt/faq-crawling'
+      pt: 'https://arquivo.pt/recolha'
+      en: 'https://arquivo.pt/crawling'
   access:
     text:
       pt: 'Acesso'
       en: 'Access'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/ajuda/acesso-a-conteudos-arquivados/'
-      en: 'https://sobre.arquivo.pt/en/help/access-to-archived-contents/'
+      pt: 'https://arquivo.pt/acesso'
+      en: 'https://arquivo.pt/access'
   courses:
     text:
       pt: 'Formação'
@@ -229,8 +229,8 @@ help:
       pt: 'Mapa do site'
       en: 'Site map'
     url:
-      pt: 'https://sobre.arquivo.pt/pt/mapa-do-sitio/'
-      en: 'https://sobre.arquivo.pt/en/site-map/'
+      pt: 'https://arquivo.pt/mapa'
+      en: 'https://arquivo.pt/sitemap'
 
 institutional:
   header:
