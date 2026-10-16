@@ -40,7 +40,7 @@ const loggingEndpoint = function () {
  * (via `URL`) escapes before sending, so it is sent as %27 here already.
  */
 const encodeLogValue = function (value) {
-    return encodeURIComponent(value).replace(/'/g, '%27');
+    return encodeURIComponent(value).replaceAll("'", '%27');
 }
 
 module.exports = function (req, res) {
