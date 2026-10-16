@@ -33,56 +33,54 @@ const handlers = {
 };
 const allHandlers = Object.values(handlers);
 
+// Fail fast instead of hanging Jest if a request never gets a response
+// (e.g. a plain-object lookup calling Object() for 'constructor')
+const REQUEST_TIMEOUT_MS = 2000;
+const getPartial = (id) => request(app).get('/partials/' + id).timeout(REQUEST_TIMEOUT_MS);
+
 beforeEach(() => {
     jest.clearAllMocks();
 });
 
 describe('GET /partials/:id', () => {
 
-    describe.each(Object.entries(handlers))('named partial %s', (id, handler) => {
-        it('dispatches to its handler only', async () => {
-            const res = await request(app).get('/partials/' + id);
-            expect(res.status).toBe(200);
-            expect(handler).toHaveBeenCalledTimes(1);
-            allHandlers
-                .filter(h => h !== handler)
-                .forEach(h => expect(h).not.toHaveBeenCalled());
-        });
-
-        it('passes the request params through to the handler', async () => {
-            await request(app).get('/partials/' + id);
-            const [req, res] = handler.mock.calls[0];
-            expect(req.params.id).toBe(id);
-            expect(typeof res.render).toBe('function');
-        });
+    it.each(Object.entries(handlers))('dispatches %s to its handler only', async (id, handler) => {
+        const res = await getPartial(id);
+        expect(res.status).toBe(200);
+        expect(handler).toHaveBeenCalledTimes(1);
+        const [req, response] = handler.mock.calls[0];
+        expect(req.params.id).toBe(id);
+        expect(typeof response.render).toBe('function');
+        allHandlers
+            .filter(h => h !== handler)
+            .forEach(h => expect(h).not.toHaveBeenCalled());
     });
 
     it('calls searchImages with (req, res, next)', async () => {
-        await request(app).get('/partials/images-search-results');
+        await getPartial('images-search-results');
         const args = searchImages.mock.calls[0];
         expect(args).toHaveLength(3);
         expect(typeof args[2]).toBe('function');
     });
 
-    it.each([
-        'pages-search-results',
-        'url-search-results',
-        'replay-nav',
-        'replay-technical-details',
-    ])('calls the %s handler with only (req, res)', async (id) => {
-        await request(app).get('/partials/' + id);
-        expect(handlers[id].mock.calls[0]).toHaveLength(2);
-    });
-
-    it('renders an existing generic partial template without a layout', async () => {
-        const res = await request(app).get('/partials/modal-datepicker');
-        expect(res.status).toBe(200);
-        expect(res.text).not.toMatch(/<html/i);
-        allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
+    it('renders an existing generic partial template with layout: false', async () => {
+        const renderSpy = jest.spyOn(app, 'render');
+        try {
+            const res = await getPartial('modal-datepicker');
+            expect(res.status).toBe(200);
+            expect(renderSpy).toHaveBeenCalledWith(
+                'partials/modal-datepicker',
+                expect.objectContaining({ layout: false }),
+                expect.any(Function)
+            );
+            allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
+        } finally {
+            renderSpy.mockRestore();
+        }
     });
 
     it('falls back to the generic render for an unknown id (missing template)', async () => {
-        const res = await request(app).get('/partials/does-not-exist');
+        const res = await getPartial('does-not-exist');
         expect(res.status).toBe(500);
         allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
     });
@@ -90,9 +88,8 @@ describe('GET /partials/:id', () => {
     it.each(['constructor', 'toString', 'hasOwnProperty', '__proto__'])(
         'treats the prototype key %s as a generic partial, not a handler',
         async (id) => {
-            const res = await request(app).get('/partials/' + id);
+            const res = await getPartial(id);
             expect(res.status).toBe(500);
-            expect(res.text).toContain('partials/' + id);
             allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
         }
     );

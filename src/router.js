@@ -249,12 +249,12 @@ router.post('/services/citationsaver', function (req, res) {
  */
 const partialHandlers = new Map([
     // Search results partials
-    ['pages-search-results', (req, res) => searchPages(req, res)],
-    ['images-search-results', (req, res, next) => searchImages(req, res, next)],
-    ['url-search-results', (req, res) => searchUrl(req, res)],
+    ['pages-search-results', searchPages],
+    ['images-search-results', searchImages],
+    ['url-search-results', searchUrl],
     // Wayback replay partials
-    ['replay-nav', (req, res) => replayNav(req, res)],
-    ['replay-technical-details', (req, res) => replayTechnicalDetails(req, res)],
+    ['replay-nav', replayNav],
+    ['replay-technical-details', replayTechnicalDetails],
 ]);
 
 /**
