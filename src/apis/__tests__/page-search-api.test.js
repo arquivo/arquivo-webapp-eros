@@ -4,6 +4,7 @@ jest.mock('config');
 const PageSearchApiRequest = require('../page-search-api');
 const config = require('config');
 const http = require('node:http');
+const todayYmd = require('../../utils/today-ymd');
 
 /**
  * PageSearchApiRequest Test Suite
@@ -540,6 +541,89 @@ describe('PageSearchApiRequest', () => {
                 expect(data.request_parameters.q).toBe('arquivo test');
                 done();
             });
+        });
+    });
+
+    /**
+     * Characterization tests: pin the request the client sends and what it returns on
+     * failure, so the base-class consolidation (#55) can't change them unnoticed.
+     */
+    describe('characterization', () => {
+        let captureServer;
+        let captured;
+        let status;
+
+        beforeAll((done) => {
+            captureServer = http.createServer((req, res) => {
+                captured.push(req.url);
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+            });
+            captureServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            captureServer.close(done);
+        });
+
+        beforeEach(() => {
+            captured = [];
+            status = 200;
+        });
+
+        const apiAtCaptureServer = () => {
+            const api = new PageSearchApiRequest();
+            api.apiUrl = `http://localhost:${captureServer.address().port}`;
+            return api;
+        };
+
+        it('sends the default params, in order, with the inline terms moved out of the query', (done) => {
+            const api = apiAtCaptureServer();
+            const requestData = new URLSearchParams({
+                q: 'lisboa collection:Roteiro site:publico.pt',
+                collection: 'Roteiro',
+                siteSearch: 'publico.pt',
+                offset: '20',
+                unknown: 'dropped',
+            });
+
+            api.get(requestData, (data) => {
+                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                const expected = new URLSearchParams([
+                    ['q', 'lisboa'],
+                    ['from', '19910806'],
+                    ['to', todayYmd()],
+                    ['offset', '20'],
+                    ['siteSearch', 'publico.pt'],
+                    ['collection', 'Roteiro'],
+                    ['maxItems', '10'],
+                    ['dedupValue', '1'],
+                    ['prettyPrint', 'false'],
+                    ['timeline', 'true'],
+                ]);
+                expect(captured).toEqual(['/?' + expected.toString()]);
+                done();
+            });
+        });
+
+        it('returns the default reply structure when the API fails', (done) => {
+            status = 500;
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toBe(api.defaultApiReply);
+                expect(data).toEqual({
+                    estimated_nr_results: 0,
+                    response_items: [],
+                    request_parameters: { from: '19910806', to: todayYmd() },
+                    timeline: { impact: {} },
+                });
+                done();
+            });
+        });
+
+        it('uses GET with a 3 minute timeout by default', () => {
+            expect(new PageSearchApiRequest().options).toEqual({ method: 'GET', timeout: 180000 });
         });
     });
 });

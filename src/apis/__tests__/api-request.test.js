@@ -57,10 +57,15 @@ function handleMockApiRequest(req, res, serverPort) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end('invalid json{');
   } else if (url.pathname === '/timeout') {
-    setTimeout(() => {
+    const pending = setTimeout(() => {
       res.writeHead(200);
       res.end('{}');
     }, 5000);
+    // the client gives up first: don't keep the timer (and the test worker) alive
+    res.on('close', () => clearTimeout(pending));
+  } else if (url.pathname === '/echo') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ url: req.url }));
   }
 }
 
@@ -265,6 +270,89 @@ describe('ApiRequest', () => {
           expect(data).toEqual(defaultReply);
           errorServer.close(done);
         });
+      });
+    });
+  });
+
+  /**
+   * Characterization tests: pin the current behaviour of the JSON API client
+   * so the base-class consolidation (#55) can't change it unnoticed.
+   */
+  describe('characterization', () => {
+    it('uses GET with a 3 minute timeout by default', () => {
+      const api = new ApiRequest('http://example.com');
+      expect(api.options).toEqual({ method: 'GET', timeout: 180000 });
+    });
+
+    it('requests apiUrl + "?" + the sanitized request data', (done) => {
+      const api = new ApiRequest(`http://localhost:${serverPort}/echo`, { a: '1', b: null, c: '3', d: null });
+      const requestData = new URLSearchParams({ c: 'x', b: 'y', ignored: 'z' });
+
+      api.get(requestData, (data) => {
+        expect(data).toEqual({ url: '/echo?a=1&b=y&c=x' });
+        expect(api.logger.info).toHaveBeenCalledWith(`http://localhost:${serverPort}/echo?a=1&b=y&c=x`);
+        done();
+      });
+    });
+
+    it('logs the status code and returns the default reply on a non-2xx status', (done) => {
+      const defaultReply = { fallback: true };
+      const api = new ApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toBe(defaultReply);
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/error : Invalid status code: 500`);
+        done();
+      });
+    });
+
+    it('logs a JSON parse error and returns the default reply on invalid JSON', (done) => {
+      const defaultReply = { fallback: true };
+      const api = new ApiRequest(`http://localhost:${serverPort}/invalid-json`, {}, defaultReply);
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toBe(defaultReply);
+        expect(api.logger.error).toHaveBeenCalledWith(expect.stringContaining(`http://localhost:${serverPort}/invalid-json : JSON parse error:`));
+        done();
+      });
+    });
+
+    it('gives up after options.timeout, destroys the request and returns the default reply once', (done) => {
+      const defaultReply = { fallback: 'timeout' };
+      const api = new ApiRequest(`http://localhost:${serverPort}/timeout`, {}, defaultReply);
+      api.options.timeout = 100;
+      const start = Date.now();
+      let calls = 0;
+
+      api.get(new URLSearchParams(), (data) => {
+        calls++;
+        expect(data).toBe(defaultReply);
+        expect(Date.now() - start).toBeLessThan(2000);
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/timeout : Timeout (100ms)`);
+        // destroying the timed out request must not call back a second time
+        setTimeout(() => {
+          expect(calls).toBe(1);
+          done();
+        }, 100);
+      });
+    });
+
+    // KNOWN GAP (kept on purpose, fixed separately): the callback runs inside the JSON.parse
+    // try block, so an exception thrown by the callback is swallowed and logged as a
+    // "JSON parse error"; the callback is not called again with the default reply.
+    it('swallows a throw from the callback and logs it as a JSON parse error (known gap)', (done) => {
+      const api = new ApiRequest(`http://localhost:${serverPort}/success`, {}, { fallback: true });
+      let calls = 0;
+
+      api.get(new URLSearchParams(), (data) => {
+        calls++;
+        expect(data).toEqual({ status: 'ok', data: 'test' });
+        setTimeout(() => {
+          expect(calls).toBe(1);
+          expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/success : JSON parse error: boom from callback`);
+          done();
+        }, 50);
+        throw new Error('boom from callback');
       });
     });
   });

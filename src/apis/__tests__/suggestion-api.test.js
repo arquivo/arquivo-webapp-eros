@@ -675,4 +675,72 @@ describe('SuggestionApiRequest', () => {
             });
         });
     });
+
+    /**
+     * Characterization tests: pin the error fallback of get(), which differs from the
+     * other API clients (the query instead of the default reply), so the base-class
+     * consolidation (#55) can't change it unnoticed.
+     */
+    describe('characterization - error fallback of get()', () => {
+        let statusServer;
+
+        beforeAll((done) => {
+            statusServer = http.createServer((req, res) => {
+                res.writeHead(500, { 'Content-Type': 'text/html' });
+                res.end('Internal Server Error');
+            });
+            statusServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            statusServer.close(done);
+        });
+
+        const apiAt = (apiUrl) => {
+            const api = new SuggestionApiRequest();
+            api.apiUrl = apiUrl;
+            return api;
+        };
+
+        it('returns the query, not the default reply, on a non-2xx status', (done) => {
+            const api = apiAt(`http://localhost:${statusServer.address().port}`);
+            api.get(new URLSearchParams({ query: 'lisboa', l: 'en' }), (suggestion) => {
+                expect(suggestion).toBe('lisboa');
+                done();
+            });
+        });
+
+        it('returns an empty string on a non-2xx status when there is no query', (done) => {
+            const api = apiAt(`http://localhost:${statusServer.address().port}`);
+            api.get(new URLSearchParams({ l: 'en' }), (suggestion) => {
+                expect(suggestion).toBe('');
+                done();
+            });
+        });
+
+        it('returns the query when the request fails', (done) => {
+            const api = apiAt('http://localhost:1');
+            api.get(new URLSearchParams({ query: 'porto' }), (suggestion) => {
+                expect(suggestion).toBe('porto');
+                done();
+            });
+        });
+
+        it('returns the query when building the request throws', (done) => {
+            const api = apiAt('');
+            api.get(new URLSearchParams({ query: 'braga' }), (suggestion) => {
+                expect(suggestion).toBe('braga');
+                done();
+            });
+        });
+
+        it('returns the suggestion of a successful reply, with the 1s timeout', (done) => {
+            const api = apiAt(`http://localhost:${mockServerPort}`);
+            api.get(new URLSearchParams({ query: 'faro', l: 'en', other: 'x' }), (suggestion) => {
+                expect(suggestion).toBe('faro suggestion');
+                expect(api.options).toEqual({ method: 'GET', timeout: 1000 });
+                done();
+            });
+        });
+    });
 });
