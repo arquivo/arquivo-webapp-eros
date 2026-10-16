@@ -48,7 +48,7 @@ class CDXSearchApiRequest extends BaseApiRequest {
 
         // STREAMING JSON PARSING: Process data chunks as they arrive
         apiRes.on('data', (chunk) => {
-            apiReply += chunk.toString();
+            apiReply += chunk;
             
             // Parse complete JSON objects (newline-delimited)
             let endIndex = apiReply.indexOf('}') + 1;

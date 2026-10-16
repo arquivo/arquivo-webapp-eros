@@ -41,7 +41,7 @@ class JsonApiRequest extends BaseApiRequest {
         let apiReply = '';
 
         apiRes.on('data', (chunk) => {
-            apiReply += chunk.toString();
+            apiReply += chunk;
         });
 
         apiRes.on('end', () => {

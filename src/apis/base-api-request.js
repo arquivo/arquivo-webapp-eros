@@ -13,7 +13,7 @@ const logger = require('../logger');
  * - Memory leak prevention
  * 
  * This is the single place for the request flow (status check, request and response errors,
- * timeout);
+ * timeout, body decoding);
  * subclasses only parse the response. JSON APIs extend JsonApiRequest.
  *
  * Subclasses must implement:
@@ -90,9 +90,15 @@ class BaseApiRequest {
                 // Handle non-2xx status codes
                 if (apiRes.statusCode < 200 || apiRes.statusCode >= 300) {
                     this.logger.error(`${this.apiUrl} : Invalid status code: ${apiRes.statusCode}`);
+                    // Discard the body, so the socket is released instead of held until it times out
+                    apiRes.resume();
                     safeCallback(this.fallbackReply(requestData));
                     return;
                 }
+
+                // Decode the body as UTF-8 text across chunks, so a multibyte character split
+                // between two chunks isn't garbled (subclasses get string chunks)
+                apiRes.setEncoding('utf8');
 
                 apiRes.on('error', (e) => {
                     this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
@@ -135,7 +141,8 @@ class BaseApiRequest {
     /**
      * Process HTTP response - must be implemented by subclass
      *
-     * Called for 2xx responses only. Response errors are already handled (fallback reply).
+     * Called for 2xx responses only. The body is already set to UTF-8 (the 'data' chunks
+     * are strings) and response errors are already handled (fallback reply).
      *
      * @abstract
      * @param {http.IncomingMessage} apiRes - HTTP response object

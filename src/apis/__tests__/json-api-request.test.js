@@ -41,6 +41,16 @@ function handleMockApiRequest(req, res, serverPort) {
     }, 5000);
     // the client gives up first: don't keep the timer (and the test worker) alive
     res.on('close', () => clearTimeout(pending));
+  } else if (url.pathname === '/split-utf8') {
+    // "ã" is 2 bytes in UTF-8: send the body in two chunks that split it in half
+    const body = Buffer.from(JSON.stringify({ q: 'São João' }));
+    const cut = body.indexOf(Buffer.from('ã')) + 1;
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(body.subarray(0, cut));
+    setTimeout(() => res.end(body.subarray(cut)), 20);
+  } else if (url.pathname === '/error-with-body') {
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end('x'.repeat(1024));
   } else if (url.pathname === '/echo') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ url: req.url }));
@@ -292,6 +302,35 @@ describe('JsonApiRequest', () => {
         expect(data).toBe(defaultReply);
         expect(api.logger.error).toHaveBeenCalledWith(expect.stringContaining(`http://localhost:${serverPort}/invalid-json : JSON parse error:`));
         done();
+      });
+    });
+
+    it('decodes a multibyte UTF-8 character split across two chunks', (done) => {
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/split-utf8`);
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toEqual({ q: 'São João' });
+        done();
+      });
+    });
+
+    it('drains a non-2xx response, so a keep-alive socket is reused right away', (done) => {
+      // a single keep-alive socket: the second request only gets it once the first body is read
+      const agent = new http.Agent({ keepAlive: true, maxSockets: 1 });
+      const failing = new JsonApiRequest(`http://localhost:${serverPort}/error-with-body`, {}, { fallback: true });
+      const succeeding = new JsonApiRequest(`http://localhost:${serverPort}/success`);
+      failing.options = { method: 'GET', timeout: 2000, agent };
+      succeeding.options = { method: 'GET', timeout: 2000, agent };
+
+      failing.get(new URLSearchParams(), (failed) => {
+        expect(failed).toEqual({ fallback: true });
+        const start = Date.now();
+        succeeding.get(new URLSearchParams(), (data) => {
+          expect(data).toEqual({ status: 'ok', data: 'test' });
+          expect(Date.now() - start).toBeLessThan(1000);
+          agent.destroy();
+          done();
+        });
       });
     });
 
