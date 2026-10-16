@@ -11,7 +11,7 @@ const todayYmd = require('../../utils/today-ymd');
  * 
  * STATUS: ✅ ALL 22 TESTS PASSING (100%)
  * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Overrides sanitizeRequestData() to clean inline parameters from queries
  * - Uses constructor to configure backend endpoints (solr, nutchwax, default)
@@ -25,7 +25,7 @@ const todayYmd = require('../../utils/today-ymd');
  * - Parameter merging with defaults (1 test)
  * - Full API integration (3 tests)
  * 
- * This serves as the model for how to properly extend ApiRequest after the refactor.
+ * This serves as the model for how to properly extend JsonApiRequest.
  */
 describe('PageSearchApiRequest', () => {
     let mockServer;

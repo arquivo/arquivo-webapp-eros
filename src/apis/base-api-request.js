@@ -12,9 +12,15 @@ const logger = require('../logger');
  * - Request parameter sanitization
  * - Memory leak prevention
  * 
+ * This is the single place for the request flow (status check, request errors, timeout);
+ * subclasses only parse the response. JSON APIs extend JsonApiRequest.
+ *
  * Subclasses must implement:
  * - processResponse(apiRes, safeCallback, requestData) - Process the HTTP response
- * 
+ *
+ * Subclasses may override:
+ * - fallbackReply(requestData) - What to reply on errors (defaults to defaultApiReply)
+ *
  * @abstract
  * @class
  */
@@ -83,7 +89,7 @@ class BaseApiRequest {
                 // Handle non-2xx status codes
                 if (apiRes.statusCode < 200 || apiRes.statusCode >= 300) {
                     this.logger.error(`${this.apiUrl} : Invalid status code: ${apiRes.statusCode}`);
-                    safeCallback(this.defaultApiReply);
+                    safeCallback(this.fallbackReply(requestData));
                     return;
                 }
 
@@ -97,14 +103,14 @@ class BaseApiRequest {
                 if (!apiReq.destroyed) {
                     apiReq.destroy();
                 }
-                safeCallback(this.defaultApiReply);
+                safeCallback(this.fallbackReply(requestData));
             });
 
             // Handle timeout
             apiReq.on('timeout', () => {
                 this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout}ms)`);
                 apiReq.destroy();
-                safeCallback(this.defaultApiReply);
+                safeCallback(this.fallbackReply(requestData));
             });
 
             // Configure timeout if specified
@@ -116,7 +122,7 @@ class BaseApiRequest {
 
         } catch (e) {
             this.logger.error(`${this.apiUrl} : Exception: ${e.message}`);
-            safeCallback(this.defaultApiReply);
+            safeCallback(this.fallbackReply(requestData));
         }
     }
 
@@ -130,6 +136,17 @@ class BaseApiRequest {
      */
     processResponse(apiRes, safeCallback, requestData) {
         throw new Error('processResponse() must be implemented by subclass');
+    }
+
+    /**
+     * Reply passed to the callback when the request fails (non-2xx status, request
+     * or response error, timeout, exception)
+     *
+     * @param {URLSearchParams} requestData - Original request parameters (for context)
+     * @returns {*} The default reply
+     */
+    fallbackReply(requestData) {
+        return this.defaultApiReply;
     }
 
     /**

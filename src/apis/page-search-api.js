@@ -1,4 +1,4 @@
-const ApiRequest = require('./api-request');
+const JsonApiRequest = require('./json-api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');
 const todayYmd = require('../utils/today-ymd');
@@ -11,7 +11,7 @@ const inlineParamRequestName = (inlineParam) => ['site','safe'].includes(inlineP
 const ALWAYS_REMOVED_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence', 'size', 'safe'];
 const alwaysRemovedTerm = new RegExp(String.raw`^(?:${ALWAYS_REMOVED_PARAMS.join('|')}):\S+$`);
 
-class PageSearchApiRequest extends ApiRequest {
+class PageSearchApiRequest extends JsonApiRequest {
     constructor(backend=null, options={}) {
         const yearBalanceEnabled = config.has('text.search.api.yearBalance_enabled') &&
                                   config.get('text.search.api.yearBalance_enabled') === true;

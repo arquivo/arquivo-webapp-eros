@@ -11,7 +11,7 @@ const todayYmd = require('../../utils/today-ymd');
  * 
  * STATUS: ✅ ALL 30 TESTS PASSING (100%)
  * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Simple constructor that only configures parameters
  * - Uses parent class for all HTTP request handling
@@ -26,7 +26,7 @@ const todayYmd = require('../../utils/today-ymd');
  * - Date range handling (3 tests)
  * 
  * Along with PageSearchApiRequest, this demonstrates the correct pattern for
- * extending ApiRequest after the refactor.
+ * extending JsonApiRequest.
  */
 describe('ImageSearchApiRequest', () => {
     let mockServer;

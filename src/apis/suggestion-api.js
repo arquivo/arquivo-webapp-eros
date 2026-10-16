@@ -61,70 +61,13 @@ class SuggestionApiRequest extends BaseApiRequest {
     }
 
     /**
-     * Performs a GET request with HTML parsing
-     * Overrides parent to return original query on errors instead of defaultApiReply
-     * 
-     * @param {URLSearchParams} requestData - Query parameters
-     * @param {Function} callback - Callback function(suggestion) with suggestion string
+     * On errors, reply with the original query (no suggestion) instead of defaultApiReply
+     *
+     * @param {URLSearchParams} requestData - Original request parameters
+     * @returns {string} The original query, or '' if there is none
      */
-    get(requestData, callback) {
-        // Validate callback
-        if (typeof callback !== 'function') {
-            return;
-        }
-
-        const originalQuery = requestData.get('query') || '';
-        const { safeCallback } = this.createSafeCallback((result) => {
-            callback(result);
-        });
-        
-        const https = require('node:https');
-        const http = require('node:http');
-        const request = this.apiUrl.startsWith('https') ? https.request : http.request;
-
-        try {
-            const url = this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString();
-            this.logger.info(url);
-
-            const apiReq = request(url, this.options, (apiRes) => {
-                // Handle non-2xx status codes - return original query
-                if (apiRes.statusCode < 200 || apiRes.statusCode >= 300) {
-                    this.logger.error(`${this.apiUrl} : Invalid status code: ${apiRes.statusCode}`);
-                    safeCallback(originalQuery);
-                    return;
-                }
-
-                // Delegate response processing to processResponse
-                this.processResponse(apiRes, safeCallback, requestData);
-            });
-
-            // Handle request errors - return original query
-            apiReq.on('error', (e) => {
-                this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
-                if (!apiReq.destroyed) {
-                    apiReq.destroy();
-                }
-                safeCallback(originalQuery);
-            });
-
-            // Handle timeout - return original query
-            apiReq.on('timeout', () => {
-                this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout} ms)`);
-                apiReq.destroy();
-                safeCallback(originalQuery);
-            });
-
-            // Configure timeout if specified
-            if (this.options.timeout) {
-                apiReq.setTimeout(this.options.timeout);
-            }
-
-            apiReq.end();
-
-        } catch (e) {
-            this.logger.error(`${this.apiUrl} : Exception: ${e.message}`);
-            safeCallback(originalQuery);
-        }
+    fallbackReply(requestData) {
+        return requestData.get('query') || '';
     }
 
     /**
@@ -141,7 +84,7 @@ class SuggestionApiRequest extends BaseApiRequest {
      */
     processResponse(apiRes, safeCallback, requestData) {
         let apiReply = '';
-        const originalQuery = requestData.get('query') || '';
+        const originalQuery = this.fallbackReply(requestData);
 
         // Accumulate HTML response, strip newlines
         apiRes.on('data', (chunk) => {

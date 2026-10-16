@@ -1,6 +1,6 @@
 const http = require('node:http');
 const https = require('node:https');
-const ApiRequest = require('../../../src/apis/api-request');
+const JsonApiRequest = require('../json-api-request');
 
 // Mock the logger
 jest.mock('../../../src/logger', () => {
@@ -11,34 +11,12 @@ jest.mock('../../../src/logger', () => {
 });
 
 /**
- * ApiRequest Test Suite
- * 
- * STATUS: ✅ ALL 12 TESTS PASSING (100%)
- * 
- * This test suite validates the REFACTORED ApiRequest implementation that includes:
- * - Memory leak fixes (using local variables instead of instance properties)
- * - Safe callback wrapper (prevents multiple invocations)
- * - Comprehensive error handling (6 error scenarios)
- * - Protocol detection (HTTP/HTTPS)
- * - Parameter sanitization and merging
- * 
- * COVERAGE:
- * - Constructor (2 tests)
- * - HTTP GET requests with success/error scenarios (5 tests)
- * - Parameter sanitization with null handling (3 tests)
- * - Error handling for network errors and exceptions (2 tests)
- * 
- * IMPACT OF REFACTOR:
- * ✅ PageSearchApiRequest - 22/22 passing (compatible)
- * ✅ ImageSearchApiRequest - 30/30 passing (compatible)
- * ❌ SuggestionApiRequest - 19/23 passing (4 failing - custom HTML parsing)
- * ❌ CDXSearchApiRequest - 19/26 passing (7 failing - streaming JSON parsing)
- * 
- * Total: 113/124 tests passing (91%)
- * 
- * The refactor successfully improved memory safety and error handling while
- * maintaining compatibility with standard JSON API clients. The 11 failing tests
- * document incompatibilities with classes that require custom response processing.
+ * JsonApiRequest Test Suite (formerly the ApiRequest suite, #55)
+ *
+ * Covers the JSON API client and, through it, the request flow of BaseApiRequest:
+ * constructor, GET success/error scenarios, parameter sanitization, error handling
+ * (network errors, exceptions, single callback invocation, response errors), timeout,
+ * and the known gap where a throw from the callback is swallowed.
  */
 
 /**
@@ -69,7 +47,7 @@ function handleMockApiRequest(req, res, serverPort) {
   }
 }
 
-describe('ApiRequest', () => {
+describe('JsonApiRequest', () => {
   let mockServer;
   let serverPort;
 
@@ -87,7 +65,7 @@ describe('ApiRequest', () => {
 
   describe('constructor', () => {
     it('should initialize with default parameters', () => {
-      const api = new ApiRequest('http://example.com');
+      const api = new JsonApiRequest('http://example.com');
       expect(api.apiUrl).toBe('http://example.com');
       expect(api.defaultApiParams).toEqual({});
       expect(api.defaultApiReply).toEqual({});
@@ -96,7 +74,7 @@ describe('ApiRequest', () => {
     it('should accept custom default parameters', () => {
       const defaultParams = { param1: 'value1' };
       const defaultReply = { status: 'default' };
-      const api = new ApiRequest('http://example.com', defaultParams, defaultReply);
+      const api = new JsonApiRequest('http://example.com', defaultParams, defaultReply);
       
       expect(api.defaultApiParams).toEqual(defaultParams);
       expect(api.defaultApiReply).toEqual(defaultReply);
@@ -105,7 +83,7 @@ describe('ApiRequest', () => {
 
   describe('get method', () => {
     it('should successfully fetch data from API', (done) => {
-      const api = new ApiRequest(`http://localhost:${serverPort}/success`);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`);
       const requestData = new URLSearchParams();
 
       api.get(requestData, (data) => {
@@ -116,7 +94,7 @@ describe('ApiRequest', () => {
 
     it('should handle HTTP error status codes', (done) => {
       const defaultReply = { error: 'default' };
-      const api = new ApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
       const requestData = new URLSearchParams();
 
       api.get(requestData, (data) => {
@@ -127,7 +105,7 @@ describe('ApiRequest', () => {
 
     it('should handle invalid JSON response', (done) => {
       const defaultReply = { status: 'fallback' };
-      const api = new ApiRequest(`http://localhost:${serverPort}/invalid-json`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/invalid-json`, {}, defaultReply);
       const requestData = new URLSearchParams();
 
       api.get(requestData, (data) => {
@@ -137,7 +115,7 @@ describe('ApiRequest', () => {
     });
 
     it('should use HTTPS for HTTPS URLs', () => {
-      const api = new ApiRequest('https://example.com/api', {}, {});
+      const api = new JsonApiRequest('https://example.com/api', {}, {});
       
       // Verify that HTTPS URLs are accepted
       expect(api.apiUrl).toBe('https://example.com/api');
@@ -145,7 +123,7 @@ describe('ApiRequest', () => {
     });
 
     it('should include request parameters in URL', (done) => {
-      const api = new ApiRequest(`http://localhost:${serverPort}/success`, { key: 'default' });
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`, { key: 'default' });
       const requestData = new URLSearchParams({ key: 'value', param: 'test' });
 
       api.get(requestData, (data) => {
@@ -158,7 +136,7 @@ describe('ApiRequest', () => {
   describe('sanitizeRequestData', () => {
     it('should merge request data with default params', () => {
       const defaultParams = { param1: 'default1', param2: 'default2' };
-      const api = new ApiRequest('http://example.com', defaultParams);
+      const api = new JsonApiRequest('http://example.com', defaultParams);
       const requestData = new URLSearchParams({ param2: 'override' });
 
       const sanitized = api.sanitizeRequestData(requestData);
@@ -169,7 +147,7 @@ describe('ApiRequest', () => {
 
     it('should handle null default parameters', () => {
       const defaultParams = { param1: null, param2: 'value2' };
-      const api = new ApiRequest('http://example.com', defaultParams);
+      const api = new JsonApiRequest('http://example.com', defaultParams);
       const requestData = new URLSearchParams({ param1: 'provided' });
 
       const sanitized = api.sanitizeRequestData(requestData);
@@ -180,7 +158,7 @@ describe('ApiRequest', () => {
 
     it('should skip null params without request override', () => {
       const defaultParams = { param1: null, param2: 'value2' };
-      const api = new ApiRequest('http://example.com', defaultParams);
+      const api = new JsonApiRequest('http://example.com', defaultParams);
       const requestData = new URLSearchParams();
 
       const sanitized = api.sanitizeRequestData(requestData);
@@ -193,7 +171,7 @@ describe('ApiRequest', () => {
   describe('error handling', () => {
     it('should handle network errors', (done) => {
       const defaultReply = { error: 'network_error' };
-      const api = new ApiRequest('http://localhost:99999/nonexistent', {}, defaultReply);
+      const api = new JsonApiRequest('http://localhost:99999/nonexistent', {}, defaultReply);
       const requestData = new URLSearchParams();
 
       api.get(requestData, (data) => {
@@ -204,7 +182,7 @@ describe('ApiRequest', () => {
 
     it('should catch exceptions in get method', (done) => {
       const defaultReply = { status: 'error' };
-      const api = new ApiRequest('', {}, defaultReply); // Invalid URL
+      const api = new JsonApiRequest('', {}, defaultReply); // Invalid URL
       const requestData = new URLSearchParams();
 
       api.get(requestData, (data) => {
@@ -215,7 +193,7 @@ describe('ApiRequest', () => {
 
     it('should invoke callback only once even with multiple errors', (done) => {
       const defaultReply = { status: 'error' };
-      const api = new ApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
       const requestData = new URLSearchParams();
       
       let callCount = 0;
@@ -232,7 +210,7 @@ describe('ApiRequest', () => {
     });
 
     it('should not leak memory between requests', (done) => {
-      const api = new ApiRequest(`http://localhost:${serverPort}/success`);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`);
       const requestData = new URLSearchParams();
 
       // First request
@@ -263,7 +241,7 @@ describe('ApiRequest', () => {
 
       errorServer.listen(0, () => {
         const port = errorServer.address().port;
-        const api = new ApiRequest(`http://localhost:${port}/`, {}, defaultReply);
+        const api = new JsonApiRequest(`http://localhost:${port}/`, {}, defaultReply);
         const requestData = new URLSearchParams();
 
         api.get(requestData, (data) => {
@@ -280,12 +258,12 @@ describe('ApiRequest', () => {
    */
   describe('characterization', () => {
     it('uses GET with a 3 minute timeout by default', () => {
-      const api = new ApiRequest('http://example.com');
+      const api = new JsonApiRequest('http://example.com');
       expect(api.options).toEqual({ method: 'GET', timeout: 180000 });
     });
 
     it('requests apiUrl + "?" + the sanitized request data', (done) => {
-      const api = new ApiRequest(`http://localhost:${serverPort}/echo`, { a: '1', b: null, c: '3', d: null });
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/echo`, { a: '1', b: null, c: '3', d: null });
       const requestData = new URLSearchParams({ c: 'x', b: 'y', ignored: 'z' });
 
       api.get(requestData, (data) => {
@@ -297,7 +275,7 @@ describe('ApiRequest', () => {
 
     it('logs the status code and returns the default reply on a non-2xx status', (done) => {
       const defaultReply = { fallback: true };
-      const api = new ApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/error`, {}, defaultReply);
 
       api.get(new URLSearchParams(), (data) => {
         expect(data).toBe(defaultReply);
@@ -308,7 +286,7 @@ describe('ApiRequest', () => {
 
     it('logs a JSON parse error and returns the default reply on invalid JSON', (done) => {
       const defaultReply = { fallback: true };
-      const api = new ApiRequest(`http://localhost:${serverPort}/invalid-json`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/invalid-json`, {}, defaultReply);
 
       api.get(new URLSearchParams(), (data) => {
         expect(data).toBe(defaultReply);
@@ -319,7 +297,7 @@ describe('ApiRequest', () => {
 
     it('gives up after options.timeout, destroys the request and returns the default reply once', (done) => {
       const defaultReply = { fallback: 'timeout' };
-      const api = new ApiRequest(`http://localhost:${serverPort}/timeout`, {}, defaultReply);
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/timeout`, {}, defaultReply);
       api.options.timeout = 100;
       const start = Date.now();
       let calls = 0;
@@ -341,7 +319,7 @@ describe('ApiRequest', () => {
     // try block, so an exception thrown by the callback is swallowed and logged as a
     // "JSON parse error"; the callback is not called again with the default reply.
     it('swallows a throw from the callback and logs it as a JSON parse error (known gap)', (done) => {
-      const api = new ApiRequest(`http://localhost:${serverPort}/success`, {}, { fallback: true });
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`, {}, { fallback: true });
       let calls = 0;
 
       api.get(new URLSearchParams(), (data) => {
