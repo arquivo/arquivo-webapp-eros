@@ -1,5 +1,6 @@
 const BaseApiRequest = require('./base-api-request');
 const config = require('config');
+const todayYmd = require('../utils/today-ymd');
 
 /**
  * CDXSearchApiRequest - HTTP client for CDX API with streaming JSON parsing
@@ -23,7 +24,7 @@ class CDXSearchApiRequest extends BaseApiRequest {
             output: 'json',
             from: config.get('search.start.date'),
             url: '',
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            to: todayYmd(),
             filter: '!:~status:4|5',
             fields: 'url,timestamp,status,digest'
         };
