@@ -6,10 +6,18 @@ const searchPages = require('../search-pages');
 jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-page-search');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-page-search');
+const loggerFactory = require('../logger');
+const logger = loggerFactory();
+// Read before beforeEach clears the mock calls
+const loggerLabels = loggerFactory.mock.calls.map(([label]) => label);
 
 describe('search-pages handler', () => {
     let req, res;
@@ -141,5 +149,50 @@ describe('search-pages handler', () => {
         searchPages(req, res);
 
         expect(res.render).toHaveBeenCalled();
+    });
+
+    it('logs under the PageSearch label', () => {
+        expect(loggerLabels).toContain('PageSearch');
+    });
+
+    it('does not log a no-results message when response_items has results', () => {
+        searchPages(req, res);
+
+        expect(logger.info).not.toHaveBeenCalled();
+    });
+
+    it('logs a no-results message when response_items is empty', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [] });
+        });
+
+        searchPages(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('logs a no-results message when the reply only has the image search responseItems key', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ responseItems: [{ title: 'Image 1' }] });
+        });
+
+        searchPages(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('renders synchronously in the API callback', () => {
+        searchPages(req, res);
+
+        expect(res.render).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not pass render errors to next: they are thrown from the API callback', () => {
+        const next = jest.fn();
+        const error = new Error('render failed');
+        res.render.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).toThrow(error);
+        expect(next).not.toHaveBeenCalled();
     });
 });

@@ -7,11 +7,19 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/image-search-api');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-image-search');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const ImageSearchApiRequest = require('../apis/image-search-api');
 const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-image-search');
+const loggerFactory = require('../logger');
+const logger = loggerFactory();
+// Read before beforeEach clears the mock calls
+const loggerLabels = loggerFactory.mock.calls.map(([label]) => label);
 
 // The handler renders once both API calls have resolved (Promise.all)
 const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
@@ -30,7 +38,7 @@ describe('search-images handler', () => {
             l: 'pt'
         });
         mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: 'pt' };
+            const map = { q: 'test query', l: 'pt', api: 'solr' };
             return map[key];
         });
 
@@ -68,10 +76,10 @@ describe('search-images handler', () => {
         expect(sanitizeInputs).toHaveBeenCalledWith(req, res);
     });
 
-    it('creates ImageSearchApiRequest instance', () => {
+    it('creates ImageSearchApiRequest instance, ignoring the api parameter', () => {
         searchImages(req, res);
 
-        expect(ImageSearchApiRequest).toHaveBeenCalled();
+        expect(ImageSearchApiRequest).toHaveBeenCalledWith();
     });
 
     it('creates a default-backend PageSearchApiRequest with a short timeout for the suggestion', () => {
@@ -166,5 +174,46 @@ describe('search-images handler', () => {
         await flushPromises();
 
         expect(res.render).toHaveBeenCalled();
+    });
+
+    it('logs under the ImageSearch label', () => {
+        expect(loggerLabels).toContain('ImageSearch');
+    });
+
+    it('does not log a no-results message when responseItems has results', async () => {
+        searchImages(req, res);
+        await flushPromises();
+
+        expect(logger.info).not.toHaveBeenCalled();
+    });
+
+    it('logs a no-results message when responseItems is empty', async () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ responseItems: [] });
+        });
+
+        searchImages(req, res);
+        await flushPromises();
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('logs a no-results message when the reply only has the page search response_items key', async () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [{ title: 'Result 1' }] });
+        });
+
+        searchImages(req, res);
+        await flushPromises();
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('renders asynchronously, after both requests resolve', async () => {
+        searchImages(req, res);
+        expect(res.render).not.toHaveBeenCalled();
+
+        await flushPromises();
+        expect(res.render).toHaveBeenCalledTimes(1);
     });
 });
