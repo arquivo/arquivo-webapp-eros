@@ -217,5 +217,52 @@ describe('isValidUrl', () => {
       expect(isValidUrl('https://example.com/' + 'a/'.repeat(10000))).toBe(true);
       expect(isValidUrl('a'.repeat(5000) + '.com')).toBe(true);
     });
+
+    it('returns quickly on input that made the old regex backtrack', () => {
+      // The old regex took ~1.6 s on this input (quadratic backtracking).
+      const start = process.hrtime.bigint();
+      expect(isValidUrl('a' + '.'.repeat(16000) + '"')).toBe(false);
+      expect(isValidUrl('a' + '.aa'.repeat(10000) + '"')).toBe(false);
+      expect(Number(process.hrtime.bigint() - start) / 1e6).toBeLessThan(100);
+    });
+
+    it.each([undefined, null, 42, ['example.com'], { href: 'https://example.com' }])(
+      'rejects the non-string %j',
+      (value) => {
+        expect(isValidUrl(value)).toBe(false);
+      },
+    );
+  });
+
+  // Inputs whose classification changed when the regex was replaced by the
+  // WHATWG URL parser.
+  describe('changes from the regex implementation', () => {
+    it.each([
+      'HTTP://EXAMPLE.COM',
+      'Https://Publico.pt',
+      'https://pt.wikipedia.org/wiki/Póvoa_de_Varzim',
+      'público.pt',
+      'https://público.pt',
+      'münchen.de',
+      'café.fr/menu',
+      '例子.测试',
+    ])('accepts upper-case schemes and non-ASCII hosts/paths: %j', (q) => {
+      expect(isValidUrl(q)).toBe(true);
+    });
+
+    it.each([
+      'e.g.',
+      'i.e.',
+      'U.S.A.',
+      'O.K.',
+      'html5.css3',
+      'www.example.c0m',
+      'example.com:99999',
+      'publico.pt:abc',
+      'joao.silva@sapo.pt',
+      '3.50€',
+    ])('rejects abbreviations, non-letter TLDs, bad ports and e-mails: %j', (q) => {
+      expect(isValidUrl(q)).toBe(false);
+    });
   });
 });
