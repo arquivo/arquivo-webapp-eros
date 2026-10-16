@@ -56,11 +56,6 @@ class JsonApiRequest extends BaseApiRequest {
                 safeCallback(this.fallbackReply(requestData));
             }
         });
-
-        apiRes.on('error', (e) => {
-            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-            safeCallback(this.fallbackReply(requestData));
-        });
     }
 }
 

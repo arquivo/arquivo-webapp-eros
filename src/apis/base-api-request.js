@@ -12,7 +12,8 @@ const logger = require('../logger');
  * - Request parameter sanitization
  * - Memory leak prevention
  * 
- * This is the single place for the request flow (status check, request errors, timeout);
+ * This is the single place for the request flow (status check, request and response errors,
+ * timeout);
  * subclasses only parse the response. JSON APIs extend JsonApiRequest.
  *
  * Subclasses must implement:
@@ -93,6 +94,11 @@ class BaseApiRequest {
                     return;
                 }
 
+                apiRes.on('error', (e) => {
+                    this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
+                    safeCallback(this.fallbackReply(requestData));
+                });
+
                 // Delegate response processing to subclass
                 this.processResponse(apiRes, safeCallback, requestData);
             });
@@ -128,7 +134,9 @@ class BaseApiRequest {
 
     /**
      * Process HTTP response - must be implemented by subclass
-     * 
+     *
+     * Called for 2xx responses only. Response errors are already handled (fallback reply).
+     *
      * @abstract
      * @param {http.IncomingMessage} apiRes - HTTP response object
      * @param {Function} safeCallback - Safe callback to invoke with result

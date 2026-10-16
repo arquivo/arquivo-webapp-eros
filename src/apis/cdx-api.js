@@ -70,12 +70,6 @@ class CDXSearchApiRequest extends BaseApiRequest {
         apiRes.on('end', () => {
             safeCallback(apiData);
         });
-
-        // Handle response errors
-        apiRes.on('error', (e) => {
-            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-            safeCallback(this.defaultApiReply);
-        });
     }
 
     /**

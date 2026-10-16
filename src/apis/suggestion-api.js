@@ -104,12 +104,6 @@ class SuggestionApiRequest extends BaseApiRequest {
                 safeCallback(originalQuery);
             }
         });
-
-        // Handle response errors - return original query
-        apiRes.on('error', (e) => {
-            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-            safeCallback(originalQuery);
-        });
     }
 }
 
