@@ -2,6 +2,7 @@
 const ApiRequest = require('./api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');
+const todayYmd = require('../utils/today-ymd');
 
 // Inline terms the image search API doesn't understand in the query, where it would search them as words.
 // collection is sent in its own parameter, the others only apply to page search.
@@ -12,7 +13,7 @@ class ImageSearchApiRequest extends ApiRequest {
         const defaultApiParams = {
             q: '',
             from: config.get('search.start.date'),
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            to: todayYmd(),
             type: null,
             offset: 0,
             siteSearch: null,
