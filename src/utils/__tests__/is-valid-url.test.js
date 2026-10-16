@@ -95,6 +95,8 @@ describe('isValidUrl', () => {
       'node.js',
       'ASP.NET',
       'mr.smith',
+      'Sr.Silva',
+      'Cavaco.Silva',
       'example.com.',
       'sub.domain.example.co.uk/a/b.html#top',
       'wikipedia.org/wiki/Lisboa',
@@ -155,6 +157,7 @@ describe('isValidUrl', () => {
       '3.5mm',
       '1.5kg',
       '€3.50',
+      '3.50€',
       'v1.2',
       'v2.0rc1',
       'web2.0',
@@ -189,6 +192,9 @@ describe('isValidUrl', () => {
       'file:///etc/passwd',
       'ws://example.com',
       'mailto:joao@sapo.pt',
+      // Parsed as user `javascript` on host `evil.com`; the credentials check rejects them.
+      'javascript:x@evil.com',
+      'javascript:@evil.com',
     ])('rejects %j', (q) => {
       expect(isValidUrl(q)).toBe(false);
     });
@@ -213,6 +219,33 @@ describe('isValidUrl', () => {
       expect(isValidUrl(q)).toBe(false);
     });
 
+    // Invisible or control characters that could spoof the displayed URL or
+    // inject into log lines.
+    it.each([
+      ['C0 control', 'publico.pt/\u0000x'],
+      ['DEL', 'publico.pt/\u007Fx'],
+      ['C1 control', 'publico.pt/\u0080x'],
+      ['NEL', 'publico.pt/\u0085x'],
+      ['C1 control', 'publico.pt/\u009Fx'],
+      ['soft hyphen', 'pub\u00ADlico.pt'],
+      ['zero-width space', 'publico\u200B.pt'],
+      ['LRE', 'publico.pt/\u202Ax'],
+      ['RLO', 'publico.pt/\u202Ex'],
+      ['LRI', 'publico.pt/\u2066x'],
+      ['PDI', 'publico.pt/\u2069x'],
+      ['BOM', 'publico.pt/\uFEFFx'],
+    ])('rejects a %s: %j', (_name, q) => {
+      expect(isValidUrl(q)).toBe(false);
+    });
+
+    // Not all format characters are blocked: some IDNs need ZWNJ/ZWJ.
+    it.each(['\u0646\u0627\u0645\u0647\u200C\u0627\u06CC.ir', '\u0915\u094D\u200D\u0937.com'])(
+      'accepts the IDN with a joiner %j',
+      (q) => {
+        expect(isValidUrl(q)).toBe(true);
+      },
+    );
+
     it('accepts a very long URL', () => {
       expect(isValidUrl('https://example.com/' + 'a/'.repeat(10000))).toBe(true);
       expect(isValidUrl('a'.repeat(5000) + '.com')).toBe(true);
@@ -222,6 +255,8 @@ describe('isValidUrl', () => {
       // The old regex took ~1.6 s on this input (quadratic backtracking).
       const start = process.hrtime.bigint();
       expect(isValidUrl('a' + '.'.repeat(16000) + '"')).toBe(false);
+      // No forbidden character, so this one goes through the URL parser.
+      expect(isValidUrl('a' + '.'.repeat(16000) + '!')).toBe(false);
       expect(isValidUrl('a' + '.aa'.repeat(10000) + '"')).toBe(false);
       expect(Number(process.hrtime.bigint() - start) / 1e6).toBeLessThan(100);
     });
@@ -250,6 +285,35 @@ describe('isValidUrl', () => {
       expect(isValidUrl(q)).toBe(true);
     });
 
+    it('accepts the punycode form of an IDN', () => {
+      // xn--pblico-pya.pt is público.pt.
+      expect(isValidUrl('xn--pblico-pya.pt')).toBe(true);
+    });
+
+    // Like the ASCII `Sr.Silva` / `Cavaco.Silva` (already URLs), accented
+    // `word.word` tokens are now routed to URL search.
+    it.each(['Sr.José', 'D.João', 'José.Saramago', 'Av.República', 'séc.XX'])(
+      'accepts the accented word.word token %j',
+      (q) => {
+        expect(isValidUrl(q)).toBe(true);
+      },
+    );
+
+    // Prose pasted with trailing punctuation is not a URL.
+    it.each([
+      'publico.pt,',
+      'publico.pt;',
+      'publico.pt!',
+      'publico.pt)',
+      'publico.pt...',
+      'Viva.Portugal!',
+      '25.Abril.1974',
+      'a.C.',
+      'd.C.',
+    ])('rejects trailing punctuation and dotted dates/abbreviations: %j', (q) => {
+      expect(isValidUrl(q)).toBe(false);
+    });
+
     it.each([
       'e.g.',
       'i.e.',
@@ -260,7 +324,6 @@ describe('isValidUrl', () => {
       'example.com:99999',
       'publico.pt:abc',
       'joao.silva@sapo.pt',
-      '3.50€',
     ])('rejects abbreviations, non-letter TLDs, bad ports and e-mails: %j', (q) => {
       expect(isValidUrl(q)).toBe(false);
     });
