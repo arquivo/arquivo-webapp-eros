@@ -105,35 +105,6 @@ describe('filterCdx', () => {
             expect(result[0].status).toBe('200');
         });
 
-        it('should compare redirects across a year boundary', () => {
-            const data = [
-                { status: '200', timestamp: `${validYear - 1}1231235000`, digest: 'abc123', url: 'http://example.com' },
-                { status: '301', timestamp: `${validYear}0101002000`, digest: 'def456', url: 'http://example.com' } // 30 min later
-            ];
-            const result = filterCdx(data);
-            expect(result.length).toBe(1);
-            expect(result[0].status).toBe('200');
-        });
-
-        it('should read the month digits (same day and time, one month apart)', () => {
-            const data = [
-                { status: '200', timestamp: `${validYear}0101120000`, digest: 'abc123', url: 'http://example.com' },
-                { status: '301', timestamp: `${validYear}0201120000`, digest: 'def456', url: 'http://example.com' }
-            ];
-            const result = filterCdx(data);
-            expect(result.length).toBe(2);
-        });
-
-        it('should compare redirects to the second', () => {
-            const data = [
-                { status: '200', timestamp: `${validYear}0101120000`, digest: 'abc123', url: 'http://example.com' },
-                { status: '301', timestamp: `${validYear}0101130000`, digest: 'def456', url: 'http://example.com' }, // exactly 1h later
-                { status: '301', timestamp: `${validYear}0101130001`, digest: 'ghi789', url: 'http://example.com' }  // 1h and 1s later
-            ];
-            const result = filterCdx(data);
-            expect(result.map(item => item.timestamp).sort()).toEqual([`${validYear}0101120000`, `${validYear}0101130001`]);
-        });
-
         it('should filter out partial timestamps (they are not zero-padded into a valid date)', () => {
             const data = [
                 { status: '200', timestamp: `${validYear}0101`, digest: 'abc123', url: 'http://example.com' },

@@ -5,7 +5,7 @@ function splitTimeStamp(timestamp) {
         logger.error(`Expected input to be 'string' but got '${typeof timestamp}': ${timestamp}`)
         timestamp='';
     }
-    return parseArchiveTimestamp(timestamp, { pad: true });
+    return parseArchiveTimestamp(timestamp.padEnd(14, '0'));
 }
 module.exports = function (translateFunction) {
     let t = translateFunction;

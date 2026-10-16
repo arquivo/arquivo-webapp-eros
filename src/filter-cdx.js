@@ -1,5 +1,4 @@
 const { archiveTimestampToDate } = require('./utils/archive-timestamp');
-
 // makes export json from Api request and reply
 module.exports = function (apiData) {
     const delta = 3600;
@@ -44,7 +43,7 @@ module.exports = function (apiData) {
             return (index == 0 || item.status[0] != '2' || item.digest != array[index - 1].digest || item.timestamp.substring(6, 8) != array[index - 1].timestamp.substring(6, 8))
         })
         // Embargo: don't display versions younger than 1 year old 
-        .filter(item => getDateFromTimestamp(item.timestamp) < (new Date()).setFullYear(currentYear-1))
+        .filter(item => archiveTimestampToDate(item.timestamp) < (new Date()).setFullYear(currentYear-1))
         // Sort by timestamp to properly order the results
         .sort(sortByTimestamp)
         
@@ -65,11 +64,6 @@ function sortByTimestamp(item1, item2) {
     return (item2.timestamp > item1.timestamp) ? 1 : 0;
 }
 
-function getDateFromTimestamp(ts) {
-    return archiveTimestampToDate(ts);
-}
 function timestampDifferenceInSeconds(ts1, ts2) {
-    let tsd1 = getDateFromTimestamp(ts1);
-    let tsd2 = getDateFromTimestamp(ts2);
-    return Math.abs((tsd2.getTime() - tsd1.getTime()) / 1000);
+    return Math.abs(archiveTimestampToDate(ts2) - archiveTimestampToDate(ts1)) / 1000;
 }

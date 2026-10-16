@@ -12,18 +12,9 @@ describe('archive-timestamp', () => {
             expect(parseArchiveTimestamp('20240315143045123').seconds).toBe('45');
         });
 
-        it('should leave the missing parts of a partial timestamp empty by default', () => {
+        it('should leave the missing parts of a partial timestamp empty', () => {
             expect(parseArchiveTimestamp('2024031')).toEqual({
                 year: '2024', month: '03', day: '1', hours: '', minutes: '', seconds: ''
-            });
-        });
-
-        it('should right-pad a partial timestamp with zeros when asked to', () => {
-            expect(parseArchiveTimestamp('2024031', { pad: true })).toEqual({
-                year: '2024', month: '03', day: '10', hours: '00', minutes: '00', seconds: '00'
-            });
-            expect(parseArchiveTimestamp('', { pad: true })).toEqual({
-                year: '0000', month: '00', day: '00', hours: '00', minutes: '00', seconds: '00'
             });
         });
 
