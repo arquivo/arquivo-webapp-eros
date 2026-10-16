@@ -44,6 +44,26 @@ recorder:
     button:
       en: Copy link and close
       pt: Copiar link e fechar
+consent:
+  protection:
+    link:
+      text:
+        en: "data protection terms"
+        pt: 'termos da proteção de dados'
+      href:
+        en: https://arquivo.pt/archivepagenow-privacy
+        pt: https://arquivo.pt/archivepagenow-privacidade
+    checkbox:
+      before:
+        en: "I have read and understood the "
+        pt: 'Li e compreendi os '
+      after:
+        en: "."
+        pt: '.'
+  processing:
+    checkbox:
+      en: "These data are processed for the purpose of enabling the submission of content to the ArchivePageNow service. No personal information should be entered while capturing content."
+      pt: 'Estes dados são tratados com a finalidade de permitir a submissão de conteúdos no serviço ArchivePageNow, não deverá ser introduzida informação pessoal durante a captura dos conteúdos.'
 description:
   first-line:
     en: "The ArchivePageNow service allows a page to be archived at the exact moment the user makes the request."
