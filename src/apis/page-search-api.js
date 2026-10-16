@@ -112,7 +112,7 @@ class PageSearchApiRequest extends ApiRequest {
     }
 
     /**
-     * Requests only the spellchecked query (no results), for searches whose own API
+     * Requests only the spellchecked query (no results, no timeline), for searches whose own API
      * doesn't spellcheck (e.g. image search).
      *
      * @param {URLSearchParams} requestData - Search request parameters
@@ -127,6 +127,7 @@ class PageSearchApiRequest extends ApiRequest {
         const spellcheckRequestData = this.withSpellcheck(requestData);
         spellcheckRequestData.set('offset', 0);
         spellcheckRequestData.set('maxItems', 0);
+        spellcheckRequestData.set('timeline', false);
         this.get(spellcheckRequestData, (apiData) => callback(this.getSuggestion(apiData, requestData)));
     }
 
