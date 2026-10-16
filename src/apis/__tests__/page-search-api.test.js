@@ -265,7 +265,7 @@ describe('PageSearchApiRequest', () => {
                 });
             });
 
-            it('should request spellcheck without results', (done) => {
+            it('should request spellcheck without results or timeline', (done) => {
                 const getSpy = jest.spyOn(api, 'get');
 
                 api.suggest(new URLSearchParams({ q: 'Lizboa', offset: '50', maxItems: '25' }), () => {
@@ -273,6 +273,7 @@ describe('PageSearchApiRequest', () => {
                     expect(requestData.get('fields')).toBe('spellcheck');
                     expect(requestData.get('maxItems')).toBe('0');
                     expect(requestData.get('offset')).toBe('0');
+                    expect(requestData.get('timeline')).toBe('false');
                     done();
                 });
             });
