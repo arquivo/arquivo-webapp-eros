@@ -1,33 +1,44 @@
-$(() => {
-    const form = $('form.advanced-search-form');
-    const formatInput = form.find('input[name=type]').first();
-    const siteInput = form.find('input[name=siteSearch]').first();
-    form.submit(function(e) {
-        let checkedTypes = form.find('input[format]:checked').toArray().map(x => $(x).attr('format'));
-        if(checkedTypes.some(x => x == 'all')){
-            formatInput.val('all')
-        } else {
-            formatInput.val(checkedTypes.join(','));
+(function (init) {
+    // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(() => {
+    const form = document.querySelector('form.advanced-search-form');
+    if (!form) {
+        return;
+    }
+    const formatInput = form.querySelector('input[name=type]');
+    const siteInput = form.querySelector('input[name=siteSearch]');
+    form.addEventListener('submit', () => {
+        let checkedTypes = Array.from(form.querySelectorAll('input[format]:checked'), x => x.getAttribute('format'));
+        if (formatInput) {
+            if(checkedTypes.some(x => x == 'all')){
+                formatInput.value = 'all';
+            } else {
+                formatInput.value = checkedTypes.join(',');
+            }
         }
-        let siteSearch = siteInput.val();
+        let siteSearch = siteInput?.value;
         if(siteSearch){
-            siteInput.val(siteSearch.split(/\s/).join(''));
+            siteInput.value = siteSearch.split(/\s/).join('');
         }
-
-        return true;
-    })
-
-    const allCheckbox = form.find('input[format="all"]');
-    const otherCheckboxes = form.find('input[format]:not([format="all"])');
-
-    allCheckbox.change(function(){
-        otherCheckboxes.prop("checked", this.checked );
     });
-    otherCheckboxes.change(function(){
+
+    const allCheckboxes = form.querySelectorAll('input[format="all"]');
+    const otherCheckboxes = Array.from(form.querySelectorAll('input[format]:not([format="all"])'));
+    const setAllChecked = (checked) => allCheckboxes.forEach(x => { x.checked = checked; });
+
+    allCheckboxes.forEach(allCheckbox => allCheckbox.addEventListener('change', function(){
+        otherCheckboxes.forEach(x => { x.checked = this.checked; });
+    }));
+    otherCheckboxes.forEach(checkbox => checkbox.addEventListener('change', function(){
         if(!this.checked){
-            allCheckbox.prop("checked",false);
-        } else if(otherCheckboxes.toArray().every(x => x.checked)){
-            allCheckbox.prop("checked",true);
+            setAllChecked(false);
+        } else if(otherCheckboxes.every(x => x.checked)){
+            setAllChecked(true);
         }
-    });
+    }));
 });
