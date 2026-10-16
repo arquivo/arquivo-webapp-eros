@@ -19,6 +19,7 @@
 const fetch = require('node-fetch');
 const dns = require('node:dns');
 const net = require('node:net');
+const { randomUUID } = require('node:crypto');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -79,6 +80,19 @@ const mimeToExtension = {
     "text/plain": "txt",
     "text/html": "html"
 }
+
+/*
+ * Random, unguessable name for a stored submission. Only the known extensions are
+ * accepted, so nothing else (path separators, or prototype values such as
+ * "constructor" that slip through the mimeToExtension lookup) reaches the upload path.
+ */
+function newUploadName(extension) {
+    if (extension !== 'link' && !Object.values(mimeToExtension).includes(extension)) {
+        throw new Error('Unexpected upload extension: ' + extension);
+    }
+    return randomUUID() + '.' + extension;
+}
+
 module.exports = function (req, res) {
     try {
         if (req.body?.url) {
@@ -171,7 +185,7 @@ function handleFile(req, res) {
         return;
     }
 
-    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+    const newName = newUploadName(outExtension);
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
@@ -281,7 +295,7 @@ function handleURL(req, res) {
             }).then(() => {
 
                 const outExtension = 'link';
-                const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+                const newName = newUploadName(outExtension);
                 const date = (new Date()).toLocaleDateString('en-CA');
                 const timestamp = Date.now();
                 const email = req.body?.email ?? '';
@@ -315,7 +329,7 @@ function handleText(req, res) {
     }
 
     const outExtension = 'txt';
-    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+    const newName = newUploadName(outExtension);
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';

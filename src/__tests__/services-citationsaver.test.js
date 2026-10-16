@@ -715,4 +715,91 @@ describe('Citation Saver Service', () => {
             expect(addToSpreadsheet).toHaveBeenCalled();
         });
     });
+
+    describe('Upload filenames', () => {
+        const uuidName = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(pdf|txt|html|link)$/;
+        const storedName = (path) => path.split('/').pop();
+
+        it.each([
+            ['application/pdf', 'pdf'],
+            ['text/plain', 'txt'],
+            ['text/html', 'html']
+        ])('names an uploaded %s file with a UUID and .%s', async (mimetype, extension) => {
+            const mockMv = jest.fn();
+            req.body = { email: 'test@example.com' };
+            req.files = { file: { name: 'original.name', mimetype, size: 5000, mv: mockMv } };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            const path = mockMv.mock.calls[0][0];
+            expect(path.startsWith('uploads/CitationSaver/')).toBe(true);
+            expect(storedName(path)).toMatch(uuidName);
+            expect(storedName(path).endsWith('.' + extension)).toBe(true);
+            // The spreadsheet row records the same stored name and path
+            expect(addToSpreadsheet).toHaveBeenCalledWith(
+                expect.arrayContaining([storedName(path), path])
+            );
+        });
+
+        it('names a submitted URL .link file with a UUID', async () => {
+            req.body = { url: 'http://example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            const path = fs.writeFile.mock.calls[0][0];
+            expect(path.startsWith('uploads/CitationSaver/')).toBe(true);
+            expect(storedName(path)).toMatch(uuidName);
+            expect(storedName(path).endsWith('.link')).toBe(true);
+            expect(addToSpreadsheet).toHaveBeenCalledWith(
+                expect.arrayContaining([storedName(path), path])
+            );
+        });
+
+        it('names a submitted text .txt file with a UUID', async () => {
+            req.body = { text: 'Sample text', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            const path = fs.writeFile.mock.calls[0][0];
+            expect(path.startsWith('uploads/CitationSaver/')).toBe(true);
+            expect(storedName(path)).toMatch(uuidName);
+            expect(storedName(path).endsWith('.txt')).toBe(true);
+            expect(addToSpreadsheet).toHaveBeenCalledWith(
+                expect.arrayContaining([storedName(path), path])
+            );
+        });
+
+        it('gives every submission a different name', () => {
+            const n = 200;
+            for (let i = 0; i < n; i++) {
+                servicesCitationSaver({ body: { text: 'Sample text ' + i }, files: null, t: req.t }, res);
+            }
+
+            const names = fs.writeFile.mock.calls.map(([path]) => storedName(path));
+            expect(names).toHaveLength(n);
+            names.forEach(name => expect(name).toMatch(uuidName));
+            expect(new Set(names).size).toBe(n);
+        });
+
+        it.each(['constructor', '__proto__', 'toString'])(
+            'rejects a file whose mimetype %s resolves to an inherited property instead of an extension',
+            (mimetype) => {
+                const mockMv = jest.fn();
+                req.body = { email: 'test@example.com' };
+                req.files = { file: { name: 'evil', mimetype, size: 5000, mv: mockMv } };
+
+                servicesCitationSaver(req, res);
+
+                expect(mockMv).not.toHaveBeenCalled();
+                expect(addToSpreadsheet).not.toHaveBeenCalled();
+                expect(res.send).toHaveBeenCalledWith({
+                    status: false,
+                    message: 'services-citation-saver.errors.default'
+                });
+            }
+        );
+    });
 });
