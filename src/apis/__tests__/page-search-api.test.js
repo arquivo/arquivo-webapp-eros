@@ -228,6 +228,19 @@ describe('PageSearchApiRequest', () => {
                     .toBe('lisboa -futebol site:www.publico.pt type:pdf');
             });
 
+            it('should add back the language, year balance and every collection term, as typed', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Lizboa language:pt minLanguageConfidence:MEDIUM yearBalance:0.5 collection:EAWP6 collection:EAWP8', {
+                    language: 'pt',
+                    minLanguageConfidence: 'MEDIUM',
+                    yearBalance: '0.5',
+                    collection: 'EAWP6,EAWP8',
+                });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, requestData))
+                    .toBe('lisboa language:pt minLanguageConfidence:MEDIUM yearBalance:0.5 collection:EAWP6 collection:EAWP8');
+            });
+
             it('should not add terms that are only parameters, not typed in the query', () => {
                 const api = new PageSearchApiRequest();
                 const requestData = params('Lizboa', { collection: 'Roteiro', siteSearch: 'www.publico.pt' });

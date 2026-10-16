@@ -4,6 +4,10 @@ const config = require('config');
 // Search terms typed in the query (e.g. collection:Roteiro) that are sent to the API as their own parameter
 const INLINE_PARAMS = ['site', 'type', 'collection', 'safe', 'size'];
 const inlineParamRequestName = (inlineParam) => ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
+// Inline terms always removed from the query: their value may have been dropped as invalid, and several
+// collection terms are all sent together in the collection parameter
+const ALWAYS_REMOVED_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence'];
+const alwaysRemovedTerm = new RegExp(String.raw`^(?:${ALWAYS_REMOVED_PARAMS.join('|')}):\S+$`);
 
 class PageSearchApiRequest extends ApiRequest {
     constructor(backend=null, options={}) {
@@ -106,11 +110,11 @@ class PageSearchApiRequest extends ApiRequest {
      * @returns {string[]} Inline terms, as typed in the query
      */
     getInlineTerms(requestData) {
-        const queryTerms = new Set((requestData.get('q') ?? '').split(/\s+/));
-        return INLINE_PARAMS
+        const extractedTerms = new Set(INLINE_PARAMS
             .filter(inlineParam => requestData.has(inlineParamRequestName(inlineParam)))
-            .map(inlineParam => `${inlineParam}:${requestData.get(inlineParamRequestName(inlineParam))}`)
-            .filter(term => queryTerms.has(term));
+            .map(inlineParam => `${inlineParam}:${requestData.get(inlineParamRequestName(inlineParam))}`));
+        return (requestData.get('q') ?? '').split(/\s+/)
+            .filter(term => extractedTerms.has(term) || alwaysRemovedTerm.test(term));
     }
 
     /**
@@ -143,9 +147,8 @@ class PageSearchApiRequest extends ApiRequest {
                 apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
             }
         });
-        // these are always removed, so they never reach the API as search terms: their value may have been dropped
-        // as invalid, and several collection terms are all sent together in the collection parameter
-        ['collection', 'yearBalance', 'language', 'minLanguageConfidence'].forEach(inlineParam => {
+        // removed even without a matching parameter, so they never reach the API as search terms
+        ALWAYS_REMOVED_PARAMS.forEach(inlineParam => {
             if (apiRequestData.has('q')) {
                 const regex = new RegExp(String.raw`(?:^|\s+)${inlineParam}:\S+`, 'g');
                 apiRequestData.set('q', apiRequestData.get('q').replace(regex, '').trim());
