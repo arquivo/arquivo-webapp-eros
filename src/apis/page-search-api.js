@@ -1,6 +1,7 @@
 const ApiRequest = require('./api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');
+const todayYmd = require('../utils/today-ymd');
 
 // Search terms typed in the query (e.g. collection:Roteiro) that are sent to the API as their own parameter
 const INLINE_PARAMS = ['site', 'type', 'collection', 'safe', 'size'];
@@ -17,7 +18,7 @@ class PageSearchApiRequest extends ApiRequest {
         const defaultApiParams = {
             q: null,
             from: config.get('search.start.date'),
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            to: todayYmd(),
             type: null,
             offset: 0,
             siteSearch: null,
