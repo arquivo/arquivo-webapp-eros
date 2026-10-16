@@ -18,8 +18,6 @@ const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-image-search');
 const loggerFactory = require('../logger');
 const logger = loggerFactory();
-// Read before beforeEach clears the mock calls
-const loggerLabels = loggerFactory.mock.calls.map(([label]) => label);
 
 // The handler renders once both API calls have resolved (Promise.all)
 const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
@@ -27,6 +25,7 @@ const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
 describe('search-images handler', () => {
     let req, res;
     let mockRequestData;
+    let mockSanitizedRequestData;
     let mockApiRequest;
     let mockSuggestionRequest;
 
@@ -42,6 +41,8 @@ describe('search-images handler', () => {
             return map[key];
         });
 
+        mockSanitizedRequestData = new URLSearchParams({ q: 'test query' });
+
         req = {
             t: jest.fn((key) => key)
         };
@@ -56,7 +57,7 @@ describe('search-images handler', () => {
             get: jest.fn((params, callback) => {
                 callback({ responseItems: [{ title: 'Image 1' }] });
             }),
-            sanitizeRequestData: jest.fn((data) => data)
+            sanitizeRequestData: jest.fn(() => mockSanitizedRequestData)
         };
         ImageSearchApiRequest.mockImplementation(() => mockApiRequest);
 
@@ -131,8 +132,9 @@ describe('search-images handler', () => {
         searchImages(req, res);
         await flushPromises();
 
+        expect(mockApiRequest.sanitizeRequestData).toHaveBeenCalledWith(mockRequestData);
         expect(makeExportObject).toHaveBeenCalledWith(
-            mockRequestData,
+            mockSanitizedRequestData,
             { responseItems: [{ title: 'Image 1' }] },
             req.t
         );
@@ -177,7 +179,12 @@ describe('search-images handler', () => {
     });
 
     it('logs under the ImageSearch label', () => {
-        expect(loggerLabels).toContain('ImageSearch');
+        // Load the handler in a fresh module registry, so the logger factory call doesn't depend on require order
+        jest.isolateModules(() => {
+            const isolatedLoggerFactory = require('../logger');
+            require('../search-images');
+            expect(isolatedLoggerFactory).toHaveBeenCalledWith('ImageSearch');
+        });
     });
 
     it('does not log a no-results message when responseItems has results', async () => {

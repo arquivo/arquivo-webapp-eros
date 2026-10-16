@@ -16,12 +16,11 @@ const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-page-search');
 const loggerFactory = require('../logger');
 const logger = loggerFactory();
-// Read before beforeEach clears the mock calls
-const loggerLabels = loggerFactory.mock.calls.map(([label]) => label);
 
 describe('search-pages handler', () => {
     let req, res;
     let mockRequestData;
+    let mockSanitizedRequestData;
     let mockSpellcheckRequestData;
     let mockApiRequest;
 
@@ -37,6 +36,8 @@ describe('search-pages handler', () => {
             return map[key];
         });
         mockSpellcheckRequestData = new URLSearchParams({ q: 'test query', fields: 'spellcheck' });
+
+        mockSanitizedRequestData = new URLSearchParams({ q: 'test query' });
 
         req = {
             t: jest.fn((key) => key)
@@ -54,7 +55,7 @@ describe('search-pages handler', () => {
             }),
             withSpellcheck: jest.fn(() => mockSpellcheckRequestData),
             getSuggestion: jest.fn((apiData, requestData) => apiData.suggested_query || requestData.get('q')),
-            sanitizeRequestData: jest.fn((data) => data)
+            sanitizeRequestData: jest.fn(() => mockSanitizedRequestData)
         };
         PageSearchApiRequest.mockImplementation(() => mockApiRequest);
 
@@ -120,7 +121,7 @@ describe('search-pages handler', () => {
 
         expect(mockApiRequest.sanitizeRequestData).toHaveBeenCalledWith(mockRequestData);
         expect(makeExportObject).toHaveBeenCalledWith(
-            mockRequestData,
+            mockSanitizedRequestData,
             { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             req.t
         );
@@ -152,7 +153,12 @@ describe('search-pages handler', () => {
     });
 
     it('logs under the PageSearch label', () => {
-        expect(loggerLabels).toContain('PageSearch');
+        // Load the handler in a fresh module registry, so the logger factory call doesn't depend on require order
+        jest.isolateModules(() => {
+            const isolatedLoggerFactory = require('../logger');
+            require('../search-pages');
+            expect(isolatedLoggerFactory).toHaveBeenCalledWith('PageSearch');
+        });
     });
 
     it('does not log a no-results message when response_items has results', () => {
