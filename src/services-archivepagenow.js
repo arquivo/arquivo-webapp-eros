@@ -15,13 +15,10 @@
  */
 
 const fetch = require('node-fetch');
-const https = require('https');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const dateToTimestamp = require('./utils/date-to-timestamp');
 const logger = require('./logger')('ArchivePageNow');
-const maxHops = 16; //limit to redirects
-const startsWithHttp = /^https?:\/\//
 
 /**
  * Builds the backend URL that logs an archiving attempt.
