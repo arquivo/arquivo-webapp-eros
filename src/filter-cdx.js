@@ -1,3 +1,5 @@
+const { archiveTimestampToDate } = require('./utils/archive-timestamp');
+
 // makes export json from Api request and reply
 module.exports = function (apiData) {
     const delta = 3600;
@@ -64,13 +66,7 @@ function sortByTimestamp(item1, item2) {
 }
 
 function getDateFromTimestamp(ts) {
-    let y = parseInt(ts.substring(0, 4));
-    let M = parseInt(ts.substring(4, 6)) - 1;
-    let d = parseInt(ts.substring(6, 8));
-    let h = parseInt(ts.substring(8, 10));
-    let m = parseInt(ts.substring(10, 12));
-    let s = parseInt(ts.substring(12, 14));
-    return new Date(y, M, d, h, m, s);
+    return archiveTimestampToDate(ts);
 }
 function timestampDifferenceInSeconds(ts1, ts2) {
     let tsd1 = getDateFromTimestamp(ts1);

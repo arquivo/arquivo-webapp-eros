@@ -218,6 +218,48 @@ describe('Export Results Utility', () => {
             }).toThrow();
         });
 
+        it('should throw on a non-string timestamp', () => {
+            const apiResponseItems = [{ tstamp: 20200101120000, title: 'Number' }];
+
+            expect(() => {
+                exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['title']);
+            }).toThrow();
+        });
+
+        it('should parse year/month/day at the end of a year', () => {
+            const apiResponseItems = [{ tstamp: '20201231235959', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            expect(result[12]).toEqual([2020, 'December', 31]);
+        });
+
+        it('should parse a day with a leading zero', () => {
+            const apiResponseItems = [{ tstamp: '20200305120000', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            expect(result[12]).toEqual([2020, 'March', 5]);
+        });
+
+        it('should parse a date only timestamp', () => {
+            const apiResponseItems = [{ tstamp: '20200101', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            expect(result[12]).toEqual([2020, 'January', 1]);
+        });
+
+        it('should not zero-pad a partial timestamp', () => {
+            const apiResponseItems = [{ tstamp: '2020', title: 'Test' }];
+
+            const result = exportResults(apiRequestData, apiResponseItems, translateFunction, 'tstamp', ['year', 'month', 'day']);
+
+            // Unlike timestampToText, the missing month/day are not padded with zeros
+            expect(result[12]).toEqual([2020, 'common.months.', NaN]);
+            expect(translateFunction).toHaveBeenCalledWith('common.months.');
+        });
+
         it('should handle missing request parameters', () => {
             const minimalRequest = new URLSearchParams({ q: 'test' });
 
