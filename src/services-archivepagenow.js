@@ -21,22 +21,26 @@ const dateToTimestamp = require('./utils/date-to-timestamp');
 const logger = require('./logger')('ArchivePageNow');
 
 /**
- * Builds the backend URL that logs an archiving attempt.
- *
- * The backend answers this request with an empty body: what gets logged is the
- * raw request line. Values are encoded with encodeURIComponent (space -> %20,
- * `( ) ! ~ *` kept literal) and not with URLSearchParams#toString (space -> +,
- * `( ) ! ~` escaped), so the logged query string stays byte-for-byte the same.
- * `URL` only normalises the result (e.g. `'` -> `%27`), exactly as node-fetch
- * does before sending; it does no joining or encoding. It throws synchronously
- * on a malformed backend.url, so callers must catch.
+ * The backend endpoint that logs an archiving attempt, built from config only
+ * (no request data). `URL` only normalises it; it throws synchronously on a
+ * malformed backend.url, so callers must catch.
  */
-const buildLoggingUrl = function (params) {
-    const loggingUrl = new URL(config.get('backend.url') + '/services/archivepagenow');
-    loggingUrl.search = Object.entries(params)
-        .map(([name, value]) => name + '=' + encodeURIComponent(value))
-        .join('&');
-    return loggingUrl.href;
+const loggingEndpoint = function () {
+    return new URL(config.get('backend.url') + '/services/archivepagenow').href;
+}
+
+/**
+ * Encodes one logging query value.
+ *
+ * The backend answers the logging request with an empty body: what gets logged
+ * is the raw request line. Values are encoded with encodeURIComponent (space ->
+ * %20, `( ) ! ~ *` kept literal) and not with URLSearchParams#toString (space
+ * -> +, `( ) ! ~` escaped), so the logged query string stays byte-for-byte the
+ * same. `'` is the only character encodeURIComponent leaves that node-fetch
+ * (via `URL`) escapes before sending, so it is sent as %27 here already.
+ */
+const encodeLogValue = function (value) {
+    return encodeURIComponent(value).replace(/'/g, '%27');
 }
 
 module.exports = function (req, res) {
@@ -55,7 +59,14 @@ module.exports = function (req, res) {
     // backend.url) may escape to Express; both go to the app logger instead.
     const logRequest = function (success) {
         try {
-            fetch(buildLoggingUrl({ url, success, logging: true, 'user-agent': userAgent, ip: userIp }), { method: 'POST' })
+            // Each request value is encoded right where it is appended to the
+            // fixed endpoint, so the host and path can only come from config.
+            fetch(loggingEndpoint()
+                + '?url=' + encodeLogValue(url)
+                + '&success=' + success
+                + '&logging=true'
+                + '&user-agent=' + encodeLogValue(userAgent)
+                + '&ip=' + encodeLogValue(userIp), { method: 'POST' })
                 .catch(logError);
         } catch (error) {
             logError(error);

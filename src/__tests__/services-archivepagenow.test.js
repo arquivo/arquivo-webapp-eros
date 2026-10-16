@@ -342,7 +342,7 @@ describe('Archive Page Now Service', () => {
 
             archivePageNow(req, res);
 
-            // `URL` escapes ' in the query, the same normalisation node-fetch 2.x applies
+            // ' is sent as %27, the same normalisation node-fetch 2.x applies before sending
             expect(loggedUrl()).toBe(endpoint
                 + '?url=http%3A%2F%2Fexample.com%2Fit%27s(1)!~*'
                 + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
