@@ -34,3 +34,9 @@ test('does not add the terms when the fields are left at their defaults', async 
 
     await expect(searchBar.input).toHaveValue('fccn');
 });
+
+test('shows minLanguageConfidence:HIGH as the default option', async ({ page, advancedSearchPage }) => {
+    await page.goto('/page/advanced/search?l=pt&q=' + encodeURIComponent('fccn language:en minLanguageConfidence:HIGH'));
+
+    await expect(advancedSearchPage.minLanguageConfidence).toHaveValue('');
+});

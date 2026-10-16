@@ -32,6 +32,10 @@ if(typeof requestData != 'undefined'){
 if (values.yearBalance == 'true') {
   values.yearBalance = '0.5';
 }
+// HIGH is the API default, shown by the empty option
+if (values.minLanguageConfidence == 'HIGH') {
+  values.minLanguageConfidence = '';
+}
 const defaultMaxItems = parseInt(config.get('text.results.per.page'));
 const defaultSuffix = ' ' + t('advanced-page-search.fieldset.default');
 
@@ -113,7 +117,7 @@ const defaultSuffix = ' ' + t('advanced-page-search.fieldset.default');
   <label for="min-language-confidence"><%- t('advanced-page-search.fieldset.minLanguageConfidence.label') %></label>
   <select id="min-language-confidence" name="minLanguageConfidence" aria-describedby="min-language-confidence-example">
     <option value="" <%= selectedFor('minLanguageConfidence', '') %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.default') %><%= defaultSuffix %></option>
-    <% ['HIGH', 'MEDIUM', 'LOW'].forEach(level => { %>
+    <% ['MEDIUM', 'LOW'].forEach(level => { %>
     <option value="<%= level %>" <%= selectedFor('minLanguageConfidence', level) %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.' + level.toLowerCase()) %></option>
     <% }) %>
   </select>

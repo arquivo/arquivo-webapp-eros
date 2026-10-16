@@ -72,9 +72,6 @@ fieldset:
       default:
         pt: Alta
         en: High
-      high:
-        pt: Alta
-        en: High
       medium:
         pt: Média
         en: Medium
