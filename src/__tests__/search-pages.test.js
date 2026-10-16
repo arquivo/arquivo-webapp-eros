@@ -6,14 +6,21 @@ const searchPages = require('../search-pages');
 jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-page-search');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const PageSearchApiRequest = require('../apis/page-search-api');
 const makeExportObject = require('../export-page-search');
+const loggerFactory = require('../logger');
+const logger = loggerFactory();
 
 describe('search-pages handler', () => {
     let req, res;
     let mockRequestData;
+    let mockSanitizedRequestData;
     let mockSpellcheckRequestData;
     let mockApiRequest;
 
@@ -29,6 +36,8 @@ describe('search-pages handler', () => {
             return map[key];
         });
         mockSpellcheckRequestData = new URLSearchParams({ q: 'test query', fields: 'spellcheck' });
+
+        mockSanitizedRequestData = new URLSearchParams({ q: 'test query' });
 
         req = {
             t: jest.fn((key) => key)
@@ -46,7 +55,7 @@ describe('search-pages handler', () => {
             }),
             withSpellcheck: jest.fn(() => mockSpellcheckRequestData),
             getSuggestion: jest.fn((apiData, requestData) => apiData.suggested_query || requestData.get('q')),
-            sanitizeRequestData: jest.fn((data) => data)
+            sanitizeRequestData: jest.fn(() => mockSanitizedRequestData)
         };
         PageSearchApiRequest.mockImplementation(() => mockApiRequest);
 
@@ -112,7 +121,7 @@ describe('search-pages handler', () => {
 
         expect(mockApiRequest.sanitizeRequestData).toHaveBeenCalledWith(mockRequestData);
         expect(makeExportObject).toHaveBeenCalledWith(
-            mockRequestData,
+            mockSanitizedRequestData,
             { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             req.t
         );
@@ -141,5 +150,55 @@ describe('search-pages handler', () => {
         searchPages(req, res);
 
         expect(res.render).toHaveBeenCalled();
+    });
+
+    it('logs under the PageSearch label', () => {
+        // Load the handler in a fresh module registry, so the logger factory call doesn't depend on require order
+        jest.isolateModules(() => {
+            const isolatedLoggerFactory = require('../logger');
+            require('../search-pages');
+            expect(isolatedLoggerFactory).toHaveBeenCalledWith('PageSearch');
+        });
+    });
+
+    it('does not log a no-results message when response_items has results', () => {
+        searchPages(req, res);
+
+        expect(logger.info).not.toHaveBeenCalled();
+    });
+
+    it('logs a no-results message when response_items is empty', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [] });
+        });
+
+        searchPages(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('logs a no-results message when the reply only has the image search responseItems key', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ responseItems: [{ title: 'Image 1' }] });
+        });
+
+        searchPages(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+    });
+
+    it('renders synchronously in the API callback', () => {
+        searchPages(req, res);
+
+        expect(res.render).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not pass render errors to next: they are thrown from the API callback', () => {
+        const next = jest.fn();
+        const error = new Error('render failed');
+        res.render.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).toThrow(error);
+        expect(next).not.toHaveBeenCalled();
     });
 });

@@ -1,5 +1,6 @@
 const config = require('config');
 const { request } = require('express');
+const todayYmd = require('./today-ymd');
 
 // Inline query terms (e.g. "collection:FCCN") that are extracted into their own request parameter
 const specialTerms = ['site', 'type', 'collection', 'safe', 'size', 'yearBalance', 'language', 'minLanguageConfidence'];
@@ -52,7 +53,7 @@ module.exports = function (req, res) {
 
     const defaultRequestParameters = {
         from: config.get('search.start.date'),
-        to: (new Date()).toLocaleDateString('en-CA').split('-').join('')
+        to: todayYmd()
     }
 
     Object.keys(defaultRequestParameters)
