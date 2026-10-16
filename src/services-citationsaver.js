@@ -74,22 +74,15 @@ function isSsrfTarget(urlString) {
     });
 }
 
-const mimeToExtension = {
-    // "application/msword": "doc",
-    "application/pdf": "pdf",
-    "text/plain": "txt",
-    "text/html": "html"
-}
+const mimeToExtension = new Map([
+    // ["application/msword", "doc"],
+    ["application/pdf", "pdf"],
+    ["text/plain", "txt"],
+    ["text/html", "html"]
+]);
 
-/*
- * Random, unguessable name for a stored submission. Only the known extensions are
- * accepted, so nothing else (path separators, or prototype values such as
- * "constructor" that slip through the mimeToExtension lookup) reaches the upload path.
- */
+// Extensions only come from mimeToExtension or literals, so the name can never contain "/".
 function newUploadName(extension) {
-    if (extension !== 'link' && !Object.values(mimeToExtension).includes(extension)) {
-        throw new Error('Unexpected upload extension: ' + extension);
-    }
     return randomUUID() + '.' + extension;
 }
 
@@ -172,7 +165,7 @@ function handleFile(req, res) {
 
     const uploadedFile = req.files.file;
     const originalName = uploadedFile.name;
-    const outExtension = mimeToExtension[uploadedFile.mimetype];
+    const outExtension = mimeToExtension.get(uploadedFile.mimetype);
 
     if (!outExtension) {
         sendExpectedError(req.t('services-citation-saver.errors.file.mimetype'));
@@ -284,7 +277,7 @@ function handleURL(req, res) {
                 mimetype = r.headers.get('content-type');
                 filesize = r.headers.get('content-length');
 
-                if (!mimeToExtension[mimetype.split(';')[0]]) {
+                if (!mimeToExtension.has(mimetype.split(';')[0])) {
                     throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
                 }
 
