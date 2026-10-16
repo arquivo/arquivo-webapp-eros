@@ -28,6 +28,12 @@ if(typeof requestData != 'undefined'){
       values[key] = requestData.get(key);
     });
 }
+// the API treats yearBalance:true as a strength of 0.5
+if (values.yearBalance == 'true') {
+  values.yearBalance = '0.5';
+}
+const defaultMaxItems = parseInt(config.get('text.results.per.page'));
+const defaultSuffix = ' ' + t('advanced-page-search.fieldset.default');
 
 %> 
 
@@ -67,7 +73,7 @@ if(typeof requestData != 'undefined'){
     <tbody>
       <tr>
         <td><input type="checkbox" id="format-all" format="all" <%= checkTypeFor('all') %>></td>
-        <td><label for="format-all"><strong><%- t('advanced-page-search.fieldset.format.option.all') %></strong></label></td>
+        <td><label for="format-all"><strong><%- t('advanced-page-search.fieldset.format.option.all') %></strong><%= defaultSuffix %></label></td>
 
         <td><input type="checkbox" id="format-xls" format="xls" <%= checkTypeFor('xls') %>></td>
         <td><label for="format-xls">Microsoft Excel (.xls)</label></td>
@@ -106,7 +112,7 @@ if(typeof requestData != 'undefined'){
   <!-- Minimum language confidence -->
   <label for="min-language-confidence"><%- t('advanced-page-search.fieldset.minLanguageConfidence.label') %></label>
   <select id="min-language-confidence" name="minLanguageConfidence" aria-describedby="min-language-confidence-example">
-    <option value="" <%= selectedFor('minLanguageConfidence', '') %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.default') %></option>
+    <option value="" <%= selectedFor('minLanguageConfidence', '') %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.default') %><%= defaultSuffix %></option>
     <% ['HIGH', 'MEDIUM', 'LOW'].forEach(level => { %>
     <option value="<%= level %>" <%= selectedFor('minLanguageConfidence', level) %>><%- t('advanced-page-search.fieldset.minLanguageConfidence.option.' + level.toLowerCase()) %></option>
     <% }) %>
@@ -116,11 +122,10 @@ if(typeof requestData != 'undefined'){
   <!-- Year balance -->
   <label for="year-balance"><%- t('advanced-page-search.fieldset.yearBalance.label') %></label>
   <select id="year-balance" name="yearBalance" aria-describedby="year-balance-example">
-    <option value="" <%= selectedFor('yearBalance', '') %>><%- t('advanced-page-search.fieldset.yearBalance.option.none') %></option>
-    <option value="true" <%= selectedFor('yearBalance', 'true') %>><%- t('advanced-page-search.fieldset.yearBalance.option.default') %></option>
+    <option value="" <%= selectedFor('yearBalance', '') %>><%- t('advanced-page-search.fieldset.yearBalance.option.none') %><%= defaultSuffix %></option>
     <% const yearBalanceStrengths = ['0.25', '0.5', '0.75', '1'];
        // keeps a strength typed directly in the query (e.g. "yearBalance:0.3") selectable
-       if (values.yearBalance != '' && values.yearBalance != 'true' && values.yearBalance != 'false' && !yearBalanceStrengths.includes(values.yearBalance)) {
+       if (values.yearBalance != '' && values.yearBalance != 'false' && !yearBalanceStrengths.includes(values.yearBalance)) {
          yearBalanceStrengths.push(values.yearBalance);
        } %>
     <% yearBalanceStrengths.forEach(strength => { %>
@@ -132,14 +137,14 @@ if(typeof requestData != 'undefined'){
   <!-- Number of results: pages -->
   <label for="number-of-results-pages"><%- t('advanced-page-search.fieldset.results.label') %></label>
   <select id="number-of-results-pages" name="maxItems" class="">
-    <option value="10" <%= selectMaxItemsFor(10) %>>10</option>
-    <option value="20" <%= selectMaxItemsFor(20) %>>20</option>
-    <option value="30" <%= selectMaxItemsFor(30) %>>30</option>
-    <option value="50" <%= selectMaxItemsFor(50) %>>50</option>
-    <option value="100" <%= selectMaxItemsFor(100) %>>100</option>
-    <option value="500" <%= selectMaxItemsFor(500) %>>500</option>
-    <option value="1000" <%= selectMaxItemsFor(1000) %>>1000</option>
-    <option value="2000" <%= selectMaxItemsFor(2000) %>>2000</option> 
+    <option value="10" <%= selectMaxItemsFor(10) %>>10<%= 10 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="20" <%= selectMaxItemsFor(20) %>>20<%= 20 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="30" <%= selectMaxItemsFor(30) %>>30<%= 30 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="50" <%= selectMaxItemsFor(50) %>>50<%= 50 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="100" <%= selectMaxItemsFor(100) %>>100<%= 100 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="500" <%= selectMaxItemsFor(500) %>>500<%= 500 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="1000" <%= selectMaxItemsFor(1000) %>>1000<%= 1000 == defaultMaxItems ? defaultSuffix : '' %></option>
+    <option value="2000" <%= selectMaxItemsFor(2000) %>>2000<%= 2000 == defaultMaxItems ? defaultSuffix : '' %></option> 
   </select> 
 
   <!-- starts advanced search navigation -->

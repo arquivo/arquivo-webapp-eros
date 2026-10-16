@@ -11,7 +11,9 @@ let values = {
   maxItems: config.get('image.results.per.page'),
 }
 // the image search API returns at most 200 images per request
-const maxItemsOptions = [...new Set([parseInt(config.get('image.results.per.page')), 50, 100, 200])].sort((a, b) => a - b);
+const defaultMaxItems = parseInt(config.get('image.results.per.page'));
+const maxItemsOptions = [...new Set([defaultMaxItems, 50, 100, 200])].sort((a, b) => a - b);
+const defaultSuffix = ' ' + t('advanced-image-search.fieldset.default');
 
 let selectFor = function(key,value){
   return (value == values[key]) ? 'selected' : '';
@@ -58,7 +60,7 @@ if(typeof requestData != 'undefined'){
       <tbody>
         <tr>
           <td><input type="checkbox" id="format-all" format="all" <%= checkTypeFor('all') %>></td>
-          <td><label for="format-all"><strong><%= t('advanced-image-search.fieldset.format.option.all') %></strong></label></td>
+          <td><label for="format-all"><strong><%= t('advanced-image-search.fieldset.format.option.all') %></strong><%= defaultSuffix %></label></td>
       
           <td><input type="checkbox" id="format-gif" format="gif" <%= checkTypeFor('gif') %>></td>
           <td><label for="format-gif">Graphics Interchange Format (.gif)</label></td>
@@ -92,7 +94,7 @@ if(typeof requestData != 'undefined'){
    <!-- words -->
    <label for="image-size"><%- t('advanced-image-search.fieldset.size.label') %></label>
     <select id="image-size" name="size" class="">
-     <option value="all" <%= selectFor('size','all') %>><%= t('advanced-image-search.fieldset.size.option.all') %></option>
+     <option value="all" <%= selectFor('size','all') %>><%= t('advanced-image-search.fieldset.size.option.all') %><%= defaultSuffix %></option>
      <option value="sm" <%= selectFor('size','sm') %>><%= t('advanced-image-search.fieldset.size.option.small') %></option>
      <option value="md" <%= selectFor('size','md') %>><%= t('advanced-image-search.fieldset.size.option.medium') %></option>
      <option value="lg" <%= selectFor('size','lg') %>><%= t('advanced-image-search.fieldset.size.option.large') %></option>
@@ -100,7 +102,7 @@ if(typeof requestData != 'undefined'){
    <!-- words -->
    <label for="safeSearch"><%- t('advanced-image-search.fieldset.safeSearch.label') %></label>
    <select id="safeSearch" name="safeSearch" class="">
-    <option value="on" <%= selectFor('safeSearch','on') %>><%= t('advanced-image-search.fieldset.safeSearch.option.remove-explicit') %></option>
+    <option value="on" <%= selectFor('safeSearch','on') %>><%= t('advanced-image-search.fieldset.safeSearch.option.remove-explicit') %><%= defaultSuffix %></option>
     <option value="off" <%= selectFor('safeSearch','off') %>><%= t('advanced-image-search.fieldset.safeSearch.option.all') %></option>
    </select>  
 
@@ -108,7 +110,7 @@ if(typeof requestData != 'undefined'){
    <label for="number-of-results-images"><%- t('advanced-image-search.fieldset.results.label') %></label>
    <select id="number-of-results-images" name="maxItems">
     <% maxItemsOptions.forEach(n => { %>
-    <option value="<%= n %>" <%= selectFor('maxItems', n) %>><%= n %></option>
+    <option value="<%= n %>" <%= selectFor('maxItems', n) %>><%= n %><%= n == defaultMaxItems ? defaultSuffix : '' %></option>
     <% }) %>
    </select>
     

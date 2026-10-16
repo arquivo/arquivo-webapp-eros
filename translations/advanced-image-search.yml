@@ -86,6 +86,9 @@ fieldset:
     label:
       pt: '<strong>Número de resultados</strong>:'
       en: '<strong>Number of results</strong>:'
+  default:
+    pt: (predefinição)
+    en: (default)
   search:
     en: Search
     pt: Pesquisar
