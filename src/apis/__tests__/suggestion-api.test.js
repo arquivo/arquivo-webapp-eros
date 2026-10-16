@@ -677,11 +677,11 @@ describe('SuggestionApiRequest', () => {
     });
 
     /**
-     * Characterization tests: pin the error fallback of get(), which differs from the
-     * other API clients (the query instead of the default reply), so the base-class
-     * consolidation (#55) can't change it unnoticed.
+     * Regression tests for the error fallback of get(), which differs from the other API
+     * clients (the query instead of the default reply); written against the pre-#55 client
+     * and kept through the base-class consolidation.
      */
-    describe('characterization - error fallback of get()', () => {
+    describe('error fallback of get()', () => {
         let statusServer;
 
         beforeAll((done) => {

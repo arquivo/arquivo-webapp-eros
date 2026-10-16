@@ -9,8 +9,6 @@ const todayYmd = require('../../utils/today-ymd');
 /**
  * PageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 22 TESTS PASSING (100%)
- * 
  * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Overrides sanitizeRequestData() to clean inline parameters from queries
@@ -545,10 +543,10 @@ describe('PageSearchApiRequest', () => {
     });
 
     /**
-     * Characterization tests: pin the request the client sends and what it returns on
-     * failure, so the base-class consolidation (#55) can't change them unnoticed.
+     * Regression tests: the request the client sends and what it returns on failure
+     * (written against the pre-#55 client and kept through the base-class consolidation)
      */
-    describe('characterization', () => {
+    describe('request sent and fallback reply', () => {
         let captureServer;
         let captured;
         let status;
@@ -620,10 +618,6 @@ describe('PageSearchApiRequest', () => {
                 });
                 done();
             });
-        });
-
-        it('uses GET with a 3 minute timeout by default', () => {
-            expect(new PageSearchApiRequest().options).toEqual({ method: 'GET', timeout: 180000 });
         });
     });
 });

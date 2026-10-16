@@ -9,8 +9,6 @@ const todayYmd = require('../../utils/today-ymd');
 /**
  * ImageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 30 TESTS PASSING (100%)
- * 
  * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Simple constructor that only configures parameters
@@ -318,10 +316,10 @@ describe('ImageSearchApiRequest', () => {
     });
 
     /**
-     * Characterization tests: pin the request the client sends and what it returns on
-     * failure, so the base-class consolidation (#55) can't change them unnoticed.
+     * Regression tests: the request the client sends and what it returns on failure
+     * (written against the pre-#55 client and kept through the base-class consolidation)
      */
-    describe('characterization', () => {
+    describe('request sent and fallback reply', () => {
         let captureServer;
         let captured;
         let status;
@@ -387,10 +385,6 @@ describe('ImageSearchApiRequest', () => {
                 expect(data).toEqual({});
                 done();
             });
-        });
-
-        it('uses GET with a 3 minute timeout by default', () => {
-            expect(new ImageSearchApiRequest().options).toEqual({ method: 'GET', timeout: 180000 });
         });
     });
 });

@@ -20,6 +20,8 @@ const BaseApiRequest = require('./base-api-request');
  */
 class JsonApiRequest extends BaseApiRequest {
     /**
+     * Only here to default the logger name to 'ApiRequest', so log lines and alerts don't change.
+     *
      * @param {string} apiUrl - The base URL for API requests
      * @param {Object} defaultApiParams - Default parameters for all requests (optional)
      * @param {Object} defaultApiReply - Fallback response returned on errors (optional)
@@ -45,7 +47,7 @@ class JsonApiRequest extends BaseApiRequest {
         });
 
         apiRes.on('end', () => {
-            // KNOWN GAP (kept as is, to be fixed separately): the callback runs inside this
+            // KNOWN GAP (kept as is, to be fixed by #175): the callback runs inside this
             // try, so an exception thrown by the callback is swallowed and logged as a
             // "JSON parse error" (and the callback isn't called again with the fallback).
             try {

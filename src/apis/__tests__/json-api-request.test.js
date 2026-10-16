@@ -263,10 +263,10 @@ describe('JsonApiRequest', () => {
   });
 
   /**
-   * Characterization tests: pin the current behaviour of the JSON API client
-   * so the base-class consolidation (#55) can't change it unnoticed.
+   * Request flow regression tests (written against the pre-#55 client and kept through
+   * the base-class consolidation)
    */
-  describe('characterization', () => {
+  describe('request flow', () => {
     it('uses GET with a 3 minute timeout by default', () => {
       const api = new JsonApiRequest('http://example.com');
       expect(api.options).toEqual({ method: 'GET', timeout: 180000 });
@@ -354,9 +354,9 @@ describe('JsonApiRequest', () => {
       });
     });
 
-    // KNOWN GAP (kept on purpose, fixed separately): the callback runs inside the JSON.parse
-    // try block, so an exception thrown by the callback is swallowed and logged as a
-    // "JSON parse error"; the callback is not called again with the default reply.
+    // KNOWN GAP (kept on purpose, fixed by #175, which flips this test): the callback runs
+    // inside the JSON.parse try block, so an exception thrown by the callback is swallowed and
+    // logged as a "JSON parse error"; the callback is not called again with the default reply.
     it('swallows a throw from the callback and logs it as a JSON parse error (known gap)', (done) => {
       const api = new JsonApiRequest(`http://localhost:${serverPort}/success`, {}, { fallback: true });
       let calls = 0;
