@@ -715,4 +715,50 @@ describe('Citation Saver Service', () => {
             expect(addToSpreadsheet).toHaveBeenCalled();
         });
     });
+
+    describe('Upload filenames', () => {
+        const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
+        const email = 'test@example.com';
+        const mv = jest.fn();
+        const file = (name, mimetype) => ({ file: { name, mimetype, size: 5000, mv } });
+
+        it.each([
+            ['File', 'pdf', { email }, file('doc.pdf', 'application/pdf'), 'doc.pdf'],
+            ['File', 'html', { email }, file('page.html', 'text/html'), 'page.html'],
+            ['Link', 'link', { email, url: 'http://example.com' }, null, 'http://example.com'],
+            ['Text', 'txt', { email, text: 'Sample text' }, null, '']
+        ])('stores a %s submission as <uuid>.%s and records it in the spreadsheet', async (type, ext, body, files, original) => {
+            Object.assign(req, { body, files });
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            const path = (mv.mock.calls[0] ?? fs.writeFile.mock.calls[0])[0];
+            const name = path.split('/').pop();
+            expect(path).toMatch(new RegExp(`^uploads/CitationSaver/${uuid}\\.${ext}$`));
+            expect(addToSpreadsheet).toHaveBeenCalledWith(
+                [expect.any(String), expect.any(Number), email, type, original, name, path]);
+        });
+
+        it.each(['constructor', '__proto__', 'toString'])('rejects an uploaded file with mimetype %s', (mimetype) => {
+            Object.assign(req, { body: { email }, files: file('evil', mimetype) });
+
+            servicesCitationSaver(req, res);
+
+            expect(mv).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+            expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.file.mimetype' });
+        });
+
+        it('rejects a URL whose content-type is constructor', async () => {
+            mockFetch.mockResolvedValue({ ok: true, headers: new Map([['content-type', 'constructor'], ['content-length', '5000']]) });
+            req.body = { email, url: 'http://example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(fs.writeFile).not.toHaveBeenCalled();
+            expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.URL.mimetype' });
+        });
+    });
 });

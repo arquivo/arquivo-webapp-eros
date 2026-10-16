@@ -19,6 +19,7 @@
 const fetch = require('node-fetch');
 const dns = require('node:dns');
 const net = require('node:net');
+const { randomUUID } = require('node:crypto');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
@@ -73,12 +74,18 @@ function isSsrfTarget(urlString) {
     });
 }
 
-const mimeToExtension = {
-    // "application/msword": "doc",
-    "application/pdf": "pdf",
-    "text/plain": "txt",
-    "text/html": "html"
+const mimeToExtension = new Map([
+    // ["application/msword", "doc"],
+    ["application/pdf", "pdf"],
+    ["text/plain", "txt"],
+    ["text/html", "html"]
+]);
+
+// Extensions only come from mimeToExtension or literals, so the name can never contain "/".
+function newUploadName(extension) {
+    return randomUUID() + '.' + extension;
 }
+
 module.exports = function (req, res) {
     try {
         if (req.body?.url) {
@@ -158,7 +165,7 @@ function handleFile(req, res) {
 
     const uploadedFile = req.files.file;
     const originalName = uploadedFile.name;
-    const outExtension = mimeToExtension[uploadedFile.mimetype];
+    const outExtension = mimeToExtension.get(uploadedFile.mimetype);
 
     if (!outExtension) {
         sendExpectedError(req.t('services-citation-saver.errors.file.mimetype'));
@@ -171,7 +178,7 @@ function handleFile(req, res) {
         return;
     }
 
-    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+    const newName = newUploadName(outExtension);
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
@@ -270,7 +277,7 @@ function handleURL(req, res) {
                 mimetype = r.headers.get('content-type');
                 filesize = r.headers.get('content-length');
 
-                if (!mimeToExtension[mimetype.split(';')[0]]) {
+                if (!mimeToExtension.has(mimetype.split(';')[0])) {
                     throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
                 }
 
@@ -281,7 +288,7 @@ function handleURL(req, res) {
             }).then(() => {
 
                 const outExtension = 'link';
-                const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+                const newName = newUploadName(outExtension);
                 const date = (new Date()).toLocaleDateString('en-CA');
                 const timestamp = Date.now();
                 const email = req.body?.email ?? '';
@@ -315,7 +322,7 @@ function handleText(req, res) {
     }
 
     const outExtension = 'txt';
-    const newName = (Math.random() + 1).toString(36).substring(2) + '.' + outExtension;
+    const newName = newUploadName(outExtension);
     const date = (new Date()).toLocaleDateString('en-CA');
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
