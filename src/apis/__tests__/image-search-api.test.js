@@ -167,6 +167,36 @@ describe('ImageSearchApiRequest', () => {
             expect(sanitized.get('collection')).toBe('FCCN');
         });
 
+        it('should remove the collection and page search only terms from the query', () => {
+            const requestData = new URLSearchParams({
+                q: 'lisboa collection:EAWP6 collection:EAWP8 yearBalance:0.5 language:pt minLanguageConfidence:MEDIUM',
+                collection: 'EAWP6,EAWP8',
+                yearBalance: '0.5',
+                language: 'pt',
+                minLanguageConfidence: 'MEDIUM'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.get('collection')).toBe('EAWP6,EAWP8');
+            expect(sanitized.has('yearBalance')).toBe(false);
+            expect(sanitized.has('language')).toBe(false);
+            expect(sanitized.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should keep the inline terms the image search API understands in the query', () => {
+            const requestData = new URLSearchParams({
+                q: 'lisboa site:www.publico.pt type:png size:sm safe:off',
+                siteSearch: 'www.publico.pt',
+                type: 'png',
+                size: 'sm',
+                safeSearch: 'off'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('lisboa site:www.publico.pt type:png size:sm safe:off');
+        });
+
         it('should handle trackingId parameter', () => {
             const trackingId = 'test-tracking-id-123';
             const requestData = new URLSearchParams({

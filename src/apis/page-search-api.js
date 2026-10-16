@@ -1,12 +1,13 @@
 const ApiRequest = require('./api-request');
 const config = require('config');
+const removeInlineTerms = require('../utils/remove-inline-terms');
 
 // Search terms typed in the query (e.g. collection:Roteiro) that are sent to the API as their own parameter
 const INLINE_PARAMS = ['site', 'type', 'collection', 'safe', 'size'];
 const inlineParamRequestName = (inlineParam) => ['site','safe'].includes(inlineParam) ? inlineParam+'Search' : inlineParam;
-// Inline terms always removed from the query: their value may have been dropped as invalid, and several
-// collection terms are all sent together in the collection parameter
-const ALWAYS_REMOVED_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence'];
+// Inline terms always removed from the query: their value may have been dropped as invalid or as a default
+// (e.g. safe:on), and several collection terms are all sent together in the collection parameter
+const ALWAYS_REMOVED_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence', 'size', 'safe'];
 const alwaysRemovedTerm = new RegExp(String.raw`^(?:${ALWAYS_REMOVED_PARAMS.join('|')}):\S+$`);
 
 class PageSearchApiRequest extends ApiRequest {
@@ -148,12 +149,9 @@ class PageSearchApiRequest extends ApiRequest {
             }
         });
         // removed even without a matching parameter, so they never reach the API as search terms
-        ALWAYS_REMOVED_PARAMS.forEach(inlineParam => {
-            if (apiRequestData.has('q')) {
-                const regex = new RegExp(String.raw`(?:^|\s+)${inlineParam}:\S+`, 'g');
-                apiRequestData.set('q', apiRequestData.get('q').replace(regex, '').trim());
-            }
-        });
+        if (apiRequestData.has('q')) {
+            apiRequestData.set('q', removeInlineTerms(apiRequestData.get('q'), ALWAYS_REMOVED_PARAMS));
+        }
         return super.sanitizeRequestData(apiRequestData);
     }
 }

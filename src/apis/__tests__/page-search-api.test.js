@@ -456,6 +456,16 @@ describe('PageSearchApiRequest', () => {
             expect(sanitized.has('minLanguageConfidence')).toBe(false);
         });
 
+        it('should remove image search size and safe terms, even when dropped as defaults', () => {
+            const requestData = new URLSearchParams({ q: 'size:all test safe:on' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test');
+            expect(sanitized.has('size')).toBe(false);
+            expect(sanitized.has('safeSearch')).toBe(false);
+        });
+
         it('should not remove words that only contain an inline term name', () => {
             const requestData = new URLSearchParams({ q: 'mylanguage:pt test' });
 

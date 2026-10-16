@@ -28,7 +28,8 @@ test('opens the image viewer modal and shows metadata + technical details for th
     // "Check image alt/original link/page title/page URL in image viewer"
     await expect.soft(page.locator('.image-alt')).toHaveText('Mock image 1');
     await expect.soft(page.locator('.image-original-address')).toHaveText('http://example.com/mock-image-1.jpg');
-    await expect.soft(page.locator('.page-title')).toHaveText('Mock result 1 for Publico collection:Roteiro');
+    // the mock echoes the query, which no longer has collection:Roteiro (it's sent as its own parameter)
+    await expect.soft(page.locator('.page-title')).toHaveText('Mock result 1 for Publico');
     await expect.soft(page.locator('.page-original-address')).toHaveText('http://example.com/mock-page-1');
 
     // "Click on Details button"
