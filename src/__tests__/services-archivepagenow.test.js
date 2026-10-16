@@ -1,9 +1,15 @@
 // Mock dependencies before requiring the module
 jest.mock('config');
 jest.mock('node-fetch');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn(), error: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const archivePageNow = require('../services-archivepagenow');
 const fetch = require('node-fetch');
+const config = require('config');
+const logger = require('../logger')();
 
 describe('Archive Page Now Service', () => {
     let req, res;
@@ -206,6 +212,36 @@ describe('Archive Page Now Service', () => {
             );
         });
 
+        describe('with a malformed backend.url', () => {
+            beforeEach(() => {
+                const realGet = config.get;
+                jest.spyOn(config, 'get').mockImplementation(key =>
+                    key === 'backend.url' ? 'not a url' : realGet(key));
+            });
+            afterEach(() => config.get.mockRestore());
+
+            it('should render the page and send the error to the app logger instead of throwing', () => {
+                req.body = { url: 'http://example.com' };
+
+                expect(() => archivePageNow(req, res)).not.toThrow();
+
+                expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow-save',
+                    expect.any(Object));
+                expect(mockFetch).not.toHaveBeenCalled();
+                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+            });
+
+            it('should also log the error on the invalid-url branch', () => {
+                req.body = { url: 'not a valid url' };
+
+                expect(() => archivePageNow(req, res)).not.toThrow();
+
+                expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow',
+                    expect.objectContaining({ error: true }));
+                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+            });
+        });
+
         it('should handle special characters in URL', () => {
             req.body = { url: 'http://example.com/path?query=test&value=123' };
 
@@ -247,6 +283,149 @@ describe('Archive Page Now Service', () => {
                 expect.stringContaining('logging=true'),
                 expect.any(Object)
             );
+        });
+    });
+
+    // Pins the FULL outgoing logging URL, not just fragments of it. The backend
+    // endpoint (POST /services/archivepagenow?logging=...) answers with an empty
+    // body: the "log" is the raw request line written to the traffic log, so the
+    // exact bytes of the query string matter.
+    describe('Logging URL (exact)', () => {
+        const endpoint = 'https://preprod.arquivo.pt/services/archivepagenow';
+        const loggedUrl = () => mockFetch.mock.calls[0][0];
+
+        it('should log a successful request with every parameter in order', () => {
+            req.body = { url: 'http://example.com' };
+
+            archivePageNow(req, res);
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            expect(mockFetch).toHaveBeenCalledWith(
+                endpoint + '?url=http%3A%2F%2Fexample.com&success=true&logging=true'
+                + '&user-agent=test-user-agent&ip=192.168.1.1',
+                { method: 'POST' }
+            );
+        });
+
+        it('should encode &, ? and # in the archived URL', () => {
+            req.body = { url: 'http://example.com/path?a=1&b=2#frag' };
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com%2Fpath%3Fa%3D1%26b%3D2%23frag'
+                + '&success=true&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
+        });
+
+        it('should encode spaces as %20 (not +) on a failed request', () => {
+            req.body = { url: 'not a valid url' };
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=not%20a%20valid%20url&success=false&logging=true'
+                + '&user-agent=test-user-agent&ip=192.168.1.1');
+        });
+
+        it('should percent-encode unicode as UTF-8', () => {
+            req.body = { url: 'http://exemplo.pt/ação?q=café' };
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexemplo.pt%2Fa%C3%A7%C3%A3o%3Fq%3Dcaf%C3%A9'
+                + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
+        });
+
+        it("should keep ( ) ! ~ * literal and send ' as %27 on the wire", () => {
+            req.body = { url: "http://example.com/it's(1)!~*" };
+
+            archivePageNow(req, res);
+
+            // ' is sent as %27, the same normalisation node-fetch 2.x applies before sending
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com%2Fit%27s(1)!~*'
+                + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
+        });
+
+        it('should encode a browser user-agent with %20 and literal parentheses', () => {
+            req.body = { url: 'http://example.com' };
+            req.get = jest.fn(() => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)');
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com&success=true&logging=true'
+                + '&user-agent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)'
+                + '&ip=192.168.1.1');
+        });
+
+        it('should send an empty user-agent parameter when the header is empty', () => {
+            req.body = { url: 'http://example.com' };
+            req.get = jest.fn(() => '');
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com&success=true&logging=true&user-agent=&ip=192.168.1.1');
+        });
+
+        it('should send "undefined" when the user-agent header is missing', () => {
+            req.body = { url: 'http://example.com' };
+            req.get = jest.fn(() => undefined);
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com&success=true&logging=true&user-agent=undefined&ip=192.168.1.1');
+        });
+
+        it('should encode a multi-hop x-forwarded-for list', () => {
+            req.body = { url: 'http://example.com' };
+            req.headers = { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' };
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com&success=true&logging=true'
+                + '&user-agent=test-user-agent&ip=203.0.113.7%2C%2010.0.0.1');
+        });
+
+        it('should log an empty url parameter when the url is missing', () => {
+            req.body = {};
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
+        });
+    });
+
+    describe('Request isolation', () => {
+        const makeReq = (userAgent, ip) => ({
+            body: { url: 'http://example.com' },
+            get: jest.fn(() => userAgent),
+            headers: { 'x-forwarded-for': ip },
+            socket: {}
+        });
+
+        it('should not share user-agent or IP between interleaved requests', () => {
+            const reqA = makeReq('agent-A', '198.51.100.1');
+            const reqB = makeReq('agent-B', '198.51.100.2');
+            // Request B is handled while request A is between reading its
+            // headers and logging (simulated by re-entering from A's render).
+            const resA = { render: jest.fn(() => archivePageNow(reqB, { render: jest.fn() })) };
+
+            archivePageNow(reqA, resA);
+
+            const logged = mockFetch.mock.calls.map(([url]) => {
+                const params = new URL(url).searchParams;
+                return [params.get('user-agent'), params.get('ip')];
+            });
+            expect(logged).toEqual([
+                ['agent-B', '198.51.100.2'],
+                ['agent-A', '198.51.100.1']
+            ]);
         });
     });
 });
