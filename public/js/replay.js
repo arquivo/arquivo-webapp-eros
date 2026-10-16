@@ -275,8 +275,8 @@ class ArquivoReplay {
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
-                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
-                    replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
+                if ( ['load', 'replace-url'].includes(e[key].wb_type) ) {
+                    replay.setUrlAndTimestamp(e[key].url,e[key].ts,true);
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({
                         "event": 'replay_page_view',
