@@ -20,7 +20,7 @@ const { URL, domainToUnicode } = require('node:url');
 // Each position is checked against two character classes, with no
 // alternation or repetition, so matching is linear in the input length.
 const FORBIDDEN_CHAR =
-  /(?![\u180B-\u180D\u180F\u200C\u200D\uFE00-\uFE0F\u{E0100}-\u{E01EF}])[\s\p{Cc}\p{Default_Ignorable_Code_Point}"'<>`\\^|[\]\uFFF9-\uFFFB]/u;
+  /(?![\u180B-\u180D\u180F\u200C-\u200D\uFE00-\uFE0F\u{E0100}-\u{E01EF}])[\s\p{Cc}\p{Default_Ignorable_Code_Point}"'<>`\\^|[\]\uFFF9-\uFFFB]/u;
 const HTTP_SCHEME = /^https?:\/\//i;
 // WHATWG drops extra leading slashes and an empty userinfo, so `//x.com`,
 // `https:///x.com` and `@x.com` would parse as `x.com`; it also allows
