@@ -204,7 +204,7 @@ describe('search-images handler', () => {
         searchImages(req, res);
         await flushPromises();
 
-        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
     });
 
     it('logs a no-results message when the reply only has the page search response_items key', async () => {
@@ -215,7 +215,7 @@ describe('search-images handler', () => {
         searchImages(req, res);
         await flushPromises();
 
-        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
     });
 
     it('renders asynchronously, after both requests resolve', async () => {

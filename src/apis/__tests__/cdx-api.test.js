@@ -324,17 +324,21 @@ describe('CDXSearchApiRequest', () => {
             api.get(requestData, verifyErrorLogging);
         });
 
-        it('logs only the first 200 characters of a long malformed object', (done) => {
+        it('logs only the first 200 characters of a long malformed object, at debug level', (done) => {
             const errorSpy = jest.spyOn(api.logger, 'error').mockImplementation(() => {});
+            const debugSpy = jest.spyOn(api.logger, 'debug').mockImplementation(() => {});
 
             api.get(new URLSearchParams({ url: 'http://example.com/malformed-long' }), (data) => {
                 // the malformed object is skipped, the next one is still parsed
                 expect(data).toHaveLength(1);
                 expect(data[0].digest).toBe('abc');
-                const errorCall = errorSpy.mock.calls.find(call => call[0].includes('Failed to parse JSON object'));
-                expect(errorCall[0]).toMatch(/^Failed to parse JSON object: \{x{199}\.\.\. \(10002 chars\)\. Error: /);
-                expect(errorCall[0].length).toBeLessThan(400);
+                // The capture (which holds the searched URL) is not in the error line
+                expect(errorSpy).toHaveBeenCalledWith('Failed to parse JSON object (10002 chars). Error: SyntaxError');
+                const debugCall = debugSpy.mock.calls.find(call => call[0].includes('Failed to parse JSON object'));
+                expect(debugCall[0]).toMatch(/^Failed to parse JSON object: \{x{199}\.\.\. \(10002 chars\)\. Error: /);
+                expect(debugCall[0].length).toBeLessThan(400);
                 errorSpy.mockRestore();
+                debugSpy.mockRestore();
                 done();
             });
         });

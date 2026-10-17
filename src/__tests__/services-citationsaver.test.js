@@ -912,6 +912,83 @@ describe('Citation Saver Service', () => {
         });
     });
 
+    // #180: the submitter's email, the original file name and the submitted URL or text
+    // never reach the info, warn or error logs.
+    describe('Logging (#180)', () => {
+        const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
+        const email = 'jane.doe@example.pt';
+        const url = 'https://example.pt/private/jane-doe?token=s3cr3t';
+        const fileName = 'Jane Doe - medical report.pdf';
+        const text = 'Jane Doe lives at Rua Exemplo 1';
+        const personalData = [email, 'jane-doe', 's3cr3t', fileName, 'Jane Doe', 'Rua Exemplo'];
+        const logged = (...levels) => levels.flatMap(level => mockLogger[level].mock.calls.flat().map(String)).join('\n');
+        const expectNoPersonalData = () => {
+            const lines = logged('info', 'warn', 'error');
+            personalData.forEach(value => expect(lines).not.toContain(value));
+        };
+
+        it.each([
+            ['file', { email }, { file: { name: fileName, mimetype: 'application/pdf', size: 5000, mv: jest.fn() } }, 'File saved', 'pdf'],
+            ['URL', { email, url }, null, 'URL saved', 'link'],
+            ['text', { email, text }, null, 'Text saved', 'txt'],
+        ])('logs only the generated name of a saved %s', async (_kind, body, files, message, ext) => {
+            Object.assign(req, { body, files });
+
+            await servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
+            expect(mockLogger.info).toHaveBeenCalledWith(expect.stringMatching(new RegExp(`^${message}: ${uuid}\\.${ext}$`)));
+            expectNoPersonalData();
+        });
+
+        it('logs the reason of a blocked URL, not the request', async () => {
+            isValidUrl.mockReturnValue(false);
+            req.body = { email, url: url + '\r\nforged line' };
+
+            await servicesCitationSaver(req, res);
+
+            expect(mockLogger.info).toHaveBeenCalledTimes(1);
+            expect(mockLogger.info).toHaveBeenCalledWith(
+                'Blocking submitted URL. Reason: "services-citation-saver.errors.URL.invalid"');
+            expectNoPersonalData();
+            expect(logged('info', 'warn', 'error', 'debug')).not.toContain('forged');
+        });
+
+        it.each([
+            ['file', { email }, { file: { name: fileName, mimetype: 'application/x-msdownload', size: 5000, mv: jest.fn() } },
+                'Blocking submitted file. Reason: "services-citation-saver.errors.file.mimetype"'],
+            // Over the 100 KiB field limit
+            ['text', { email, text: text + ' ' + 'x'.repeat(100 * 1024) }, null,
+                'Blocking submitted text. Reason: "services-citation-saver.errors.text.toolong"'],
+        ])('logs the reason of a blocked %s, not the request', async (_kind, body, files, message) => {
+            Object.assign(req, { body, files });
+
+            await servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: false }));
+            expect(mockLogger.info).toHaveBeenCalledTimes(1);
+            expect(mockLogger.info).toHaveBeenCalledWith(message);
+            expectNoPersonalData();
+        });
+
+        it('keeps the error message of a failed save to the debug log, with control characters escaped', async () => {
+            fs.promises.writeFile.mockRejectedValue(Object.assign(
+                new Error('EIO: i/o error, write ' + email + '\r\nforged line'), { code: 'EIO' }));
+            req.body = { email, text };
+
+            await servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(mockLogger.error).toHaveBeenCalledWith('Something unexpected occurred. Reason: name: "Error", code: "EIO"');
+            expectNoPersonalData();
+            const debug = logged('debug');
+            expect(debug).toContain('write ' + email + '\\u000d\\u000aforged line');
+            expect(debug).not.toMatch(/[\r\n]forged/);
+        });
+    });
+
     describe('Upload filenames', () => {
         const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
         const email = 'test@example.com';
@@ -986,8 +1063,11 @@ describe('Citation Saver Service', () => {
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
-            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringMatching(
-                /Something unexpected occurred\. Reason: .*"code":"ENOSPC".*"message":"ENOSPC: simulated"/));
+            expect(mockLogger.error).toHaveBeenCalledWith(
+                'Something unexpected occurred. Reason: name: "Error", code: "ENOSPC"');
+            // The error message (which may quote a path or the input) only reaches the debug log.
+            expect(mockLogger.error.mock.calls.flat().join('\n')).not.toContain('ENOSPC: simulated');
+            expect(mockLogger.debug).toHaveBeenCalledWith(expect.stringContaining('ENOSPC: simulated'));
             const writtenPath = fs.promises.writeFile.mock.calls[0][0];
             expect(fs.promises.rm).toHaveBeenCalledWith(writtenPath, { force: true });
         });

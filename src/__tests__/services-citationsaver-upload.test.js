@@ -254,6 +254,11 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.headers['content-type']).toMatch(/^application\/json/);
             expect(res.body).toEqual({ status: false, message: messages.default });
             expect(storedFiles()).toHaveLength(0);
+            // The parser's message only at debug level, escaped
+            expect(mockLogger.info).toHaveBeenCalledWith('Blocking submission: unreadable multipart request. Reason: name: "Error"');
+            expect(mockLogger.error).not.toHaveBeenCalled();
+            expect(mockLogger.debug).toHaveBeenCalledWith(
+                expect.stringMatching(/^Blocking submission: unreadable multipart request\. Error: Multipart: Boundary not found\\u000a/));
             // The process is still up and serving.
             const next = await post().field('text', 'still here');
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
@@ -470,7 +475,8 @@ describe('POST /services/citationsaver through the app', () => {
                 expect(res.status).toBe(500);
                 expect(res.body).toEqual({ status: false, message: messages.default });
                 expect(storedFiles()).toHaveLength(0);
-                expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining(uploadTempFolder));
+                expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining(
+                    'Could not parse the upload (temporary folder ' + uploadTempFolder + '). Reason: name: "Error", code: "E'));
             } finally {
                 fs.rmSync(uploadTempFolder);
             }
@@ -511,7 +517,9 @@ describe('POST /services/citationsaver through the app', () => {
                 expect(res.status).toBe(500);
                 expect(res.body).toEqual({ status: false, message: messages.default });
                 expect(storedFiles()).toHaveLength(0);
-                expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('ENOSPC'));
+                expect(mockLogger.error).toHaveBeenCalledWith(
+                    'Blocking submission: could not read the multipart request. Reason: name: "Error", code: "ENOSPC", syscall: "write"');
+                expect(mockLogger.debug).toHaveBeenCalledWith(expect.stringContaining('ENOSPC: no space left on device'));
             } finally {
                 createWriteStream.mockRestore();
             }

@@ -15,4 +15,28 @@ describe('logger default config', () => {
     const info = getDefaults('my-label').format.transform({ level: 'info', message: 'hello' });
     expect(info[MESSAGE]).toBe('16/Oct/2026:09:05:07\tINFO\tmy-label\t-\thello');
   });
+
+  describe('logger.level', () => {
+    // The defaults with this logger.level, in a fresh module registry
+    function defaultsWithLevel(level) {
+      let defaults;
+      jest.isolateModules(() => {
+        if (level !== undefined) require('config').set('logger.level', level);
+        defaults = require('../default.config')('my-label');
+      });
+      return defaults;
+    }
+
+    it('should write info and above by default, so debug lines (personal data) are dropped', () => {
+      expect(defaultsWithLevel().level).toBe('info');
+    });
+
+    it('should take another level from the setting', () => {
+      expect(defaultsWithLevel('debug').level).toBe('debug');
+    });
+
+    it.each(['inf', 'DEBUG', '', 'constructor'])('should refuse to start with the unknown level "%s"', (level) => {
+      expect(() => defaultsWithLevel(level)).toThrow(/"logger\.level" \(LOGGER_LEVEL\) must be one of error, warn, info/);
+    });
+  });
 });

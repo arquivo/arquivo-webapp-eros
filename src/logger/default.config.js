@@ -6,6 +6,14 @@ require('winston-daily-rotate-file');
 
 const loggerType = config.get('logger.type');
 
+// The lowest level written. debug holds personal data (URLs, error messages), so it is
+// off by default. A typo would silently drop every line: refuse it at startup.
+const level = config.get('logger.level');
+if (!Object.hasOwn(winston.config.npm.levels, level)) {
+    throw new Error('Configuration property "logger.level" (LOGGER_LEVEL) must be one of '
+        + Object.keys(winston.config.npm.levels).join(', ') + ', got "' + level + '"');
+}
+
 let transports = [];
 
 if(loggerType == 'daily'){
@@ -23,6 +31,7 @@ if(loggerType == 'daily'){
 }
 
 module.exports = (label='-') => ({
+    level,
     transports: transports,
     format: winston.format.combine(
         winston.format.timestamp({format:'DD/MMM/YYYY:HH:mm:ss'}),
