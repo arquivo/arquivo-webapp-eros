@@ -11,6 +11,21 @@ const inlineParamRequestName = (inlineParam) => ['site','safe'].includes(inlineP
 const ALWAYS_REMOVED_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence', 'size', 'safe'];
 const alwaysRemovedTerm = new RegExp(String.raw`^(?:${ALWAYS_REMOVED_PARAMS.join('|')}):\S+$`);
 
+/**
+ * Removes every occurrence of a term from a query, matching it literally (never as a regular
+ * expression), and replaces it and the whitespace around it with a single space
+ *
+ * @param {string} query - Search query
+ * @param {string} term - Term to remove, e.g. "site:publico.pt"
+ * @returns {string} Query without the term
+ */
+const removeLiteralTerm = (query, term) => query.split(term)
+    .map((part, index, parts) => {
+        const trimmedStart = index > 0 ? part.trimStart() : part;
+        return index < parts.length - 1 ? trimmedStart.trimEnd() : trimmedStart;
+    })
+    .join(' ');
+
 class PageSearchApiRequest extends JsonApiRequest {
     constructor(backend=null, options={}) {
         const yearBalanceEnabled = config.has('text.search.api.yearBalance_enabled') &&
@@ -144,9 +159,9 @@ class PageSearchApiRequest extends JsonApiRequest {
 
         INLINE_PARAMS.forEach(inlineParam => {
             const requestParam = inlineParamRequestName(inlineParam);
-            if (apiRequestData.has(requestParam)) {
-                const regex = new RegExp(String.raw`\s*${inlineParam}:${apiRequestData.get(requestParam)}\s*`)
-                apiRequestData.set('q', apiRequestData.get('q').split(regex).join(' '));
+            if (apiRequestData.has(requestParam) && apiRequestData.has('q')) {
+                const inlineTerm = `${inlineParam}:${apiRequestData.get(requestParam)}`;
+                apiRequestData.set('q', removeLiteralTerm(apiRequestData.get('q'), inlineTerm));
             }
         });
         // removed even without a matching parameter, so they never reach the API as search terms
