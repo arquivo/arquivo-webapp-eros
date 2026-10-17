@@ -164,8 +164,8 @@ function unexpectedError(req, res, err) {
     // JSON.stringify only keeps an Error's enumerable fields (e.g. code), so add message and stack.
     const reason = err instanceof Error ? { ...err, message: err.message, stack: err.stack } : err;
     logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', reason));
-    // Don't reply twice: a second res.send() would throw ERR_HTTP_HEADERS_SENT, and
-    // router.js does not handle a rejection of the handler's Promise.
+    // Don't reply twice: a second res.send() would throw ERR_HTTP_HEADERS_SENT. router.js
+    // would pass that to Express's error handler, which cannot reply after headers are sent.
     if (res.headersSent) {
         return;
     }
@@ -317,7 +317,7 @@ async function handleText(req, res) {
     const text = req.body.text;
 
     // A field sent more than once arrives as an array, which fs.promises.writeFile would
-    // join and store. Same reply as when the callback fs.writeFile rejected it.
+    // join and store. Reject it with the default error reply instead.
     if (typeof text !== 'string') {
         logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', 'text is not a string'));
         res.send({
