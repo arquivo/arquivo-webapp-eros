@@ -4,9 +4,11 @@ const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
 const cookies = require('cookie-parser');
+const http = require('http');
 const path = require('path');
 const router = require('./src/router');
 const trafficLogger = require('./src/logger/traffic-logger');
+const errorLogger = require('./src/logger')('UnhandledException');
 const { validateSessionSecret } = require('./src/utils/session-secret-validator');
 
 validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
@@ -14,11 +16,6 @@ validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 const app = express();
 
 app.disable('x-powered-by');
-
-app.use((err, req, res, next) => {
-    require('./src/logger')('UnhandledException').error(err.stack);
-    next(err);
-});
 
 const i18n = require('i18n-node-yaml')({
     debug: app.get('environment') !== 'production',
@@ -97,5 +94,20 @@ app.use((req, res, next) => {
 });
 
 app.use(router);
+
+// Error handler: must be registered after every route so it receives their
+// errors (#56). It replies with a generic message itself, rather than calling
+// next(err), so the body never depends on NODE_ENV and never includes a stack.
+// Client errors that carry a 4xx status (e.g. a malformed JSON body) keep it.
+app.use((err, req, res, next) => {
+    errorLogger.error((err && err.stack) || String(err));
+    if (res.headersSent) {
+        // Too late to send an error page: let Express close the connection.
+        return next(err);
+    }
+    const errStatus = err && (err.status || err.statusCode);
+    const status = errStatus >= 400 && errStatus < 500 ? errStatus : 500;
+    res.status(status).type('text/plain').send(http.STATUS_CODES[status]);
+});
 
 module.exports = app;
