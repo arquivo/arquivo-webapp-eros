@@ -61,6 +61,12 @@ describe('utilsMiddleware', () => {
         expect(typeof mockReq.utils.displayUrl).toBe('function');
     });
 
+    it.each(['emphasizedHtml', 'snippetHtml'])('should attach the %s utility', (name) => {
+        utilsMiddleware(mockReq, mockRes, mockNext);
+
+        expect(typeof mockReq.utils[name]).toBe('function');
+    });
+
     it('should attach sanitizeInputs utility', () => {
         utilsMiddleware(mockReq, mockRes, mockNext);
         
