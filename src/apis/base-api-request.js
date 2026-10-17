@@ -6,6 +6,10 @@ const logger = require('../logger');
 // at most, even when asked for their maximum number of items.
 const DEFAULT_MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
 
+// Default total deadline, also used when options.timeout is missing or 0, so no request is ever
+// left without one (the agent's socket timeout does not stop a backend that keeps sending data)
+const DEFAULT_TIMEOUT_MS = 180000; // 3 minutes
+
 /**
  * BaseApiRequest - Abstract base class for HTTP API clients
  * 
@@ -38,7 +42,8 @@ class BaseApiRequest {
      * @param {*} defaultApiReply - Fallback response returned on errors
      * @param {string} loggerName - Logger name for this API client
      * @param {Object} options - HTTP request options (method, agent, etc.), plus:
-     *   - timeout: total deadline in ms for the whole request, body included (AbortSignal.timeout)
+     *   - timeout: total deadline in ms for the whole request, body included (AbortSignal.timeout);
+     *     3 minutes when missing or 0
      *   - idleTimeout: optional, give up when the backend sends nothing for this many ms
      *   - maxResponseBytes: optional, give up on a body larger than this (defaults to 10 MB)
      */
@@ -49,7 +54,7 @@ class BaseApiRequest {
         this.logger = logger(loggerName);
         this.options = options || { 
             method: 'GET',
-            timeout: 180000 // 3 minutes
+            timeout: DEFAULT_TIMEOUT_MS
         };
     }
 
@@ -88,7 +93,8 @@ class BaseApiRequest {
 
         const { safeCallback } = this.createSafeCallback(callback);
         const request = this.apiUrl.startsWith('https') ? https.request : http.request;
-        const { timeout, idleTimeout, maxResponseBytes = DEFAULT_MAX_RESPONSE_BYTES, ...requestOptions } = this.options;
+        const { timeout: configuredTimeout, idleTimeout, maxResponseBytes = DEFAULT_MAX_RESPONSE_BYTES, ...requestOptions } = this.options;
+        const timeout = configuredTimeout > 0 ? configuredTimeout : DEFAULT_TIMEOUT_MS;
 
         try {
             const url = this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString();
@@ -97,7 +103,7 @@ class BaseApiRequest {
             // Unlike a socket timeout, the deadline also stops a backend that keeps sending a few bytes at a
             // time, and it covers the drain of a non-2xx body. When it fires, the request is destroyed and
             // the 'error' handler below gets an AbortError.
-            const signal = timeout ? AbortSignal.timeout(timeout) : undefined;
+            const signal = AbortSignal.timeout(timeout);
 
             const apiReq = request(url, { ...requestOptions, timeout: idleTimeout, signal }, (apiRes) => {
                 // Handle non-2xx status codes

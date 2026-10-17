@@ -280,6 +280,22 @@ describe('JsonApiRequest', () => {
       expect(api.options).toEqual({ method: 'GET', timeout: 180000 });
     });
 
+    it.each([
+      ['missing', { method: 'GET' }],
+      ['0', { method: 'GET', timeout: 0 }],
+    ])('falls back to the 3 minute deadline when options.timeout is %s', (_, options, done) => {
+      const timeoutSpy = jest.spyOn(AbortSignal, 'timeout');
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`);
+      api.options = options;
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toEqual({ status: 'ok', data: 'test' });
+        expect(timeoutSpy).toHaveBeenCalledWith(180000);
+        timeoutSpy.mockRestore();
+        done();
+      });
+    });
+
     it('requests apiUrl + "?" + the sanitized request data', (done) => {
       const api = new JsonApiRequest(`http://localhost:${serverPort}/echo`, { a: '1', b: null, c: '3', d: null });
       const requestData = new URLSearchParams({ c: 'x', b: 'y', ignored: 'z' });
