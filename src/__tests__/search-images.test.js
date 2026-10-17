@@ -1,5 +1,7 @@
 'use strict';
 
+const http = require('node:http');
+const request = require('supertest');
 const searchImages = require('../search-images');
 
 // Mock dependencies
@@ -8,7 +10,7 @@ jest.mock('../apis/image-search-api');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-image-search');
 jest.mock('../logger', () => {
-    const logger = { info: jest.fn() };
+    const logger = { info: jest.fn(), error: jest.fn() };
     return jest.fn(() => logger);
 });
 
@@ -222,5 +224,63 @@ describe('search-images handler', () => {
 
         await flushPromises();
         expect(res.render).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('GET /partials/images-search-results when the image search API fails', () => {
+    let app;
+    let stubServer;
+    let stubStatus;
+    let stubBody;
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => {
+            res.writeHead(stubStatus, { 'Content-Type': 'application/json' });
+            res.end(stubBody);
+        });
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        // The real request flow, API client, fallback reply, template and export; only the API is a stub
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockImplementation(jest.requireActual('../export-image-search'));
+        const ActualImageSearchApiRequest = jest.requireActual('../apis/image-search-api');
+        ImageSearchApiRequest.mockImplementation(() => {
+            const api = new ActualImageSearchApiRequest();
+            api.apiUrl = `http://localhost:${stubServer.address().port}`;
+            return api;
+        });
+        PageSearchApiRequest.mockImplementation(() => ({
+            suggest: (requestData, callback) => callback(requestData.get('q')),
+        }));
+    });
+
+    const expectNotFound = async () => {
+        const res = await request(app).get('/partials/images-search-results?q=test').timeout(5000);
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('id="not-found-container"');
+        expect(res.text).not.toContain('image-cards-container');
+        expect(makeExportObject).toHaveBeenCalledWith(
+            expect.any(URLSearchParams), { totalItems: 0, responseItems: [] }, expect.any(Function)
+        );
+    };
+
+    it.each([
+        ['a non-2xx status', 503, JSON.stringify({ error: 'unavailable' })],
+        ['{}', 200, '{}'],
+        ['null', 200, 'null'],
+    ])('renders the not found body when the API replies %s', async (_name, status, body) => {
+        stubStatus = status;
+        stubBody = body;
+
+        await expectNotFound();
     });
 });
