@@ -178,12 +178,16 @@ const rateLimiter = rateLimitMax === 0 ? (req, res, next) => next() : rateLimit(
 });
 
 const UPLOAD_IDLE_TIMEOUT_MS = 15000;
+// Room for the multipart framing and the small form fields next to the file or text.
+const MULTIPART_OVERHEAD_BYTES = 1024 * 1024;
 
 /*
  * Parses a multipart body (#177). The file streams into a temporary file and the
  * upload is cut off once it goes over maxUploadSize: express-fileupload then replies
  * 413 with responseOnLimit, closes the connection and deletes the partial file.
- * At most one file and 10 fields (busboy keeps up to 1 MB per field) are read.
+ * At most one file and 10 fields are read. A text field may be as large as a file, so
+ * it is not cut short, and the whole body may not go over maxUploadSize plus
+ * MULTIPART_OVERHEAD_BYTES, which bounds the fields kept in memory.
  *
  * Each request gets its own temporary folder, removed when the response is closed.
  * This covers every outcome: stored (the file was moved out), rejected, failed,
@@ -212,20 +216,32 @@ function parseUpload(req, res, next) {
         }
         // The 413 reply is sent with writeHead(), which keeps the headers already set.
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        const responseOnLimit = JSON.stringify({
+            status: false,
+            message: req.t('services-citation-saver.errors.file.filesize')
+        });
         const middleware = fileUpload({
-            // busboy cuts a file off once it reaches fileSize bytes, so + 1 still
-            // accepts a file of exactly maxUploadSize, as the check in handleFile does.
-            limits: { fileSize: maxUploadSize + 1, files: 1, fields: 10 },
+            // busboy cuts a file or field off once it reaches this many bytes, so + 1
+            // still accepts exactly maxUploadSize, as handleFile and handleText check.
+            limits: { fileSize: maxUploadSize + 1, fieldSize: maxUploadSize + 1, files: 1, fields: 10, parts: 11 },
             abortOnLimit: true,
-            responseOnLimit: JSON.stringify({
-                status: false,
-                message: req.t('services-citation-saver.errors.file.filesize')
-            }),
+            responseOnLimit,
             useTempFiles: true,
             tempFileDir: tempDir,
             // A file that gets no data for this long is dropped, e.g. once the client is
             // gone. Its folder is already removed then, but the file is still open.
             uploadTimeout: UPLOAD_IDLE_TIMEOUT_MS,
+        });
+        // Counted from here on: the middleware pipes the request in this same tick.
+        let received = 0;
+        req.on('data', (chunk) => {
+            received += chunk.length;
+            if (received > maxUploadSize + MULTIPART_OVERHEAD_BYTES && !res.headersSent) {
+                logger.info('Blocking submission: multipart body over the limit.');
+                req.unpipe();
+                res.writeHead(413, { Connection: 'close' });
+                res.end(responseOnLimit);
+            }
         });
         try {
             middleware(req, res, (err) => {
@@ -496,8 +512,8 @@ async function handleText(req, res) {
         return;
     }
 
-    if (text.length > maxUploadSize) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize')));
+    if (Buffer.byteLength(text) > maxUploadSize) {
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.text.filesize')));
         res.send({
             status: false,
             message: req.t('services-citation-saver.errors.text.filesize')

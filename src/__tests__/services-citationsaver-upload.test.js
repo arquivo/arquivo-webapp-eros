@@ -37,8 +37,9 @@ const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-'));
 const uploadFolder = path.join(tmpRoot, 'uploads', 'CitationSaver');
 // The default temporary folder: next to the upload folder, not inside it.
 const uploadTempFolder = path.join(tmpRoot, 'uploads', '.citationsaver-tmp');
-// Larger than one read chunk (64 KiB), so a text file can span several chunks.
-const MAX_UPLOAD_SIZE = 256 * 1024;
+// Larger than one read chunk (64 KiB), so a text file can span several chunks, and
+// than busboy's default field size (1 MiB), so a text field of the limit is not cut short.
+const MAX_UPLOAD_SIZE = 1536 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
 config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
 // Every test posts from the same IP; the rate limit has its own suite.
@@ -61,6 +62,7 @@ const messages = {
     missing: 'O ficheiro não foi transferido, nenhum ficheiro foi submetido.',
     mimetype: 'O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.',
     filesize: 'O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.',
+    textFilesize: 'O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.',
     default: 'Algo correu mal, por favor tente novamente mais tarde.',
 };
 
@@ -292,6 +294,38 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.status).toBe(200);
             expect(res.body).toEqual(expect.objectContaining({ status: true }));
             expect(storedFiles()).toHaveLength(1);
+        });
+
+        it.each([
+            ['of exactly the limit', MAX_UPLOAD_SIZE, true],
+            // busboy used to cut a field off at 1 MB, so a text over the limit was stored truncated.
+            ['over the limit', MAX_UPLOAD_SIZE + 1, false],
+        ])('handles a multipart text %s without cutting it short', async (kind, size, accepted) => {
+            const text = 'x'.repeat(size);
+
+            const res = await post().field('text', text);
+
+            expect(res.status).toBe(200);
+            if (accepted) {
+                expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
+                expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
+            } else {
+                expect(res.body).toEqual({ status: false, message: messages.textFilesize });
+                expect(storedFiles()).toHaveLength(0);
+            }
+        });
+
+        it('rejects a multipart body over the limit with 413 even when no single part is', async () => {
+            let req = post();
+            for (let i = 0; i < 6; i++) {
+                req = req.field('field' + i, 'x'.repeat(MAX_UPLOAD_SIZE));
+            }
+
+            const res = await req.catch(err => err.response ?? Promise.reject(err));
+
+            expect(res.status).toBe(413);
+            expect(res.body).toEqual({ status: false, message: messages.filesize });
+            expect(storedFiles()).toHaveLength(0);
         });
 
         it('keeps only the first file when several are sent', async () => {
