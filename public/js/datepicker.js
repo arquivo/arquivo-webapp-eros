@@ -12,12 +12,9 @@ $(function () {
         var modalDatepickerContent = null;
         
         //load modal datepicker template into local variable
-        $.ajax({
-            url: '/partials/modal-datepicker?l='+lang,
-            success: function (data) {
-                modalDatepickerContent = data
-            }
-        });
+        fetch('/partials/modal-datepicker?l='+lang)
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
+            .then((data) => { modalDatepickerContent = data; }, () => {});
 
         //converts yyyymmdd into Date object
         let stringToDate = function (dateString) {
