@@ -220,6 +220,8 @@ describe('filterCdx', () => {
             ['an invalid month', '20241310120000'],
             ['too short', '2024031012000'],
             ['too long', '202403101200000'],
+            ['a trailing newline', '20240310120000\n'],
+            ['fullwidth digits', '\uFF12\uFF10\uFF12\uFF14\uFF10\uFF13\uFF11\uFF10\uFF11\uFF12\uFF10\uFF10\uFF10\uFF10'],
         ])('should filter out timestamps with %s', (_, timestamp) => {
             expect(filterCdx([item(timestamp)])).toEqual([]);
         });
