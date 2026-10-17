@@ -54,6 +54,9 @@ function getMockResponse(requestedUrl) {
     if (requestedUrl === 'http://example.com/empty') {
         return '';
     }
+    if (requestedUrl === 'http://example.com/malformed-long') {
+        return '{' + 'x'.repeat(10000) + '}\n{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc"}';
+    }
     return '{"url":"http://default.com","timestamp":"20230101120000","status":"200","digest":"default"}';
 }
 
@@ -317,6 +320,21 @@ describe('CDXSearchApiRequest', () => {
             };
 
             api.get(requestData, verifyErrorLogging);
+        });
+
+        it('logs only the first 200 characters of a long malformed object', (done) => {
+            const errorSpy = jest.spyOn(api.logger, 'error').mockImplementation(() => {});
+
+            api.get(new URLSearchParams({ url: 'http://example.com/malformed-long' }), (data) => {
+                // the malformed object is skipped, the next one is still parsed
+                expect(data).toHaveLength(1);
+                expect(data[0].digest).toBe('abc');
+                const errorCall = errorSpy.mock.calls.find(call => call[0].includes('Failed to parse JSON object'));
+                expect(errorCall[0]).toMatch(/^Failed to parse JSON object: \{x{199}\.\.\. \(10002 chars\)\. Error: /);
+                expect(errorCall[0].length).toBeLessThan(400);
+                errorSpy.mockRestore();
+                done();
+            });
         });
 
         it('should handle empty response', (done) => {

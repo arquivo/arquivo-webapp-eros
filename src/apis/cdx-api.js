@@ -2,6 +2,9 @@ const BaseApiRequest = require('./base-api-request');
 const config = require('config');
 const todayYmd = require('../utils/today-ymd');
 
+// How much of a malformed capture goes into the parse-error log line
+const MAX_LOGGED_FRAGMENT_LENGTH = 200;
+
 /**
  * CDXSearchApiRequest - HTTP client for CDX API with streaming JSON parsing
  * 
@@ -62,8 +65,12 @@ class CDXSearchApiRequest extends BaseApiRequest {
                     let currentData = JSON.parse(currentJson);
                     apiData.push(currentData);
                 } catch (e) {
-                    // Log and skip malformed JSON, continue processing
-                    this.logger.error(`Failed to parse JSON object: ${currentJson}. Error: ${e.message}`);
+                    // Log and skip malformed JSON, continue processing. Log only the start of the
+                    // fragment, so a malformed reply can't write a huge log line.
+                    const fragment = currentJson.length > MAX_LOGGED_FRAGMENT_LENGTH
+                        ? `${currentJson.slice(0, MAX_LOGGED_FRAGMENT_LENGTH)}... (${currentJson.length} chars)`
+                        : currentJson;
+                    this.logger.error(`Failed to parse JSON object: ${fragment}. Error: ${e.message}`);
                 }
                 apiReply = apiReply.slice(endIndex + 1);
                 endIndex = apiReply.indexOf('}') + 1;
