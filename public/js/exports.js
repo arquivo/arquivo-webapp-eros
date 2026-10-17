@@ -1,3 +1,8 @@
+'use strict';
+
+// XLSX: the SheetJS library (public/vendor/js/xlsx.full.min.js).
+/* global XLSX */
+
 (function (init) {
     // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
     if (document.readyState === 'loading') {
@@ -6,7 +11,6 @@
         init();
     }
 })(function () {
-    let _exportSERPInfo = [];
     let addZero = function (i) {
         if (i < 10) {
             i = "0" + i;

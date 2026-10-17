@@ -6,6 +6,18 @@ const { describeScript, loadScript } = require('./helpers/load-script.cjs');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
+// The globals functions.js declares. It is a strict-mode script, so loadScript only puts
+// on window the ones named here (a <script> tag makes them all globals).
+const GLOBALS = [
+    'setInlineStyle', 'setInlineStyleAll', 'openLeftMenuNav', 'closeLeftMenuNav',
+    'openOptionstMenuNav', 'closeOptionsMenuNav', 'openReplayLeftMenuNav', 'closeReplayLeftMenuNav',
+    'openReplayRightMenuNav', 'closeReplayRightMenuNav', 'copyURLToClipboard', 'alertsMessageIn',
+    'alertsMessageOut', 'openAdvancedSearchForm', 'closeAdvancedSearch', 'opensFullScreen',
+    'closesFullScreen', 'showTable', 'showList', 'removeSearchBoxShadow', 'showsSearchBoxShadow',
+    'openImageDetailsModalWindow', 'closeImageDetailsModalWindow', 'dateFromTimestamp', 'isMobile',
+    'onSectionLoad', 'isValidUrl',
+];
+
 // The elements functions.js styles, as the views render them. Some start with an inline
 // style, to check that it is replaced and not merged. There are two .blocker-menus
 // overlays, to check that every one is styled, as jQuery did.
@@ -130,7 +142,7 @@ describe('dateFromTimestamp month names', () => {
     });
 
     it.each(['pt', 'en'])('are the jQuery UI datepicker month names in "%s"', (language) => {
-        loadScript('js/functions.js');
+        loadScript('js/functions.js', { globals: GLOBALS });
         window.lang = language;
         const { monthNames, monthNamesShort } = window.jQuery.datepicker.regional[language];
 
@@ -138,13 +150,13 @@ describe('dateFromTimestamp month names', () => {
         expect(monthNamesShort).toHaveLength(12);
         monthNames.forEach((name, i) => {
             const month = String(i + 1).padStart(2, '0');
-            expect(dateFromTimestamp(`2020${month}10`, 'medium')).toBe(`10 ${name} 2020`);
-            expect(dateFromTimestamp(`2020${month}10`, 'short')).toBe(`10 ${monthNamesShort[i]}`);
+            expect(window.dateFromTimestamp(`2020${month}10`, 'medium')).toBe(`10 ${name} 2020`);
+            expect(window.dateFromTimestamp(`2020${month}10`, 'short')).toBe(`10 ${monthNamesShort[i]}`);
         });
     });
 });
 
-describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
+describeScript('js/functions.js', { html: PAGE, globals: GLOBALS }, ({ setup }) => {
     beforeEach(() => {
         // alertsMessageIn hides the alert with a timer.
         jest.useFakeTimers();
@@ -174,7 +186,7 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
     it('styles only the first element when an id is repeated, as jQuery did', () => {
         setup('<nav id="left-nav" style="color: red"></nav><nav id="left-nav" style="color: red"></nav>');
 
-        openLeftMenuNav();
+        window.openLeftMenuNav();
 
         const [first, second] = document.querySelectorAll('nav');
         expect(first.style.left).toBe('0px');
@@ -184,7 +196,7 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
     it('alertsMessageIn hides the alert again after 2 seconds', () => {
         setup();
 
-        alertsMessageIn();
+        window.alertsMessageIn();
         jest.advanceTimersByTime(1999);
         expect(document.getElementById('alert-container').style.opacity).toBe('1');
 
@@ -204,7 +216,7 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
         const inputsBefore = document.querySelectorAll('input').length;
 
         try {
-            copyURLToClipboard();
+            window.copyURLToClipboard();
         } finally {
             delete document.execCommand;
         }
@@ -268,11 +280,11 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
     it('openAdvancedSearchForm and closeAdvancedSearch show and hide the accordion', () => {
         setup();
 
-        expect(openAdvancedSearchForm()).toBe(false);
+        expect(window.openAdvancedSearchForm()).toBe(false);
         expect(document.getElementById('accordion').style.display).toBe('block');
         expect(document.getElementById('closeAdvancedSearch').style.display).toBe('block');
 
-        expect(closeAdvancedSearch()).toBe(false);
+        expect(window.closeAdvancedSearch()).toBe(false);
         expect(document.getElementById('accordion').style.display).toBe('none');
     });
 
@@ -296,14 +308,14 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
             setup('');
             window.lang = language;
 
-            expect(dateFromTimestamp(timestamp, format)).toBe(expected);
+            expect(window.dateFromTimestamp(timestamp, format)).toBe(expected);
         });
 
         it('uses the long format by default', () => {
             setup('');
             window.lang = 'pt';
 
-            expect(dateFromTimestamp('20200102030405')).toBe('2 Janeiro 03h04, 2020');
+            expect(window.dateFromTimestamp('20200102030405')).toBe('2 Janeiro 03h04, 2020');
         });
 
         it('shows the replayed date in the complete-page header (dynamic-header-url.js)', () => {
@@ -332,15 +344,15 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
 
         try {
             userAgent.mockReturnValue('Mozilla/5.0 (X11; Linux x86_64)');
-            expect(isMobile()).toBe(false);
+            expect(window.isMobile()).toBe(false);
             expect(window.matchMedia).toHaveBeenCalledWith('(max-width: 767px)');
 
             matches.value = true;
-            expect(isMobile()).toBe(true);
+            expect(window.isMobile()).toBe(true);
 
             matches.value = false;
             userAgent.mockReturnValue('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)');
-            expect(isMobile()).toBe(true);
+            expect(window.isMobile()).toBe(true);
         } finally {
             delete window.matchMedia;
         }
@@ -349,7 +361,7 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
     it('onSectionLoad runs the callback when that section has loaded', () => {
         setup('');
         const callback = jest.fn();
-        onSectionLoad('url-results-table', callback);
+        window.onSectionLoad('url-results-table', callback);
         const post = (data) => window.dispatchEvent(new MessageEvent('message', { data }));
 
         post({ arquivo_type: 'section-loaded', message: 'other-section' });
@@ -373,6 +385,6 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
         });
 
         // describeScript fails the test on any uncaught error, such as that SyntaxError.
-        expect(typeof dateFromTimestamp).toBe('function');
+        expect(typeof window.dateFromTimestamp).toBe('function');
     });
 });

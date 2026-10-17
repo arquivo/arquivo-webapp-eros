@@ -1,3 +1,8 @@
+'use strict';
+
+// dateFromTimestamp: functions.js.
+/* global dateFromTimestamp */
+
 (() => {
     const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
     const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
@@ -11,7 +16,7 @@
         try {
             const src = new URL(iframe.src);
             return ['http:', 'https:'].includes(src.protocol) ? src.origin : null;
-        } catch (err) {
+        } catch {
             return null;
         }
     };
@@ -20,7 +25,7 @@
     const isHttpUrl = (url) => {
         try {
             return typeof url === 'string' && ['http:', 'https:'].includes(new URL(url).protocol);
-        } catch (err) {
+        } catch {
             return false;
         }
     };

@@ -7,6 +7,8 @@
 //     redirection on the click event for click duration longer than 
 //     page_search_result_data.threshold milliseconds.
 
+'use strict';
+
 // The script's state, an explicit global as before (nothing else on the page reads it).
 // The semicolon matters: the next line starts with "(".
 window.page_search_result_data = {};
@@ -18,6 +20,7 @@ window.page_search_result_data = {};
         init();
     }
 })(function () {
+    const page_search_result_data = window.page_search_result_data;
     page_search_result_data.lastMouseDown = 0;
     page_search_result_data.threshold = 300;
     page_search_result_data.selecting = false;
