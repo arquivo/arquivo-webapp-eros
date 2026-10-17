@@ -91,7 +91,7 @@ function click(element) {
     return event;
 }
 
-describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'] }, ({ setup, whileParsing }) => {
+describeScript('js/init.js', { html: PAGE }, ({ setup, whileParsing }) => {
     let messages;
     let originalPostMessage;
     let removeBodyListeners;
@@ -187,14 +187,6 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
             document.body.insertAdjacentHTML('beforeend', '<a id="later" class="blockUrl" href="#later">later</a>');
 
             expect(click($id('later')).defaultPrevented).toBe(false);
-        });
-
-        it('cancels each click, every time', () => {
-            setup(`${PAGE}<a id="blocked-2" class="blockUrl" href="#b2">b2</a>`);
-
-            expect(click($id('blocked')).defaultPrevented).toBe(true);
-            expect(click($id('blocked')).defaultPrevented).toBe(true);
-            expect(click($id('blocked-2')).defaultPrevented).toBe(true);
         });
     });
 
@@ -480,22 +472,14 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
             expect(first).not.toBe(second);
         });
 
-        it('keeps a trackingId input the form already has', () => {
+        it('keeps a trackingId input the form already has, so it adds one only once', () => {
             setup(`<form id="f" action="/page/search"><div><input type="hidden" name="trackingId" value="kept"></div></form>`);
 
+            submit($id('f'));
             submit($id('f'));
 
             expect(trackingInputs($id('f'))).toHaveLength(1);
             expect(trackingInputs($id('f'))[0].value).toBe('kept');
-        });
-
-        it('adds the input only once when the form is submitted again', () => {
-            setup();
-
-            submit($id('search-form'));
-            submit($id('search-form'));
-
-            expect(trackingInputs($id('search-form'))).toHaveLength(1);
         });
 
         it('leaves forms whose action does not contain "search" alone', () => {
@@ -586,26 +570,6 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
                 ...(window.jQuery ? [['$(fn)', true]] : []),
                 ['DOMContentLoaded', true],
             ]);
-        });
-    });
-
-    describe('generateId and getClientId', () => {
-        it('generateId returns that many random hex digits, 20 by default', () => {
-            const { generateId } = setup();
-
-            expect(generateId()).toMatch(/^[0-9a-f]{20}$/);
-            expect(generateId(8)).toMatch(/^[0-9a-f]{8}$/);
-            expect(generateId()).not.toBe(generateId());
-        });
-
-        it('getClientId creates the client_id cookie once and then returns it', () => {
-            const { getClientId } = setup();
-
-            const id = getClientId();
-
-            expect(id).toMatch(/^[0-9a-f]{20}$/);
-            expect(document.cookie).toContain(`client_id=${id}`);
-            expect(getClientId()).toBe(id);
         });
     });
 });

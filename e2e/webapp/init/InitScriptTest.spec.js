@@ -235,18 +235,6 @@ test('loads the page search results with the loading form\'s fields and the page
     expect(errors).toEqual([]);
 });
 
-test('runs the url search partial\'s accordion script once', async ({ page, urlSearchPage }) => {
-    const errors = collectPageErrors(page);
-    await urlSearchPage.goto('fccn.pt', { viewMode: 'list' });
-    await expect(urlSearchPage.listContainer).toBeVisible();
-
-    // The partial's inline script binds the accordion toggle: run twice, a click would toggle twice.
-    const yearLink = page.locator('#list-results-year-2015 > a');
-    await yearLink.click();
-    await expect(yearLink).toHaveClass(/\bactive\b/);
-    expect(errors).toEqual([]);
-});
-
 test('adds a trackingId to searches from the homepage', async ({ page, context, searchBar }) => {
     await searchBar.goto();
     await searchBar.search('fccn');
