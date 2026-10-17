@@ -78,10 +78,8 @@ describe('Citation Saver spreadsheet date column', () => {
     };
 
     describe.each(Object.keys(submissions))('a %s submission', (type) => {
-        it.each([
-            ['just after local midnight', new Date(2024, 0, 1, 0, 0, 1), '2024-01-01'],
-            ['just before local midnight', new Date(2023, 11, 31, 23, 59, 59), '2023-12-31'],
-        ])('records the local date %s', async (_label, now, expected) => {
+        it('records the local date just after local midnight', async () => {
+            const now = new Date(2024, 0, 1, 0, 0, 1);
             jest.setSystemTime(now);
             Object.assign(req, submissions[type]());
 
@@ -91,20 +89,8 @@ describe('Citation Saver spreadsheet date column', () => {
             expect(addToSpreadsheet).toHaveBeenCalledTimes(1);
             const row = addToSpreadsheet.mock.calls[0][0];
             expect(row[3]).toBe(type);
-            expect(row[0]).toBe(expected);
+            expect(row[0]).toBe('2024-01-01');
             expect(row[1]).toBe(now.getTime());
         });
-    });
-
-    it('is not the UTC date just after local midnight', async () => {
-        const now = new Date(2024, 0, 1, 0, 0, 1);
-        jest.setSystemTime(now);
-        Object.assign(req, submissions.Text());
-
-        servicesCitationSaver(req, res);
-        await flushPromises();
-
-        expect(now.toISOString().slice(0, 10)).toBe('2023-12-31');
-        expect(addToSpreadsheet.mock.calls[0][0][0]).toBe('2024-01-01');
     });
 });

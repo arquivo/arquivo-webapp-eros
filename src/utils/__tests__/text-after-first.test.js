@@ -19,17 +19,13 @@ describe('textAfterFirst', () => {
         expect(textAfterFirst('https://other.example/2023/example.com', 'replay/')).toBe('');
     });
 
-    it('handles the token at the start, at the end and repeated back to back', () => {
-        expect(textAfterFirst('/example.com', '/')).toBe('example.com');
-        expect(textAfterFirst('20230101120000/', '/')).toBe('');
-        expect(textAfterFirst('a//b', '/')).toBe('/b');
-        expect(textAfterFirst('', '/')).toBe('');
-    });
-
     it.each([
         ['20230101120000/example.com', '/'],
         ['20230101120000/example.com/a//b/', '/'],
         ['20230101120000', '/'],
+        ['/example.com', '/'],
+        ['20230101120000/', '/'],
+        ['a//b', '/'],
         ['/', '/'],
         ['', '/'],
         ['https://h/noFrame/replay/2023/example.com', 'replay/'],
