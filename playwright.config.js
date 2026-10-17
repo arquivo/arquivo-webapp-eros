@@ -22,8 +22,6 @@ const mockedBackendEnv = {
     BACKEND_URL: MOCK_SERVER_URL,
     WAYBACK_URL: `${MOCK_SERVER_URL}/wayback`,
     PYWB_URL: `${MOCK_SERVER_URL}/noFrame/replay`,
-    TEXT_SEARCH_API_SOLR: `${MOCK_SERVER_URL}/textsearch`,
-    TEXT_SEARCH_API_NUTCHWAX: `${MOCK_SERVER_URL}/textsearchnutchwax`,
     TEXT_SEARCH_API_DEFAULT: `${MOCK_SERVER_URL}/textsearch`,
     IMAGE_SEARCH_API: `${MOCK_SERVER_URL}/imagesearch`,
     CDX_API: `${MOCK_SERVER_URL}/wayback/cdx`,

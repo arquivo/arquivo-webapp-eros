@@ -184,18 +184,8 @@ describeScript('js/annotate.js', { html: SEARCH_TOOLS + pagesResults(3) }, ({ se
             expect($id('startend').innerHTML).toBe(`<span>${text}</span>`);
         });
 
-        it('keeps the api parameter in the search form', () => {
-            open('/page/search?q=sapo&annotate=true&api=a"b<c>');
-
-            const input = $id('search-form').lastElementChild;
-            expect(input.tagName).toBe('INPUT');
-            expect(input.getAttributeNames()).toEqual(['type', 'name', 'value']);
-            expect([input.type, input.name, input.getAttribute('value')]).toEqual(['hidden', 'api', 'a"b<c>']);
-            expect(document.querySelectorAll('input[name=api]')).toHaveLength(1);
-        });
-
-        it('adds no api input without the parameter', () => {
-            open('/page/search?q=sapo&annotate=true');
+        it('does not carry an api parameter over to the search form', () => {
+            open('/page/search?q=sapo&annotate=true&api=nutchwax');
 
             expect(document.querySelector('input[name=api]')).toBeNull();
         });
@@ -204,10 +194,9 @@ describeScript('js/annotate.js', { html: SEARCH_TOOLS + pagesResults(3) }, ({ se
             const html = `<input id="submit-search-input" value="sapo">
                 <input id="start-date" value="19960101"><input id="end-date" value="20201231">${pagesResults(1)}`;
 
-            open('/page/search?q=sapo&annotate=true&api=x', html);
+            open('/page/search?q=sapo&annotate=true', html);
 
             expect($id('startend')).toBeNull();
-            expect(document.querySelector('input[name=api]')).toBeNull();
             expect(document.querySelectorAll('.ids')).toHaveLength(1);
         });
     });

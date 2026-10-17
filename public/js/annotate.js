@@ -279,15 +279,6 @@
             }
             startValue += 1
 
-            let api = urlParams.get('api');
-            if(!!api){
-                let apiInput = document.createElement('input');
-                apiInput.setAttribute('type','hidden');
-                apiInput.setAttribute('name','api');
-                apiInput.setAttribute('value',api);
-                document.getElementById('search-form')?.appendChild(apiInput);
-            }
-
             var nRes = 0
             if (window.location.href.includes("/image/search")){
                 type = "image";

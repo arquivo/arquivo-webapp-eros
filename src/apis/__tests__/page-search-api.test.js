@@ -14,12 +14,12 @@ const todayYmd = require('../../utils/today-ymd');
  * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Overrides sanitizeRequestData() to clean inline parameters from queries
- * - Uses constructor to configure backend endpoints (solr, nutchwax, default)
+ * - Uses the configured text search endpoint (text.search.api.default)
  * - Maintains all default parameter handling through parent class
  * - No custom response processing needed - works with standard JSON responses
  * 
  * COVERAGE:
- * - Constructor with different backends (3 tests)
+ * - Constructor with the configured endpoint (1 test)
  * - Default parameters and reply structure (2 tests)
  * - Inline parameter sanitization for site, type, collection, safe, size (7 tests)
  * - Parameter merging with defaults (1 test)
@@ -74,20 +74,10 @@ describe('PageSearchApiRequest', () => {
     });
 
     describe('Constructor', () => {
-        it('should create instance with default backend', () => {
+        it('should create instance with the configured endpoint', () => {
             const api = new PageSearchApiRequest();
             expect(api).toBeInstanceOf(PageSearchApiRequest);
             expect(api.apiUrl).toBe(config.get('text.search.api.default'));
-        });
-
-        it('should create instance with solr backend', () => {
-            const api = new PageSearchApiRequest('solr');
-            expect(api.apiUrl).toBe(config.get('text.search.api.solr'));
-        });
-
-        it('should create instance with nutchwax backend', () => {
-            const api = new PageSearchApiRequest('nutchwax');
-            expect(api.apiUrl).toBe(config.get('text.search.api.nutchwax'));
         });
 
         it('should have correct default parameters', () => {
@@ -315,8 +305,9 @@ describe('PageSearchApiRequest', () => {
         });
 
         it('should apply custom request options', () => {
-            const api = new PageSearchApiRequest(null, { timeout: 3000 });
+            const api = new PageSearchApiRequest({ timeout: 3000 });
             expect(api.options).toMatchObject({ method: 'GET', timeout: 3000 });
+            expect(api.apiUrl).toBe(config.get('text.search.api.default'));
         });
     });
 
