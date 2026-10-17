@@ -271,13 +271,35 @@ class ArquivoReplay {
         const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
         const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
+        // pywb posts the wb_type messages from the replay iframe, on the origin of the
+        // configured pywb.url; init.js posts the arquivo_type ones from this page itself.
+        // Messages from any other origin are ignored.
+        const isHttp = (url) => ['http:', 'https:'].includes(url.protocol);
+        let pywbOrigin = null;
+        try {
+            const pywbUrl = new URL(replay.getConfig('pywb.url'), window.location.href);
+            pywbOrigin = isHttp(pywbUrl) ? pywbUrl.origin : null;
+        } catch (err) {
+            // No valid pywb.url: no replay messages are accepted.
+        }
+        // Only http(s) URLs end up in the page links and history.
+        const isHttpUrl = (url) => {
+            try {
+                return typeof url === 'string' && isHttp(new URL(url));
+            } catch (err) {
+                return false;
+            }
+        };
+
         window[eventMethod](messageEvent, (e) => {
             const key = e.message ? "message" : "data";
-            if (e[key] && e[key].wb_type) {
+            const fromReplay = e.origin === pywbOrigin;
+            const fromThisPage = e.origin === window.location.origin;
+            if (fromReplay && e[key] && e[key].wb_type) {
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
-                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
+                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) && isHttpUrl(e[key].url) ) {
                     replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({
@@ -290,7 +312,7 @@ class ArquivoReplay {
                     $('#replay-not-found').show();
                 }
             }
-            if(e[key] && e[key].arquivo_type && e[key].message){
+            if(fromThisPage && e[key] && e[key].arquivo_type && e[key].message){
                 if(e[key].arquivo_type == 'section-loaded' && e[key].message == 'date'){
                     const target = $('.date-selected');
                     if(target.length){

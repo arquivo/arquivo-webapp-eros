@@ -190,5 +190,68 @@ describe('replay.js', () => {
 
             expect($.fn.scrollParent).toHaveBeenCalledTimes(1);
         });
+
+        it.each([
+            ['another origin', 'https://evil.example.net'],
+            ['the page itself', 'http://localhost'],
+            ['an opaque origin (sandboxed frame)', 'null'],
+            ['no origin', ''],
+            ['the pywb host on another port', PYWB_ORIGIN + ':8443'],
+        ])('ignores replay messages from %s', (_case, origin) => {
+            const replay = newReplay();
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+
+            post({ wb_type: 'load', url: 'https://example.org/', ts: '20210101000000', title: 'Evil' }, origin);
+            post({ wb_type: 'not-found' }, origin);
+
+            expect(setUrlAndTimestamp).not.toHaveBeenCalled();
+            expect(document.title).toBe('Arquivo.pt');
+            expect(window.dataLayer).toBeUndefined();
+            expect($id('replay-not-found').style.display).toBe('none');
+        });
+
+        it('ignores section-loaded messages from the replay', () => {
+            newReplay();
+            document.getElementById('replay-left-nav').innerHTML = '<ul><li class="date-selected"><a>d</a></li></ul>';
+
+            post({ arquivo_type: 'section-loaded', message: 'date' }, PYWB_ORIGIN);
+            post({ arquivo_type: 'section-loaded', message: 'date' }, 'https://evil.example.net');
+
+            expect($.fn.scrollParent).not.toHaveBeenCalled();
+        });
+
+        it('accepts no replay messages when pywb.url is not an http(s) URL', () => {
+            const replay = new ArquivoReplay({ ...CONFIGS, 'pywb.url': 'javascript:alert(1)' });
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+
+            post({ wb_type: 'load', url: 'https://example.org/', ts: '20210101000000' }, 'null');
+
+            expect(setUrlAndTimestamp).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['a javascript: URL', 'javascript:alert(1)'],
+            ['a data: URL', 'data:text/html,hi'],
+            ['a URL without a scheme', 'example.org/a'],
+            ['no URL', undefined],
+            ['a non-string URL', { toString: () => 'https://example.org/' }],
+        ])('does not follow %s from the replay', (_case, url) => {
+            const replay = newReplay();
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+
+            post({ wb_type: 'replace-url', url, ts: '20210101000000' });
+
+            expect(setUrlAndTimestamp).not.toHaveBeenCalled();
+            expect(window.dataLayer).toBeUndefined();
+            expect(window.history.pushState).not.toHaveBeenCalled();
+        });
+
+        it('still sets the title of a loaded page whose URL it does not follow', () => {
+            newReplay();
+
+            post({ wb_type: 'load', url: 'javascript:alert(1)', title: 'Example' });
+
+            expect(document.title).toBe('Example - preserved by Arquivo.pt');
+        });
     });
 });
