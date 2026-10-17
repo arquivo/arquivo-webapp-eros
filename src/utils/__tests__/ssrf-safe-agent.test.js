@@ -176,6 +176,16 @@ describe('ssrfSafeAgent', () => {
         expect(dns.lookup).not.toHaveBeenCalled();
     });
 
+    it.each([
+        [http, 'http://10.9.8.7:8080/'],
+        [https, 'https://10.9.8.7:8443/']
+    ])('leaves no socket entry behind for a refused IP address host (%#)', async (module, url) => {
+        const agent = ssrfSafeAgent(new URL(url));
+
+        await expect(request(module, url)).rejects.toMatchObject({ code: BLOCKED_ADDRESS });
+        expect(Object.keys(agent.sockets).filter(name => name.startsWith('10.9.8.7:'))).toEqual([]);
+    });
+
     describe('when the address is public', () => {
         let createConnection;
 

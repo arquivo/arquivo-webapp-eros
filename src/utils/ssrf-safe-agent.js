@@ -123,6 +123,9 @@ function pinnedAgent(Agent) {
     const agent = new Agent({ lookup: pinnedLookup });
     agent.createConnection = function (options, callback) {
         if (isPrivateIp(options.host)) {
+            // addRequest() has made an entry for this host that no socket will use or remove.
+            const name = this.getName(options);
+            if (this.sockets[name]?.length === 0) delete this.sockets[name];
             process.nextTick(callback, blockedAddressError(options.host));
             return undefined;
         }
