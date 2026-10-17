@@ -1,9 +1,10 @@
 'use strict';
 
 // The app's error middleware must be registered after the router so route
-// errors reach it (#56). It logs the stack through the 'UnhandledException'
-// logger and replies with a generic message, so the response never depends on
-// NODE_ENV and never includes a stack trace or server paths.
+// errors reach it (#56). It logs 5xx stacks through the 'UnhandledException'
+// logger (4xx at warn, without message or stack) and replies with the generic
+// status text, so the response never depends on NODE_ENV and never includes a
+// stack trace or server paths.
 
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
@@ -69,21 +70,11 @@ describe('error middleware', () => {
         expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('TypeError: simulated synchronous failure'));
     });
 
-    it('replies with a generic 500 when an async handler rejects', async () => {
-        citationSaver.mockRejectedValue(new Error('simulated handler failure'));
-
-        const res = await request(app).post('/services/citationsaver').type('form').send({ text: 'hello' })
-            .timeout(REQUEST_TIMEOUT_MS);
-
-        expect(res.status).toBe(500);
-        expect(res.text).toBe('Internal Server Error');
-        expectNoStack(res.text);
-        expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('simulated handler failure'));
-    });
-
-    it('keeps the response independent of NODE_ENV', async () => {
-        const previousEnv = process.env.NODE_ENV;
-        process.env.NODE_ENV = 'development';
+    it('keeps the response generic when the app runs in development', async () => {
+        // Express reads the env per request (app.get('env')), and its default
+        // handler would put the stack in the body outside production.
+        const previousEnv = app.get('env');
+        app.set('env', 'development');
         try {
             replayNav.mockImplementation((req, res, next) => next(new Error('simulated route failure')));
 
@@ -91,8 +82,9 @@ describe('error middleware', () => {
 
             expect(res.status).toBe(500);
             expect(res.text).toBe('Internal Server Error');
+            expectNoStack(res.text);
         } finally {
-            process.env.NODE_ENV = previousEnv;
+            app.set('env', previousEnv);
         }
     });
 
@@ -108,18 +100,45 @@ describe('error middleware', () => {
         expect(citationSaver).not.toHaveBeenCalled();
     });
 
-    it('delegates to Express with next(err) when headers were already sent', async () => {
+    it('logs a client error at warn with only its status and name', async () => {
+        // V8 quotes the start of the source in JSON.parse errors, so err.message
+        // would carry raw request body text into the log.
+        await request(app).post('/services/citationsaver')
+            .set('Content-Type', 'application/json')
+            .send('{"bodymarker": nope}')
+            .timeout(REQUEST_TIMEOUT_MS);
+
+        expect(mockLogger.error).not.toHaveBeenCalled();
+        expect(mockLogger.warn).toHaveBeenCalledTimes(1);
+        const line = mockLogger.warn.mock.calls[0][0];
+        expect(line).toBe('Client error 400 SyntaxError');
+        expect(line).not.toContain('bodymarker');
+        expect(line).not.toMatch(/\n\s+at /);
+    });
+
+    it('falls back to 500 for a status that is not a 4xx integer', async () => {
+        for (const status of ['404', 404.5, 302, 503]) {
+            replayNav.mockImplementation((req, res, next) => next(Object.assign(new Error('simulated'), { status })));
+
+            const res = await request(app).get('/partials/replay-nav').timeout(REQUEST_TIMEOUT_MS);
+
+            expect(res.status).toBe(500);
+            expect(res.text).toBe('Internal Server Error');
+        }
+    });
+
+    it('drops the connection and logs once when headers were already sent', async () => {
         replayNav.mockImplementation((req, res, next) => {
             res.status(200).type('text/plain');
             res.write('partial body');
             next(new Error('simulated late failure'));
         });
 
-        // Express's default handler closes the connection mid-response, so the
-        // client sees an aborted request instead of a second, conflicting reply.
+        // The client sees an aborted request instead of a second, conflicting reply.
         await expect(
             request(app).get('/partials/replay-nav').timeout(REQUEST_TIMEOUT_MS)
         ).rejects.toThrow();
+        expect(mockLogger.error).toHaveBeenCalledTimes(1);
         expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('simulated late failure'));
     });
 
