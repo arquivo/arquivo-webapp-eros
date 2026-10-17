@@ -1,4 +1,3 @@
-const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 /**
  * Export Results Utility
  * 
@@ -17,6 +16,8 @@ const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
  * @param {Array<string>} displayFields - List of fields to include in export
  * @returns {Array<Array>} 2D array suitable for CSV/JSON export
  */
+
+const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 
 //makes export json from Api request and reply
 module.exports = function (apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
