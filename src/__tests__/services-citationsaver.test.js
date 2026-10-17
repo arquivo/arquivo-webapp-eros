@@ -818,8 +818,7 @@ describe('Citation Saver Service', () => {
             const mv = jest.fn().mockRejectedValue(fsError('EACCES'));
             Object.assign(req, submissions.file(mv));
 
-            servicesCitationSaver(req, res);
-            await flushPromises();
+            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
 
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
@@ -833,8 +832,7 @@ describe('Citation Saver Service', () => {
             fs.promises.rm.mockRejectedValue(fsError('EPERM'));
             Object.assign(req, submissions.text());
 
-            servicesCitationSaver(req, res);
-            await flushPromises();
+            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
 
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
