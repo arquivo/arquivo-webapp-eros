@@ -9,7 +9,7 @@
  * @param {string[]} inlineParams - Inline parameter names, e.g. ['collection', 'language']
  * @returns {string} Query without those terms
  */
-module.exports = function (query, inlineParams) {
+module.exports = function removeInlineTerms(query, inlineParams) {
   const inlineTerm = new RegExp(String.raw`^(?:${inlineParams.join('|')}):\S+$`);
   // with the capturing group, words are at even indexes and the whitespace between them at odd ones
   const tokens = query.split(/(\s+)/);

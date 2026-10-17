@@ -60,9 +60,9 @@ module.exports = function (apiRequestData, apiResponseItems, translateFunction, 
         }
 
         const { year, month, day } = parseArchiveTimestamp(currentDocument[timstampField]);
-        currentDocument.year = parseInt(year);
+        currentDocument.year = Number.parseInt(year);
         currentDocument.month = translateFunction('common.months.' + month);
-        currentDocument.day = parseInt(day);
+        currentDocument.day = Number.parseInt(day);
 
         // append result so it can be exported
         exportSERPSaveLine(
