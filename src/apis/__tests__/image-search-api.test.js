@@ -4,13 +4,12 @@ jest.mock('config');
 const ImageSearchApiRequest = require('../image-search-api');
 const config = require('config');
 const http = require('node:http');
+const todayYmd = require('../../utils/today-ymd');
 
 /**
  * ImageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 30 TESTS PASSING (100%)
- * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Simple constructor that only configures parameters
  * - Uses parent class for all HTTP request handling
@@ -25,7 +24,7 @@ const http = require('node:http');
  * - Date range handling (3 tests)
  * 
  * Along with PageSearchApiRequest, this demonstrates the correct pattern for
- * extending ApiRequest after the refactor.
+ * extending JsonApiRequest.
  */
 describe('ImageSearchApiRequest', () => {
     let mockServer;
@@ -313,6 +312,78 @@ describe('ImageSearchApiRequest', () => {
             const sanitized = api.sanitizeRequestData(requestData);
             expect(sanitized.get('from')).toBe('20200101');
             expect(sanitized.get('to')).toBe('20201231');
+        });
+    });
+
+    /**
+     * Regression tests: the request the client sends and what it returns on failure
+     */
+    describe('request sent and fallback reply', () => {
+        let captureServer;
+        let captured;
+        let status;
+
+        beforeAll((done) => {
+            captureServer = http.createServer((req, res) => {
+                captured.push(req.url);
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+            });
+            captureServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            captureServer.close(done);
+        });
+
+        beforeEach(() => {
+            captured = [];
+            status = 200;
+        });
+
+        const apiAtCaptureServer = () => {
+            const api = new ImageSearchApiRequest();
+            api.apiUrl = `http://localhost:${captureServer.address().port}`;
+            return api;
+        };
+
+        it('sends the default params, in order, without the page search only terms in the query', (done) => {
+            const api = apiAtCaptureServer();
+            const requestData = new URLSearchParams({
+                q: 'gato collection:Roteiro language:pt size:lg',
+                collection: 'Roteiro',
+                size: 'lg',
+                offset: '25',
+                unknown: 'dropped',
+            });
+
+            api.get(requestData, (data) => {
+                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                const expected = new URLSearchParams([
+                    ['q', 'gato size:lg'],
+                    ['from', '19910806'],
+                    ['to', todayYmd()],
+                    ['offset', '25'],
+                    ['collection', 'Roteiro'],
+                    ['maxItems', '25'],
+                    ['fields', api.defaultApiParams.fields],
+                    ['prettyPrint', 'false'],
+                    ['size', 'lg'],
+                    ['safeSearch', 'on'],
+                ]);
+                expect(captured).toEqual(['/?' + expected.toString()]);
+                done();
+            });
+        });
+
+        it('returns an empty object when the API fails', (done) => {
+            status = 503;
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toEqual({});
+                done();
+            });
         });
     });
 });

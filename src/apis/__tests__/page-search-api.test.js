@@ -4,13 +4,12 @@ jest.mock('config');
 const PageSearchApiRequest = require('../page-search-api');
 const config = require('config');
 const http = require('node:http');
+const todayYmd = require('../../utils/today-ymd');
 
 /**
  * PageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 22 TESTS PASSING (100%)
- * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Overrides sanitizeRequestData() to clean inline parameters from queries
  * - Uses constructor to configure backend endpoints (solr, nutchwax, default)
@@ -24,7 +23,7 @@ const http = require('node:http');
  * - Parameter merging with defaults (1 test)
  * - Full API integration (3 tests)
  * 
- * This serves as the model for how to properly extend ApiRequest after the refactor.
+ * This serves as the model for how to properly extend JsonApiRequest.
  */
 describe('PageSearchApiRequest', () => {
     let mockServer;
@@ -538,6 +537,84 @@ describe('PageSearchApiRequest', () => {
 
             api.get(requestData, (data) => {
                 expect(data.request_parameters.q).toBe('arquivo test');
+                done();
+            });
+        });
+    });
+
+    /**
+     * Regression tests: the request the client sends and what it returns on failure
+     */
+    describe('request sent and fallback reply', () => {
+        let captureServer;
+        let captured;
+        let status;
+
+        beforeAll((done) => {
+            captureServer = http.createServer((req, res) => {
+                captured.push(req.url);
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+            });
+            captureServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            captureServer.close(done);
+        });
+
+        beforeEach(() => {
+            captured = [];
+            status = 200;
+        });
+
+        const apiAtCaptureServer = () => {
+            const api = new PageSearchApiRequest();
+            api.apiUrl = `http://localhost:${captureServer.address().port}`;
+            return api;
+        };
+
+        it('sends the default params, in order, with the inline terms moved out of the query', (done) => {
+            const api = apiAtCaptureServer();
+            const requestData = new URLSearchParams({
+                q: 'lisboa collection:Roteiro site:publico.pt',
+                collection: 'Roteiro',
+                siteSearch: 'publico.pt',
+                offset: '20',
+                unknown: 'dropped',
+            });
+
+            api.get(requestData, (data) => {
+                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                const expected = new URLSearchParams([
+                    ['q', 'lisboa'],
+                    ['from', '19910806'],
+                    ['to', todayYmd()],
+                    ['offset', '20'],
+                    ['siteSearch', 'publico.pt'],
+                    ['collection', 'Roteiro'],
+                    ['maxItems', '10'],
+                    ['dedupValue', '1'],
+                    ['prettyPrint', 'false'],
+                    ['timeline', 'true'],
+                ]);
+                expect(captured).toEqual(['/?' + expected.toString()]);
+                done();
+            });
+        });
+
+        it('returns the default reply structure when the API fails', (done) => {
+            status = 500;
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toBe(api.defaultApiReply);
+                expect(data).toEqual({
+                    estimated_nr_results: 0,
+                    response_items: [],
+                    request_parameters: { from: '19910806', to: todayYmd() },
+                    timeline: { impact: {} },
+                });
                 done();
             });
         });

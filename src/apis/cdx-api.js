@@ -48,7 +48,7 @@ class CDXSearchApiRequest extends BaseApiRequest {
 
         // STREAMING JSON PARSING: Process data chunks as they arrive
         apiRes.on('data', (chunk) => {
-            apiReply += chunk.toString();
+            apiReply += chunk;
             
             // Parse complete JSON objects (newline-delimited)
             let endIndex = apiReply.indexOf('}') + 1;
@@ -69,12 +69,6 @@ class CDXSearchApiRequest extends BaseApiRequest {
         // Return parsed array on end
         apiRes.on('end', () => {
             safeCallback(apiData);
-        });
-
-        // Handle response errors
-        apiRes.on('error', (e) => {
-            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-            safeCallback(this.defaultApiReply);
         });
     }
 
