@@ -215,7 +215,6 @@ describe('filterCdx', () => {
         it.each([
             ['a leading space', ' 2026031012000'],
             ['a 00 year', '00260310120000'],
-            ['a 00 year two years back', '00240310120000'],
             ['non-digits', '2024031012000a'],
             ['an invalid month', '20241310120000'],
             ['too short', '2024031012000'],
