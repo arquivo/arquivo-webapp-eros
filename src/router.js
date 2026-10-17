@@ -233,8 +233,8 @@ router.get('/services/citationsaver', function (req, res) {
 });
 
 /** Citation Saver - Form submission handler */
-router.post('/services/citationsaver', function (req, res) {
-    citationSaver(req,res);
+router.post('/services/citationsaver', function (req, res, next) {
+    citationSaver(req, res).catch(next);
 });
 
 // ============================================================================
