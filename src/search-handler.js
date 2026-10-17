@@ -5,7 +5,7 @@ const makeLogger = require('./logger');
 
 /**
  * Makes the handler of a search results partial (pages or images): sanitizes the request,
- * gets the results and the spelling suggestion, logs searches without results and renders
+ * gets the results and the spelling suggestion, logs searches without results (the query length only) and renders
  * the partial with its export object.
  *
  * @param {Object} search - What differs between the searches
@@ -29,7 +29,8 @@ module.exports = function makeSearchHandler({ createApiRequest, fetchResults, it
         // fetchResults routes errors thrown while getting or rendering the results to next
         fetchResults(apiRequest, requestData, next, (apiData, suggestion) => {
             if(!apiData[itemsKey] || apiData[itemsKey].length == 0){
-                logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
+                // Only the length: the query itself may hold personal data
+                logger.info('No results found for a query of ' + (requestData.get('q') ?? '').length + ' characters');
             }
             res.render(template, {
                 requestData: requestData,

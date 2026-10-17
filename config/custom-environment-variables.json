@@ -61,5 +61,8 @@
     "trust": {
       "proxy": "EXPRESS_TRUST_PROXY"
     }
+  },
+  "logger": {
+    "maxFiles": "LOGGER_MAX_FILES"
   }
 }

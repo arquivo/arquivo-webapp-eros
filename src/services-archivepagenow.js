@@ -12,12 +12,15 @@
  * 3. Logs the archiving request to backend with user-agent and IP
  * 
  * On validation failure, renders error page and logs the failed attempt.
- * All logging includes user-agent and IP for tracking purposes.
+ * All logging includes user-agent and IP for tracking purposes. The IP is req.ip, as
+ * derived through Express "trust proxy" (express.trust.proxy). The submitted URL only
+ * goes to the app log at debug level, with its control characters escaped.
  */
 
 const fetch = require('node-fetch');
 const config = require('config');
 const isValidUrl = require('./utils/is-valid-url');
+const escapeForLog = require('./utils/escape-for-log');
 const dateToTimestamp = require('./utils/date-to-timestamp');
 const logger = require('./logger')('ArchivePageNow');
 
@@ -36,7 +39,8 @@ module.exports = function (req, res) {
 
     // Logging info, scoped to this request:
     const userAgent = req.get('user-agent');
-    const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // Never the raw X-Forwarded-For header, which any client can set.
+    const userIp = req.ip;
 
     // Never log error.message: node-fetch puts the full request URL in it, i.e.
     // backend.url (which may hold credentials) plus the user's URL, UA and IP.
@@ -90,12 +94,13 @@ module.exports = function (req, res) {
         if (isValidUrl(url)) {
             renderOk();
         } else {
-            logger.error('Invalid Url: ' + url);
+            logger.error('Invalid URL submitted (' + url.length + ' characters)');
+            logger.debug('Invalid URL: ' + escapeForLog(url));
             renderError();
         }
     }
 
-    logger.info('Accessing requested page: ' + url);
+    logger.debug('Accessing requested page: ' + escapeForLog(url));
     processUrl(url);
 
 }

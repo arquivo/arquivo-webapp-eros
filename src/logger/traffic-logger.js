@@ -3,10 +3,13 @@
 const expressWinston = require('express-winston');
 const getDefaults = require('./default.config');
 
+// Like expressFormat ("GET /search?q=… 200 12ms"), but with the path only: the query
+// string (search terms and other user input) is never logged. The path comes from the
+// raw request line, where Node's HTTP parser accepts no control characters. msg stays a
+// fixed template: express-winston compiles what a msg function returns as a template.
 module.exports = expressWinston.logger({
     ...getDefaults('Traffic'),
-    meta: true, // optional: control whether you want to log the meta data about the request (default to true)
-    msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-    expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
+    meta: false, // no request metadata (headers, query) is collected; the format only prints the message
+    msg: '{{req.method}} {{req.path}} {{res.statusCode}} {{res.responseTime}}ms',
     ignoreRoute: function () { return false; } // optional: allows to skip some log messages based on request and/or response
 })

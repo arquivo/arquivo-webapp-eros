@@ -1,12 +1,8 @@
 'use strict';
 
 // Mock the logger to avoid config dependency issues
-jest.mock('../../../src/logger', () => {
-  return jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn()
-  }));
-});
+const mockLogger = { info: jest.fn(), error: jest.fn() };
+jest.mock('../../../src/logger', () => jest.fn(() => mockLogger));
 
 const timestampToText = require('../../../src/utils/timestamp-to-text');
 
@@ -104,6 +100,14 @@ describe('timestampToText', () => {
       // Non-string input is handled with error logging and padding
       expect(result).toBeDefined();
       expect(typeof result).toBe('string');
+    });
+
+    it('logs the type of a non-string input, never its value (#180)', () => {
+      mockLogger.error.mockClear();
+      const formatter = timestampToText(mockTranslate);
+      formatter.short(['jane.doe@example.pt\r\nforged']);
+      expect(mockLogger.error).toHaveBeenCalledWith("Expected input to be 'string' but got 'object'");
+      expect(mockLogger.error.mock.calls.flat().join('\n')).not.toContain('jane.doe');
     });
 
     it('should handle empty string', () => {

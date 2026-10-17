@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
 const logger = require('./logger')('Wayback');
 const textAfterFirst = require('./utils/text-after-first');
+const escapeForLog = require('./utils/escape-for-log');
+const describeError = require('./utils/describe-error');
 module.exports = function (req, res) {
     function sanitizeUrl(url){
         let res = url.replace(/(^\/+)|(\/+$)/g, '');
@@ -64,13 +66,16 @@ module.exports = function (req, res) {
 
                     renderOk(newUrl);
                 } else {
-                    logger.error('Something went wrong while trying to fetch the following URL: '+url);
+                    // The URL tells which page the user is reading: debug only.
+                    logger.error('Something went wrong while trying to fetch the replay URL. Status: ' + res.status);
+                    logger.debug('Replay URL: ' + escapeForLog(url));
                     renderError();
                 }
             }).
             catch(error => {
-                logger.error('Failed to fetch the following URL: '+url);
-                logger.error(error);
+                // The error message quotes the URL: debug only.
+                logger.error('Failed to fetch the replay URL. Reason: ' + describeError(error));
+                logger.debug('Failed to fetch ' + escapeForLog(url) + ': ' + escapeForLog(error?.stack ?? error));
                 renderError();
             });
     }

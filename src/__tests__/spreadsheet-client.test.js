@@ -4,10 +4,11 @@ const mockAddRow = jest.fn();
 const mockLoadInfo = jest.fn();
 const mockJWT = jest.fn();
 const mockLoggerError = jest.fn();
+const mockLoggerDebug = jest.fn();
 const mockGoogleSpreadsheetConstructor = jest.fn();
 
 jest.mock('config', () => ({ get: jest.fn().mockReturnValue('test-sheet-id') }));
-jest.mock('../logger', () => jest.fn(() => ({ error: mockLoggerError })));
+jest.mock('../logger', () => jest.fn(() => ({ error: mockLoggerError, debug: mockLoggerDebug })));
 jest.mock('../../config/service_account.json', () => ({
     client_email: 'sa@test-project.iam.gserviceaccount.com',
     private_key: 'FAKE_KEY'
@@ -56,5 +57,21 @@ describe('spreadsheet-client', () => {
         expect(mockLoggerError).toHaveBeenCalledWith(
             expect.stringContaining('Failed to connect to google services')
         );
+    });
+
+    it('never logs the row, and keeps the error message to the debug log', async () => {
+        const row = ['2024-01-01', 1000, 'jane.doe@example.pt', 'URL', 'https://example.pt/a?b=c', 'abc.link'];
+        mockAddRow.mockRejectedValue(Object.assign(
+            new Error('Invalid value at jane.doe@example.pt\r\nforged line'), { code: 400 }));
+
+        await addToSpreadsheet(row);
+
+        expect(mockLoggerError).toHaveBeenCalledTimes(1);
+        expect(mockLoggerError).toHaveBeenCalledWith(
+            'Failed to connect to google services. Reason: name: "Error", code: "400"');
+        const debugLine = mockLoggerDebug.mock.calls.flat().join('\n');
+        expect(debugLine).toContain('jane.doe@example.pt\\u000d\\u000aforged line');
+        expect(debugLine).not.toContain('https://example.pt/a?b=c');
+        expect(debugLine).not.toMatch(/[\r\n]forged/);
     });
 });

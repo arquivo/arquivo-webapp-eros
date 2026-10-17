@@ -7,7 +7,8 @@ const JsonApiRequest = require('../json-api-request');
 jest.mock('../../../src/logger', () => {
   return jest.fn(() => ({
     info: jest.fn(),
-    error: jest.fn()
+    error: jest.fn(),
+    debug: jest.fn()
   }));
 });
 
@@ -303,7 +304,9 @@ describe('JsonApiRequest', () => {
 
       api.get(requestData, (data) => {
         expect(data).toEqual({ url: '/echo?a=1&b=y&c=x' });
-        expect(api.logger.info).toHaveBeenCalledWith(`http://localhost:${serverPort}/echo?a=1&b=y&c=x`);
+        // The request URL holds the search terms: debug level only
+        expect(api.logger.debug).toHaveBeenCalledWith(`http://localhost:${serverPort}/echo?a=1&b=y&c=x`);
+        expect(api.logger.info).not.toHaveBeenCalled();
         done();
       });
     });

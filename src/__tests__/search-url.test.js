@@ -7,11 +7,16 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/cdx-api');
 jest.mock('../filter-cdx');
 jest.mock('../apis/suggestion-api');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const CDXSearchApiRequest = require('../apis/cdx-api');
 const cdxFilter = require('../filter-cdx');
 const SuggestionApi = require('../apis/suggestion-api');
+const logger = require('../logger')();
 
 describe('search-url handler', () => {
     let req, res;
@@ -215,5 +220,23 @@ describe('search-url handler', () => {
             'pt',
             expect.any(Function)
         );
+    });
+
+    it('logs a search without results with the query length, never the query', () => {
+        const query = 'jane.doe@example.pt\r\n01/Jan/2026:00:00:00\tINFO\tUrlSearch\t-\tforged';
+        mockRequestData.get = jest.fn((key) => ({ q: query, l: 'pt', viewMode: 'list' })[key]);
+        mockApiRequest.get = jest.fn((params, callback) => callback([]));
+
+        searchUrl(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of ' + query.length + ' characters');
+        const logged = [logger.info, logger.warn, logger.error, logger.debug].flatMap(fn => fn.mock.calls).flat().join('\n');
+        expect(logged).not.toMatch(/jane|forged|[\r\n]/);
+    });
+
+    it('logs nothing for a search with results', () => {
+        searchUrl(req, res);
+
+        expect(logger.info).not.toHaveBeenCalled();
     });
 });

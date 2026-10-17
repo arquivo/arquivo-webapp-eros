@@ -3,8 +3,9 @@
 const BaseApiRequest = require('./base-api-request');
 const config = require('config');
 const todayYmd = require('../utils/today-ymd');
+const escapeForLog = require('../utils/escape-for-log');
 
-// How much of a malformed capture goes into the parse-error log line
+// How much of a malformed capture goes into the parse-error debug line
 const MAX_LOGGED_FRAGMENT_LENGTH = 200;
 
 /**
@@ -67,12 +68,14 @@ class CDXSearchApiRequest extends BaseApiRequest {
                     let currentData = JSON.parse(currentJson);
                     apiData.push(currentData);
                 } catch (e) {
-                    // Log and skip malformed JSON, continue processing. Log only the start of the
-                    // fragment, so a malformed reply can't write a huge log line.
+                    // Log and skip malformed JSON, continue processing. A capture holds the
+                    // searched URL, and so does the parser's message: both only go to the debug
+                    // log, and only the start of the fragment, so it can't write a huge line.
                     const fragment = currentJson.length > MAX_LOGGED_FRAGMENT_LENGTH
                         ? `${currentJson.slice(0, MAX_LOGGED_FRAGMENT_LENGTH)}... (${currentJson.length} chars)`
                         : currentJson;
-                    this.logger.error(`Failed to parse JSON object: ${fragment}. Error: ${e.message}`);
+                    this.logger.error(`Failed to parse JSON object (${currentJson.length} chars). Error: ${e.name}`);
+                    this.logger.debug(escapeForLog(`Failed to parse JSON object: ${fragment}. Error: ${e.message}`));
                 }
                 apiReply = apiReply.slice(endIndex + 1);
                 endIndex = apiReply.indexOf('}') + 1;

@@ -1,11 +1,13 @@
 'use strict';
 
-const wayback = require('../wayback');
-
 // Mock dependencies — config uses __mocks__/config.js automatically
 jest.mock('config');
 jest.mock('node-fetch');
 jest.mock('../apis/page-search-api');
+const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
+jest.mock('../logger', () => () => mockLogger);
+
+const wayback = require('../wayback');
 
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('../apis/page-search-api');
@@ -96,6 +98,44 @@ describe('wayback handler', () => {
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.render).toHaveBeenCalledWith('pages/arquivo-404');
+    });
+
+    // #180: the replay URL tells which page the user is reading, so it stays at debug.
+    describe('logging (#180)', () => {
+        const page = 'jane-doe.example.pt/private?token=s3cr3t';
+        const logged = (...levels) => levels.flatMap(level => mockLogger[level].mock.calls.flat().map(String)).join('\n');
+
+        beforeEach(() => {
+            req.url = '/wayback/20230101120000/' + page;
+        });
+
+        it('keeps the URL of a failed fetch to the debug log', async () => {
+            const error = Object.assign(new Error(`request to ${PYWB_URL}/20230101120000/${page} failed, reason: \r\nforged`),
+                { name: 'FetchError', type: 'system', code: 'ECONNREFUSED' });
+            mockFetch.mockRejectedValueOnce(error);
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockLogger.error).toHaveBeenCalledTimes(1);
+            expect(mockLogger.error).toHaveBeenCalledWith(
+                'Failed to fetch the replay URL. Reason: name: "FetchError", type: "system", code: "ECONNREFUSED"');
+            expect(logged('info', 'warn', 'error')).not.toContain('jane-doe');
+            expect(logged('debug')).toContain(page);
+            expect(logged('debug')).toContain('\\u000d\\u000aforged');
+            expect(logged('debug')).not.toMatch(/[\r\n]forged/);
+        });
+
+        it('keeps the URL of a response that is not ok to the debug log', async () => {
+            mockFetch.mockResolvedValueOnce({ ok: false, status: 502, url: `${PYWB_URL}/20230101120000/${page}`, headers: new Map() });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockLogger.error).toHaveBeenCalledWith('Something went wrong while trying to fetch the replay URL. Status: 502');
+            expect(logged('info', 'warn', 'error')).not.toContain('jane-doe');
+            expect(mockLogger.debug).toHaveBeenCalledWith(`Replay URL: ${PYWB_URL}/20230101120000/${page}`);
+        });
     });
 
     it('requests API metadata for rendering', async () => {

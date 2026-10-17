@@ -100,7 +100,8 @@ class BaseApiRequest {
 
         try {
             const url = this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString();
-            this.logger.info(url);
+            // Debug only: the query string holds the user's search terms
+            this.logger.debug(url);
 
             // Unlike a socket timeout, the deadline also stops a backend that keeps sending a few bytes at a
             // time, and it covers the drain of a non-2xx body. When it fires, the request is destroyed and

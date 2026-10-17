@@ -4,11 +4,14 @@
 jest.mock('config');
 jest.mock('node-fetch');
 jest.mock('../logger', () => {
-    const logger = { info: jest.fn(), error: jest.fn() };
+    const logger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
     return jest.fn(() => logger);
 });
 
+const express = require('express');
+const request = require('supertest');
 const archivePageNow = require('../services-archivepagenow');
+const { parseTrustProxy } = require('../utils/trust-proxy');
 const fetch = require('node-fetch');
 const config = require('config');
 const logger = require('../logger')();
@@ -25,8 +28,11 @@ describe('Archive Page Now Service', () => {
                 if (header === 'user-agent') return 'test-user-agent';
                 return null;
             }),
+            // The client IP, as Express derives it through "trust proxy"
+            ip: '192.168.1.1',
+            // Set by the client: never logged
             headers: {
-                'x-forwarded-for': '192.168.1.1'
+                'x-forwarded-for': '203.0.113.66'
             },
             socket: {
                 remoteAddress: '127.0.0.1'
@@ -93,16 +99,15 @@ describe('Archive Page Now Service', () => {
             );
         });
 
-        it('should use socket.remoteAddress when x-forwarded-for is not available', () => {
+        it('should send req.ip, never the X-Forwarded-For header or the socket address', () => {
             req.body = { url: 'http://example.com' };
-            req.headers = {}; // Remove x-forwarded-for
 
             archivePageNow(req, res);
 
-            expect(mockFetch).toHaveBeenCalledWith(
-                expect.stringContaining('ip=127.0.0.1'),
-                expect.any(Object)
-            );
+            const fetchCall = mockFetch.mock.calls[0][0];
+            expect(fetchCall).toMatch(/&ip=192\.168\.1\.1$/);
+            expect(fetchCall).not.toContain('203.0.113.66');
+            expect(fetchCall).not.toContain('127.0.0.1');
         });
 
         it('should include recordingUrl with timestamp in response', () => {
@@ -265,7 +270,7 @@ describe('Archive Page Now Service', () => {
                     'system', { code: 'ECONNREFUSED', errno: 'ECONNREFUSED' })));
                 req.body = { url: 'http://example.com/submitted-page' };
                 req.get = jest.fn(() => 'agent-under-test');
-                req.headers = { 'x-forwarded-for': '203.0.113.9' };
+                req.ip = '203.0.113.9';
 
                 archivePageNow(req, res);
                 await new Promise(setImmediate);
@@ -277,9 +282,8 @@ describe('Archive Page Now Service', () => {
                 const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
                 ['s3cr3t', 'agent-under-test', '203.0.113.9']
                     .forEach(value => expect(logged).not.toContain(value));
-                // The submitted URL is logged on purpose when the page is accessed,
-                // but never as part of the backend request.
-                expect(logger.error.mock.calls.flat().join('\n')).not.toContain('submitted-page');
+                // The submitted URL only goes to the debug log.
+                expect(logged).not.toContain('submitted-page');
             });
         });
 
@@ -433,15 +437,27 @@ describe('Archive Page Now Service', () => {
                 + '?url=http%3A%2F%2Fexample.com&success=true&logging=true&user-agent=undefined&ip=192.168.1.1');
         });
 
-        it('should encode a multi-hop x-forwarded-for list', () => {
+        it('should send req.ip, not a multi-hop X-Forwarded-For list', () => {
             req.body = { url: 'http://example.com' };
             req.headers = { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' };
+            req.ip = '10.0.0.1';
 
             archivePageNow(req, res);
 
             expect(loggedUrl()).toBe(endpoint
                 + '?url=http%3A%2F%2Fexample.com&success=true&logging=true'
-                + '&user-agent=test-user-agent&ip=203.0.113.7%2C%2010.0.0.1');
+                + '&user-agent=test-user-agent&ip=10.0.0.1');
+        });
+
+        it('should encode an IPv6 req.ip', () => {
+            req.body = { url: 'http://example.com' };
+            req.ip = '::ffff:127.0.0.1';
+
+            archivePageNow(req, res);
+
+            expect(loggedUrl()).toBe(endpoint
+                + '?url=http%3A%2F%2Fexample.com&success=true&logging=true'
+                + '&user-agent=test-user-agent&ip=%3A%3Affff%3A127.0.0.1');
         });
 
         it('should log an empty url parameter when the url is missing', () => {
@@ -458,7 +474,8 @@ describe('Archive Page Now Service', () => {
         const makeReq = (userAgent, ip) => ({
             body: { url: 'http://example.com' },
             get: jest.fn(() => userAgent),
-            headers: { 'x-forwarded-for': ip },
+            ip,
+            headers: {},
             socket: {}
         });
 
@@ -479,6 +496,76 @@ describe('Archive Page Now Service', () => {
                 ['agent-B', '198.51.100.2'],
                 ['agent-A', '198.51.100.1']
             ]);
+        });
+    });
+
+    describe('App log', () => {
+        const atInfoOrAbove = () => [...logger.info.mock.calls, ...logger.warn.mock.calls, ...logger.error.mock.calls]
+            .flat().join('\n');
+
+        it('should log the submitted URL only at debug level', () => {
+            req.body = { url: 'http://example.com/jane.doe@example.pt' };
+
+            archivePageNow(req, res);
+
+            expect(atInfoOrAbove()).not.toContain('example.com');
+            expect(logger.debug).toHaveBeenCalledWith('Accessing requested page: http://example.com/jane.doe@example.pt');
+        });
+
+        it('should log the length of an invalid URL, not the URL', () => {
+            req.body = { url: 'not a url jane.doe@example.pt' };
+
+            archivePageNow(req, res);
+
+            expect(logger.error).toHaveBeenCalledWith('Invalid URL submitted (29 characters)');
+            expect(atInfoOrAbove()).not.toContain('jane.doe');
+            expect(logger.debug).toHaveBeenCalledWith('Invalid URL: not a url jane.doe@example.pt');
+        });
+
+        it('should escape CR and LF in the submitted URL, so it cannot forge a log line', () => {
+            req.body = { url: 'x\r\n01/Jan/2026:00:00:00\tINFO\tArchivePageNow\t-\tforged' };
+
+            archivePageNow(req, res);
+
+            expect(atInfoOrAbove()).not.toContain('forged');
+            const debugged = logger.debug.mock.calls.flat();
+            expect(debugged).toEqual([
+                'Accessing requested page: x\\u000d\\u000a01/Jan/2026:00:00:00\\u0009INFO\\u0009ArchivePageNow\\u0009-\\u0009forged',
+                'Invalid URL: x\\u000d\\u000a01/Jan/2026:00:00:00\\u0009INFO\\u0009ArchivePageNow\\u0009-\\u0009forged',
+            ]);
+            debugged.forEach(line => expect(line).not.toMatch(/[\r\n\t]/));
+        });
+    });
+
+    // The IP sent to the backend, as app.js derives it from express.trust.proxy
+    describe('Client IP behind Express "trust proxy"', () => {
+        function appTrusting(setting) {
+            const app = express();
+            app.set('trust proxy', parseTrustProxy(setting));
+            app.use(express.urlencoded({ extended: false }));
+            // Renders nothing: only the logging request matters here
+            app.post('/services/archivepagenow', (req, res) => archivePageNow(req, { render: () => res.end() }));
+            return app;
+        }
+        const sentIp = () => new URL(mockFetch.mock.calls[0][0]).searchParams.get('ip');
+
+        it('should send the TCP peer and ignore X-Forwarded-For when no proxy is trusted (the default)', async () => {
+            await request(appTrusting(''))
+                .post('/services/archivepagenow')
+                .set('X-Forwarded-For', '203.0.113.66')
+                .type('form').send({ url: 'http://example.com' });
+
+            expect(sentIp()).toMatch(/^(::ffff:)?127\.0\.0\.1$/);
+        });
+
+        it('should send only the address the trusted proxy saw, not one the client added', async () => {
+            await request(appTrusting('1'))
+                .post('/services/archivepagenow')
+                // The client sent "X-Forwarded-For: 203.0.113.66"; the proxy appended 198.51.100.7
+                .set('X-Forwarded-For', '203.0.113.66, 198.51.100.7')
+                .type('form').send({ url: 'http://example.com' });
+
+            expect(sentIp()).toBe('198.51.100.7');
         });
     });
 });

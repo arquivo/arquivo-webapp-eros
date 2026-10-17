@@ -19,6 +19,9 @@
  *
  * Response format: { status: boolean, message: string, data?: object }
  *
+ * The logs never get the email, the original file name, the submitted URL or text or the
+ * request body: only the generated file name, the type and the reason.
+ *
  * Multipart bodies are parsed only for this POST, by parseUpload (#177). Uploads
  * stream into a temporary file and are cut off at citation.saver.max.upload.size.
  * The page sends a text as a file part too, so the other fields stay small.
@@ -34,6 +37,8 @@ const fileUpload = require('express-fileupload');
 const { rateLimit } = require('express-rate-limit');
 const isValidUrl = require('./utils/is-valid-url');
 const localIsoDate = require('./utils/local-iso-date');
+const escapeForLog = require('./utils/escape-for-log');
+const describeError = require('./utils/describe-error');
 const fs = require('fs');
 const addToSpreadsheet = require('./spreadsheet-client');
 const logger = require('./logger')('CitationSaver');
@@ -220,10 +225,11 @@ function parseUpload(req, res, next) {
     });
     // Replies { status: false } JSON, unless the response is already under way.
     function reject(status, logMessage) {
+        // The parser's error may quote a request header, e.g. the Content-Type.
         if (status >= 500) {
-            logger.error(logMessage);
+            logger.error(escapeForLog(logMessage));
         } else {
-            logger.info(logMessage);
+            logger.info(escapeForLog(logMessage));
         }
         if (res.headersSent) {
             res.destroy();
@@ -330,7 +336,7 @@ module.exports = async function citationSaver(req, res) {
         } else if (req.body?.file || req.files) {
             await handleFile(req, res);
         } else {
-            logger.info(loggerErrorMessage(req, res, 'Malformed form.', req.t('services-citation-saver.errors.empty')));
+            logger.info(blockedMessage('Malformed form.', req.t('services-citation-saver.errors.empty')));
             res.send({
                 status: false,
                 message: req.t('services-citation-saver.errors.empty')
@@ -342,44 +348,15 @@ module.exports = async function citationSaver(req, res) {
     }
 }
 
-function loggerErrorMessage(req, res, start, reason) {
-    const maxLogEntryArrayLength = 30;
-    const maxLogEntryStringLength = 250;
-    const maxSanitizerDepth = 100;
-
-    function stringifySanitizer(obj) {
-        var i = 0;
-
-        return function (k, v) {
-            // Handle circular objects
-            if (i !== 0 && typeof (obj) === 'object' && typeof (v) == 'object' && obj == v)
-                return '[Circular]';
-
-            // Limit the depth 
-            if (i >= maxSanitizerDepth)
-                return '[Unknown]';
-
-            ++i; // so we know we aren't using the original object anymore
-
-            // Truncate big strings
-            if (typeof v == 'string' && v.length > maxLogEntryStringLength) {
-                return v.substring(0, maxLogEntryStringLength / 2) + '[Truncated]' + v.substring(v.length - maxLogEntryStringLength / 2);
-            }
-            // Truncate big arrays
-            if (typeof v == 'object' && Array.isArray(v) && v.length > maxLogEntryArrayLength) {
-                return [...v.filter((x, i) => i <= maxLogEntryArrayLength / 2), '[Truncated]', ...v.filter((x, i) => i > v.length - maxLogEntryArrayLength / 2)];
-            }
-            return v;
-        }
-    }
-    const reqData = { body: req.body, files: req.files };
-    return start + ' Reason: ' + JSON.stringify(reason,stringifySanitizer(reason)) + ' Request data: ' + JSON.stringify(reqData, stringifySanitizer(reqData));
+// The reason is one of our own reply messages: the request is never logged.
+function blockedMessage(start, reason) {
+    return start + ' Reason: ' + JSON.stringify(reason);
 }
 
 function unexpectedError(req, res, err) {
-    // JSON.stringify only keeps an Error's enumerable fields (e.g. code), so add message and stack.
-    const reason = err instanceof Error ? { ...err, message: err.message, stack: err.stack } : err;
-    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', reason));
+    // The message may hold user input (node-fetch puts the submitted URL in it): debug only.
+    logger.error('Something unexpected occurred. Reason: ' + describeError(err));
+    logger.debug('Something unexpected occurred: ' + escapeForLog(err?.stack ?? err));
     // Don't reply twice: a second res.send() would throw ERR_HTTP_HEADERS_SENT. router.js
     // would pass that to Express's error handler, which cannot reply after headers are sent.
     if (res.headersSent) {
@@ -394,7 +371,7 @@ function unexpectedError(req, res, err) {
 async function handleFile(req, res) {
 
     function sendExpectedError(message) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted file.', message));
+        logger.info(blockedMessage('Blocking submitted file.', message));
         res.send({
             status: false,
             message: message
@@ -437,9 +414,9 @@ async function handleFile(req, res) {
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path])
         .then(() => {
-            logger.info('File saved: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName);
+            logger.info('File saved: ' + newName);
         }).catch(err => {
-            logger.error('Failed to save file: ' + newName + '\tEmail: ' + email + '\tOriginal name: ' + originalName+ '\t Due to the following error: '+err);
+            logger.error('Failed to save file: ' + newName + '\t Due to the following error: ' + describeError(err));
         });
 
     res.send({
@@ -459,7 +436,7 @@ async function handleFile(req, res) {
 async function handleURL(req, res) {
 
     function sendExpectedError(message) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted URL.', message));
+        logger.info(blockedMessage('Blocking submitted URL.', message));
         res.send({
             status: false,
             message: message
@@ -529,9 +506,9 @@ async function handleURL(req, res) {
 
     addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
         .then(() => {
-            logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+            logger.info('URL saved: ' + newName);
         }).catch(e => {
-            logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: ' + e);
+            logger.error('FAILED to save URL: ' + newName + '\t Due to the following error: ' + describeError(e));
         });
 
     res.send({
@@ -553,7 +530,7 @@ async function handleURL(req, res) {
 async function handleText(req, res) {
 
     function sendExpectedError(message, status = 200) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', message));
+        logger.info(blockedMessage('Blocking submitted text.', message));
         res.status(status).send({
             status: false,
             message: message
@@ -610,9 +587,9 @@ async function handleText(req, res) {
 
     addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
         .then(() => {
-            logger.info('Text saved: ' + newName + '\tEmail: ' + email);
+            logger.info('Text saved: ' + newName);
         }).catch(err => {
-            logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err);
+            logger.error('FAILED to save text: ' + newName + '\t Due to the following error: ' + describeError(err));
         });
 
     res.send({
