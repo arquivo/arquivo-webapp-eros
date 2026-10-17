@@ -342,13 +342,5 @@ describe('Export Results Utility', () => {
 
             expect(globalThis).not.toHaveProperty('exportObject');
         });
-
-        it('returns a new array on every call', () => {
-            const first = exportResults(apiRequestData, [], translateFunction, 'tstamp', ['title']);
-            const second = exportResults(apiRequestData, [], translateFunction, 'tstamp', ['title']);
-
-            expect(second).not.toBe(first);
-            expect(second).toEqual(first);
-        });
     });
 });

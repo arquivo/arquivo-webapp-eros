@@ -226,18 +226,12 @@ describe('wayback handler', () => {
             });
         });
 
-        it('redirects to pywb', async () => {
+        it('redirects to pywb once and stops instead of also rendering the replay page', async () => {
             wayback(req, res);
             await flushPromises();
 
             expect(res.redirect).toHaveBeenCalledTimes(1);
             expect(res.redirect).toHaveBeenCalledWith(`${PYWB_URL}/20230101120000id_/example.com`);
-        });
-
-        it('stops after the redirect instead of also rendering the replay page', async () => {
-            wayback(req, res);
-            await flushPromises();
-
             expect(PageSearchApiRequest).not.toHaveBeenCalled();
             expect(res.render).not.toHaveBeenCalled();
         });
