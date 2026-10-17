@@ -276,6 +276,36 @@ describe('Citation Saver Service', () => {
             );
         });
 
+        it('connects through the agent that checks the connected address', async () => {
+            const { ssrfSafeAgent } = require('../utils/ssrf-safe-agent');
+            req.body = { url: 'http://example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                'http://example.com',
+                expect.objectContaining({ agent: ssrfSafeAgent })
+            );
+        });
+
+        it('rejects URL whose connection is refused for its address (DNS rebinding)', async () => {
+            // The early check saw a public address; the connection's own lookup did not.
+            const { BLOCKED_ADDRESS } = require('../utils/ssrf-safe-agent');
+            mockFetch.mockRejectedValueOnce(Object.assign(new Error('request failed'), { code: BLOCKED_ADDRESS }));
+            req.body = { url: 'http://rebind.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+            expect(fs.promises.writeFile).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
         it('validates URL accessibility with HEAD request', async () => {
             req.body = { url: 'http://example.com', email: 'test@example.com' };
 
@@ -624,6 +654,20 @@ describe('Citation Saver Service', () => {
                 status: false,
                 message: 'services-citation-saver.errors.URL.invalid'
             });
+        });
+
+        it('blocks when DNS lookup returns no address', async () => {
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, []));
+            req.body = { url: 'http://empty.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+            expect(mockFetch).not.toHaveBeenCalled();
         });
 
         it('blocks URL with IP literal resolving to loopback (127.0.0.1)', async () => {

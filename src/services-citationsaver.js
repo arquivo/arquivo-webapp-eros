@@ -24,7 +24,6 @@
  */
 
 const fetch = require('node-fetch');
-const dns = require('node:dns');
 const net = require('node:net');
 const { randomUUID } = require('node:crypto');
 const nodePath = require('node:path');
@@ -88,28 +87,7 @@ const FIELD_LENGTH_LIMITS = [
 ];
 
 
-function isPrivateIpv4(ip) {
-    const [a, b] = ip.split('.').map(Number);
-    return a === 127
-        || a === 10
-        || (a === 172 && b >= 16 && b <= 31)
-        || (a === 192 && b === 168)
-        || (a === 169 && b === 254);
-}
-
-function isPrivateIpv6(ip) {
-    if (ip === '::1') return true;
-    const firstGroup = Number.parseInt(ip.split(':')[0] || '0', 16);
-    return (firstGroup & 0xfe00) === 0xfc00 || (firstGroup & 0xffc0) === 0xfe80;
-}
-
-function isPrivateIp(ip) {
-    const v4mapped = (ip.startsWith('::ffff:') || ip.startsWith('::FFFF:')) ? ip.slice(7) : null;
-    if (v4mapped && net.isIPv4(v4mapped)) return isPrivateIpv4(v4mapped);
-    if (net.isIPv4(ip)) return isPrivateIpv4(ip);
-    if (net.isIPv6(ip)) return isPrivateIpv6(ip);
-    return false;
-}
+const { BLOCKED_ADDRESS, isPrivateIp, pinnedLookup, ssrfSafeAgent } = require('./utils/ssrf-safe-agent');
 
 function isSsrfTarget(urlString) {
     let parsedUrl;
@@ -125,12 +103,8 @@ function isSsrfTarget(urlString) {
     if (net.isIP(hostname)) {
         return Promise.resolve(isPrivateIp(hostname));
     }
-    return new Promise((resolve) => {
-        dns.lookup(hostname, { all: true }, (err, addresses) => {
-            if (err) return resolve(true);
-            resolve(addresses.some(a => isPrivateIp(a.address)));
-        });
-    });
+    // Same rule as the agent: a DNS error, no address or any private address.
+    return new Promise(resolve => pinnedLookup(hostname, { all: true }, err => resolve(Boolean(err))));
 }
 
 const mimeToExtension = new Map([
@@ -502,7 +476,10 @@ async function handleURL(req, res) {
     const fetchUrl = startsWithHttp.test(url.toLowerCase()) ? url : 'https://' + url;
     const fetchOptions = {
         method: 'HEAD',
-        redirect: 'error'
+        redirect: 'error',
+        // Checks the address actually connected to, which may differ from the one
+        // isSsrfTarget() saw if the name resolves differently the second time.
+        agent: ssrfSafeAgent
     };
 
     // Any other failure (fetch, a missing content-type, the write) propagates to the
@@ -512,7 +489,14 @@ async function handleURL(req, res) {
         return;
     }
 
-    const r = await fetch(fetchUrl, fetchOptions);
+    let r;
+    try {
+        r = await fetch(fetchUrl, fetchOptions);
+    } catch (err) {
+        if (err.code !== BLOCKED_ADDRESS) throw err;
+        sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+        return;
+    }
 
     if (!r.ok) {
         sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
