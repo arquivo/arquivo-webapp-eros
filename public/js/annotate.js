@@ -43,12 +43,6 @@ function annotationCards(){
     return cards
 }
 
-// An attribute's value, or undefined (not null) when the element or the attribute is missing.
-function attributeOrUndefined(element, name){
-    var value = element ? element.getAttribute(name) : null
-    return value === null ? undefined : value
-}
-
 function changeRelevance(relevanceLocal, id){
     var results = JSON.parse(window.localStorage.getItem('annotations'))
     results[type]["queries"][queryString]["results"][id]["relevance"] = relevanceLocal
@@ -93,10 +87,10 @@ function prepareAnnotator(type, div){
         } else if (type == 'image'){
             position = parseInt(card.getAttribute("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
             //<li class="image-card" id="image-card-1" data-index="1" data-tstamp="20170624094538" data-url="http://www.primebrands.pt/uploads/marcas/teste/59381b31bfd5d.jpg">
-            var imageCard = document.getElementById("image-card-" + position)
-            id = attributeOrUndefined(imageCard && imageCard.querySelector("img"), "src")
-            metadata["url"] = attributeOrUndefined(card, "data-url");//id.split("/").slice(1).join('/')
-            metadata["timestamp"] = attributeOrUndefined(card, "data-timestamp");//id.split("/")[0].substring(0,"20081029060647".length)
+            // A missing attribute gives undefined (not null), as jQuery's .attr() did.
+            id = document.getElementById("image-card-" + position)?.querySelector("img")?.getAttribute("src") ?? undefined
+            metadata["url"] = card.getAttribute("data-url") ?? undefined;//id.split("/").slice(1).join('/')
+            metadata["timestamp"] = card.getAttribute("data-timestamp") ?? undefined;//id.split("/")[0].substring(0,"20081029060647".length)
             //id = metadata["timestamp"] + '/' + metadata["url"]
             metadata["position"] = position
         }

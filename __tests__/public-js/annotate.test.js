@@ -407,6 +407,13 @@ describeScript('js/annotate.js', { html: SEARCH_TOOLS + pagesResults(3) }, ({ se
             expect(storedResults('image')[imageSrc(1)].metadata).toEqual({ position: 1 });
         });
 
+        it('gives an image without a src the id "undefined", not "null"', () => {
+            open('/image/search?q=sapo&annotate=true', SEARCH_TOOLS + imagesResults(1).replace(/ src="[^"]*"/, ''));
+
+            expect(document.querySelector('.ids').id).toBe('undefined');
+            expect(Object.keys(storedResults('image'))).toEqual(['undefined']);
+        });
+
         // divResId is "image-cards-container" (no "#"), so the keyboard shortcuts find no images.
         it('the keyboard shortcuts that annotate every image do nothing', () => {
             localStorage.setItem('annotateKeyboard', 'true');
