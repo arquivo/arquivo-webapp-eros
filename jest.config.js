@@ -6,7 +6,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.js',
-    '!src/logger/**',
     '!**/node_modules/**'
   ],
   testMatch: [
