@@ -274,7 +274,7 @@ class ArquivoReplay {
         const isHttp = (url) => ['http:', 'https:'].includes(url.protocol);
         let pywbOrigin = null;
         try {
-            const pywbUrl = new URL(replay.getConfig('pywb.url'), window.location.href);
+            const pywbUrl = new URL(replay.getConfig('pywb.url'));
             pywbOrigin = isHttp(pywbUrl) ? pywbUrl.origin : null;
         } catch (err) {
             // No valid pywb.url: no replay messages are accepted.

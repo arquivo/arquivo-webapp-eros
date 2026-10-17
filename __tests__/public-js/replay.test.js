@@ -230,6 +230,19 @@ describe('replay.js', () => {
         });
 
         it.each([
+            ['missing', undefined],
+            ['relative', '/noFrame/replay'],
+        ])('accepts no replay messages, not even from the page itself, when pywb.url is %s', (_case, pywbUrl) => {
+            const replay = new ArquivoReplay({ ...CONFIGS, 'pywb.url': pywbUrl });
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+
+            post({ wb_type: 'load', url: 'https://example.org/', ts: '20210101000000', title: 'Evil' }, window.location.origin);
+
+            expect(setUrlAndTimestamp).not.toHaveBeenCalled();
+            expect(document.title).toBe('Arquivo.pt');
+        });
+
+        it.each([
             ['a javascript: URL', 'javascript:alert(1)'],
             ['a data: URL', 'data:text/html,hi'],
             ['a URL without a scheme', 'example.org/a'],
