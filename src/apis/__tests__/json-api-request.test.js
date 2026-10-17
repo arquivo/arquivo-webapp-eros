@@ -464,12 +464,17 @@ describe('JsonApiRequest', () => {
     });
 
     it('also bounds the drain of a non-2xx body that never ends with the deadline', (done) => {
+      let api;
+      let callbackCalled = false;
       const server = http.createServer((req, res) => {
         // an error page that keeps trickling in: only the deadline can close the connection
         res.writeHead(500);
         const drip = setInterval(() => res.write('.'), 20);
         res.on('close', () => {
           clearInterval(drip);
+          // the deadline is what closed the connection, after the default reply
+          expect(callbackCalled).toBe(true);
+          expect(api.logger.error).toHaveBeenLastCalledWith(`${api.apiUrl} : Timeout (150ms)`);
           expect(Date.now() - start).toBeLessThan(1000);
           server.close(done);
         });
@@ -478,14 +483,17 @@ describe('JsonApiRequest', () => {
 
       server.listen(0, () => {
         const defaultReply = { fallback: true };
-        const api = new JsonApiRequest(`http://localhost:${server.address().port}/`, {}, defaultReply);
+        api = new JsonApiRequest(`http://localhost:${server.address().port}/`, {}, defaultReply);
         api.options.timeout = 150;
         start = Date.now();
 
         api.get(new URLSearchParams(), (data) => {
-          // the default reply comes right away, without waiting for the body
+          // the default reply comes right away, without waiting for the body: the status
+          // has been logged and the deadline has not fired yet
+          callbackCalled = true;
           expect(data).toBe(defaultReply);
-          expect(Date.now() - start).toBeLessThan(150);
+          expect(api.logger.error).toHaveBeenCalledWith(`${api.apiUrl} : Invalid status code: 500`);
+          expect(api.logger.error).not.toHaveBeenCalledWith(`${api.apiUrl} : Timeout (150ms)`);
         });
       });
     });
