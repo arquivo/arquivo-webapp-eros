@@ -66,7 +66,7 @@ docker compose -f docker-compose.prod.yml logs -f
 docker compose -f docker-compose.prod.yml down
 ```
 
-In production mode, `/switchlang` only returns to pages on the `backend.url` host. When the production compose file is run at http://localhost, switching language returns to the home page.
+In production mode (`NODE_ENV=production`), `/switchlang` only switches the language for pages on the `backend.url` host; from any other host, such as the production compose file at http://localhost:3000, it goes to the home page and the language stays the same. The Docker image and the production compose file already set `NODE_ENV=production`; production runs outside Docker should set it too.
 
 **Production optimizations:**
 - Minimal image size (production dependencies only)
