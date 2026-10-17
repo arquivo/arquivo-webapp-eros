@@ -335,4 +335,12 @@ describe('Export Results Utility', () => {
             expect(translateFunction).toHaveBeenCalledWith('common.months.01');
         });
     });
+
+    describe('Scope', () => {
+        it('does not leak exportObject into the global scope (#56)', () => {
+            exportResults(apiRequestData, [], translateFunction, 'tstamp', ['title']);
+
+            expect(globalThis).not.toHaveProperty('exportObject');
+        });
+    });
 });
