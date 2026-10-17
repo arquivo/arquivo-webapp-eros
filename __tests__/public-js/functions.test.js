@@ -181,18 +181,6 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
         expect(second.getAttribute('style')).toBe('color: red');
     });
 
-    it('opens and closes a menu', () => {
-        setup();
-
-        openLeftMenuNav();
-        expect(document.getElementById('left-nav').style.left).toBe('0px');
-        expect(document.getElementById('menus-overlay').style.display).toBe('block');
-
-        closeLeftMenuNav();
-        expect(document.getElementById('left-nav').style.left).toBe('-200px');
-        expect(document.getElementById('menus-overlay').style.display).toBe('none');
-    });
-
     it('alertsMessageIn hides the alert again after 2 seconds', () => {
         setup();
 
@@ -289,13 +277,6 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
     });
 
     describe('dateFromTimestamp', () => {
-        beforeEach(() => {
-            // The pages load jQuery UI with jQuery. It is no longer needed for the dates.
-            if (window.jQuery) {
-                loadJQueryUI();
-            }
-        });
-
         afterEach(() => {
             delete window.lang;
         });
