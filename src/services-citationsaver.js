@@ -273,8 +273,8 @@ async function handleURL(req, res) {
         return;
     }
 
-    mimetype = r.headers.get('content-type');
-    filesize = r.headers.get('content-length');
+    const mimetype = r.headers.get('content-type');
+    const filesize = r.headers.get('content-length');
 
     if (!mimeToExtension.has(mimetype.split(';')[0])) {
         sendExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
