@@ -133,13 +133,27 @@ describe('error middleware', () => {
             res.write('partial body');
             next(new Error('simulated late failure'));
         });
+        // Outside the test env, Express's default handler would console.error the
+        // error a second time if the middleware handed it on with next(err).
+        const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const previousEnv = app.get('env');
+        app.set('env', 'development');
+        try {
+            // The client sees a reset connection instead of a second, conflicting
+            // reply (a hang would surface as a timeout instead).
+            await expect(
+                request(app).get('/partials/replay-nav').timeout(REQUEST_TIMEOUT_MS)
+            ).rejects.toMatchObject({ code: 'ECONNRESET' });
+            // Express defers its own logging to the next turn of the event loop
+            await new Promise((resolve) => setImmediate(resolve));
 
-        // The client sees an aborted request instead of a second, conflicting reply.
-        await expect(
-            request(app).get('/partials/replay-nav').timeout(REQUEST_TIMEOUT_MS)
-        ).rejects.toThrow();
-        expect(mockLogger.error).toHaveBeenCalledTimes(1);
-        expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('simulated late failure'));
+            expect(mockLogger.error).toHaveBeenCalledTimes(1);
+            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('simulated late failure'));
+            expect(consoleError).not.toHaveBeenCalled();
+        } finally {
+            app.set('env', previousEnv);
+            consoleError.mockRestore();
+        }
     });
 
     it('still serves the 404 page for unknown routes', async () => {
