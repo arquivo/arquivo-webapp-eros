@@ -105,7 +105,7 @@ async function storeUpload(path, write) {
     }
 }
 
-module.exports = async function (req, res) {
+module.exports = async function citationSaver(req, res) {
     try {
         if (req.body?.url) {
             await handleURL(req, res);
@@ -162,7 +162,8 @@ function loggerErrorMessage(req, res, start, reason) {
 
 function unexpectedError(req, res, err) {
     logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
-    // Never throw from here: the handler's returned Promise would reject unhandled.
+    // Don't reply twice: a second res.send() would throw ERR_HTTP_HEADERS_SENT, and
+    // router.js does not handle a rejection of the handler's Promise.
     if (res.headersSent) {
         return;
     }
@@ -241,33 +242,12 @@ async function handleURL(req, res) {
         });
     }
 
-    async function saveLink(path, url, newName, date, timestamp, email) {
-        await storeUpload(path, (target) => fs.promises.writeFile(target, url));
-        addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
-            .then(() => {
-                logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
-            }).catch(e => {
-                logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: ' + e);
-            });
-        res.send({
-            status: true,
-            message: 'Link uploaded',
-            data: {
-                name: url,
-                mimetype: '',
-                size: url.length
-            }
-        });
-    }
-
     const url = req.body.url
 
     if (!isValidUrl(url)) {
         sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
         return;
     }
-
-    let expectedError = false;
 
     const startsWithHttp = /^https?:\/\//
 
@@ -277,56 +257,58 @@ async function handleURL(req, res) {
         redirect: 'error'
     };
 
-    return isSsrfTarget(fetchUrl).then((isSsrf) => {
-        if (isSsrf) {
-            sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
-            return;
-        }
+    // Any other failure (fetch, a missing content-type, the write) propagates to the
+    // exported handler, which replies with unexpectedError().
+    if (await isSsrfTarget(fetchUrl)) {
+        sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+        return;
+    }
 
-        return fetch(fetchUrl, fetchOptions)
-            .then((r) => {
-                function throwExpectedError(message) {
-                    expectedError = true;
-                    throw new Error(message);
-                }
+    const r = await fetch(fetchUrl, fetchOptions);
 
-                if (!r.ok) {
-                    throwExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
-                }
+    if (!r.ok) {
+        sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
+        return;
+    }
 
-                mimetype = r.headers.get('content-type');
-                filesize = r.headers.get('content-length');
+    mimetype = r.headers.get('content-type');
+    filesize = r.headers.get('content-length');
 
-                if (!mimeToExtension.has(mimetype.split(';')[0])) {
-                    throwExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
-                }
+    if (!mimeToExtension.has(mimetype.split(';')[0])) {
+        sendExpectedError(req.t('services-citation-saver.errors.URL.mimetype'));
+        return;
+    }
 
-                if (Number(filesize) > maxUploadSize) {
-                    throwExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
-                }
+    if (Number(filesize) > maxUploadSize) {
+        sendExpectedError(req.t('services-citation-saver.errors.URL.filesize'));
+        return;
+    }
 
-            }).then(() => {
+    const outExtension = 'link';
+    const newName = newUploadName(outExtension);
+    const date = (new Date()).toLocaleDateString('en-CA');
+    const timestamp = Date.now();
+    const email = req.body?.email ?? '';
+    const path = uploadFolderPath + '/' + newName;
 
-                const outExtension = 'link';
-                const newName = newUploadName(outExtension);
-                const date = (new Date()).toLocaleDateString('en-CA');
-                const timestamp = Date.now();
-                const email = req.body?.email ?? '';
-                const path = uploadFolderPath + '/' + newName;
+    await storeUpload(path, (target) => fs.promises.writeFile(target, url));
 
-                return saveLink(path, url, newName, date, timestamp, email);
-            });
+    addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
+        .then(() => {
+            logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
+        }).catch(e => {
+            logger.error('FAILED to save URL: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email + '\t Due to the following error: ' + e);
+        });
 
-    }).catch((err) => {
-        if (expectedError) {
-            sendExpectedError(err.message);
-        } else {
-            unexpectedError(req, res, err);
+    res.send({
+        status: true,
+        message: 'Link uploaded',
+        data: {
+            name: url,
+            mimetype: '',
+            size: url.length
         }
     });
-
-
-
 }
 
 async function handleText(req, res) {
