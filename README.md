@@ -66,6 +66,8 @@ docker compose -f docker-compose.prod.yml logs -f
 docker compose -f docker-compose.prod.yml down
 ```
 
+In production mode, `/switchlang` only returns to pages on the `backend.url` host. When the production compose file is run at http://localhost, switching language returns to the home page.
+
 **Production optimizations:**
 - Minimal image size (production dependencies only)
 - Runs as non-root user for security

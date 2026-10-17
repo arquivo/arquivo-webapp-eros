@@ -180,24 +180,19 @@ describe('/switchlang characterization (#85)', () => {
     });
 
     describe('invalid referer', () => {
-        it('a referer that is not a URL redirects to / without switching', async () => {
-            mockLogger.error.mockClear();
-            const res = await switchlang('not a url');
-            expect(res.status).toBe(302);
-            expect(res.headers.location).toBe('/');
-            expectNoSwitch(res);
-            expect(mockLogger.error).not.toHaveBeenCalled();
-        });
+        beforeEach(() => mockLogger.error.mockClear());
 
         it.each([
+            'not a url',
             'javascript:alert(1)',
             'ftp://localhost/x',
             'data:text/html,x',
-        ])('a referer that is not http(s) redirects to / without switching (%s)', async (referer) => {
+        ])('a referer that is not an http(s) URL redirects to / without switching (%s)', async (referer) => {
             const res = await switchlang(referer);
             expect(res.status).toBe(302);
             expect(res.headers.location).toBe('/');
             expectNoSwitch(res);
+            expect(mockLogger.error).not.toHaveBeenCalled();
         });
     });
 
@@ -207,10 +202,14 @@ describe('/switchlang characterization (#85)', () => {
             'http://localhost/\\other.example',
             'http://localhost/\\/other.example',
             BACKEND + '//other.example/x?q=a',
-        ])('is / when the referer path starts with more than one slash (%s)', async (referer) => {
+        ])('is / when the referer path starts with more than one slash, still switching (%s)', async (referer) => {
             const res = await switchlang(referer);
             expect(res.status).toBe(302);
             expect(res.headers.location).toBe('/');
+            const cookies = i18nCookies(res);
+            expect(cookies[2]).toBe(CLEARED_COOKIE);
+            expect(cookies[3]).toMatch(appCookie('en_GB'));
+            expectNoCacheHeaders(res);
         });
 
         it('is the referer path, query and fragment, without the user info', async () => {

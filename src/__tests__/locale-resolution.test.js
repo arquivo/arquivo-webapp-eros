@@ -211,9 +211,9 @@ describe('locale resolution (characterization, #85)', () => {
     });
 
     describe('malformed language input', () => {
-        function expectLocale(res, lang, locale, cookieLocale) {
+        function expectLocale(res, locale, cookieLocale) {
             expect(res.status).toBe(200);
-            expect(htmlLang(res)).toBe(lang);
+            expect(htmlLang(res)).toBe(locale.slice(0, 2));
             const cookies = i18nCookies(res);
             expect(cookies[0]).toMatch(libraryCookie(locale));
             expect(cookies[1]).toMatch(appCookie(cookieLocale));
@@ -221,18 +221,18 @@ describe('locale resolution (characterization, #85)', () => {
         }
 
         it.each([
-            '/?l=en&l=pt',
-            '/?l[]=en',
-            '/?l[a]=en',
-        ])('%s is ignored (default locale) and seen unchanged by later middleware', async (url) => {
+            ['/?l=en&l=pt', ['en', 'pt']],
+            ['/?l[]=en', ['en']],
+            ['/?l[a]=en', { a: 'en' }],
+        ])('%s is ignored (default locale) and seen unchanged by later middleware', async (url, l) => {
             const res = await get(url);
-            expectLocale(res, 'pt', 'pt_PT', 'pt_PT');
-            expect(typeof mockSeen[0].l).toBe('object');
+            expectLocale(res, 'pt_PT', 'pt_PT');
+            expect(mockSeen[0].l).toStrictEqual(l);
         });
 
         it('a repeated l falls back to the cookie', async () => {
             const res = await get('/?l=pt&l=pt', { Cookie: 'i18n=en_GB' });
-            expectLocale(res, 'en', 'en_GB', 'en_GB');
+            expectLocale(res, 'en_GB', 'en_GB');
         });
 
         it.each([
@@ -242,12 +242,12 @@ describe('locale resolution (characterization, #85)', () => {
             ['a number', '5'],
         ])('an i18n cookie with %s is ignored (default locale)', async (_name, value) => {
             const res = await get('/', { Cookie: `i18n=${value}` });
-            expectLocale(res, 'pt', 'pt_PT', 'pt_PT');
+            expectLocale(res, 'pt_PT', 'pt_PT');
         });
 
         it('an ignored i18n cookie lets a valid l apply', async () => {
             const res = await get('/?l=en', { Cookie: 'i18n=j:{"a":1}' });
-            expectLocale(res, 'en', 'en_GB', 'pt_PT');
+            expectLocale(res, 'en_GB', 'pt_PT');
         });
 
         it('an ignored i18n cookie on a /wayback path uses the default language', async () => {
@@ -258,30 +258,52 @@ describe('locale resolution (characterization, #85)', () => {
             expect(mockLogger.error).not.toHaveBeenCalled();
         });
 
-        it('puts the request back as it was when i18n-node-yaml throws', () => {
+        describe('the request given to the middleware', () => {
             const { localeMiddleware } = require('../locale');
-            const req = {
-                url: '/',
-                headers: { 'accept-language': 'en' },
-                query: { l: ['en', 'pt'] },
-                cookies: { i18n: { a: 1 } },
-            };
-            // i18n-node-yaml sets its cookie with res.cookie: make that throw
-            const res = { cookie: jest.fn(() => { throw new TypeError('cookie failed'); }), locals: {} };
-            const next = jest.fn();
-            expect(() => localeMiddleware({ debug: false })(req, res, next)).toThrow('cookie failed');
-            expect(req.headers).toEqual({ 'accept-language': 'en' });
-            expect(req.query).toEqual({ l: ['en', 'pt'] });
-            expect(req.cookies).toEqual({ i18n: { a: 1 } });
-            expect(next).not.toHaveBeenCalled();
-        });
+            const middleware = localeMiddleware({ debug: false });
+            const HELPERS = ['getLanguage', 'getLanguages', 'getLocale', 'getLocales', 't'];
 
-        it('does not add keys the request did not have when i18n-node-yaml throws', () => {
-            const { localeMiddleware } = require('../locale');
-            const req = { url: '/', headers: {}, query: {}, cookies: {} };
-            const res = { cookie: jest.fn(() => { throw new TypeError('cookie failed'); }), locals: {} };
-            expect(() => localeMiddleware({ debug: false })(req, res, jest.fn())).toThrow('cookie failed');
-            expect(req).toEqual({ url: '/', headers: {}, query: {}, cookies: {} });
+            // A deep copy for toStrictEqual. Not structuredClone: under Jest its
+            // copies have other Object/Array prototypes, so they never match.
+            const copy = (value) => JSON.parse(JSON.stringify(value));
+
+            function newRequest(url) {
+                return {
+                    url,
+                    headers: { 'accept-language': 'en' },
+                    query: { l: ['en', 'pt'], q: 'x' },
+                    cookies: { i18n: { a: 1 }, other: 'y' },
+                };
+            }
+
+            it.each([
+                '/',
+                WAYBACK_PATH,
+            ])('is left untouched apart from the i18n helpers (%s)', (url) => {
+                const req = newRequest(url);
+                const before = copy(req);
+                const next = jest.fn();
+                middleware(req, { cookie: jest.fn(), locals: {} }, next);
+                expect(next).toHaveBeenCalled();
+                expect(req.getLocale()).toBe('pt_PT');
+                const added = Object.keys(req).filter(key => !Object.hasOwn(before, key));
+                expect(added.sort()).toEqual(HELPERS);
+                for (const key of added) {
+                    delete req[key];
+                }
+                expect(req).toStrictEqual(before);
+            });
+
+            it('is left untouched when i18n-node-yaml throws', () => {
+                const req = newRequest('/');
+                const before = copy(req);
+                // i18n-node-yaml sets its cookie with res.cookie: make that throw
+                const res = { cookie: jest.fn(() => { throw new TypeError('cookie failed'); }), locals: {} };
+                const next = jest.fn();
+                expect(() => middleware(req, res, next)).toThrow('cookie failed');
+                expect(req).toStrictEqual(before);
+                expect(next).not.toHaveBeenCalled();
+            });
         });
     });
 });

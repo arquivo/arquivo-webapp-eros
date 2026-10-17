@@ -21,35 +21,6 @@ function setLocaleCookie(res, locale) {
     res.cookie(COOKIE_NAME, locale, COOKIE_OPTIONS);
 }
 
-/** The value if it is one of LOCALES, undefined otherwise */
-const knownLocale = (value) => (LOCALES.includes(value) ? value : undefined);
-
-/**
- * Calls fn with the [object, key, value] overrides applied (undefined removes
- * the key), then puts the original values back, even if fn throws.
- */
-function withOverrides(overrides, fn) {
-    const originals = overrides.map(([object, key]) => [object, key, Object.hasOwn(object, key), object[key]]);
-    try {
-        for (const [object, key, value] of overrides) {
-            if (value === undefined) {
-                delete object[key];
-            } else {
-                object[key] = value;
-            }
-        }
-        return fn();
-    } finally {
-        for (const [object, key, had, value] of originals) {
-            if (had) {
-                object[key] = value;
-            } else {
-                delete object[key];
-            }
-        }
-    }
-}
-
 /**
  * Middleware that selects the locale of the request and sets the i18n helpers
  * (getLocale, getLanguage, getLocales, t, ...) on req and res.locals.
@@ -72,27 +43,30 @@ function localeMiddleware({ debug }) {
     return function (req, res, next) {
         // Only a known locale is taken from the cookie; any other value (e.g. a
         // number or an object parsed from a 'j:' JSON cookie) is ignored.
-        const cookie = knownLocale(req.cookies?.[COOKIE_NAME]);
-        const cookieLocale = cookie || DEFAULT_LOCALE;
+        const cookieValue = req.cookies?.[COOKIE_NAME];
+        const knownCookieLocale = LOCALES.includes(cookieValue) ? cookieValue : undefined;
+        const cookieLocale = knownCookieLocale || DEFAULT_LOCALE;
 
-        // i18n-node-yaml's middleware picks the locale from the query parameter,
-        // then the cookie, then Accept-Language, and has no option to skip
-        // Accept-Language or to ignore the query parameter on some paths. So, only
-        // for its call, Accept-Language is hidden, an ignored cookie is hidden, a
-        // 'l' parameter that is not a string (repeated or nested) is hidden and,
-        // on /wayback paths, the 'l' parameter is replaced by the cookie's
-        // language. All are put back after, so the rest of the app sees the
-        // request unchanged.
+        // i18n-node-yaml picks the locale from the 'l' parameter, then the cookie,
+        // then Accept-Language, and sets its helpers on the request it gets. It
+        // gets a stand-in request with only what it should see, so req is not
+        // changed:
+        // - no Accept-Language
+        // - 'l' only if it is a string; on /wayback paths, the cookie's language
+        // - the cookie only if it is a known locale
         const queryLanguage = req.query[QUERY_PARAMETER];
         let i18nQueryLanguage = typeof queryLanguage === 'string' ? queryLanguage : undefined;
         if (queryLanguage && req.url.startsWith(WAYBACK_PREFIX)) {
             i18nQueryLanguage = localeLanguage(cookieLocale);
         }
-        withOverrides([
-            [req.headers, 'accept-language', undefined],
-            [req.query, QUERY_PARAMETER, i18nQueryLanguage],
-            [req.cookies ?? {}, COOKIE_NAME, cookie],
-        ], () => i18n.middleware(req, res, () => {}));
+        const i18nRequest = {
+            headers: {},
+            query: { [QUERY_PARAMETER]: i18nQueryLanguage },
+            cookies: { [COOKIE_NAME]: knownCookieLocale },
+        };
+        i18n.middleware(i18nRequest, res, () => {});
+        const { headers, query, cookies, ...helpers } = i18nRequest;
+        Object.assign(req, helpers);
 
         // Sets the i18n cookie again, after the one i18n-node-yaml set, to its own
         // value (or the default). Browsers keep the last one, so the 'l'
