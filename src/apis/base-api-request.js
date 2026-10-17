@@ -2,6 +2,10 @@ const https = require('node:https');
 const http = require('node:http');
 const logger = require('../logger');
 
+// Default cap on the size of a response body. Far above what the search APIs reply: about 0.7 MB
+// at most, even when asked for their maximum number of items.
+const DEFAULT_MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
+
 /**
  * BaseApiRequest - Abstract base class for HTTP API clients
  * 
@@ -13,8 +17,8 @@ const logger = require('../logger');
  * - Memory leak prevention
  * 
  * This is the single place for the request flow (status check, request and response errors,
- * timeout, UTF-8 body decoding); subclasses only parse the response. JSON APIs extend
- * JsonApiRequest.
+ * timeouts, response size cap, UTF-8 body decoding); subclasses only parse the response.
+ * JSON APIs extend JsonApiRequest.
  *
  * Subclasses must implement:
  * - processResponse(apiRes, safeCallback, requestData) - Process the HTTP response
@@ -33,7 +37,10 @@ class BaseApiRequest {
      * @param {Object} defaultApiParams - Default parameters for all requests
      * @param {*} defaultApiReply - Fallback response returned on errors
      * @param {string} loggerName - Logger name for this API client
-     * @param {Object} options - HTTP request options (method, timeout, etc.)
+     * @param {Object} options - HTTP request options (method, agent, etc.), plus:
+     *   - timeout: total deadline in ms for the whole request, body included (AbortSignal.timeout)
+     *   - idleTimeout: optional, give up when the backend sends nothing for this many ms
+     *   - maxResponseBytes: optional, give up on a body larger than this (defaults to 10 MB)
      */
     constructor(apiUrl, defaultApiParams = {}, defaultApiReply = {}, loggerName = 'BaseApiRequest', options = null) {
         this.apiUrl = apiUrl;
@@ -81,12 +88,18 @@ class BaseApiRequest {
 
         const { safeCallback } = this.createSafeCallback(callback);
         const request = this.apiUrl.startsWith('https') ? https.request : http.request;
+        const { timeout, idleTimeout, maxResponseBytes = DEFAULT_MAX_RESPONSE_BYTES, ...requestOptions } = this.options;
 
         try {
             const url = this.apiUrl + '?' + this.sanitizeRequestData(requestData).toString();
             this.logger.info(url);
 
-            const apiReq = request(url, this.options, (apiRes) => {
+            // Unlike a socket timeout, the deadline also stops a backend that keeps sending a few bytes at a
+            // time, and it covers the drain of a non-2xx body. When it fires, the request is destroyed and
+            // the 'error' handler below gets an AbortError.
+            const signal = timeout ? AbortSignal.timeout(timeout) : undefined;
+
+            const apiReq = request(url, { ...requestOptions, timeout: idleTimeout, signal }, (apiRes) => {
                 // Handle non-2xx status codes
                 if (apiRes.statusCode < 200 || apiRes.statusCode >= 300) {
                     this.logger.error(`${this.apiUrl} : Invalid status code: ${apiRes.statusCode}`);
@@ -105,29 +118,41 @@ class BaseApiRequest {
                     safeCallback(this.fallbackReply(requestData));
                 });
 
+                // Give up on a body that is too large, before it fills the memory
+                let receivedBytes = 0;
+                apiRes.on('data', (chunk) => {
+                    receivedBytes += Buffer.byteLength(chunk);
+                    if (receivedBytes > maxResponseBytes) {
+                        this.logger.error(`${this.apiUrl} : Response too large (over ${maxResponseBytes} bytes)`);
+                        apiReq.destroy();
+                        safeCallback(this.fallbackReply(requestData));
+                    }
+                });
+
                 // Delegate response processing to subclass
                 this.processResponse(apiRes, safeCallback, requestData);
             });
 
-            // Handle request errors
+            // Handle request errors, including the deadline (AbortError)
             apiReq.on('error', (e) => {
-                this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                if (e.name === 'AbortError') {
+                    this.logger.error(`${this.apiUrl} : Timeout (${timeout}ms)`);
+                } else {
+                    this.logger.error(`${this.apiUrl} : Request error: ${e.message}`);
+                }
                 if (!apiReq.destroyed) {
                     apiReq.destroy();
                 }
                 safeCallback(this.fallbackReply(requestData));
             });
 
-            // Handle timeout
-            apiReq.on('timeout', () => {
-                this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout}ms)`);
-                apiReq.destroy();
-                safeCallback(this.fallbackReply(requestData));
-            });
-
-            // Configure timeout if specified
-            if (this.options.timeout) {
-                apiReq.setTimeout(this.options.timeout);
+            // Handle the inactivity timeout, if there is one
+            if (idleTimeout) {
+                apiReq.on('timeout', () => {
+                    this.logger.error(`${this.apiUrl} : Timeout (no data for ${idleTimeout}ms)`);
+                    apiReq.destroy();
+                    safeCallback(this.fallbackReply(requestData));
+                });
             }
 
             apiReq.end();
@@ -155,7 +180,7 @@ class BaseApiRequest {
 
     /**
      * Reply passed to the callback when the request fails (non-2xx status, request
-     * or response error, timeout, exception)
+     * or response error, timeout, response too large, exception)
      *
      * @param {URLSearchParams} requestData - Original request parameters (for context)
      * @returns {*} The default reply
