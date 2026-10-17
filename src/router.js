@@ -1,16 +1,3 @@
-/**
- * Main Application Router
- * 
- * Defines all routes for the Arquivo.pt web archive application including:
- * - Search routes (pages, images, URLs)
- * - Advanced search interfaces
- * - Wayback Machine integration
- * - Services (Archive Page Now, Citation Saver)
- * - Tracking and analytics
- * - Language switching
- * - Backward compatibility redirects
- */
-
 const backendRoutes = require('./backend-routes');
 const healthcheckRoutes = require('./healthcheck-routes');
 const searchPages = require('./search-pages.js');
@@ -26,26 +13,14 @@ const isValidUrl = require('./utils/is-valid-url');
 const express = require('express');
 const router = express.Router();
 
-// ============================================================================
-// Backend Routes - PyWb proxy redirects (must be registered first)
-// ============================================================================
+// PyWb redirects; registered first so they take precedence over /wayback/:url*
 backendRoutes(router);
 
-// ============================================================================
-// Healthcheck Routes - backend connectivity check for rolling deploys
-// ============================================================================
 healthcheckRoutes(router);
 
-// ============================================================================
-// Homepage
-// ============================================================================
 router.get('/', function (req, res) {
     res.render('pages/home');
 });
-
-// ============================================================================
-// Search Routes
-// ============================================================================
 
 /**
  * Page/Text Search Results
@@ -68,10 +43,6 @@ router.get('/page/search', function (req, res) {
     }
 });
 
-/**
- * URL Search Results
- * Displays timeline/history of captures for a specific URL
- */
 router.get('/url/search', function (req, res) {
     res.render('pages/replay-table-list-results', { requestData: req.utils.sanitizeInputs(req, res) });
 });
@@ -98,42 +69,23 @@ router.get('/image/search', function (req, res) {
     }
 });
 
-// ============================================================================
-// Landing Pages
-// ============================================================================
-
-/** Page/Text search landing page */
 router.get('/pages', function (req, res) {
     res.render('pages/home',{searchType: 'pages'});
 });
 
-/** Image search landing page */
 router.get('/images', function (req, res) {
     res.render('pages/home',{searchType: 'images'});
 });
 
-// ============================================================================
-// Advanced Search Forms
-// ============================================================================
-
-/** Page/Text advanced search interface */
 router.get('/page/advanced/search', function (req, res) {
     res.render('pages/pages-advanced-search', { requestData: req.utils.sanitizeInputs(req, res) });
 });
 
-/** Image advanced search interface */
 router.get('/image/advanced/search', function (req, res) {
     res.render('pages/images-advanced-search',{ requestData: req.utils.sanitizeInputs(req, res) });
 });
 
-// ============================================================================
-// Wayback Machine Routes
-// ============================================================================
-
-/**
- * Wayback wildcard route
- * Handles URLs with wildcard patterns, routing to URL or page search
- */
+// /wayback/*/<url>: a valid URL goes to the URL search, anything else to the page search
 router.get('/wayback/[*]/:url*', function (req, res) {
     const requestUrl = req.params.url + (req.params['0'] ?? '');
     const requestData = new URLSearchParams({q:requestUrl});
@@ -146,31 +98,17 @@ router.get('/wayback/[*]/:url*', function (req, res) {
     }
 });
 
-/**
- * Wayback replay route
- * Displays archived content for a specific timestamp/URL combination
- */
 router.get('/wayback/:url*', function (req, res) {
     wayback(req, res);
 });
 
-// ============================================================================
-// Tracking Routes
-// ============================================================================
-
-/** Track page views in archived content */
 router.get('/page/view/:url*', function (req, res) {
     tracking(req, res,'PageView');
 });
 
-/** Track image views in archived content */
 router.get('/image/view/:url*', function (req, res) {
     tracking(req, res,'ImageView');
 });
-
-// ============================================================================
-// Language Switching
-// ============================================================================
 
 /**
  * Switch Language Route
@@ -223,25 +161,13 @@ router.get('/switchlang', function (req, res) {
     }
 });
 
-// ============================================================================
-// Services
-// ============================================================================
-
-/** Citation Saver - Form display */
 router.get('/services/citationsaver', function (req, res) {
     res.render('pages/services-citation-saver');
 });
 
-/** Citation Saver - Form submission handler */
 router.post('/services/citationsaver', citationSaver.rateLimiter, citationSaver.parseUpload, function (req, res, next) {
     citationSaver(req, res).catch(next);
 });
-
-// ============================================================================
-// Partial Content Routes
-// Partials loaded via AJAX: search results, wayback replay navigation and
-// the datepicker and image details modals
-// ============================================================================
 
 /** Render a partial template as-is, without the page layout */
 const renderPartial = (view) => (req, res) => res.render(view, { layout: false });
@@ -267,12 +193,7 @@ const partialHandlers = new Map([
     ['modal-image-details', renderPartial('partials/modal-image-details')], // public/js/modal-image-result.js
 ]);
 
-/**
- * Dynamic Partials Router
- * Routes partial template requests to their handler; any other id falls
- * through to the 404 page.
- * Used for AJAX content loading without full page refresh
- */
+// Partials are loaded via AJAX, without a full page refresh
 router.get('/partials/:id', function (req, res, next) {
     const handler = partialHandlers.get(req.params.id);
     if (handler) {
@@ -282,21 +203,12 @@ router.get('/partials/:id', function (req, res, next) {
     }
 });
 
-// ============================================================================
-// Backward Compatibility Redirects
-// ============================================================================
-
-/** Redirect old service name to new one */
+// Backward compatibility: the old name of the Archive Page Now service
 router.get('/services/savepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     res.redirect('/services/archivepagenow?'+requestData.toString());
 });
 
-// ============================================================================
-// Archive Page Now Service
-// ============================================================================
-
-/** Archive Page Now - Display submission form */
 router.get('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     const rawUrl = (requestData.get('url') ?? '').trim();
@@ -306,11 +218,7 @@ router.get('/services/archivepagenow', function (req, res) {
     });
 });
 
-/**
- * Archive Page Now - Process URL submission
- * If 'logging' parameter is present, skip processing (logging endpoint)
- * Otherwise, process the URL for archiving
- */
+// With a 'logging' query parameter the request is only acknowledged (empty 200), not archived
 router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     if (!requestData.has('logging')) {
@@ -320,11 +228,7 @@ router.post('/services/archivepagenow', function (req, res) {
     }
 });
 
-// ============================================================================
-// Additional Services
-// ============================================================================
-
-/** Complete Page Service - Display patched page reconstruction */
+// Complete Page: displays the patched reconstruction of an archived page
 router.get('/services/complete-page', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     const rawUrl = decodeURIComponent(requestData.get('url') ?? '');
@@ -334,10 +238,7 @@ router.get('/services/complete-page', function (req, res) {
     });
 });
 
-// ============================================================================
-// 404 Error Handler
-// Must be last route to catch all unmatched requests
-// ============================================================================
+// 404: must be the last route, so it only catches unmatched requests
 router.use(function (req, res, next) {
     res.status(404).render('pages/arquivo-404');
 });
