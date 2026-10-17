@@ -108,14 +108,11 @@ describe('ImageSearchApiRequest', () => {
             expect(api.defaultApiParams.trackingId).toBeNull();
         });
 
-        it('should have a no results default reply', () => {
+        it('should have a no results default reply, frozen as all requests share it', () => {
             const api = new ImageSearchApiRequest();
             expect(api.defaultApiReply).toEqual({ totalItems: 0, responseItems: [] });
-        });
-
-        it('should not share the default reply between instances', () => {
-            expect(new ImageSearchApiRequest().defaultApiReply)
-                .not.toBe(new ImageSearchApiRequest().defaultApiReply);
+            expect(Object.isFrozen(api.defaultApiReply)).toBe(true);
+            expect(Object.isFrozen(api.defaultApiReply.responseItems)).toBe(true);
         });
     });
 
