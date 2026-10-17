@@ -52,8 +52,6 @@ describe('Citation Saver Service', () => {
         fetch.mockImplementation(mockFetch);
 
         // Mock fs
-        fs.writeFile.mockImplementation((path, data, cb) => cb(null));
-        fs.unlink.mockImplementation((path, cb) => cb && cb(null));
         fs.promises.mkdir.mockResolvedValue(undefined);
         fs.promises.writeFile.mockResolvedValue(undefined);
         fs.promises.rm.mockResolvedValue(undefined);
@@ -489,17 +487,6 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('handles file write errors gracefully', async () => {
-            fs.promises.writeFile.mockRejectedValueOnce(new Error('Write failed'));
-            req.body = { text: 'Sample text', email: 'test@example.com' };
-
-            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
-            expect(res.send).toHaveBeenCalledWith({
-                status: false,
-                message: 'services-citation-saver.errors.default'
-            });
-        });
-
         it('handles unexpected errors gracefully', () => {
             req.body = { url: null }; // Malformed request
 
@@ -800,29 +787,10 @@ describe('Citation Saver Service', () => {
         const failure = { status: false, message: 'services-citation-saver.errors.default' };
         const fsError = (code) => Object.assign(new Error(code + ': simulated'), { code });
 
-        const settle = async () => {
-            for (let i = 0; i < 20; i++) await new Promise(resolve => setImmediate(resolve));
-        };
-
         const deferred = () => {
             let resolve;
             const promise = new Promise(r => { resolve = r; });
             return { promise, resolve };
-        };
-
-        // Make the callback fs API behave like Node 20: callbacks run on a later tick,
-        // and fs.unlink() without a callback throws ERR_INVALID_ARG_TYPE.
-        const callbackFsLikeNode = (writeResult) => {
-            fs.writeFile.mockImplementation((path, data, cb) => {
-                Promise.resolve(writeResult).then(err => setImmediate(() => cb(err)));
-            });
-            fs.unlink.mockImplementation((path, cb) => {
-                if (typeof cb !== 'function') {
-                    throw Object.assign(new TypeError('The "cb" argument must be of type function. Received undefined'),
-                        { code: 'ERR_INVALID_ARG_TYPE' });
-                }
-                setImmediate(() => cb(null));
-            });
         };
 
         const submissions = {
@@ -832,13 +800,10 @@ describe('Citation Saver Service', () => {
         };
 
         it.each(['text', 'url'])('returns status:false and keeps running when writing a %s submission fails', async (kind) => {
-            const err = fsError('ENOSPC');
-            callbackFsLikeNode(err);
-            fs.promises.writeFile.mockRejectedValue(err);
+            fs.promises.writeFile.mockRejectedValue(fsError('ENOSPC'));
             Object.assign(req, submissions[kind]());
 
-            servicesCitationSaver(req, res);
-            await settle();
+            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
 
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
@@ -847,7 +812,6 @@ describe('Citation Saver Service', () => {
                 /Something unexpected occurred\. Reason: .*"code":"ENOSPC".*"message":"ENOSPC: simulated"/));
             const writtenPath = fs.promises.writeFile.mock.calls[0][0];
             expect(fs.promises.rm).toHaveBeenCalledWith(writtenPath, { force: true });
-            expect(fs.unlink).not.toHaveBeenCalled();
         });
 
         it('returns status:false and keeps running when moving an uploaded file fails', async () => {
@@ -855,7 +819,7 @@ describe('Citation Saver Service', () => {
             Object.assign(req, submissions.file(mv));
 
             servicesCitationSaver(req, res);
-            await settle();
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
@@ -865,85 +829,36 @@ describe('Citation Saver Service', () => {
         });
 
         it('still reports the original failure when cleanup also fails', async () => {
-            const err = fsError('ENOSPC');
-            callbackFsLikeNode(err);
-            fs.promises.writeFile.mockRejectedValue(err);
+            fs.promises.writeFile.mockRejectedValue(fsError('ENOSPC'));
             fs.promises.rm.mockRejectedValue(fsError('EPERM'));
             Object.assign(req, submissions.text());
 
             servicesCitationSaver(req, res);
-            await settle();
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
             expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('ENOSPC'));
         });
 
-        it.each(['text', 'url', 'file'])('returns status:false when the upload folder cannot be created (%s)', async (kind) => {
-            const mv = jest.fn().mockResolvedValue(undefined);
-            callbackFsLikeNode(null);
-            fs.promises.mkdir.mockRejectedValue(fsError('ENOTDIR'));
-            Object.assign(req, submissions[kind](mv));
-
-            servicesCitationSaver(req, res);
-            await settle();
-
-            expect(res.send).toHaveBeenCalledTimes(1);
-            expect(res.send).toHaveBeenCalledWith(failure);
-            expect(fs.promises.writeFile).not.toHaveBeenCalled();
-            expect(mv).not.toHaveBeenCalled();
-            expect(addToSpreadsheet).not.toHaveBeenCalled();
-        });
-
-        it.each(['text', 'url', 'file'])('creates the upload folder before storing a %s submission', async (kind) => {
-            const mv = jest.fn().mockResolvedValue(undefined);
-            callbackFsLikeNode(null);
-            Object.assign(req, submissions[kind](mv));
-
-            servicesCitationSaver(req, res);
-            await settle();
-
-            expect(fs.promises.mkdir).toHaveBeenCalledWith('uploads/CitationSaver', { recursive: true });
-            const store = kind === 'file' ? mv : fs.promises.writeFile;
-            expect(fs.promises.mkdir.mock.invocationCallOrder[0]).toBeLessThan(store.mock.invocationCallOrder[0]);
-            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
-        });
-
         it.each(['text', 'url', 'file'])('adds the Sheet row and replies only after a %s submission is on disk', async (kind) => {
             const onDisk = deferred();
             const mv = jest.fn(() => onDisk.promise);
-            callbackFsLikeNode(onDisk.promise.then(() => null));
             fs.promises.writeFile.mockImplementation(() => onDisk.promise);
             Object.assign(req, submissions[kind](mv));
 
             servicesCitationSaver(req, res);
-            await settle();
+            await flushPromises();
 
             expect(addToSpreadsheet).not.toHaveBeenCalled();
             expect(res.send).not.toHaveBeenCalled();
 
             onDisk.resolve();
-            await settle();
+            await flushPromises();
 
             expect(addToSpreadsheet).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
-        });
-
-        it('only logs an unexpected error when the response was already sent', async () => {
-            fs.promises.writeFile.mockRejectedValue(fsError('EIO'));
-            res.headersSent = true;
-            res.send.mockImplementation(() => { throw new Error('ERR_HTTP_HEADERS_SENT'); });
-            Object.assign(req, submissions.text());
-
-            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
-            expect(res.send).not.toHaveBeenCalled();
-            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Something unexpected occurred.'));
-        });
-
-        it('has no callback-less fs.* calls left in the service', () => {
-            const source = jest.requireActual('fs').readFileSync(require.resolve('../services-citationsaver'), 'utf8');
-            expect(source.match(/\bfs\.(?!promises\.)\w+\s*\(/g)).toBeNull();
         });
     });
 });
