@@ -444,15 +444,20 @@ describe('POST /services/citationsaver through the app', () => {
         });
 
         it('removes the temporary file when storing the upload fails', async () => {
-            // A regular file where the upload folder should be: storing fails.
+            // A regular file where the upload folder should be: storing fails. Its parent
+            // only exists once a request has been made, so create it here.
+            fs.mkdirSync(path.dirname(uploadFolder), { recursive: true });
             fs.writeFileSync(uploadFolder, 'not a directory');
+            try {
+                const res = await post().attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
 
-            const res = await post().attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
-
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual({ status: false, message: messages.default });
-            expect(addToSpreadsheet).not.toHaveBeenCalled();
-            fs.rmSync(uploadFolder);
+                expect(res.status).toBe(200);
+                expect(res.body).toEqual({ status: false, message: messages.default });
+                expect(addToSpreadsheet).not.toHaveBeenCalled();
+                await expectNoTempFiles();
+            } finally {
+                fs.rmSync(uploadFolder, { force: true });
+            }
         });
 
         it('replies 500 JSON and keeps serving when the temporary folder cannot be created', async () => {
