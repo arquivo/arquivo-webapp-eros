@@ -2,7 +2,11 @@
 
 jest.mock('config');
 jest.mock('node-fetch');
-jest.mock('fs');
+// Automocked, but for the check of the temporary folder setting, which runs on load.
+jest.mock('fs', () => ({
+    ...jest.createMockFromModule('fs'),
+    realpathSync: jest.requireActual('fs').realpathSync,
+}));
 jest.mock('../spreadsheet-client');
 jest.mock('../utils/is-valid-url');
 jest.mock('node:dns');

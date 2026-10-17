@@ -616,6 +616,18 @@ describe('POST /services/citationsaver through the app', () => {
                 .toThrow('must not be inside');
         });
 
+        it('refuses a folder inside it through a symlink', () => {
+            fs.mkdirSync(uploadFolder, { recursive: true });
+            const link = path.join(tmpRoot, 'link-to-uploads');
+            fs.symlinkSync(uploadFolder, link);
+            try {
+                expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': path.join(link, 'tmp') }))
+                    .toThrow('must not be inside');
+            } finally {
+                fs.rmSync(link);
+            }
+        });
+
         it('accepts a folder next to the upload folder', () => {
             expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': path.join(uploadFolder, '..', 'tmp') }))
                 .not.toThrow();

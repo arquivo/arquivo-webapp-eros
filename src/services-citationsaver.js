@@ -54,9 +54,23 @@ const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 // the upload folder, so it is never taken for a submission.
 const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path')
     || nodePath.join(nodePath.dirname(uploadFolderPath), '.citationsaver-tmp');
-const tempFolderInUploadFolder = nodePath.relative(nodePath.resolve(uploadFolderPath), nodePath.resolve(uploadTempFolderPath));
-if (!nodePath.isAbsolute(tempFolderInUploadFolder) && tempFolderInUploadFolder !== '..'
-    && !tempFolderInUploadFolder.startsWith('..' + nodePath.sep)) {
+// The absolute path with symlinks resolved, as far as it exists.
+function realPath(path) {
+    const resolved = nodePath.resolve(path);
+    try {
+        return fs.realpathSync(resolved);
+    } catch {
+        const parent = nodePath.dirname(resolved);
+        return parent === resolved ? resolved : nodePath.join(realPath(parent), nodePath.basename(resolved));
+    }
+}
+function isInside(folder, path) {
+    const relative = nodePath.relative(folder, path);
+    return !nodePath.isAbsolute(relative) && relative !== '..' && !relative.startsWith('..' + nodePath.sep);
+}
+// Checked as written and with symlinks resolved.
+if (isInside(nodePath.resolve(uploadFolderPath), nodePath.resolve(uploadTempFolderPath))
+    || isInside(realPath(uploadFolderPath), realPath(uploadTempFolderPath))) {
     // Its partial uploads would be taken for submissions.
     throw new Error('Configuration property "citation.saver.upload.temp.folder.path" must not be '
         + 'inside "citation.saver.upload.folder.path" (' + uploadFolderPath + ')');
