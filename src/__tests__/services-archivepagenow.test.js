@@ -223,7 +223,7 @@ describe('Archive Page Now Service', () => {
         };
 
         describe('with a malformed backend.url', () => {
-            withBackendUrl('not a url');
+            withBackendUrl('http://user:s3cr3t@bad host');
 
             it('should render the page and send the error to the app logger instead of throwing', () => {
                 req.body = { url: 'http://example.com' };
@@ -234,6 +234,10 @@ describe('Archive Page Now Service', () => {
                     expect.any(Object));
                 expect(mockFetch).not.toHaveBeenCalled();
                 expect(logger.error).toHaveBeenCalledWith('Invalid backend.url configuration');
+                // backend.url may carry credentials: its value is never logged.
+                const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
+                expect(logged).not.toContain('s3cr3t');
+                expect(logged).not.toContain('bad host');
             });
 
             it('should also log the error on the invalid-url branch', () => {
@@ -275,25 +279,6 @@ describe('Archive Page Now Service', () => {
                 // but never as part of the backend request.
                 expect(logger.error.mock.calls.flat().join('\n')).not.toContain('submitted-page');
             });
-        });
-
-        it('should not log a malformed backend.url, which may carry credentials', () => {
-            const realGet = config.get;
-            jest.spyOn(config, 'get').mockImplementation(key =>
-                key === 'backend.url' ? 'http://user:s3cr3t@bad host' : realGet(key));
-            req.body = { url: 'http://example.com' };
-
-            try {
-                archivePageNow(req, res);
-            } finally {
-                config.get.mockRestore();
-            }
-
-            expect(mockFetch).not.toHaveBeenCalled();
-            expect(logger.error).toHaveBeenCalledWith('Invalid backend.url configuration');
-            const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
-            expect(logged).not.toContain('s3cr3t');
-            expect(logged).not.toContain('bad host');
         });
 
         it('should log a non-URL synchronous error by its name', () => {
