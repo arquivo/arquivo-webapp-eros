@@ -29,8 +29,12 @@ class CDXSearchApiRequest extends BaseApiRequest {
             fields: 'url,timestamp,status,digest'
         };
         const defaultApiReply = [];
-        
-        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', { method: 'GET' });
+        // The reply is streamed: the largest ones (the server stops at 100,000 captures, about 13 MB)
+        // take about 10 s, with gaps under 0.5 s. Give up when no data comes for 5 s, after 1 minute
+        // in total, or past 64 MB.
+        const options = { method: 'GET', timeout: 60000, idleTimeout: 5000, maxResponseBytes: 64 * 1024 * 1024 };
+
+        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', options);
     }
 
     /**
