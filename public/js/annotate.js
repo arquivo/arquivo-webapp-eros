@@ -221,7 +221,9 @@ function clearAnnotations(){
 
 
 (function (init) {
-    // Same timing as jQuery's $(document).ready: once the DOM is parsed, or now if it already is.
+    // Like jQuery's $(document).ready: on DOMContentLoaded (after jQuery's own ready callbacks), or
+    // straight away if the DOM is already parsed, where jQuery 1.12 deferred with setTimeout.
+    // Loaded in <head>, this script sees no difference.
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
