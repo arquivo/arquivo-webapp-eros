@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-const { loadScript, loadJQuery, trackGlobalListeners } = require('./helpers/load-script.cjs');
+const { describeScript } = require('./helpers/load-script.cjs');
 
 // The toolbar from views/pages/services-complete-page.ejs.
 const COMPLETE_PAGE_HEADER = `
@@ -19,22 +19,8 @@ function postFromReplay(data) {
     window.dispatchEvent(new MessageEvent('message', { data }));
 }
 
-describe.each([
-    ['with jQuery on the page', true],
-    ['without jQuery', false],
-])('dynamic-header-url.js %s', (_label, withJQuery) => {
-    let removeListeners;
-    let errors;
-
-    beforeEach(async () => {
-        removeListeners = trackGlobalListeners();
-        errors = [];
-        window.addEventListener('error', (e) => errors.push(e.error));
-        delete window.jQuery;
-        delete window.$;
-        if (withJQuery) {
-            await loadJQuery();
-        }
+describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ load: setup }) => {
+    beforeEach(() => {
         // Defined globally by functions.js on the real pages.
         window.dateFromTimestamp = jest.fn((ts, format) => `date(${ts},${format})`);
         jest.spyOn(console, 'log').mockImplementation(() => {});
@@ -43,27 +29,7 @@ describe.each([
     afterEach(() => {
         jest.restoreAllMocks();
         delete window.dateFromTimestamp;
-        removeListeners();
-        document.body.innerHTML = '';
-        expect(errors).toEqual([]);
     });
-
-    function setup(html = COMPLETE_PAGE_HEADER) {
-        document.body.innerHTML = html;
-        loadScript('js/dynamic-header-url.js');
-    }
-
-    if (!withJQuery) {
-        it('runs with no jQuery on the page', () => {
-            expect(window.jQuery).toBeUndefined();
-            expect(window.$).toBeUndefined();
-            setup();
-
-            postFromReplay({ wb_type: 'load', url: 'https://www.example.com/', ts: '20200102030405' });
-
-            expect($id('headerUrl').textContent).toBe('example.com');
-        });
-    }
 
     it.each(['load', 'replace-url', 'unload'])('a "%s" message shows the replayed URL and date', (wbType) => {
         setup();

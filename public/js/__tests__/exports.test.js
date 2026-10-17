@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-const { loadScript, loadJQuery, trackGlobalListeners, simulateLoadingDocument } = require('./helpers/load-script.cjs');
+const { describeScript, loadScript } = require('./helpers/load-script.cjs');
 
 // The export links from views/templates/menu/options_right_nav_menu.ejs.
 const MENU = `
@@ -36,12 +36,7 @@ function click(id) {
     return event;
 }
 
-describe.each([
-    ['with jQuery on the page', true],
-    ['without jQuery', false],
-])('exports.js %s', (_label, withJQuery) => {
-    let removeListeners;
-    let errors;
+describeScript('js/exports.js', { html: MENU + EXPORT_JSON }, ({ load: setup, whileParsing }) => {
     let writeFile;
 
     beforeAll(() => {
@@ -49,16 +44,8 @@ describe.each([
         loadScript('vendor/js/xlsx.full.min.js');
     });
 
-    beforeEach(async () => {
-        removeListeners = trackGlobalListeners();
-        errors = [];
-        window.addEventListener('error', (e) => errors.push(e.error));
-        delete window.jQuery;
-        delete window.$;
+    beforeEach(() => {
         delete window.dataLayer;
-        if (withJQuery) {
-            await loadJQuery();
-        }
         writeFile = jest.spyOn(window.XLSX, 'writeFile').mockImplementation(() => {});
         jest.useFakeTimers({ now: NOW });
     });
@@ -66,23 +53,7 @@ describe.each([
     afterEach(() => {
         jest.useRealTimers();
         jest.restoreAllMocks();
-        removeListeners();
-        document.body.innerHTML = '';
-        expect(errors).toEqual([]);
     });
-
-    function setup(html = MENU + EXPORT_JSON) {
-        document.body.innerHTML = html;
-        loadScript('js/exports.js');
-    }
-
-    if (!withJQuery) {
-        it('runs with no jQuery on the page', () => {
-            expect(window.jQuery).toBeUndefined();
-            expect(window.$).toBeUndefined();
-            expect(() => setup()).not.toThrow();
-        });
-    }
 
     it.each(EXTENSIONS)('the %s link writes the results to a timestamped file', (ext) => {
         setup();
@@ -169,10 +140,7 @@ describe.each([
 
     it('waits for DOMContentLoaded when loaded from <head>', async () => {
         jest.useRealTimers();
-        const fireDOMContentLoaded = simulateLoadingDocument();
-        if (withJQuery) {
-            await loadJQuery();
-        }
+        const fireDOMContentLoaded = await whileParsing();
         setup();
 
         expect(click('options-export-xlsx').defaultPrevented).toBe(false);

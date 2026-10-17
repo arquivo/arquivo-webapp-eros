@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-const { loadScript, loadJQuery, trackGlobalListeners, simulateLoadingDocument } = require('./helpers/load-script.cjs');
+const { describeScript } = require('./helpers/load-script.cjs');
 
 // Trimmed copy of the form in views/templates/body/body-pages-advanced-search.ejs.
 const FORM = `
@@ -40,43 +40,7 @@ function submit(form = document.querySelector('form')) {
     return event;
 }
 
-describe.each([
-    ['with jQuery on the page', true],
-    ['without jQuery', false],
-])('advanced-search.js %s', (_label, withJQuery) => {
-    let removeListeners;
-    let errors;
-
-    beforeEach(async () => {
-        removeListeners = trackGlobalListeners();
-        errors = [];
-        window.addEventListener('error', (e) => errors.push(e.error));
-        delete window.jQuery;
-        delete window.$;
-        if (withJQuery) {
-            await loadJQuery();
-        }
-    });
-
-    afterEach(() => {
-        removeListeners();
-        document.body.innerHTML = '';
-        expect(errors).toEqual([]);
-    });
-
-    function setup(html = FORM) {
-        document.body.innerHTML = html;
-        loadScript('js/advanced-search.js');
-    }
-
-    if (!withJQuery) {
-        it('runs with no jQuery on the page', () => {
-            expect(window.jQuery).toBeUndefined();
-            expect(window.$).toBeUndefined();
-            expect(() => setup()).not.toThrow();
-        });
-    }
-
+describeScript('js/advanced-search.js', { html: FORM }, ({ load: setup, whileParsing }) => {
     describe('on submit', () => {
         it('writes the checked formats, in page order, to the hidden type input', () => {
             setup();
@@ -198,10 +162,7 @@ describe.each([
     });
 
     it('waits for DOMContentLoaded when loaded from <head>', async () => {
-        const fireDOMContentLoaded = simulateLoadingDocument();
-        if (withJQuery) {
-            await loadJQuery();
-        }
+        const fireDOMContentLoaded = await whileParsing();
         setup();
         $id('format-xls').checked = true;
 
