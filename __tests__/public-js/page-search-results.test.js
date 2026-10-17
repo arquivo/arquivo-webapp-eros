@@ -105,13 +105,14 @@ describeScript('js/page-search-results.js', { html: RESULTS }, ({ setup, whilePa
         document.documentElement.replaceChild(originalBody, document.body);
     });
 
-    // Press the left button on the overlay link of card `index`, pointing at `offset` of
-    // the text node `textNode` (as if the overlay were not there).
+    // Press the left button on `target` at character `offset` of `textNode`.
+    // elementFromPoint returns the parent of `textNode`, as if the overlay were not there.
     function pressOn(target, textNode, offset) {
         hit = textNode.parentNode;
         return mouse('mousedown', target, pointAt(textNode, offset));
     }
 
+    // The same for a mouse move.
     function moveOver(target, textNode, offset) {
         hit = textNode.parentNode;
         return mouse('mousemove', target, pointAt(textNode, offset));
