@@ -8,12 +8,16 @@
             console.log(e[key]);
             if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
                 const presentationUrl = e[key].url.replace(/^(http(s)?\:\/\/)?(www\.)?/,'').replace(/\/$/,'');
-                $("#headerUrl").text(presentationUrl);
-                $("#headerUrl").attr('href',e[key].url);
-                $("#headerUrl").attr('title',e[key].url);
+                const headerUrl = document.getElementById('headerUrl');
+                if (headerUrl) {
+                    headerUrl.textContent = presentationUrl;
+                    headerUrl.setAttribute('href', e[key].url);
+                    headerUrl.setAttribute('title', e[key].url);
+                }
 
-                if(e[key].ts && $("#headerTimestamp").length){
-                    $("#headerTimestamp").text( dateFromTimestamp(e[key].ts,format='long') );
+                const headerTimestamp = document.getElementById('headerTimestamp');
+                if (e[key].ts && headerTimestamp) {
+                    headerTimestamp.textContent = dateFromTimestamp(e[key].ts, 'long');
                 }
             }
         }

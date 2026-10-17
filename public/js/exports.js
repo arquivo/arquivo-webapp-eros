@@ -1,4 +1,11 @@
-$(function () {
+(function (init) {
+    // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(function () {
     let _exportSERPInfo = [];
     let addZero = function (i) {
         if (i < 10) {
@@ -32,7 +39,7 @@ $(function () {
         };
         const sheetName = type + " export";
         wb.SheetNames.push(sheetName);
-        let _exportSERPInfo = JSON.parse($('#options-export-json').text())
+        let _exportSERPInfo = JSON.parse(document.getElementById('options-export-json').textContent)
         const ws = XLSX.utils.aoa_to_sheet(_exportSERPInfo);
         wb.Sheets[sheetName] = ws;
         const filename = "arquivo_pt_" + type + "_" + jsDateToTimetamp(new Date()) + "." + outputFileExtension;
@@ -51,9 +58,9 @@ $(function () {
     //     document.getElementById("replayMenuButton").style.display = totalResults > 0 ? 'block' : 'none';
     const fileExtensions = ['xlsx', 'csv', 'ods', 'txt'];
     fileExtensions.forEach(fileExtension => {
-        $('#options-export-' + fileExtension).click((e) => {
+        document.getElementById('options-export-' + fileExtension)?.addEventListener('click', (e) => {
             e.preventDefault()
-            if($('#options-export-json').length){
+            if(document.getElementById('options-export-json')){
                 exportSERP('page_search', fileExtension);
             }
         })
