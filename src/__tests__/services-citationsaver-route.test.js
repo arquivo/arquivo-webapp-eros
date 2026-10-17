@@ -50,6 +50,7 @@ describe('POST /services/citationsaver', () => {
         await new Promise(resolve => setImmediate(resolve));
 
         expect(res.status).toBe(500);
+        expect(res.text).toBe('Internal Server Error');
         expect(citationSaver).toHaveBeenCalledTimes(1);
         expect(unhandledRejection).not.toHaveBeenCalled();
     });
