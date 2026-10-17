@@ -225,6 +225,21 @@ describe('POST /services/citationsaver through the app', () => {
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
         });
 
+        it.each([
+            ['an unexpected end of the body', '--b177\r\nContent-Disposition: form-data; name="text"\r\n\r\nabc'],
+            ['a malformed part header', '--b177\r\nContent-Disposition: form-data; name="text"\r\n'
+                + 'x'.repeat(100 * 1024) + '\r\n\r\nabc\r\n--b177--\r\n'],
+        ])('replies 400 JSON and keeps serving for a multipart body with %s', async (_case, body) => {
+            const res = await post().set('Content-Type', 'multipart/form-data; boundary=b177').send(body);
+
+            expect(res.status).toBe(400);
+            expect(res.headers['content-type']).toMatch(/^application\/json/);
+            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(storedFiles()).toHaveLength(0);
+            const next = await post().field('text', 'still here');
+            expect(next.body).toEqual(expect.objectContaining({ status: true }));
+        });
+
         it('replies status:false for a file with an unsupported mimetype', async () => {
             const res = await post()
                 .attach('file', Buffer.from('PK\u0003\u0004'), { filename: 'doc.docx', contentType: 'application/zip' });
@@ -354,6 +369,27 @@ describe('POST /services/citationsaver through the app', () => {
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
         });
 
+        it('replies 500 JSON and keeps serving when the temporary file cannot be written', async () => {
+            const { Writable } = require('node:stream');
+            const createWriteStream = jest.spyOn(fs, 'createWriteStream').mockImplementationOnce(() => new Writable({
+                write(chunk, encoding, callback) {
+                    callback(Object.assign(new Error('ENOSPC: no space left on device'), { code: 'ENOSPC', syscall: 'write' }));
+                }
+            }));
+            try {
+                const res = await post().attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
+
+                expect(res.status).toBe(500);
+                expect(res.body).toEqual({ status: false, message: messages.default });
+                expect(storedFiles()).toHaveLength(0);
+                expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('ENOSPC'));
+            } finally {
+                createWriteStream.mockRestore();
+            }
+            const next = await post().field('text', 'still here');
+            expect(next.body).toEqual(expect.objectContaining({ status: true }));
+        });
+
         it('removes the temporary file when the client goes away mid-upload', async () => {
             const received = new Promise(resolve => server.once('request', (req, res) => res.once('close', resolve)));
             const req = http.request({
@@ -403,6 +439,26 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.status).toBe(200);
             expect(res.body).toEqual({ status: false, message: messages.textFilesize });
             expect(storedFiles()).toHaveLength(0);
+        });
+    });
+
+    describe('temporary folder setting (#177)', () => {
+        it.each([
+            ['the upload folder', (folder) => folder],
+            ['a folder inside it', (folder) => path.join(folder, 'tmp')],
+        ])('refuses to start with the temporary folder set to %s', (_case, tempFolder) => {
+            expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': tempFolder(uploadFolder) }))
+                .toThrow('"citation.saver.upload.temp.folder.path" must not be inside "citation.saver.upload.folder.path"');
+        });
+
+        it('refuses a folder inside it whose name starts with ".."', () => {
+            expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': path.join(uploadFolder, '..tmp') }))
+                .toThrow('must not be inside');
+        });
+
+        it('accepts a folder next to the upload folder', () => {
+            expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': path.join(uploadFolder, '..', 'tmp') }))
+                .not.toThrow();
         });
     });
 

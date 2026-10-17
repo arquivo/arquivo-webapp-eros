@@ -53,6 +53,13 @@ const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 // the upload folder, so it is never taken for a submission.
 const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path')
     || nodePath.join(nodePath.dirname(uploadFolderPath), '.citationsaver-tmp');
+const tempFolderInUploadFolder = nodePath.relative(nodePath.resolve(uploadFolderPath), nodePath.resolve(uploadTempFolderPath));
+if (!nodePath.isAbsolute(tempFolderInUploadFolder) && tempFolderInUploadFolder !== '..'
+    && !tempFolderInUploadFolder.startsWith('..' + nodePath.sep)) {
+    // Its partial uploads would be taken for submissions.
+    throw new Error('Configuration property "citation.saver.upload.temp.folder.path" must not be '
+        + 'inside "citation.saver.upload.folder.path" (' + uploadFolderPath + ')');
+}
 
 
 function isPrivateIpv4(ip) {
@@ -210,6 +217,22 @@ function parseUpload(req, res, next) {
         closed = true;
         removeTempDir();
     });
+    // Replies { status: false } JSON, unless the response is already under way.
+    function reject(status, logMessage) {
+        if (status >= 500) {
+            logger.error(logMessage);
+        } else {
+            logger.info(logMessage);
+        }
+        if (res.headersSent) {
+            res.destroy();
+            return;
+        }
+        res.status(status).send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+    }
 
     function parse() {
         if (closed) {
@@ -253,20 +276,18 @@ function parseUpload(req, res, next) {
                 if (res.writableEnded || res.destroyed) {
                     return;
                 }
-                next(err);
+                if (err) {
+                    // busboy fails on a body it cannot parse, e.g. a malformed part header.
+                    // An error writing the temporary file is ours.
+                    reject(err.syscall ? 500 : 400, 'Blocking submission: could not read the multipart request. ' + err);
+                    return;
+                }
+                next();
             });
         } catch (err) {
             // busboy throws at once for a Content-Type it cannot parse, e.g. one without
             // a boundary. Uncaught here, it would be an unhandled rejection and end the process.
-            logger.info('Blocking submission: unreadable multipart request. ' + err);
-            if (res.headersSent) {
-                res.destroy();
-                return;
-            }
-            res.status(400).send({
-                status: false,
-                message: req.t('services-citation-saver.errors.default')
-            });
+            reject(400, 'Blocking submission: unreadable multipart request. ' + err);
         }
     }
 
@@ -275,15 +296,7 @@ function parseUpload(req, res, next) {
         .then(parse)
         .catch((err) => {
             // E.g. the temporary folder cannot be created. Never let it end the process.
-            logger.error('Could not parse the upload (temporary folder ' + uploadTempFolderPath + '): ' + err);
-            if (res.headersSent) {
-                res.destroy();
-                return;
-            }
-            res.status(500).send({
-                status: false,
-                message: req.t('services-citation-saver.errors.default')
-            });
+            reject(500, 'Could not parse the upload (temporary folder ' + uploadTempFolderPath + '): ' + err);
         });
 }
 
