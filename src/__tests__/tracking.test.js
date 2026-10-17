@@ -5,7 +5,6 @@ const tracking = require('../tracking');
 // Mock config (auto-mocked)
 jest.mock('config');
 
-
 describe('tracking handler', () => {
     let req, res;
 

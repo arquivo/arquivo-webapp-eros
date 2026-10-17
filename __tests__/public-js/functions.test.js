@@ -9,18 +9,6 @@ const { describeScript, loadScript } = require('./helpers/load-script.cjs');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
-// The globals functions.js declares. It is a strict-mode script, so loadScript only puts
-// on window the ones named here (a <script> tag makes them all globals).
-const GLOBALS = [
-    'setInlineStyle', 'setInlineStyleAll', 'openLeftMenuNav', 'closeLeftMenuNav',
-    'openOptionstMenuNav', 'closeOptionsMenuNav', 'openReplayLeftMenuNav', 'closeReplayLeftMenuNav',
-    'openReplayRightMenuNav', 'closeReplayRightMenuNav', 'copyURLToClipboard', 'alertsMessageIn',
-    'alertsMessageOut', 'openAdvancedSearchForm', 'closeAdvancedSearch', 'opensFullScreen',
-    'closesFullScreen', 'showTable', 'showList', 'removeSearchBoxShadow', 'showsSearchBoxShadow',
-    'openImageDetailsModalWindow', 'closeImageDetailsModalWindow', 'dateFromTimestamp', 'isMobile',
-    'onSectionLoad', 'isValidUrl',
-];
-
 // The elements functions.js styles, as the views render them. Some start with an inline
 // style, to check that it is replaced and not merged. There are two .blocker-menus
 // overlays, to check that every one is styled, as jQuery did.
@@ -81,6 +69,14 @@ const STYLE_CASES = [
         '#modal-window-image-technical-details': 'display:none; transition:0.5s',
         '#close-modal-tecnhical': 'display:none; transition:0.5s',
     }],
+];
+
+// The functions.js globals these tests call. It is a strict-mode script, so loadScript only
+// puts on window the ones named here (a <script> tag makes them all globals).
+const GLOBALS = [
+    ...STYLE_CASES.map(([name]) => name),
+    'copyURLToClipboard', 'openAdvancedSearchForm', 'closeAdvancedSearch', 'showTable', 'showList',
+    'dateFromTimestamp', 'isMobile', 'onSectionLoad',
 ];
 
 // The inline style an element gets from `setAttribute('style', css)`, which is what
