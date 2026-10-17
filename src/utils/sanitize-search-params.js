@@ -11,27 +11,24 @@ const isValidYearBalance = (v) => ['true', 'false'].includes(v) || (/^(?:\d+(?:\
 const isValidLanguage = (v) => /^[a-zA-Z]{2}$/.test(v);
 const isValidMinLanguageConfidence = (v) => ['HIGH', 'MEDIUM', 'LOW'].includes(v);
 
+/**
+ * Deletes oldName parameter from target, setting newName with its value if newName 
+ *  isn't set yet. If given, applies valueTransformationFunction on old value before setting it.
+ * @param  {URLSearchParams}    target                          target URLSearchParams object
+ * @param  {string}             oldName                         old parameter name
+ * @param  {string}             newName                         new parameter name
+ * @param  {function}           [valueTransformationFunction]   value modification function. Should have old value as its single argument and return the new value.
+ */
+const transformParameterName = function (target, oldName, newName, valueTransformationFunction = (v) => v) {
+    if (target.has(oldName) && !target.has(newName)) {
+        target.set(newName, valueTransformationFunction(target.get(oldName)));
+        target.delete(oldName);
+    }
+}
+
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
-
-module.exports = function (req) {
-    const requestData = new URLSearchParams(req.query);
-
-    /**
-     * Deletes oldName parameter from target, setting newName with its value if newName 
-     *  isn't set yet. If given, applies valueTransformationFunction on old value before setting it.
-     * @param  {URLSearchParams}    target                          target URLSearchParams object
-     * @param  {string}             oldName                         old parameter name
-     * @param  {string}             newName                         new parameter name
-     * @param  {function}           [valueTransformationFunction]   value modification function. Should have old value as its single argument and return the new value.
-     */
-    const transformParameterName = function (target, oldName, newName, valueTransformationFunction = (v) => v) {
-        if (target.has(oldName) && !target.has(newName)) {
-            target.set(newName, valueTransformationFunction(target.get(oldName)));
-            target.delete(oldName);
-        }
-    }
-
+function renameLegacyParams(requestData) {
     //Normal search parameters
     transformParameterName(requestData, 'dateStart', 'from', (v) => v.split('/').reverse().join(''));
     transformParameterName(requestData, 'ion-dt-0', 'from', (v) => v.split('-').join(''));
@@ -46,12 +43,10 @@ module.exports = function (req) {
     transformParameterName(requestData, 'hitsPerPage', 'maxItems');
     transformParameterName(requestData, 'site', 'siteSearch', (v) => v.split(/\s/).join(''));
     transformParameterName(requestData, 'hitsPerDup', 'dedupValue');
+}
 
-    // a comma separated list of collections, with or without spaces after the commas
-    if (requestData.has('collection')) {
-        requestData.set('collection', requestData.get('collection').replaceAll(/\s/g, ''));
-    }
-
+// Sets the default date range and keeps from/to inside it
+function limitDates(requestData) {
     const defaultRequestParameters = {
         from: config.get('search.start.date'),
         to: todayYmd()
@@ -67,77 +62,73 @@ module.exports = function (req) {
     if(parseInt(requestData.get('to')) > parseInt(defaultRequestParameters.to)){
         requestData.set('to', defaultRequestParameters.to)
     }
+}
 
-    //Clean empty fields
-    [...requestData.keys()]
-        .filter(key => requestData.get(key).trim() === '')
-        .forEach(key => requestData.delete(key));
-
-    //handle all query inputs
-    let q = requestData.get('q') ?? '';
-
-    //convert advanced search params into query terms
-    if (q != '') { //Convert query into advanced search terms
-        
-        let adv_and = q;
-
-        //Handling exact phrases (between double quotes), each distinct phrase once, in a single pass
-        const phraseRegEx = /"([^"]*)"/g;
-        const phrases = [...new Set(Array.from(adv_and.matchAll(phraseRegEx), m => m[1]))];
-        adv_and = adv_and.replaceAll(phraseRegEx, '');
-        if(phrases.length){
-            requestData.set('adv_phr',phrases.pop());
-        }
-
-        //Handling excluding terms (with preceding '-')
-        const notRegEx = /(^|\s)-[^\s]+/g;
-        let without = []
-        if(notRegEx.test(adv_and)){
-            without = adv_and.match(notRegEx).map(t => t.trim()).map(t => t.slice(1));
-            adv_and = adv_and.split(notRegEx).map(t => t.trim()).filter(t => t!='').join(' ');
-        }
-        if(without.length){
-            requestData.set('adv_not',without.join(' '));
-        }
-
-        adv_and = adv_and.trim();
-
-        //Handling special terms (type, site, collection, ...)
-        const specialParamsRegEx = new RegExp(String.raw`(?:\s|^)(?:${specialTerms.join('|')}):(?:[^\s]+)`);
-        if(specialParamsRegEx.test(adv_and)){
-
-            // putting "site","type", "collection", ... on API params if needed.
-            specialTerms.forEach(t => {
-                const regexString = '(\\s|^)' + t + ':([^\\s]+)';
-                const queryRegEx = new RegExp(regexString);
-                const requestParam = ['site','safe'].includes(t) ? t+'Search' : t;
-                if (!requestData.has(requestParam) && queryRegEx.test(adv_and)) {
-                    if (t == 'collection') {
-                        // "collection:A collection:B" is the same as "collection:A,B"
-                        const allCollectionsRegEx = new RegExp(regexString, 'g');
-                        requestData.set(requestParam, [...adv_and.matchAll(allCollectionsRegEx)].map(m => m[2]).join(','));
-                    } else {
-                        requestData.set(requestParam, adv_and.match(queryRegEx)[2])
-                    }
-                }
-            })
-
-            // removing special terms from advanced search input
-            adv_and = adv_and.split(specialParamsRegEx)
-                .map(t => t.trim())
-                .filter(t => t != "")
-                .join(' ');
-        }
-
-        // adding leftover phrases to advanced search input
-        if(phrases.length){
-            adv_and = (adv_and + ' ' + phrases.map(p => '"'+p+'"').join(' ')).trim();
-        }
-        requestData.set('adv_and',adv_and);
-
+// Moves the special terms (site, type, collection, ...) of the query into their own
+// request parameters, unless already set, and returns the rest of the query
+function extractSpecialTerms(requestData, adv_and) {
+    const specialParamsRegEx = new RegExp(String.raw`(?:\s|^)(?:${specialTerms.join('|')}):(?:[^\s]+)`);
+    if (!specialParamsRegEx.test(adv_and)) {
+        return adv_and;
     }
 
-    // drop values the text search API would reject
+    // putting "site","type", "collection", ... on API params if needed.
+    specialTerms.forEach(t => {
+        const regexString = '(\\s|^)' + t + ':([^\\s]+)';
+        const queryRegEx = new RegExp(regexString);
+        const requestParam = ['site','safe'].includes(t) ? t+'Search' : t;
+        if (!requestData.has(requestParam) && queryRegEx.test(adv_and)) {
+            if (t == 'collection') {
+                // "collection:A collection:B" is the same as "collection:A,B"
+                const allCollectionsRegEx = new RegExp(regexString, 'g');
+                requestData.set(requestParam, [...adv_and.matchAll(allCollectionsRegEx)].map(m => m[2]).join(','));
+            } else {
+                requestData.set(requestParam, adv_and.match(queryRegEx)[2])
+            }
+        }
+    })
+
+    // removing special terms from advanced search input
+    return adv_and.split(specialParamsRegEx)
+        .map(t => t.trim())
+        .filter(t => t != "")
+        .join(' ');
+}
+
+// Converts the query into advanced search parameters (adv_and, adv_phr, adv_not, ...)
+function queryToAdvancedParams(requestData, q) {
+    let adv_and = q;
+
+    //Handling exact phrases (between double quotes), each distinct phrase once, in a single pass
+    const phraseRegEx = /"([^"]*)"/g;
+    const phrases = [...new Set(Array.from(adv_and.matchAll(phraseRegEx), m => m[1]))];
+    adv_and = adv_and.replaceAll(phraseRegEx, '');
+    if(phrases.length){
+        requestData.set('adv_phr',phrases.pop());
+    }
+
+    //Handling excluding terms (with preceding '-')
+    const notRegEx = /(^|\s)-[^\s]+/g;
+    let without = []
+    if(notRegEx.test(adv_and)){
+        without = adv_and.match(notRegEx).map(t => t.trim()).map(t => t.slice(1));
+        adv_and = adv_and.split(notRegEx).map(t => t.trim()).filter(t => t!='').join(' ');
+    }
+    if(without.length){
+        requestData.set('adv_not',without.join(' '));
+    }
+
+    adv_and = extractSpecialTerms(requestData, adv_and.trim());
+
+    // adding leftover phrases to advanced search input
+    if(phrases.length){
+        adv_and = (adv_and + ' ' + phrases.map(p => '"'+p+'"').join(' ')).trim();
+    }
+    requestData.set('adv_and',adv_and);
+}
+
+// Drops values the text search API would reject, and the default settings
+function dropInvalidAndDefaultValues(requestData) {
     [
         ['yearBalance', isValidYearBalance],
         ['language', isValidLanguage],
@@ -148,7 +139,6 @@ module.exports = function (req) {
         }
     });
 
-    // remove default settings
     if (requestData.get('type') == 'all') {
         requestData.delete('type');
     }
@@ -158,23 +148,55 @@ module.exports = function (req) {
     if (requestData.get('safeSearch') == 'on') {
         requestData.delete('safeSearch');
     }
+}
 
-    
+// Builds the query from the advanced search parameters
+function advancedParamsToQuery(requestData) {
+    let fullquery = [
+        requestData.get('adv_and') ?? '',
+       [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
+       (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),
+       [requestData.get('siteSearch') ?? '']        .filter(t => t != '').map(t => `site:${t}`).join(''),
+       [requestData.get('size') ?? '']              .filter(t => t != '').map(t => `size:${t}`).join(''),
+       [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
+       [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
+       [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
+       [requestData.get('yearBalance') ?? '']       .filter(t => t != '').map(t => `yearBalance:${t}`).join(''),
+       [requestData.get('language') ?? '']          .filter(t => t != '').map(t => `language:${t}`).join(''),
+       [requestData.get('minLanguageConfidence') ?? ''].filter(t => t != '').map(t => `minLanguageConfidence:${t}`).join(''),
+   ]
+    return fullquery.filter(t => t!='').join(' ');
+}
+
+module.exports = function sanitizeSearchParams(req) {
+    const requestData = new URLSearchParams(req.query);
+
+    renameLegacyParams(requestData);
+
+    // a comma separated list of collections, with or without spaces after the commas
+    if (requestData.has('collection')) {
+        requestData.set('collection', requestData.get('collection').replaceAll(/\s/g, ''));
+    }
+
+    limitDates(requestData);
+
+    //Clean empty fields
+    [...requestData.keys()]
+        .filter(key => requestData.get(key).trim() === '')
+        .forEach(key => requestData.delete(key));
+
+    //handle all query inputs
+    const q = requestData.get('q') ?? '';
+
+    //convert advanced search params into query terms
+    if (q != '') { //Convert query into advanced search terms
+        queryToAdvancedParams(requestData, q);
+    }
+
+    dropInvalidAndDefaultValues(requestData);
+
     if(q == ''){
-        let fullquery = [
-            requestData.get('adv_and') ?? '',
-           [requestData.get('adv_phr') ?? '']           .filter(t => t != '').map(t => `"${t}"`).join(''),
-           (requestData.get('adv_not') ?? '').split(' ').filter(t => t != '').map(t => `-${t}`).join(' '),
-           [requestData.get('siteSearch') ?? '']        .filter(t => t != '').map(t => `site:${t}`).join(''),
-           [requestData.get('size') ?? '']              .filter(t => t != '').map(t => `size:${t}`).join(''),
-           [requestData.get('type') ?? '']              .filter(t => t != '').map(t => `type:${t}`).join(''),
-           [requestData.get('collection') ?? '']        .filter(t => t != '').map(t => `collection:${t}`).join(''),
-           [requestData.get('safeSearch') ?? '']        .filter(t => t != '').map(t => `safe:${t}`).join(''),
-           [requestData.get('yearBalance') ?? '']       .filter(t => t != '').map(t => `yearBalance:${t}`).join(''),
-           [requestData.get('language') ?? '']          .filter(t => t != '').map(t => `language:${t}`).join(''),
-           [requestData.get('minLanguageConfidence') ?? ''].filter(t => t != '').map(t => `minLanguageConfidence:${t}`).join(''),
-       ]
-        requestData.set('q', fullquery.filter(t => t!='').join(' '));
+        requestData.set('q', advancedParamsToQuery(requestData));
     }
     return requestData;
 }
