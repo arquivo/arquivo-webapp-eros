@@ -27,7 +27,12 @@ class ImageSearchApiRequest extends JsonApiRequest {
             safeSearch:'on',
             trackingId: null,
         }
-        super(config.get('image.search.api'),defaultApiParams);
+        // Reply on failure, with the keys the results partial and the export read, so it renders "not found"
+        const defaultApiReply = {
+            totalItems: 0,
+            responseItems: [],
+        };
+        super(config.get('image.search.api'),defaultApiParams,defaultApiReply);
     }
 
     sanitizeRequestData(requestData) {

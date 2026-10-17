@@ -108,9 +108,14 @@ describe('ImageSearchApiRequest', () => {
             expect(api.defaultApiParams.trackingId).toBeNull();
         });
 
-        it('should have empty object as default reply', () => {
+        it('should have a no results default reply', () => {
             const api = new ImageSearchApiRequest();
-            expect(api.defaultApiReply).toEqual({});
+            expect(api.defaultApiReply).toEqual({ totalItems: 0, responseItems: [] });
+        });
+
+        it('should not share the default reply between instances', () => {
+            expect(new ImageSearchApiRequest().defaultApiReply)
+                .not.toBe(new ImageSearchApiRequest().defaultApiReply);
         });
     });
 
@@ -322,12 +327,13 @@ describe('ImageSearchApiRequest', () => {
         let captureServer;
         let captured;
         let status;
+        let body;
 
         beforeAll((done) => {
             captureServer = http.createServer((req, res) => {
                 captured.push(req.url);
                 res.writeHead(status, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+                res.end(body);
             });
             captureServer.listen(0, done);
         });
@@ -339,6 +345,7 @@ describe('ImageSearchApiRequest', () => {
         beforeEach(() => {
             captured = [];
             status = 200;
+            body = JSON.stringify({ estimated_nr_results: 1, response_items: [] });
         });
 
         const apiAtCaptureServer = () => {
@@ -376,12 +383,22 @@ describe('ImageSearchApiRequest', () => {
             });
         });
 
-        it('returns an empty object when the API fails', (done) => {
+        it('returns a no results reply when the API fails', (done) => {
             status = 503;
             const api = apiAtCaptureServer();
 
             api.get(new URLSearchParams({ q: 'test' }), (data) => {
-                expect(data).toEqual({});
+                expect(data).toEqual({ totalItems: 0, responseItems: [] });
+                done();
+            });
+        });
+
+        it('returns a no results reply when the API replies invalid JSON', (done) => {
+            body = '<html>not json</html>';
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toEqual({ totalItems: 0, responseItems: [] });
                 done();
             });
         });
