@@ -4,7 +4,6 @@ const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
 const cookies = require('cookie-parser');
-const http = require('http');
 const path = require('path');
 const router = require('./src/router');
 const trafficLogger = require('./src/logger/traffic-logger');
@@ -96,18 +95,24 @@ app.use((req, res, next) => {
 app.use(router);
 
 // Error handler: must be registered after every route so it receives their
-// errors (#56). It replies with a generic message itself, rather than calling
-// next(err), so the body never depends on NODE_ENV and never includes a stack.
-// Client errors that carry a 4xx status (e.g. a malformed JSON body) keep it.
-app.use((err, req, res, next) => {
-    errorLogger.error((err && err.stack) || String(err));
-    if (res.headersSent) {
-        // Too late to send an error page: let Express close the connection.
-        return next(err);
+// errors (#56). It replies with the generic status text itself, so the body never
+// depends on NODE_ENV and never includes a stack or err.message. Client errors
+// with a 4xx status (e.g. a malformed JSON body) keep it and are logged at warn
+// without message or stack, since some messages quote the raw request body.
+app.use((err, req, res, next) => { // Express needs all four parameters
+    const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+    if (status < 500) {
+        errorLogger.warn(`Client error ${status} ${err.name}`);
+    } else {
+        errorLogger.error(err.stack || String(err));
     }
-    const errStatus = err && (err.status || err.statusCode);
-    const status = errStatus >= 400 && errStatus < 500 ? errStatus : 500;
-    res.status(status).type('text/plain').send(http.STATUS_CODES[status]);
+    if (res.headersSent) {
+        // Too late for an error reply: drop the connection, as Express's default
+        // handler would, without logging the error a second time.
+        res.destroy();
+        return;
+    }
+    res.sendStatus(status);
 });
 
 module.exports = app;
