@@ -2949,3 +2949,11 @@ body#landing-replay .preloader div::after {
   font-size: 0.85em;
   color: #595959;
 }
+/* In page results the hint's parent isn't the URL, whose size is fixed, so
+   fix the hint's size too, below the URL's 12px. */
+section#pages-results .url-ascii-host {
+  font-size: 11px;
+}
+section#images-results .url-ascii-host {
+  text-align: center;
+}

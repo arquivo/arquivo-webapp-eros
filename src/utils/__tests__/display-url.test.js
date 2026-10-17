@@ -68,9 +68,17 @@ describe('displayUrl', () => {
   });
 
   it('should keep a right-to-left override in the URL from reordering the host', () => {
-    const url = 'http://exämple.pt/?q=\u202Eabc';
+    expect(displayUrl('http://exämple.pt/?q=\u202Eabc')).toBe(`${FSI}http://exämple.pt/?q=abc${PDI} (xn--exmple-cua.pt)`);
+  });
 
-    expect(displayUrl(url)).toBe(`${FSI}${url}${PDI} (xn--exmple-cua.pt)`);
+  it('should keep a stray isolate terminator in the URL from closing the isolate early', () => {
+    expect(displayUrl('http://exämple.pt/a\u2069\u202Eevil')).toBe(`${FSI}http://exämple.pt/aevil${PDI} (xn--exmple-cua.pt)`);
+  });
+
+  it('should strip every bidi control from the text', () => {
+    const controls = '\u061C\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069';
+
+    expect(displayUrl('http://exämple.pt/', `ex${controls}ämple.pt`)).toBe(`${FSI}exämple.pt${PDI} (xn--exmple-cua.pt)`);
   });
 
   it.each([

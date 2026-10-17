@@ -7,16 +7,19 @@ const { URL } = require('node:url');
 const HTTP_AUTHORITY = /^https?:[/\\]*([^/\\?#]*)/i;
 const NON_ASCII = /\P{ASCII}/u;
 const TAB_OR_NEWLINE = /[\t\n\r]/g;
-const FIRST_STRONG_ISOLATE = '⁨';
-const POP_DIRECTIONAL_ISOLATE = '⁩';
+const FIRST_STRONG_ISOLATE = '\u2068';
+const POP_DIRECTIONAL_ISOLATE = '\u2069';
+// ALM, LRM, RLM, the embeddings and overrides (LRE to RLO) and the isolates
+// (LRI to PDI).
+const BIDI_CONTROLS = /[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g;
 
 // The WHATWG parser's preprocessing: strip leading and trailing C0 controls
 // and spaces, then remove every tab and newline.
 function preprocess(s) {
   let start = 0;
   let end = s.length;
-  while (start < end && s.charCodeAt(start) <= 0x20) start++;
-  while (end > start && s.charCodeAt(end - 1) <= 0x20) end--;
+  while (start < end && s.codePointAt(start) <= 0x20) start++;
+  while (end > start && s.codePointAt(end - 1) <= 0x20) end--;
   return s.slice(start, end).replace(TAB_OR_NEWLINE, '');
 }
 
@@ -44,8 +47,8 @@ function asciiHost(url) {
 /**
  * Plain-text form of `text` (by default the URL itself) for places that can't
  * hold markup, such as a `title`: when `url` has an {@link asciiHost}, `text`
- * is isolated (so bidi controls in it can't reorder what follows) and followed
- * by that host in parentheses. Otherwise `text` is returned unchanged.
+ * is stripped of bidi controls, isolated (so it can't reorder what follows) and
+ * followed by that host in parentheses. Otherwise `text` is returned unchanged.
  *
  * @param {*} url
  * @param {*} [text=url]
@@ -53,7 +56,9 @@ function asciiHost(url) {
  */
 function displayUrl(url, text = url) {
   const host = asciiHost(url);
-  return host ? `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE} (${host})` : text;
+  if (!host) return text;
+  const isolated = String(text).replace(BIDI_CONTROLS, '');
+  return `${FIRST_STRONG_ISOLATE}${isolated}${POP_DIRECTIONAL_ISOLATE} (${host})`;
 }
 
 module.exports = { asciiHost, displayUrl };

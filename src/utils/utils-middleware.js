@@ -1,9 +1,11 @@
 'use strict';
 
+const { asciiHost, displayUrl } = require('./display-url');
+
 const utils = {
     isValidUrl: require('./is-valid-url'),
-    asciiHost: require('./display-url').asciiHost,
-    displayUrl: require('./display-url').displayUrl,
+    asciiHost,
+    displayUrl,
     sanitizeInputs: require('./sanitize-search-params'),
     dateToTimestamp: require('./date-to-timestamp'),
     timestampToText: require('./timestamp-to-text')
