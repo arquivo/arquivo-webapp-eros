@@ -14,13 +14,7 @@
     const siteInput = form.querySelector('input[name=siteSearch]');
     form.addEventListener('submit', () => {
         let checkedTypes = Array.from(form.querySelectorAll('input[format]:checked'), x => x.getAttribute('format'));
-        if (formatInput) {
-            if(checkedTypes.some(x => x == 'all')){
-                formatInput.value = 'all';
-            } else {
-                formatInput.value = checkedTypes.join(',');
-            }
-        }
+        if (formatInput) formatInput.value = checkedTypes.includes('all') ? 'all' : checkedTypes.join(',');
         let siteSearch = siteInput?.value;
         if(siteSearch){
             siteInput.value = siteSearch.split(/\s/).join('');
