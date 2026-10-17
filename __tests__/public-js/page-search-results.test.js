@@ -32,14 +32,15 @@ const T0 = new Date(2024, 0, 2, 3, 4, 5).getTime();
 // --- Layout stubs: jsdom has no layout, elementFromPoint or Range#getBoundingClientRect.
 //
 // Each laid-out text node gets a row; its characters are 10px wide and the row is 10px
-// tall, so the character at offset i covers x in (10i, 10i + 10).
+// tall, so the character at offset i covers x in (10i, 10i + 10). A laid-out element
+// covers its own text, starting at x = 0 on its row.
 let rows;
 let hit;
 let fromPointCalls;
 let watched;
 
-function layout(textNode, row) {
-    rows.set(textNode, row);
+function layout(node, row) {
+    rows.set(node, row);
 }
 
 // The point in the middle of character `offset` of a laid-out text node.
@@ -61,7 +62,7 @@ function rangeRect() {
         // A whole node, from Range#selectNode in checkNodePosition.
         node = this.startContainer.childNodes[this.startOffset];
         left = 0;
-        right = (node.length || 0) * 10;
+        right = (node.nodeType === Node.TEXT_NODE ? node.length : node.textContent.length) * 10;
     }
     if (!rows.has(node)) return ZERO;
     const top = rows.get(node) * 20;
@@ -145,6 +146,27 @@ describeScript('js/page-search-results.js', { html: RESULTS }, ({ setup, whilePa
             mouse('mousedown', $id('overlay-1'), { clientX: 500, clientY: 500 });
 
             expect(data().start).toEqual([$id('title-1'), 0]);
+        });
+
+        it('finds the point inside a child element of the element under the point', () => {
+            // elementFromPoint can return the <p> while the point is in one of its child
+            // elements, e.g. the <em> highlight of a search term. checkNode used to read an
+            // undeclared `nodes` there and throw, which left the overlay at pointer-events:
+            // none, so the card stopped opening on click until a reload.
+            setup(RESULTS.replace('second card', 'second <em id="term">card</em> text'));
+            const before = textOf('summary-2');
+            const term = textOf('term');
+            layout(before, 0);
+            layout($id('term'), 1);
+            layout(term, 1);
+            watched = $id('overlay-2');
+
+            hit = $id('summary-2');
+            const event = mouse('mousedown', $id('overlay-2'), pointAt(term, 2));
+
+            expect(event.defaultPrevented).toBe(true);
+            expect(data().start).toEqual([term, 2]);
+            expect($id('overlay-2').style.pointerEvents).toBe('auto');
         });
 
         it('also runs for a press on an element nested inside the overlay link', () => {

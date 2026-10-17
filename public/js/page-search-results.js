@@ -98,7 +98,7 @@ page_search_result_data = {};
         if (n.nodeType != 3){
             if(!n.childNodes.length){ return [n,0]; }
             for(let i=0; i<n.childNodes.length;i++){
-                let r = checkNode(nodes[i],x,y);
+                let r = checkNode(n.childNodes[i],x,y);
                 if(!!r) { return r; }
             }
             return [n,0];
