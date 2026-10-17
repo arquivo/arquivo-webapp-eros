@@ -88,7 +88,7 @@ class SuggestionApiRequest extends BaseApiRequest {
 
         // Accumulate HTML response, strip newlines
         apiRes.on('data', (chunk) => {
-            apiReply += chunk.split("\n").join('');
+            apiReply += chunk.replaceAll("\n", '');
         });
 
         // Parse complete HTML response

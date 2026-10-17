@@ -12,7 +12,7 @@ function parseArchiveTimestamp(timestamp) {
  */
 function archiveTimestampToDate(timestamp) {
     const { year, month, day, hours, minutes, seconds } = parseArchiveTimestamp(timestamp);
-    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes), parseInt(seconds));
+    return new Date(Number.parseInt(year), Number.parseInt(month) - 1, Number.parseInt(day), Number.parseInt(hours), Number.parseInt(minutes), Number.parseInt(seconds));
 }
 
 module.exports = { parseArchiveTimestamp, archiveTimestampToDate };
