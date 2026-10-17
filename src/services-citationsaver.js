@@ -597,9 +597,10 @@ async function handleText(req, res) {
         write = (target) => textFile.mv(target);
     } else if (typeof text === 'string') {
         // Over MAX_FIELD_BYTES, busboy may have cut it short: never store part of a text.
-        // 413 like a text part over the limit, with the text size message.
+        // 413 like a text part over the limit. The limit here is not the upload limit
+        // that the size messages state, so the message gives no size.
         if (Buffer.byteLength(text) > Math.min(maxUploadSize, MAX_FIELD_BYTES)) {
-            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'), 413);
+            sendExpectedError(req.t('services-citation-saver.errors.text.toolong'), 413);
             return;
         }
         size = text.length;

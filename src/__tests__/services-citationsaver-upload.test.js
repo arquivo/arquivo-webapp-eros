@@ -572,7 +572,7 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedFiles()).toHaveLength(0);
         });
 
-        it('rejects a text field over the limit with the text size message', async () => {
+        it('rejects a text field over the limit with the text too long message', async () => {
             // An urlencoded body is not parsed by parseUpload; its size limit is express's.
             const { app: smallApp } = loadApp(uploadFolder, { 'citation.saver.max.upload.size': 10 });
             await translationsLoaded(smallApp);
@@ -580,19 +580,19 @@ describe('POST /services/citationsaver through the app', () => {
             const res = await postTo(smallApp).type('form').send({ text: 'x'.repeat(11) });
 
             expect(res.status).toBe(413);
-            expect(res.body).toEqual({ status: false, message: messages.textFilesize });
+            expect(res.body).toEqual({ status: false, message: messages.textTooLong });
             expect(storedFiles()).toHaveLength(0);
         });
 
         it.each([
             ['just over 100 KiB', 100 * 1024 + 1],
             ['that the parser cut short', 200 * 1024],
-        ])('rejects a multipart text field %s with 413 and the text size message, storing nothing', async (_case, length) => {
+        ])('rejects a multipart text field %s with 413 and the text too long message, storing nothing', async (_case, length) => {
             const res = await postTo(textApp).field('text', 'x'.repeat(length));
 
             expect(res.status).toBe(413);
             expect(res.headers['content-type']).toMatch(/^application\/json/);
-            expect(res.body).toEqual({ status: false, message: messages.textFilesize });
+            expect(res.body).toEqual({ status: false, message: messages.textTooLong });
             expect(storedFiles()).toHaveLength(0);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
         });

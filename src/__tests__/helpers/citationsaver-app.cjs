@@ -16,7 +16,8 @@ const messages = {
     missing: 'O ficheiro não foi transferido, nenhum ficheiro foi submetido.',
     mimetype: 'O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.',
     filesize: 'O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.',
-    textFilesize: 'O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.',
+    // A text field over its own limit, which is not the upload limit.
+    textTooLong: 'O texto não foi submetido porque é demasiado longo.',
     // The 413 sent while the upload is streaming, for a file or a text.
     uploadFilesize: 'O ficheiro ou texto não foi submetido. A dimensão não pode exceder os 100 MB.',
     emailInvalid: 'O endereço de e-mail não é válido.',
