@@ -228,7 +228,7 @@ describe('Archive Page Now Service', () => {
                 expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow-save',
                     expect.any(Object));
                 expect(mockFetch).not.toHaveBeenCalled();
-                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+                expect(logger.error).toHaveBeenCalledWith('Invalid backend.url configuration');
             });
 
             it('should also log the error on the invalid-url branch', () => {
@@ -238,8 +238,40 @@ describe('Archive Page Now Service', () => {
 
                 expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow',
                     expect.objectContaining({ error: true }));
-                expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('ERR_INVALID_URL'));
+                expect(mockFetch).not.toHaveBeenCalled();
+                expect(logger.error).toHaveBeenCalledWith('Invalid backend.url configuration');
             });
+        });
+
+        it('should not log a malformed backend.url, which may carry credentials', () => {
+            const realGet = config.get;
+            jest.spyOn(config, 'get').mockImplementation(key =>
+                key === 'backend.url' ? 'http://user:s3cr3t@bad host' : realGet(key));
+            req.body = { url: 'http://example.com' };
+
+            try {
+                archivePageNow(req, res);
+            } finally {
+                config.get.mockRestore();
+            }
+
+            expect(mockFetch).not.toHaveBeenCalled();
+            expect(logger.error).toHaveBeenCalledWith('Invalid backend.url configuration');
+            const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
+            expect(logged).not.toContain('s3cr3t');
+            expect(logged).not.toContain('bad host');
+        });
+
+        it('should log a non-URL synchronous error with its details', () => {
+            // A lone surrogate makes encodeURIComponent throw a URIError.
+            req.body = { url: 'http://example.com' };
+            req.get = jest.fn(() => 'agent-\uD800');
+
+            expect(() => archivePageNow(req, res)).not.toThrow();
+
+            expect(mockFetch).not.toHaveBeenCalled();
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('URI malformed'));
+            expect(logger.error).not.toHaveBeenCalledWith('Invalid backend.url configuration');
         });
 
         it('should handle special characters in URL', () => {
@@ -337,14 +369,14 @@ describe('Archive Page Now Service', () => {
                 + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
         });
 
-        it("should keep ( ) ! ~ * literal and send ' as %27 on the wire", () => {
+        it("should keep ' ( ) ! ~ * literal", () => {
             req.body = { url: "http://example.com/it's(1)!~*" };
 
             archivePageNow(req, res);
 
-            // ' is sent as %27, the same normalisation node-fetch 2.x applies before sending
+            // node-fetch 2.x still sends ' as %27 on the wire (WHATWG URL normalisation)
             expect(loggedUrl()).toBe(endpoint
-                + '?url=http%3A%2F%2Fexample.com%2Fit%27s(1)!~*'
+                + "?url=http%3A%2F%2Fexample.com%2Fit's(1)!~*"
                 + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
         });
 
