@@ -11,9 +11,12 @@
 
 Review `config/default.properties` to configure API endpoints and other settings before running the application. `config/custom-environment-variables.json` lists the settings that environment variables can override, among them:
 
+- `SESSION_SECRET` (`session.secret`): the secret that signs the session cookie. `config/default.properties` only has a placeholder; with `NODE_ENV=production` the app refuses to start unless `SESSION_SECRET` is set to another value (see [Production Mode](#production-mode)).
 - `EXPRESS_TRUST_PROXY` (`express.trust.proxy`): which reverse proxies may set the client IP with `X-Forwarded-For` (Express "trust proxy"). Empty by default: no proxy is trusted. Behind a proxy, set it to the exact number of proxy hops (e.g. `1`) or to the proxy addresses/subnets (e.g. `172.16.0.0/12`). `true` is refused at startup: it would let any client choose its IP with `X-Forwarded-For`. A higher hop count, `0.0.0.0/0` or `::/0` would do the same.
 - `CITATION_SAVER_RATE_LIMIT_MAX` / `CITATION_SAVER_RATE_LIMIT_WINDOW_MS`: at most that many Citation Saver submissions per client IP in each window. Empty or `0` (the default) turns the limit off; only turn it on once the deployment forwards a trustworthy client IP, or every client shares one limit.
 - `CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH`: folder for uploads in progress. By default `.citationsaver-tmp` next to the upload folder, on the writable uploads volume. It must not be inside the upload folder. Anything that reads `uploads/` recursively should skip it.
+
+The Citation Saver requires a Google service account key file at `config/service_account.json`. The path is fixed: there is no setting or environment variable for it.
 
 ## Docker (Recommended)
 
@@ -32,6 +35,9 @@ docker compose up --build
 
 # Stop containers
 docker compose down
+
+# Run the tests inside the development container
+docker compose -f docker-compose.yml run node npm run test
 ```
 
 The application will be available at: http://localhost:3000/
@@ -120,9 +126,6 @@ npm run test:coverage
 
 # Run accessibility tests (WCAG 2.1 AA — no external APIs needed)
 npm run test:a11y
-
-# Run tests inside the development container
-docker compose -f docker-compose.yml run node npm run test
 ```
 
 ## Health Check
