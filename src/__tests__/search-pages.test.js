@@ -264,7 +264,7 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
     ])('replies with an error, instead of hanging or crashing, when the API %s', async (_name, handler, fallbackLog) => {
         stubHandler = handler;
 
-        const res = await request(app).get('/partials/pages-search-results?q=test').timeout(5000);
+        const res = await request(app).get('/partials/pages-search-results?q=test').timeout(3000);
 
         expect(res.status).toBe(500);
         expect(makeExportObject).toHaveBeenCalledTimes(1);
