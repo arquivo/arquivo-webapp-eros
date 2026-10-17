@@ -20,6 +20,9 @@ const isValidUrl = require('../utils/is-valid-url');
 // jest's automock of 'fs' does not include the fs.promises getter, so provide it explicitly.
 fs.promises = { mkdir: jest.fn(), writeFile: jest.fn(), rm: jest.fn() };
 
+// The bytes of an uploaded PDF must start with the PDF magic (#177).
+const PDF_DATA = Buffer.from('%PDF-1.4\n%%EOF\n');
+
 const flushPromises = async () => {
     for (let i = 0; i < 5; i++) await new Promise(resolve => setImmediate(resolve));
 };
@@ -70,6 +73,7 @@ describe('Citation Saver Service', () => {
                 file: {
                     name: 'document.pdf',
                     mimetype: 'application/pdf',
+                    data: PDF_DATA,
                     size: 10000,
                     mv: jest.fn()
                 }
@@ -159,6 +163,7 @@ describe('Citation Saver Service', () => {
                 file: {
                     name: 'large.pdf',
                     mimetype: 'application/pdf',
+                    data: PDF_DATA,
                     size: 200000000,
                     mv: jest.fn()
                 }
@@ -193,6 +198,7 @@ describe('Citation Saver Service', () => {
                 file: {
                     name: 'document.pdf',
                     mimetype: 'application/pdf',
+                    data: PDF_DATA,
                     size: 5000,
                     mv: mockMv
                 }
@@ -453,6 +459,7 @@ describe('Citation Saver Service', () => {
                 file: {
                     name: 'document.pdf',
                     mimetype: 'application/pdf',
+                    data: PDF_DATA,
                     size: 5000,
                     mv: jest.fn()
                 }
@@ -717,6 +724,62 @@ describe('Citation Saver Service', () => {
 
     });
 
+    describe('Content sniffing (#177)', () => {
+        const upload = (mimetype, data) => ({ file: { name: 'upload', mimetype, size: data.length, data, mv: jest.fn() } });
+
+        it.each([
+            ['HTML', Buffer.from('<!doctype html><script>alert(1)</script>')],
+            ['an executable', Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03])],
+            ['the magic after a leading space', Buffer.from(' %PDF-1.4\n')],
+            ['a file shorter than the magic', Buffer.from('%PDF')],
+            ['an empty file', Buffer.alloc(0)],
+        ])('rejects %s declared as application/pdf', async (label, data) => {
+            req.files = upload('application/pdf', data);
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.file.mimetype' });
+            expect(req.files.file.mv).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['text/plain', 'invalid UTF-8', Buffer.from([0x61, 0xff, 0xfe, 0x62])],
+            ['text/plain', 'a NUL byte', Buffer.from('abc\u0000def')],
+            ['text/plain', 'UTF-16', Buffer.from('\ufeffhello', 'utf16le')],
+            ['text/plain', 'a multi-byte character cut off at the end', Buffer.from('olá').subarray(0, -1)],
+            ['text/plain', 'a PDF', Buffer.from('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n', 'latin1')],
+            ['text/html', 'a NUL byte', Buffer.from('<p>a\u0000b</p>')],
+            ['text/html', 'invalid UTF-8', Buffer.from([0x3c, 0x70, 0x3e, 0xc3, 0x28])],
+        ])('rejects a %s file with %s', async (mimetype, label, data) => {
+            req.files = upload(mimetype, data);
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.file.mimetype' });
+            expect(req.files.file.mv).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['application/pdf', 'a PDF', PDF_DATA],
+            ['text/plain', 'UTF-8 with accents and emoji', Buffer.from('Citações — 📚 https://arquivo.pt')],
+            ['text/plain', 'a UTF-8 BOM', Buffer.from('\ufeffhello')],
+            ['text/plain', 'no bytes', Buffer.alloc(0)],
+            ['text/html', 'UTF-8 HTML', Buffer.from('<p>Olá</p>')],
+        ])('accepts a %s file with %s', async (mimetype, label, data) => {
+            req.files = upload(mimetype, data);
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
+            expect(req.files.file.mv).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('Spreadsheet logging', () => {
         it('attempts to log file upload to spreadsheet', async () => {
             req.body = { email: 'test@example.com' };
@@ -724,6 +787,7 @@ describe('Citation Saver Service', () => {
                 file: {
                     name: 'document.pdf',
                     mimetype: 'application/pdf',
+                    data: PDF_DATA,
                     size: 5000,
                     mv: jest.fn()
                 }
@@ -749,7 +813,7 @@ describe('Citation Saver Service', () => {
         const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
         const email = 'test@example.com';
         const mv = jest.fn();
-        const file = (name, mimetype) => ({ file: { name, mimetype, size: 5000, mv } });
+        const file = (name, mimetype) => ({ file: { name, mimetype, size: 5000, data: PDF_DATA, mv } });
 
         it.each([
             ['File', 'pdf', { email }, file('doc.pdf', 'application/pdf'), 'doc.pdf'],
@@ -807,7 +871,7 @@ describe('Citation Saver Service', () => {
         const submissions = {
             text: () => ({ body: { text: 'hello', email }, files: null }),
             url: () => ({ body: { url: 'http://example.com', email }, files: null }),
-            file: (mv) => ({ body: { email }, files: { file: { name: 'doc.pdf', mimetype: 'application/pdf', size: 5000, mv } } })
+            file: (mv) => ({ body: { email }, files: { file: { name: 'doc.pdf', mimetype: 'application/pdf', size: 5000, data: PDF_DATA, mv } } })
         };
 
         it.each(['text', 'url'])('returns status:false and keeps running when writing a %s submission fails', async (kind) => {
