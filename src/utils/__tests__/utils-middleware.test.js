@@ -47,6 +47,13 @@ describe('utilsMiddleware', () => {
         expect(typeof mockReq.utils.isValidUrl).toBe('function');
     });
 
+    it('should attach displayUrl utility', () => {
+        utilsMiddleware(mockReq, mockRes, mockNext);
+        
+        expect(mockReq.utils.displayUrl).toBeDefined();
+        expect(typeof mockReq.utils.displayUrl).toBe('function');
+    });
+
     it('should attach sanitizeInputs utility', () => {
         utilsMiddleware(mockReq, mockRes, mockNext);
         

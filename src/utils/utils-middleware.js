@@ -2,6 +2,7 @@
 
 const utils = {
     isValidUrl: require('./is-valid-url'),
+    displayUrl: require('./display-url'),
     sanitizeInputs: require('./sanitize-search-params'),
     dateToTimestamp: require('./date-to-timestamp'),
     timestampToText: require('./timestamp-to-text')

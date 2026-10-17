@@ -9,9 +9,9 @@
       <%     if(key == 'collection'){ %>
                <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><a href="https://arquivo.pt/colecoes"><%= value %></a></li>
       <%      } else if(!utils.isValidUrl(value) || key == 'fileName'){ %>
-               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><%= value %></li>
+               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><%= utils.displayUrl(value) %></li>
       <%      } else { %>
-               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><a href="<%= value %>"><%= value %></a></li>
+               <li class="technical-details-row" data-key="<%= key %>"><strong><%= key %>:</strong><a href="<%= value %>"><%= utils.displayUrl(value) %></a></li>
       <%      } %>
       <%   }); %>
       <% } %>
