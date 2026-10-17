@@ -6,7 +6,7 @@
     // DOMContentLoaded callbacks thus still find the #modal div created here
     // (datepicker.js and modal-image-result.js keep `$('#modal')`).
     if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', init, { capture: true, once: true });
+        window.addEventListener('DOMContentLoaded', init, { capture: true });
     } else {
         init();
     }
@@ -70,16 +70,7 @@
     //load ajax content:
     const loadingSection = document.getElementById('loading-section');
     if(loadingSection){
-        let afterReplace = () => {}
         const message = loadingSection.getAttribute('onloadmessage');
-        if(message){
-            afterReplace = () => {
-                window.postMessage({
-                    'arquivo_type': 'section-loaded',
-                    message: message
-                });
-            };
-        }
         const url = partialUrl(document.getElementById('loading-form'));
         if (url) {
             // Same request as $.ajax: a same-origin GET (so with the cookies), with jQuery's
@@ -90,17 +81,22 @@
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 redirect: 'error',
             })
-                .then(response => response.ok ? response.text() : Promise.reject(new Error('HTTP ' + response.status)))
+                .then(response => response.ok ? response.text() : Promise.reject())
                 .then(html => {
                     replaceWithHtml(loadingSection, html);
-                    afterReplace();
+                    if(message){
+                        window.postMessage({
+                            'arquivo_type': 'section-loaded',
+                            message: message
+                        });
+                    }
                 }, () => {});
         }
     }
 
     document.body.addEventListener('submit', (e) => {
-        const form = e.target.closest('form');
-        if(form && form.getAttribute('action')?.includes('search') && !form.querySelector('input[name=trackingId]')){
+        const form = e.target; // a submit event's target is the submitted form
+        if(form.getAttribute('action')?.includes('search') && !form.querySelector('input[name=trackingId]')){
             const trackingIdInput = document.createElement('input');
             trackingIdInput.setAttribute('type', 'hidden');
             trackingIdInput.setAttribute('name', 'trackingId');
