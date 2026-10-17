@@ -19,19 +19,26 @@ const net = require('node:net');
 // Error code of a connection refused because of its address.
 const BLOCKED_ADDRESS = 'ERR_SSRF_BLOCKED_ADDRESS';
 
-// Addresses that are not on the public internet: "this network" (0.0.0.0, which
-// reaches the local host), private (RFC 1918), shared (CGNAT), loopback, link-local
-// (cloud metadata), multicast and reserved; for IPv6 the unspecified address,
-// loopback, unique local, link-local and multicast. BlockList also matches
-// IPv4-mapped IPv6 addresses (::ffff:10.0.0.1, ::ffff:a00:1) against the IPv4 ranges.
+// Addresses that are not on the public internet, as [leading octets or groups,
+// prefix length]: "this network" (0.0.0.0/8, which reaches the local host), private
+// (RFC 1918), shared (CGNAT, 100.64.0.0/10), loopback, link-local (cloud metadata),
+// multicast and reserved (224.0.0.0/3); for IPv6 the unspecified address, loopback,
+// unique local (fc00::/7), link-local (fe80::/10) and multicast (ff00::/8).
+// BlockList also matches IPv4-mapped IPv6 addresses (::ffff:10.0.0.1, ::ffff:a00:1)
+// against the IPv4 ranges.
+const NON_PUBLIC_IPV4 = [
+    [[0], 8], [[10], 8], [[100, 64], 10], [[127], 8],
+    [[169, 254], 16], [[172, 16], 12], [[192, 168], 16], [[224], 3]
+];
+const NON_PUBLIC_IPV6 = [[[0], 128], [[0, 0, 0, 0, 0, 0, 0, 1], 128], [[0xfc00], 7], [[0xfe80], 10], [[0xff00], 8]];
+
 const nonPublic = new net.BlockList();
-for (const [network, prefix] of [
-    ['0.0.0.0', 8], ['10.0.0.0', 8], ['100.64.0.0', 10], ['127.0.0.0', 8],
-    ['169.254.0.0', 16], ['172.16.0.0', 12], ['192.168.0.0', 16], ['224.0.0.0', 3]
-]) {
+for (const [octets, prefix] of NON_PUBLIC_IPV4) {
+    const network = [0, 1, 2, 3].map(i => octets[i] ?? 0).join('.');
     nonPublic.addSubnet(network, prefix, 'ipv4');
 }
-for (const [network, prefix] of [['::', 128], ['::1', 128], ['fc00::', 7], ['fe80::', 10], ['ff00::', 8]]) {
+for (const [groups, prefix] of NON_PUBLIC_IPV6) {
+    const network = [0, 1, 2, 3, 4, 5, 6, 7].map(i => (groups[i] ?? 0).toString(16)).join(':');
     nonPublic.addSubnet(network, prefix, 'ipv6');
 }
 
