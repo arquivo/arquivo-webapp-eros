@@ -120,7 +120,14 @@ describe('GET /partials/:id', () => {
         'url-table-results',
     ])('returns 404 for the non-allowlisted id %s', expectNotFound);
 
-    it.each(['constructor', 'toString', 'hasOwnProperty', '__proto__'])(
+    // ids are matched exactly: an upper-case variant of a generic partial
+    // or of a handler id is not that id
+    it.each(['MODAL-DATEPICKER', 'REPLAY-NAV'])(
+        'returns 404 for the case variant %s',
+        expectNotFound
+    );
+
+    it.each(['constructor','toString', 'hasOwnProperty', '__proto__'])(
         'returns 404 for the prototype key %s',
         expectNotFound
     );
