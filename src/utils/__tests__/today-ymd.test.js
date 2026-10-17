@@ -2,6 +2,9 @@ const todayYmd = require('../../../src/utils/today-ymd');
 
 // Jest runs in Pacific/Kiritimati (UTC+14, see jest.global-setup.js), so a UTC
 // based implementation would return a different date for most of these.
+// The two midnight cases work as a pair: a UTC based implementation fails the
+// "just before midnight" one in zones behind UTC and the "day before" one in
+// zones ahead of UTC (like the pinned one), so it is caught in either case.
 describe('todayYmd', () => {
   afterEach(() => {
     jest.useRealTimers();
@@ -29,6 +32,10 @@ describe('todayYmd', () => {
 
   it('should add leading zeros to single-digit months and days', () => {
     expect(todayYmd(new Date(2024, 0, 5))).toBe('20240105');
+  });
+
+  it('should use the local date just before midnight', () => {
+    expect(todayYmd(new Date(2024, 11, 31, 23, 59, 59, 999))).toBe('20241231');
   });
 
   it('should use the local date when the UTC date is still the day before', () => {
