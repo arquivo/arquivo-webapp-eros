@@ -35,7 +35,7 @@ app.use(cookies());
 
 // Multipart bodies are only parsed on the Citation Saver POST (src/router.js, #177).
 
-app.use(localeMiddleware({ debug: app.get('environment') !== 'production' }));
+app.use(localeMiddleware({ debug: app.get('env') !== 'production' }));
 
 app.locals.config = config;
 

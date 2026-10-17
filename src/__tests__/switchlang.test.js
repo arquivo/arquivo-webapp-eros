@@ -6,7 +6,7 @@ jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
 jest.mock('../../src/apis/suggestion-api');
-// Keep the 500 response below from printing a stack trace
+// Lets the tests below check that an invalid referer logs no error
 const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
 jest.mock('../logger', () => jest.fn(() => mockLogger));
 
@@ -64,7 +64,7 @@ describe('/switchlang characterization (#85)', () => {
 
     const i18nCookies = (res) => (res.headers['set-cookie'] || []).filter(c => c.startsWith('i18n='));
     const libraryCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+; HttpOnly$`);
-    const appCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+$`);
+    const appCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+; SameSite=Lax$`);
     const CLEARED_COOKIE = 'i18n=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
     function switchlang(referer, { cookie, query = '' } = {}) {
@@ -180,10 +180,68 @@ describe('/switchlang characterization (#85)', () => {
     });
 
     describe('invalid referer', () => {
-        it('a referer that is not a URL gives 500', async () => {
-            const res = await switchlang('not a url');
-            expect(res.status).toBe(500);
-            expect(res.text).toBe('Internal Server Error');
+        beforeEach(() => mockLogger.error.mockClear());
+
+        it.each([
+            'not a url',
+            'javascript:alert(1)',
+            'ftp://localhost/x',
+            'data:text/html,x',
+        ])('a referer that is not an http(s) URL redirects to / without switching (%s)', async (referer) => {
+            const res = await switchlang(referer);
+            expect(res.status).toBe(302);
+            expect(res.headers.location).toBe('/');
+            expectNoSwitch(res);
+            expect(mockLogger.error).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('redirect target', () => {
+        it.each([
+            'http://localhost//other.example/x',
+            'http://localhost/\\other.example',
+            'http://localhost/\\/other.example',
+            BACKEND + '//other.example/x?q=a',
+        ])('is / when the referer path starts with more than one slash, still switching (%s)', async (referer) => {
+            const res = await switchlang(referer);
+            expect(res.status).toBe(302);
+            expect(res.headers.location).toBe('/');
+            const cookies = i18nCookies(res);
+            expect(cookies[2]).toBe(CLEARED_COOKIE);
+            expect(cookies[3]).toMatch(appCookie('en_GB'));
+            expectNoCacheHeaders(res);
+        });
+
+        it('is the referer path, query and fragment, without the user info', async () => {
+            const res = await switchlang('http://user:pw@localhost/x?a=1#top');
+            expect(res.headers.location).toBe('/x?a=1&l=en#top');
+        });
+
+        it('keeps the fragment of a wayback referer', async () => {
+            const res = await switchlang(BACKEND + '/wayback/20200101000000/http://example.pt/#part');
+            expect(res.headers.location).toBe('/wayback/20200101000000/http://example.pt/#part');
+        });
+
+        it('keeps a referer on the backend host with a port', async () => {
+            const res = await switchlang('https://preprod.arquivo.pt:8443/search?q=a');
+            expect(res.headers.location).toBe('/search?q=a&l=en');
+        });
+    });
+
+    describe('in production', () => {
+        const env = app.get('env');
+        beforeEach(() => app.set('env', 'production'));
+        afterEach(() => app.set('env', env));
+
+        it('does not trust localhost referers', async () => {
+            const res = await switchlang('http://localhost/search?q=test');
+            expect(res.headers.location).toBe('/');
+            expectNoSwitch(res);
+        });
+
+        it('still trusts the backend host', async () => {
+            const res = await switchlang(BACKEND + '/search?q=test');
+            expect(res.headers.location).toBe('/search?q=test&l=en');
         });
     });
 });

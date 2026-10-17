@@ -11,7 +11,7 @@ const LOCALES = ['en_GB', 'pt_PT'];
 const DEFAULT_LOCALE = 'pt_PT';
 const QUERY_PARAMETER = 'l';
 const COOKIE_NAME = 'i18n';
-const COOKIE_OPTIONS = { maxAge: 900000, httpOnly: false };
+const COOKIE_OPTIONS = { maxAge: 900000, httpOnly: false, sameSite: 'lax' };
 const WAYBACK_PREFIX = '/wayback';
 
 /** 'en_GB' -> 'en' */
@@ -41,33 +41,32 @@ function localeMiddleware({ debug }) {
     });
 
     return function (req, res, next) {
-        const cookieLocale = req.cookies?.[COOKIE_NAME] || DEFAULT_LOCALE;
+        // Only a known locale is taken from the cookie; any other value (e.g. a
+        // number or an object parsed from a 'j:' JSON cookie) is ignored.
+        const cookieValue = req.cookies?.[COOKIE_NAME];
+        const knownCookieLocale = LOCALES.includes(cookieValue) ? cookieValue : undefined;
+        const cookieLocale = knownCookieLocale || DEFAULT_LOCALE;
 
-        // i18n-node-yaml's middleware picks the locale from the query parameter,
-        // then the cookie, then Accept-Language, and has no option to skip
-        // Accept-Language or to ignore the query parameter on some paths. So, only
-        // for its call, Accept-Language is hidden and, on /wayback paths, the 'l'
-        // parameter is replaced by the cookie's language. Both are put back after,
-        // so the rest of the app sees the request unchanged.
-        const acceptLanguage = req.headers['accept-language'];
+        // i18n-node-yaml picks the locale from the 'l' parameter, then the cookie,
+        // then Accept-Language, and sets its helpers on the request it gets. It
+        // gets a stand-in request with only what it should see, so req is not
+        // changed:
+        // - no Accept-Language
+        // - 'l' only if it is a string; on /wayback paths, the cookie's language
+        // - the cookie only if it is a known locale
         const queryLanguage = req.query[QUERY_PARAMETER];
-        const replaceQueryLanguage = queryLanguage && req.url.startsWith(WAYBACK_PREFIX);
-        if (acceptLanguage) {
-            req.headers['accept-language'] = null;
+        let i18nQueryLanguage = typeof queryLanguage === 'string' ? queryLanguage : undefined;
+        if (queryLanguage && req.url.startsWith(WAYBACK_PREFIX)) {
+            i18nQueryLanguage = localeLanguage(cookieLocale);
         }
-        try {
-            if (replaceQueryLanguage) {
-                req.query[QUERY_PARAMETER] = localeLanguage(cookieLocale);
-            }
-            i18n.middleware(req, res, () => {});
-        } finally {
-            if (acceptLanguage) {
-                req.headers['accept-language'] = acceptLanguage;
-            }
-            if (replaceQueryLanguage) {
-                req.query[QUERY_PARAMETER] = queryLanguage;
-            }
-        }
+        const i18nRequest = {
+            headers: {},
+            query: { [QUERY_PARAMETER]: i18nQueryLanguage },
+            cookies: { [COOKIE_NAME]: knownCookieLocale },
+        };
+        i18n.middleware(i18nRequest, res, () => {});
+        const { headers, query, cookies, ...helpers } = i18nRequest;
+        Object.assign(req, helpers);
 
         // Sets the i18n cookie again, after the one i18n-node-yaml set, to its own
         // value (or the default). Browsers keep the last one, so the 'l'
@@ -83,20 +82,24 @@ function localeMiddleware({ debug }) {
  * - the new locale in the i18n cookie
  * - the new language in the 'l' parameter (except for wayback paths)
  * - cache headers so the browser does not show the page in the old language
- * The referer must be on a trusted host; otherwise, or without a referer, it
+ * It only returns to the path of an http(s) referer on a trusted host
+ * (localhost only outside production); otherwise, or without a referer, it
  * redirects to the homepage.
  */
 function switchLanguage(req, res) {
-    if (!req.headers.referer) {
+    let refererUrl;
+    try {
+        refererUrl = new URL(req.headers.referer);
+    } catch {
+        // Missing or unparsable referer
         return res.redirect('/');
     }
-    const refererUrl = new URL(req.headers.referer);
 
-    const validHosts = [
-        'localhost', // to allow local testing
-        new URL(config.get('backend.url')).hostname,
-    ];
-    if (!validHosts.includes(refererUrl.hostname)) {
+    const validHosts = [new URL(config.get('backend.url')).hostname];
+    if (req.app.get('env') !== 'production') {
+        validHosts.push('localhost'); // to allow local testing
+    }
+    if (!['http:', 'https:'].includes(refererUrl.protocol) || !validHosts.includes(refererUrl.hostname)) {
         return res.redirect('/');
     }
 
@@ -114,7 +117,9 @@ function switchLanguage(req, res) {
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
 
-    res.redirect(refererUrl.href.slice(refererUrl.origin.length));
+    // Only a path on this site: one starting with a single '/'
+    const target = refererUrl.pathname + refererUrl.search + refererUrl.hash;
+    res.redirect(/^\/(?![/\\])/.test(target) ? target : '/');
 }
 
 module.exports = { localeMiddleware, switchLanguage };

@@ -9,7 +9,7 @@ jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
 jest.mock('../../src/apis/suggestion-api');
-// Keep the 500 responses below from printing stack traces
+// Lets the tests below check that malformed input logs no error
 const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
 jest.mock('../logger', () => jest.fn(() => mockLogger));
 
@@ -38,8 +38,8 @@ const i18nCookies = (res) => (res.headers['set-cookie'] || []).filter(c => c.sta
 
 // i18n cookie as set by the i18n library: the chosen locale, HttpOnly
 const libraryCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+; HttpOnly$`);
-// i18n cookie as set by the app: readable by scripts (no HttpOnly)
-const appCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+$`);
+// i18n cookie as set by the app: readable by scripts (no HttpOnly), SameSite=Lax
+const appCookie = (value) => new RegExp(`^i18n=${value}; Max-Age=900; Path=/; Expires=[^;]+; SameSite=Lax$`);
 
 function get(url, headers = {}) {
     let req = request(app).get(url);
@@ -53,6 +53,7 @@ describe('locale resolution (characterization, #85)', () => {
 
     beforeEach(() => {
         mockSeen.length = 0;
+        mockLogger.error.mockClear();
     });
 
     describe('default locale', () => {
@@ -109,20 +110,16 @@ describe('locale resolution (characterization, #85)', () => {
             expect(htmlLang(res)).toBe('pt');
         });
 
-        it('accepts a language without region (en)', async () => {
-            const res = await get('/', { Cookie: 'i18n=en' });
-            expect(htmlLang(res)).toBe('en');
-            const cookies = i18nCookies(res);
-            expect(cookies[0]).toMatch(libraryCookie('en_GB'));
-            expect(cookies[1]).toMatch(appCookie('en'));
-        });
-
-        it('falls back to pt_PT for an unknown value, which the app cookie echoes back', async () => {
-            const res = await get('/', { Cookie: 'i18n=bogus' });
+        it.each([
+            'en',
+            'en_XX',
+            'bogus',
+        ])('is ignored when it is not a known locale (%s): pt_PT in both cookies', async (value) => {
+            const res = await get('/', { Cookie: `i18n=${value}` });
             expect(htmlLang(res)).toBe('pt');
             const cookies = i18nCookies(res);
             expect(cookies[0]).toMatch(libraryCookie('pt_PT'));
-            expect(cookies[1]).toMatch(appCookie('bogus'));
+            expect(cookies[1]).toMatch(appCookie('pt_PT'));
         });
 
         it('falls back to pt_PT for an empty value', async () => {
@@ -187,12 +184,12 @@ describe('locale resolution (characterization, #85)', () => {
             expect(i18nCookies(res)[0]).toMatch(libraryCookie('pt_PT'));
         });
 
-        it('is replaced by the language of the cookie (en_XX selects en_GB)', async () => {
-            const res = await get(`${WAYBACK_PATH}?l=pt`, { Cookie: 'i18n=en_XX' });
-            expect(htmlLang(res)).toBe('en');
+        it('is replaced by the default language when the cookie is not a known locale (en_XX)', async () => {
+            const res = await get(`${WAYBACK_PATH}?l=en`, { Cookie: 'i18n=en_XX' });
+            expect(htmlLang(res)).toBe('pt');
             const cookies = i18nCookies(res);
-            expect(cookies[0]).toMatch(libraryCookie('en_GB'));
-            expect(cookies[1]).toMatch(appCookie('en_XX'));
+            expect(cookies[0]).toMatch(libraryCookie('pt_PT'));
+            expect(cookies[1]).toMatch(appCookie('pt_PT'));
         });
 
         it('without l, an unknown cookie (en_XX) falls back to pt_PT', async () => {
@@ -213,25 +210,100 @@ describe('locale resolution (characterization, #85)', () => {
         });
     });
 
-    describe('malformed input (current responses)', () => {
-        it('a repeated l on a non-wayback path gives 500', async () => {
-            const res = await get('/?l=en&l=pt');
-            expect(res.status).toBe(500);
-            expect(res.text).toBe('Internal Server Error');
+    describe('malformed language input', () => {
+        function expectLocale(res, locale, cookieLocale) {
+            expect(res.status).toBe(200);
+            expect(htmlLang(res)).toBe(locale.slice(0, 2));
+            const cookies = i18nCookies(res);
+            expect(cookies[0]).toMatch(libraryCookie(locale));
+            expect(cookies[1]).toMatch(appCookie(cookieLocale));
+            expect(mockLogger.error).not.toHaveBeenCalled();
+        }
+
+        it.each([
+            ['/?l=en&l=pt', ['en', 'pt']],
+            ['/?l[]=en', ['en']],
+            ['/?l[a]=en', { a: 'en' }],
+        ])('%s is ignored (default locale) and seen unchanged by later middleware', async (url, l) => {
+            const res = await get(url);
+            expectLocale(res, 'pt_PT', 'pt_PT');
+            expect(mockSeen[0].l).toStrictEqual(l);
         });
 
-        it('a JSON i18n cookie gives 500', async () => {
-            const res = await get('/', { Cookie: 'i18n=j:{"a":1}' });
-            expect(res.status).toBe(500);
-            expect(res.text).toBe('Internal Server Error');
+        it('a repeated l falls back to the cookie', async () => {
+            const res = await get('/?l=pt&l=pt', { Cookie: 'i18n=en_GB' });
+            expectLocale(res, 'en_GB', 'en_GB');
         });
 
-        it('puts Accept-Language back when i18n-node-yaml throws', () => {
+        it.each([
+            ['a JSON object', 'j:{"a":1}'],
+            ['a JSON array', 'j:["en_GB"]'],
+            ['a JSON number', 'j:5'],
+            ['a number', '5'],
+        ])('an i18n cookie with %s is ignored (default locale)', async (_name, value) => {
+            const res = await get('/', { Cookie: `i18n=${value}` });
+            expectLocale(res, 'pt_PT', 'pt_PT');
+        });
+
+        it('an ignored i18n cookie lets a valid l apply', async () => {
+            const res = await get('/?l=en', { Cookie: 'i18n=j:{"a":1}' });
+            expectLocale(res, 'en_GB', 'pt_PT');
+        });
+
+        it('an ignored i18n cookie on a /wayback path uses the default language', async () => {
+            const res = await get(`${WAYBACK_PATH}?l=en`, { Cookie: 'i18n=j:{"a":1}' });
+            expect(res.status).toBe(404);
+            expect(htmlLang(res)).toBe('pt');
+            expect(i18nCookies(res)[1]).toMatch(appCookie('pt_PT'));
+            expect(mockLogger.error).not.toHaveBeenCalled();
+        });
+
+        describe('the request given to the middleware', () => {
             const { localeMiddleware } = require('../locale');
-            const req = { url: '/', headers: { 'accept-language': 'en' }, query: { l: ['en', 'pt'] }, cookies: {} };
-            const res = { cookie: jest.fn(), locals: {} };
-            expect(() => localeMiddleware({ debug: false })(req, res, jest.fn())).toThrow(TypeError);
-            expect(req.headers['accept-language']).toBe('en');
+            const middleware = localeMiddleware({ debug: false });
+            const HELPERS = ['getLanguage', 'getLanguages', 'getLocale', 'getLocales', 't'];
+
+            // A deep copy for toStrictEqual. Not structuredClone: under Jest its
+            // copies have other Object/Array prototypes, so they never match.
+            const copy = (value) => JSON.parse(JSON.stringify(value));
+
+            function newRequest(url) {
+                return {
+                    url,
+                    headers: { 'accept-language': 'en' },
+                    query: { l: ['en', 'pt'], q: 'x' },
+                    cookies: { i18n: { a: 1 }, other: 'y' },
+                };
+            }
+
+            it.each([
+                '/',
+                WAYBACK_PATH,
+            ])('is left untouched apart from the i18n helpers (%s)', (url) => {
+                const req = newRequest(url);
+                const before = copy(req);
+                const next = jest.fn();
+                middleware(req, { cookie: jest.fn(), locals: {} }, next);
+                expect(next).toHaveBeenCalled();
+                expect(req.getLocale()).toBe('pt_PT');
+                const added = Object.keys(req).filter(key => !Object.hasOwn(before, key));
+                expect(added.sort()).toEqual(HELPERS);
+                for (const key of added) {
+                    delete req[key];
+                }
+                expect(req).toStrictEqual(before);
+            });
+
+            it('is left untouched when i18n-node-yaml throws', () => {
+                const req = newRequest('/');
+                const before = copy(req);
+                // i18n-node-yaml sets its cookie with res.cookie: make that throw
+                const res = { cookie: jest.fn(() => { throw new TypeError('cookie failed'); }), locals: {} };
+                const next = jest.fn();
+                expect(() => middleware(req, res, next)).toThrow('cookie failed');
+                expect(req).toStrictEqual(before);
+                expect(next).not.toHaveBeenCalled();
+            });
         });
     });
 });
