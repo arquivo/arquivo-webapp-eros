@@ -28,13 +28,14 @@ const JQUERY = 'vendor/js/jquery-1.12.4.js';
 function loadScript(publicPath, { globals = [] } = {}) {
     const file = path.join(PUBLIC_DIR, publicPath);
     const code = fs.readFileSync(file, 'utf8');
-    // The trailing expression is the eval's result, read while the bindings are in scope.
-    const exposed = globals.length ? `\n;({ ${globals.join(', ')} });` : '';
+    const sourceURL = `\n//# sourceURL=${file}`;
     // Indirect eval runs in the global scope of the jsdom window.
-    const bindings = (0, eval)(`${code}${exposed}\n//# sourceURL=${file}`);
     if (!globals.length) {
+        (0, eval)(code + sourceURL);
         return {};
     }
+    // The trailing expression is the eval's result, read while the bindings are in scope.
+    const bindings = (0, eval)(`${code}\n;({ ${globals.join(', ')} });${sourceURL}`);
     Object.assign(window, bindings);
     return bindings;
 }
@@ -89,16 +90,16 @@ function simulateLoadingDocument() {
 // script loads with no jQuery at all.
 //
 // `defineTests` gets:
-// - `load(html = options.html)`: put `html` in <body>, then run the script. Returns the
-//   bindings named in `options.globals` (see loadScript).
+// - `setup(html = options.html)`: put `html` in <body>, then run the script. Returns the
+//   bindings named in `options.globals` (see loadScript; e.g. `ArquivoReplay`, which
+//   replay.js declares as a top-level class).
 // - `whileParsing()`: make the document report it is still loading, reloading jQuery so
 //   its ready queue waits too. Resolves to a function that fires DOMContentLoaded.
-// - `withJQuery`: which run this is.
 //
 // Hooks declared in `defineTests` run after this helper's own beforeEach / afterEach.
 function describeScript(publicPath, options, defineTests) {
     const { html = '', globals } = options;
-    const load = (body = html) => {
+    const setup = (body = html) => {
         document.body.innerHTML = body;
         return loadScript(publicPath, { globals });
     };
@@ -139,11 +140,11 @@ function describeScript(publicPath, options, defineTests) {
             it('runs with no jQuery on the page', () => {
                 expect(window.jQuery).toBeUndefined();
                 expect(window.$).toBeUndefined();
-                expect(() => load()).not.toThrow();
+                expect(() => setup()).not.toThrow();
             });
         }
 
-        defineTests({ load, whileParsing, withJQuery });
+        defineTests({ setup, whileParsing });
     });
 }
 

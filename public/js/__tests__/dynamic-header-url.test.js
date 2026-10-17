@@ -19,7 +19,7 @@ function postFromReplay(data) {
     window.dispatchEvent(new MessageEvent('message', { data }));
 }
 
-describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ load: setup }) => {
+describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ setup }) => {
     beforeEach(() => {
         // Defined globally by functions.js on the real pages.
         window.dateFromTimestamp = jest.fn((ts, format) => `date(${ts},${format})`);

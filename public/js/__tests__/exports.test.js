@@ -36,7 +36,7 @@ function click(id) {
     return event;
 }
 
-describeScript('js/exports.js', { html: MENU + EXPORT_JSON }, ({ load: setup, whileParsing }) => {
+describeScript('js/exports.js', { html: MENU + EXPORT_JSON }, ({ setup, whileParsing }) => {
     let writeFile;
 
     beforeAll(() => {

@@ -40,7 +40,7 @@ function submit(form = document.querySelector('form')) {
     return event;
 }
 
-describeScript('js/advanced-search.js', { html: FORM }, ({ load: setup, whileParsing }) => {
+describeScript('js/advanced-search.js', { html: FORM }, ({ setup, whileParsing }) => {
     describe('on submit', () => {
         it('writes the checked formats, in page order, to the hidden type input', () => {
             setup();
