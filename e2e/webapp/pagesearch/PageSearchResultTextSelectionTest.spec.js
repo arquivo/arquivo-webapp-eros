@@ -13,7 +13,21 @@ test.describe('page search result text selection', () => {
         await pageSearchPage.goto('fccn');
         const summary = pageSearchPage.result(0).locator('.results-summary');
         await expect(summary).toBeVisible();
-        const url = page.url();
+
+        // Whether each click on an overlay link was cancelled, read once the click has been
+        // dispatched, and every /page/view/ navigation the page starts.
+        await page.evaluate(() => {
+            window.overlayClicks = [];
+            window.addEventListener('click', (e) => {
+                if (e.target.closest('a.overlay-link')) {
+                    setTimeout(() => window.overlayClicks.push(e.defaultPrevented));
+                }
+            }, true);
+        });
+        const views = [];
+        page.on('request', (r) => {
+            if (r.isNavigationRequest() && new URL(r.url()).pathname.startsWith('/page/view/')) views.push(r.url());
+        });
 
         // The box of the first line of the snippet text itself (the <p> is wider than it).
         const line = await summary.evaluate((p) => {
@@ -31,13 +45,15 @@ test.describe('page search result text selection', () => {
         await page.waitForTimeout(400);
         await page.mouse.up();
 
+        // The click that ends the drag is cancelled, so the link is not followed.
+        await expect.poll(() => page.evaluate(() => window.overlayClicks)).toEqual([true]);
+        expect(views).toEqual([]);
+
         const selected = await page.evaluate(() => window.getSelection().toString());
         expect(selected.trim().length).toBeGreaterThan(5);
         expect((await summary.textContent()).replace(/\s+/g, ' ')).toContain(selected.replace(/\s+/g, ' ').trim());
         // The overlay is clickable again once the drag ends.
         await expect(pageSearchPage.result(0).locator('.overlay-link')).toHaveCSS('pointer-events', 'auto');
-        await page.waitForTimeout(200);
-        expect(page.url()).toBe(url);
     });
 
     test('a short click on a result follows its link', async ({ page, pageSearchPage }) => {
@@ -46,9 +62,13 @@ test.describe('page search result text selection', () => {
         await expect(overlay).toBeAttached();
         const href = await overlay.getAttribute('href');
 
-        // /page/view/... records the view and redirects to the replay.
+        // /page/view/... records the view and redirects to the replay. A short timeout, so
+        // a click that is wrongly cancelled fails fast instead of at the test timeout.
         const [request] = await Promise.all([
-            page.waitForRequest((r) => r.isNavigationRequest() && new URL(r.url()).pathname.startsWith('/page/view/')),
+            page.waitForRequest(
+                (r) => r.isNavigationRequest() && new URL(r.url()).pathname.startsWith('/page/view/'),
+                { timeout: 5000 },
+            ),
             overlay.click(),
         ]);
 
