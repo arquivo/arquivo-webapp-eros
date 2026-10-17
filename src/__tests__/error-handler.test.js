@@ -13,6 +13,7 @@ jest.mock('../../src/apis/suggestion-api');
 jest.mock('../replay-nav', () => jest.fn());
 // The handler is a mock; the route's middlewares just pass the request on.
 jest.mock('../services-citationsaver', () => Object.assign(jest.fn(), {
+    rateLimiter: (req, res, next) => next(),
     parseUpload: (req, res, next) => next(),
 }));
 

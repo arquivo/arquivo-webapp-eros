@@ -33,6 +33,8 @@ const mockConfig = {
   'citation.saver.max.upload.size': 100000000,
   'citation.saver.upload.folder.path': 'uploads/CitationSaver',
   'citation.saver.upload.temp.folder.path': '',
+  'citation.saver.rate.limit.max': 10,
+  'citation.saver.rate.limit.window.ms': 900000,
   'logger.type': 'console',
   'logger.dir': 'logs/'
 };

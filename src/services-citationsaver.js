@@ -29,6 +29,7 @@ const os = require('node:os');
 const nodePath = require('node:path');
 const config = require('config');
 const fileUpload = require('express-fileupload');
+const { rateLimit } = require('express-rate-limit');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
 const addToSpreadsheet = require('./spreadsheet-client');
@@ -122,6 +123,26 @@ async function storeUpload(path, write) {
         throw err;
     }
 }
+
+/*
+ * Per-IP limit on submissions (#177): each one stores a file and adds a Sheet row,
+ * and a URL also costs an outbound HEAD request. Counted in memory, per process.
+ * The key is req.ip: behind a reverse proxy, Express's "trust proxy" setting must
+ * match the proxy hops, or every client shares the proxy's address.
+ */
+const rateLimiter = rateLimit({
+    windowMs: positiveNumberSetting('citation.saver.rate.limit.window.ms'),
+    limit: positiveNumberSetting('citation.saver.rate.limit.max'),
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (req, res, next, options) => {
+        logger.info('Blocking submission: too many submissions from the same client.');
+        res.status(options.statusCode).send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+    },
+});
 
 // A private folder (mode 0700) for this process, created on the first upload.
 let uploadTempRoot;
@@ -460,4 +481,5 @@ async function handleText(req, res) {
         }
     });
 }
+module.exports.rateLimiter = rateLimiter;
 module.exports.parseUpload = parseUpload;

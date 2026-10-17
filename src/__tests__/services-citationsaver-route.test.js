@@ -12,7 +12,7 @@ jest.mock('../spreadsheet-client');
 // Replace only the handler: the route's middlewares stay the real ones.
 jest.mock('../services-citationsaver', () => {
     const actual = jest.requireActual('../services-citationsaver');
-    return Object.assign(jest.fn(), { parseUpload: actual.parseUpload });
+    return Object.assign(jest.fn(), { rateLimiter: actual.rateLimiter, parseUpload: actual.parseUpload });
 });
 
 const request = require('supertest');

@@ -28,6 +28,8 @@ const MAX_UPLOAD_SIZE = 64 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
 config.set('citation.saver.upload.temp.folder.path', uploadTempFolder);
 config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
+// Every test posts from the same IP; the rate limit has its own suite.
+config.set('citation.saver.rate.limit.max', 1000);
 
 const http = require('http');
 const request = require('supertest');
