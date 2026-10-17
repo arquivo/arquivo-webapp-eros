@@ -134,7 +134,6 @@ function isSsrfTarget(urlString) {
 }
 
 const mimeToExtension = new Map([
-    // ["application/msword", "doc"],
     ["application/pdf", "pdf"],
     ["text/plain", "txt"],
     ["text/html", "html"]

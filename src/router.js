@@ -1,16 +1,3 @@
-/**
- * Main Application Router
- * 
- * Defines all routes for the Arquivo.pt web archive application including:
- * - Search routes (pages, images, URLs)
- * - Advanced search interfaces
- * - Wayback Machine integration
- * - Services (Archive Page Now, Citation Saver)
- * - Tracking and analytics
- * - Language switching
- * - Backward compatibility redirects
- */
-
 const backendRoutes = require('./backend-routes');
 const healthcheckRoutes = require('./healthcheck-routes');
 const searchPages = require('./search-pages.js');
@@ -231,10 +218,7 @@ router.get('/services/archivepagenow', function (req, res) {
     });
 });
 
-/**
- * If 'logging' parameter is present, skip processing (logging endpoint)
- * Otherwise, process the URL for archiving
- */
+// With a 'logging' query parameter this is a no-op logging endpoint
 router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     if (!requestData.has('logging')) {
