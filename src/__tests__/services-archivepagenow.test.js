@@ -212,13 +212,18 @@ describe('Archive Page Now Service', () => {
             );
         });
 
-        describe('with a malformed backend.url', () => {
+        // Stubs config's backend.url for every test of the enclosing describe.
+        const withBackendUrl = value => {
             beforeEach(() => {
                 const realGet = config.get;
                 jest.spyOn(config, 'get').mockImplementation(key =>
-                    key === 'backend.url' ? 'not a url' : realGet(key));
+                    key === 'backend.url' ? value : realGet(key));
             });
             afterEach(() => config.get.mockRestore());
+        };
+
+        describe('with a malformed backend.url', () => {
+            withBackendUrl('not a url');
 
             it('should render the page and send the error to the app logger instead of throwing', () => {
                 req.body = { url: 'http://example.com' };
@@ -243,6 +248,35 @@ describe('Archive Page Now Service', () => {
             });
         });
 
+        describe('when the logging request is rejected', () => {
+            withBackendUrl('http://user:s3cr3t@127.0.0.1:1');
+
+            it('should not log the request URL, credentials, user-agent or IP', async () => {
+                // node-fetch 2.x puts the full request URL in FetchError.message.
+                const { FetchError } = jest.requireActual('node-fetch');
+                mockFetch.mockImplementation(url => Promise.reject(new FetchError(
+                    `request to ${url} failed, reason: connect ECONNREFUSED 127.0.0.1:1`,
+                    'system', { code: 'ECONNREFUSED', errno: 'ECONNREFUSED' })));
+                req.body = { url: 'http://example.com/submitted-page' };
+                req.get = jest.fn(() => 'agent-under-test');
+                req.headers = { 'x-forwarded-for': '203.0.113.9' };
+
+                archivePageNow(req, res);
+                await new Promise(setImmediate);
+
+                expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('s3cr3t'), expect.any(Object));
+                expect(logger.error).toHaveBeenCalledTimes(1);
+                expect(logger.error).toHaveBeenCalledWith('Backend logging failed - '
+                    + 'name: "FetchError", type: "system", errno: "ECONNREFUSED", code: "ECONNREFUSED"');
+                const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
+                ['s3cr3t', 'agent-under-test', '203.0.113.9']
+                    .forEach(value => expect(logged).not.toContain(value));
+                // The submitted URL is logged on purpose when the page is accessed,
+                // but never as part of the backend request.
+                expect(logger.error.mock.calls.flat().join('\n')).not.toContain('submitted-page');
+            });
+        });
+
         it('should not log a malformed backend.url, which may carry credentials', () => {
             const realGet = config.get;
             jest.spyOn(config, 'get').mockImplementation(key =>
@@ -262,7 +296,7 @@ describe('Archive Page Now Service', () => {
             expect(logged).not.toContain('bad host');
         });
 
-        it('should log a non-URL synchronous error with its details', () => {
+        it('should log a non-URL synchronous error by its name', () => {
             // A lone surrogate makes encodeURIComponent throw a URIError.
             req.body = { url: 'http://example.com' };
             req.get = jest.fn(() => 'agent-\uD800');
@@ -270,7 +304,7 @@ describe('Archive Page Now Service', () => {
             expect(() => archivePageNow(req, res)).not.toThrow();
 
             expect(mockFetch).not.toHaveBeenCalled();
-            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('URI malformed'));
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('name: "URIError"'));
             expect(logger.error).not.toHaveBeenCalledWith('Invalid backend.url configuration');
         });
 

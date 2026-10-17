@@ -37,8 +37,10 @@ module.exports = function (req, res) {
     const userAgent = req.get('user-agent');
     const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
+    // Never log error.message: node-fetch puts the full request URL in it, i.e.
+    // backend.url (which may hold credentials) plus the user's URL, UA and IP.
     const logError = function (error) {
-        logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
+        logger.error('Backend logging failed - ' + ['name', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
     }
     // Logging is fail-safe: it runs after the page has been rendered, so neither
     // a rejected fetch nor a synchronous throw (e.g. `new URL` on a malformed
