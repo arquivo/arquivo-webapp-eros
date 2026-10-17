@@ -146,6 +146,28 @@ test.describe('fixture page', () => {
         expect(errors).toEqual([]);
     });
 
+    test('does not run a module script of the partial, as jQuery did not', async ({ page }) => {
+        await page.unroute(`**${PARTIAL_PATH}?*`);
+        await page.route(`**${PARTIAL_PATH}?*`, (route) => route.fulfill({
+            contentType: 'text/html; charset=utf-8',
+            body: `${PARTIAL}<script type="module">window.moduleRan = true;</script>`,
+        }));
+        const errors = collectPageErrors(page);
+        await page.goto(FIXTURE_PATH);
+        await expect.poll(() => page.evaluate(() => window.messages.length)).toBe(1);
+
+        // An inline module script added now runs after any the partial could have queued.
+        await page.evaluate(() => new Promise((resolve) => {
+            window.moduleSentinel = resolve;
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.textContent = 'window.moduleSentinel();';
+            document.body.append(script);
+        }));
+        expect(await page.evaluate(() => [window.partialRuns, window.moduleRan])).toEqual([1, undefined]);
+        expect(errors).toEqual([]);
+    });
+
     test('leaves the section in place when the partial fails', async ({ page }) => {
         await page.unroute(`**${PARTIAL_PATH}?*`);
         await page.route(`**${PARTIAL_PATH}?*`, (route) => route.fulfill({ status: 500, contentType: 'text/html; charset=utf-8', body: PARTIAL }));

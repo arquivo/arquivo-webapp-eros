@@ -280,6 +280,22 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
             ]);
         });
 
+        it('runs only the classic JavaScript scripts of the response, like jQuery', async () => {
+            const runs = (type) => `<script${type}>window.ranTypes.push('${type}');</script>`;
+            const ran = [' type=""', '', ' type="text/javascript"', ' type="application/javascript"', ' type="text/ecmascript"'];
+            const inert = [' type="module"', ' type="importmap"', ' type="application/ld+json"', ' type="text/template"'];
+            window.ranTypes = [];
+            respond = () => ({ status: 200, body: [...ran, ...inert].map(runs).join('') });
+            setup(LOADING_SECTION);
+            await settleAll();
+
+            expect(window.ranTypes).toEqual(ran);
+            // The others are left as they were parsed.
+            const scripts = Array.from($id('replay-left-nav').querySelectorAll('script'), (el) => el.outerHTML);
+            expect(scripts).toEqual([...ran, ...inert].map(runs));
+            delete window.ranTypes;
+        });
+
         it.each([404, 500])('leaves the section and posts nothing when the response is HTTP %i', async (status) => {
             respond = () => ({ status, body: '<section id="loaded">Error page</section>' });
             setup(LOADING_SECTION);

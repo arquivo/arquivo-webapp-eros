@@ -41,11 +41,15 @@
      * Replace element with the nodes of an HTML string, like jQuery's replaceWith(html):
      * the inline scripts in the HTML run once it is in the page, in order.
      * HTML parsed by innerHTML never runs its scripts, so each one is swapped for a new copy.
+     * Only classic scripts are: no type, or a JavaScript MIME type (jQuery's rscriptType test).
+     * Others, such as type="module", importmap or data blocks like application/ld+json and
+     * text/template, stay inert, as jQuery 1.12 left them.
      */
     function replaceWithHtml(element, html) {
         const template = document.createElement('template');
         template.innerHTML = html;
-        const scripts = template.content.querySelectorAll('script');
+        const scripts = Array.from(template.content.querySelectorAll('script'))
+            .filter(script => /^$|\/(?:java|ecma)script/i.test(script.type));
         element.replaceWith(template.content);
         scripts.forEach(parsed => {
             const script = document.createElement('script');
