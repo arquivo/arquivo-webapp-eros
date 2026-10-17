@@ -60,7 +60,12 @@ module.exports = function (apiData) {
 // 'YYYYMMDDhhmmss' (UTC, like archive timestamps) of EMBARGO_YEARS ago, compared as a string
 function embargoCutoffTimestamp() {
     const cutoff = new Date();
+    const month = cutoff.getUTCMonth();
     cutoff.setUTCFullYear(cutoff.getUTCFullYear() - EMBARGO_YEARS);
+    // On 29 Feb the year before has no such day and Date rolls over to 1 Mar; clamp to 28 Feb
+    if (cutoff.getUTCMonth() !== month) {
+        cutoff.setUTCDate(0);
+    }
     return cutoff.toISOString().replace(/\D/g, '').substring(0, 14);
 }
 

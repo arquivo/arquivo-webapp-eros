@@ -194,6 +194,13 @@ describe('filterCdx', () => {
             expect(filterCdx([item('20240101120000')]).length).toBe(1);
         });
 
+        it('should clamp the cutoff to 28 Feb when today is 29 Feb', () => {
+            jest.setSystemTime(new Date('2028-02-29T12:00:00Z')); // cutoff '20270228120000', not 1 Mar
+            expect(filterCdx([item('20270228115959')]).length).toBe(1);
+            expect(filterCdx([item('20270228120000')])).toEqual([]);
+            expect(filterCdx([item('20270301115959')])).toEqual([]);
+        });
+
         it.each([
             ['a leading space', ' 2026031012000'],
             ['a 00 year', '00260310120000'],
