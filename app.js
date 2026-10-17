@@ -1,5 +1,4 @@
 const { resolveInclude } = require('ejs');
-const fileUpload = require('express-fileupload');
 const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
@@ -42,9 +41,7 @@ app.use((req, res, next) => {
 
 app.use(cookies());
 
-app.use(fileUpload({
-    createParentPath: true,
-}));
+// Multipart bodies are only parsed on the Citation Saver POST (src/router.js, #177).
 
 app.use((req, res, next) => {
     let requestLanguage = '';

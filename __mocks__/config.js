@@ -32,6 +32,7 @@ const mockConfig = {
   'citation.saver.google.sheet.id': '',
   'citation.saver.max.upload.size': 100000000,
   'citation.saver.upload.folder.path': 'uploads/CitationSaver',
+  'citation.saver.upload.temp.folder.path': '',
   'logger.type': 'console',
   'logger.dir': 'logs/'
 };

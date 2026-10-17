@@ -39,5 +39,16 @@
     "archivepagenow": {
       "url": "SERVICES_ARCHIVEPAGENOW_URL"
     }
+  },
+  "citation": {
+    "saver": {
+      "upload": {
+        "temp": {
+          "folder": {
+            "path": "CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH"
+          }
+        }
+      }
+    }
   }
 }

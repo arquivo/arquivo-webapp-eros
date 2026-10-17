@@ -23,8 +23,13 @@ const config = require('config');
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-'));
 const uploadFolder = path.join(tmpRoot, 'uploads');
+const uploadTempFolder = path.join(tmpRoot, 'tmp');
+const MAX_UPLOAD_SIZE = 64 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
+config.set('citation.saver.upload.temp.folder.path', uploadTempFolder);
+config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
 
+const http = require('http');
 const request = require('supertest');
 const fetch = require('node-fetch');
 const dns = require('node:dns');
@@ -38,7 +43,10 @@ const PDF = Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\
 
 const messages = {
     empty: 'Nenhum documento foi submetido.',
+    missing: 'O ficheiro não foi transferido, nenhum ficheiro foi submetido.',
     mimetype: 'O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.',
+    filesize: 'O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.',
+    default: 'Algo correu mal, por favor tente novamente mais tarde.',
 };
 
 function post() {
@@ -51,6 +59,69 @@ function storedFiles() {
 
 function storedContent(name) {
     return fs.readFileSync(path.join(uploadFolder, name));
+}
+
+// Every file left under the temporary upload folder, at any depth.
+function tempFiles() {
+    if (!fs.existsSync(uploadTempFolder)) return [];
+    return fs.readdirSync(uploadTempFolder, { recursive: true })
+        .filter(name => fs.statSync(path.join(uploadTempFolder, name)).isFile());
+}
+
+// The temporary folder of a request is removed once its response is closed, which
+// can happen just after the client got the reply.
+async function expectNoTempFiles() {
+    for (let i = 0; i < 50 && tempFiles().length > 0; i++) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    expect(tempFiles()).toEqual([]);
+}
+
+/*
+ * Streams a multipart file of `size` bytes to `port` without ever ending the request,
+ * so a reply proves the upload was rejected while streaming, before the whole body
+ * arrived. Resolves with the reply, or 'no reply' after REQUEST_TIMEOUT_MS.
+ */
+function streamUploadWithoutEnding(port, size) {
+    return new Promise((resolve) => {
+        const boundary = 'citationsaver177boundary';
+        const req = http.request({
+            port,
+            method: 'POST',
+            path: '/services/citationsaver',
+            headers: { 'content-type': 'multipart/form-data; boundary=' + boundary },
+        });
+        const timer = setTimeout(() => {
+            req.destroy();
+            resolve('no reply');
+        }, REQUEST_TIMEOUT_MS);
+        // The server may close the connection while this side is still writing.
+        req.on('error', () => {});
+        req.on('response', (res) => {
+            let body = '';
+            res.setEncoding('utf8');
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+                clearTimeout(timer);
+                req.destroy();
+                resolve({ status: res.statusCode, contentType: res.headers['content-type'], body });
+            });
+        });
+        req.write('--' + boundary + '\r\n'
+            + 'Content-Disposition: form-data; name="file"; filename="big.pdf"\r\n'
+            + 'Content-Type: application/pdf\r\n\r\n');
+        const chunk = Buffer.alloc(8 * 1024, 'a');
+        let sent = 0;
+        (function writeMore() {
+            while (sent < size && !req.destroyed) {
+                sent += chunk.length;
+                if (!req.write(chunk)) {
+                    req.once('drain', writeMore);
+                    return;
+                }
+            }
+        })();
+    });
 }
 
 describe('POST /services/citationsaver through the app', () => {
@@ -67,6 +138,10 @@ describe('POST /services/citationsaver through the app', () => {
 
     afterAll(() => {
         fs.rmSync(tmpRoot, { recursive: true, force: true });
+    });
+
+    afterEach(async () => {
+        await expectNoTempFiles();
     });
 
     describe('characterization: submissions that are accepted', () => {
@@ -152,6 +227,96 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.body).toEqual({ status: false, message: messages.mimetype });
             expect(storedFiles()).toHaveLength(0);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('multipart parsing limits (#177)', () => {
+        let server;
+        let port;
+
+        beforeAll((done) => {
+            server = app.listen(0, () => {
+                port = server.address().port;
+                done();
+            });
+        });
+
+        afterAll((done) => {
+            server.close(done);
+        });
+
+        it('rejects an upload over the limit with 413 while it is still streaming', async () => {
+            const reply = await streamUploadWithoutEnding(port, 4 * MAX_UPLOAD_SIZE);
+
+            expect(reply).not.toBe('no reply');
+            expect(reply.status).toBe(413);
+            expect(reply.contentType).toMatch(/^application\/json/);
+            expect(JSON.parse(reply.body)).toEqual({ status: false, message: messages.filesize });
+            expect(storedFiles()).toHaveLength(0);
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it('accepts a file of exactly the limit', async () => {
+            const content = Buffer.concat([Buffer.from('%PDF-'), Buffer.alloc(MAX_UPLOAD_SIZE - 5, 'a')]);
+
+            const res = await post().attach('file', content, { filename: 'max.pdf', contentType: 'application/pdf' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual(expect.objectContaining({ status: true }));
+            expect(storedFiles()).toHaveLength(1);
+        });
+
+        it('keeps only the first file when several are sent', async () => {
+            const res = await post()
+                .attach('file', PDF, { filename: 'first.pdf', contentType: 'application/pdf' })
+                .attach('file', PDF, { filename: 'second.pdf', contentType: 'application/pdf' });
+
+            expect(res.status).toBe(200);
+            expect(res.body.data).toEqual(expect.objectContaining({ name: 'first.pdf' }));
+            expect(storedFiles()).toHaveLength(1);
+        });
+
+        it('replies "file missing" for a file sent under another field name', async () => {
+            const res = await post().attach('document', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.missing });
+            expect(storedFiles()).toHaveLength(0);
+        });
+
+        it('removes the temporary file when storing the upload fails', async () => {
+            // A regular file where the upload folder should be: storing fails.
+            fs.writeFileSync(uploadFolder, 'not a directory');
+
+            const res = await post().attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+            fs.rmSync(uploadFolder);
+        });
+
+        it('removes the temporary file when the client goes away mid-upload', async () => {
+            const received = new Promise(resolve => server.once('request', (req, res) => res.once('close', resolve)));
+            const req = http.request({
+                port,
+                method: 'POST',
+                path: '/services/citationsaver',
+                headers: { 'content-type': 'multipart/form-data; boundary=b177' },
+            });
+            req.on('error', () => {});
+            req.write('--b177\r\nContent-Disposition: form-data; name="file"; filename="a.pdf"\r\n'
+                + 'Content-Type: application/pdf\r\n\r\n%PDF-' + 'a'.repeat(1024));
+            // Wait for the partial file to reach the disk, then drop the connection.
+            for (let i = 0; i < 50 && tempFiles().length === 0; i++) {
+                await new Promise(resolve => setTimeout(resolve, 20));
+            }
+            expect(tempFiles()).toHaveLength(1);
+            req.destroy();
+            await received;
+
+            await expectNoTempFiles();
+            expect(storedFiles()).toHaveLength(0);
         });
     });
 });

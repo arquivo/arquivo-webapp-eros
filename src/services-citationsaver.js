@@ -16,19 +16,37 @@
  * Each entry includes: date, timestamp, email, type, original name, filename, path
  *
  * Response format: { status: boolean, message: string, data?: object }
+ *
+ * Multipart bodies are parsed only for this POST, by parseUpload (#177). Uploads
+ * stream into a temporary file and are cut off at citation.saver.max.upload.size.
  */
 
 const fetch = require('node-fetch');
 const dns = require('node:dns');
 const net = require('node:net');
 const { randomUUID } = require('node:crypto');
+const os = require('node:os');
+const nodePath = require('node:path');
 const config = require('config');
+const fileUpload = require('express-fileupload');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
 const addToSpreadsheet = require('./spreadsheet-client');
-const maxUploadSize = config.get('citation.saver.max.upload.size');
-const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
+
+// busboy ignores a fileSize limit that is not a number, so fail at startup instead.
+function positiveNumberSetting(key) {
+    const value = Number(config.get(key));
+    if (!Number.isFinite(value) || value <= 0) {
+        throw new Error('Configuration property "' + key + '" must be a positive number');
+    }
+    return value;
+}
+
+const maxUploadSize = positiveNumberSetting('citation.saver.max.upload.size');
+const uploadFolderPath = config.get('citation.saver.upload.folder.path');
+// Empty means the OS temporary folder.
+const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path') || os.tmpdir();
 
 
 function isPrivateIpv4(ip) {
@@ -103,6 +121,84 @@ async function storeUpload(path, write) {
             .catch(rmErr => logger.warn('Could not remove partial upload ' + path + ': ' + rmErr));
         throw err;
     }
+}
+
+// A private folder (mode 0700) for this process, created on the first upload.
+let uploadTempRoot;
+function getUploadTempRoot() {
+    if (!uploadTempRoot) {
+        uploadTempRoot = fs.promises.mkdir(uploadTempFolderPath, { recursive: true })
+            .then(() => fs.promises.mkdtemp(nodePath.join(uploadTempFolderPath, 'citationsaver-')));
+        // Try again on the next upload instead of failing every upload from now on.
+        uploadTempRoot.catch(() => { uploadTempRoot = undefined; });
+    }
+    return uploadTempRoot;
+}
+
+/*
+ * Parses a multipart body (#177). The file streams into a temporary file and the
+ * upload is cut off once it goes over maxUploadSize: express-fileupload then replies
+ * 413 with responseOnLimit, closes the connection and deletes the partial file.
+ * At most one file and 10 fields (busboy keeps up to 1 MB per field) are read.
+ *
+ * Each request gets its own temporary folder, removed when the response is closed.
+ * This covers every outcome: stored (the file was moved out), rejected, failed,
+ * over the limit and aborted by the client.
+ */
+function parseUpload(req, res, next) {
+    if (!req.is('multipart/form-data')) {
+        next();
+        return;
+    }
+    getUploadTempRoot().then((tempRoot) => {
+        const tempDir = nodePath.join(tempRoot, randomUUID());
+        // express-fileupload pipes the request into its parser (busboy).
+        let parser;
+        const pipe = req.pipe;
+        req.pipe = function (destination, options) {
+            parser = destination;
+            return pipe.call(this, destination, options);
+        };
+        res.on('close', () => {
+            if (!req.complete && parser) {
+                // The body was not fully read (client gone, or cut off at the limit).
+                // Otherwise express-fileupload keeps the partial file open until its
+                // 60 s upload timer fires.
+                parser.destroy(new Error('Upload not completed'));
+            }
+            fs.promises.rm(tempDir, { recursive: true, force: true })
+                .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
+        });
+        // The 413 reply is sent with writeHead(), which keeps the headers already set.
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        const middleware = fileUpload({
+            createParentPath: true,
+            // busboy cuts a file off once it reaches fileSize bytes, so + 1 still
+            // accepts a file of exactly maxUploadSize, as the check in handleFile does.
+            limits: { fileSize: maxUploadSize + 1, files: 1, fields: 10 },
+            abortOnLimit: true,
+            responseOnLimit: JSON.stringify({
+                status: false,
+                message: req.t('services-citation-saver.errors.file.filesize')
+            }),
+            useTempFiles: true,
+            tempFileDir: tempDir,
+        });
+        middleware(req, res, (err) => {
+            // express-fileupload can call next() after the response is over, e.g. once
+            // the parser is destroyed for a client that went away. Nothing to do then.
+            if (res.writableEnded || res.destroyed) {
+                return;
+            }
+            next(err);
+        });
+    }, (err) => {
+        logger.error('Could not create the temporary upload folder in ' + uploadTempFolderPath + ': ' + err);
+        res.send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+    });
 }
 
 module.exports = async function citationSaver(req, res) {
@@ -184,12 +280,13 @@ async function handleFile(req, res) {
             message: message
         });
     }
-    if (!req.files) {
+    // A file sent under another field name is treated as missing.
+    const uploadedFile = req.files?.file;
+    if (!uploadedFile) {
         sendExpectedError(req.t('services-citation-saver.errors.file.missing'));
         return;
     }
 
-    const uploadedFile = req.files.file;
     const originalName = uploadedFile.name;
     const outExtension = mimeToExtension.get(uploadedFile.mimetype);
 
@@ -198,8 +295,8 @@ async function handleFile(req, res) {
         return;
     }
 
-    if (uploadedFile.size > maxUploadSize) {
-
+    // parseUpload already cuts off a file over the limit; this is a second check.
+    if (uploadedFile.truncated || uploadedFile.size > maxUploadSize) {
         sendExpectedError(req.t('services-citation-saver.errors.file.filesize'));
         return;
     }
@@ -363,3 +460,4 @@ async function handleText(req, res) {
         }
     });
 }
+module.exports.parseUpload = parseUpload;
