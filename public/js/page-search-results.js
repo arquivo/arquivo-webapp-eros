@@ -7,8 +7,17 @@
 //     redirection on the click event for click duration longer than 
 //     page_search_result_data.threshold milliseconds.
 
-page_search_result_data = {}
-$(() => {
+// The script's state, an explicit global as before (nothing else on the page reads it).
+// The semicolon matters: the next line starts with "(".
+window.page_search_result_data = {};
+(function (init) {
+    // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(function () {
     page_search_result_data.lastMouseDown = 0;
     page_search_result_data.threshold = 300;
     page_search_result_data.selecting = false;
@@ -17,43 +26,67 @@ $(() => {
     page_search_result_data.start = null;
     page_search_result_data.end = null;
 
-    $('#pages-results').on('mousedown', "a.overlay-link", (e) => {
+    // init.js loads the results into #pages-results after this runs, so the mousedown and
+    // click handlers are delegated from it, as jQuery's .on(type, 'a.overlay-link', fn) was.
+    const results = document.getElementById('pages-results');
+
+    // The event target as jQuery reports it: a text node target becomes its parent.
+    const targetOf = (e) => (e.target.nodeType === Node.TEXT_NODE ? e.target.parentNode : e.target);
+
+    // Whether the event started in an a.overlay-link inside #pages-results. As in jQuery,
+    // only the target and its ancestors below #pages-results can match.
+    const fromOverlayLink = (e) => {
+        const link = targetOf(e).closest('a.overlay-link');
+        return !!link && link !== results && results.contains(link);
+    };
+
+    // jQuery's .css('pointer-events', value), which skips nodes without a style.
+    const setPointerEvents = (el, value) => {
+        if (el.style) { el.style.pointerEvents = value; }
+    };
+
+    results?.addEventListener('mousedown', (e) => {
+        if (!fromOverlayLink(e)) { return; }
         if(e.button == 0){ //left mouse button
             e.preventDefault(); //fix for firefox
             page_search_result_data.lastMouseDown=new Date();
             page_search_result_data.selecting=true;
-            $(e.target).css('pointer-events','none');
+            setPointerEvents(targetOf(e),'none');
             page_search_result_data.start = getElementAndOffsetFromPoint(e.clientX,e.clientY);
-            $(e.target).css('pointer-events','auto');
+            setPointerEvents(targetOf(e),'auto');
             page_search_result_data.selection.removeAllRanges();
             page_search_result_data.selection.addRange(page_search_result_data.range);
         }
     });
-    $('body').on('mousemove',(e) => {
+    document.body.addEventListener('mousemove',(e) => {
         if(page_search_result_data.selecting){
-            if($(e.target).hasClass('overlay-link')){
-                $(e.target).css('pointer-events','none');
+            if(targetOf(e).classList.contains('overlay-link')){
+                setPointerEvents(targetOf(e),'none');
             }
                 page_search_result_data.end = getElementAndOffsetFromPoint(e.clientX,e.clientY);
                 updateSelection();
-            if($(e.target).hasClass('overlay-link')){
-                $(e.target).css('pointer-events','auto');
+            if(targetOf(e).classList.contains('overlay-link')){
+                setPointerEvents(targetOf(e),'auto');
             }
         }
     });
     addEventListener("mouseup", () => {
         page_search_result_data.selecting = false;
     });
-    $('#pages-results').on('click', 'a.overlay-link', (e) => {
+    results?.addEventListener('click', (e) => {
+        // jQuery runs delegated click handlers for the main button only.
+        if (e.button > 0) { return; }
+        if (!fromOverlayLink(e)) { return; }
         let lastMouseUp = new Date();
         if(lastMouseUp - page_search_result_data.lastMouseDown > page_search_result_data.threshold){
+            //prevents following link if user was selecting text
             e.preventDefault();
             e.stopPropagation();
-            return false; //prevents following link if user was selecting text
         }
     });
 
-    getElementAndOffsetFromPoint = function (x,y){
+    // The helpers below are local to this function: nothing else on the page uses them.
+    function getElementAndOffsetFromPoint(x,y){
         var el = document.elementFromPoint(x, y);
         var nodes = el.childNodes;
         for(let i=0; i<nodes.length;i++){
@@ -62,12 +95,12 @@ $(() => {
         }
         return [el,0];
     }
-    checkNode = function (n, x, y){
+    function checkNode(n, x, y){
         if (!checkNodePosition(n,x,y)){ return false; }
         if (n.nodeType != 3){
             if(!n.childNodes.length){ return [n,0]; }
             for(let i=0; i<n.childNodes.length;i++){
-                let r = checkNode(nodes[i],x,y);
+                let r = checkNode(n.childNodes[i],x,y);
                 if(!!r) { return r; }
             }
             return [n,0];
@@ -86,7 +119,7 @@ $(() => {
             return false;
         }
     }
-    checkNodePosition = function(n,x,y){
+    function checkNodePosition(n,x,y){
         var r = document.createRange();
         r.selectNode(n);
         var rect = r.getBoundingClientRect();
@@ -95,7 +128,7 @@ $(() => {
         }
         return false;
     }
-    updateSelection = function(){
+    function updateSelection(){
         let start = page_search_result_data.start;
         let end = page_search_result_data.end;
         if(!start) { return; }
