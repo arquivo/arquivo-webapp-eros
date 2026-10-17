@@ -42,6 +42,12 @@ describe('page result template: search terms emphasized in the title', () => {
         expect(renderedTitle(html)).toBe(`antes <em>${term}</em> depois`);
     });
 
+    it('should not emphasize anything for the empty terms of repeated spaces', async () => {
+        const html = await renderPageResult('lisboa   noticias', 'Viver em Lisboa');
+
+        expect(renderedTitle(html)).toBe('Viver em <em>Lisboa</em>');
+    });
+
     // Regression: as a regular expression, this term took exponential time to match this title
     // (~1.6 s here). Jest's timeout can't interrupt the synchronous rendering, so the elapsed time
     // is asserted instead.

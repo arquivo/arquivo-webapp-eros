@@ -44,6 +44,8 @@ if (typeof pageData != 'undefined'){
             }
             return  p;
         }, {a: ['']}).a
+        // repeated spaces make empty terms, which would add an empty emphasis to the title
+        .filter(term => term !== '')
 
     let emphasizeText = function(textToBeEmphasized,searchTerms) {
         let resultText = textToBeEmphasized;
