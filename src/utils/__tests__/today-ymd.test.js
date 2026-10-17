@@ -31,7 +31,8 @@ describe('todayYmd', () => {
     expect(todayYmd(new Date(2024, 0, 5))).toBe('20240105');
   });
 
-  it('should use the local date just before midnight', () => {
-    expect(todayYmd(new Date(2024, 11, 31, 23, 59, 59, 999))).toBe('20241231');
+  it('should use the local date when the UTC date is still the day before', () => {
+    // 00:30 local on 1 January is 10:30 UTC on 31 December in UTC+14
+    expect(todayYmd(new Date(2025, 0, 1, 0, 30))).toBe('20250101');
   });
 });
