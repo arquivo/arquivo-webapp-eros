@@ -66,7 +66,7 @@ describe('Citation Saver Service', () => {
     });
 
     describe('File upload handling', () => {
-        it('accepts valid PDF file upload', () => {
+        it('accepts valid PDF file upload', async () => {
             req.body = { email: 'test@example.com' };
             req.files = {
                 file: {
@@ -78,6 +78,7 @@ describe('Citation Saver Service', () => {
             };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: true,
@@ -90,7 +91,7 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('accepts valid TXT file upload', () => {
+        it('accepts valid TXT file upload', async () => {
             req.body = { email: 'test@example.com' };
             req.files = {
                 file: {
@@ -102,6 +103,7 @@ describe('Citation Saver Service', () => {
             };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: true,
@@ -113,7 +115,7 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('accepts valid HTML file upload', () => {
+        it('accepts valid HTML file upload', async () => {
             req.body = { email: 'test@example.com' };
             req.files = {
                 file: {
@@ -125,6 +127,7 @@ describe('Citation Saver Service', () => {
             };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: true,
@@ -185,7 +188,7 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('calls file move method with generated path', () => {
+        it('calls file move method with generated path', async () => {
             const mockMv = jest.fn();
             req.body = { email: 'test@example.com' };
             req.files = {
@@ -198,6 +201,7 @@ describe('Citation Saver Service', () => {
             };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(mockMv).toHaveBeenCalledWith(
                 expect.stringContaining('uploads/CitationSaver/')
@@ -342,19 +346,19 @@ describe('Citation Saver Service', () => {
             servicesCitationSaver(req, res);
             await flushPromises();
 
-            expect(fs.writeFile).toHaveBeenCalledWith(
+            expect(fs.promises.writeFile).toHaveBeenCalledWith(
                 expect.stringContaining('.link'),
-                'http://example.com',
-                expect.any(Function)
+                'http://example.com'
             );
         });
     });
 
     describe('Text submission handling', () => {
-        it('accepts valid text submission', () => {
+        it('accepts valid text submission', async () => {
             req.body = { text: 'Sample citation text', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: true,
@@ -378,22 +382,23 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('writes .txt file with text content', () => {
+        it('writes .txt file with text content', async () => {
             req.body = { text: 'Sample text', email: 'test@example.com' };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
-            expect(fs.writeFile).toHaveBeenCalledWith(
+            expect(fs.promises.writeFile).toHaveBeenCalledWith(
                 expect.stringContaining('.txt'),
-                'Sample text',
-                expect.any(Function)
+                'Sample text'
             );
         });
 
-        it('saves text without email when email is missing', () => {
+        it('saves text without email when email is missing', async () => {
             req.body = { text: 'Sample text' };
 
             servicesCitationSaver(req, res);
+            await flushPromises();
 
             expect(res.send).toHaveBeenCalledWith({
                 status: true,
@@ -467,15 +472,15 @@ describe('Citation Saver Service', () => {
             });
         });
 
-        it('handles file write errors gracefully', () => {
-            fs.writeFile.mockImplementationOnce((path, data, cb) => {
-                cb(new Error('Write failed'));
-            });
+        it('handles file write errors gracefully', async () => {
+            fs.promises.writeFile.mockRejectedValueOnce(new Error('Write failed'));
             req.body = { text: 'Sample text', email: 'test@example.com' };
 
-            expect(() => {
-                servicesCitationSaver(req, res);
-            }).not.toThrow();
+            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.default'
+            });
         });
 
         it('handles unexpected errors gracefully', () => {
@@ -742,7 +747,7 @@ describe('Citation Saver Service', () => {
             servicesCitationSaver(req, res);
             await flushPromises();
 
-            const path = (mv.mock.calls[0] ?? fs.writeFile.mock.calls[0])[0];
+            const path = (mv.mock.calls[0] ?? fs.promises.writeFile.mock.calls[0])[0];
             const name = path.split('/').pop();
             expect(path).toMatch(new RegExp(`^uploads/CitationSaver/${uuid}\\.${ext}$`));
             expect(addToSpreadsheet).toHaveBeenCalledWith(
@@ -766,7 +771,7 @@ describe('Citation Saver Service', () => {
             servicesCitationSaver(req, res);
             await flushPromises();
 
-            expect(fs.writeFile).not.toHaveBeenCalled();
+            expect(fs.promises.writeFile).not.toHaveBeenCalled();
             expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.URL.mimetype' });
         });
     });
@@ -905,6 +910,17 @@ describe('Citation Saver Service', () => {
             expect(addToSpreadsheet).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
+        });
+
+        it('only logs an unexpected error when the response was already sent', async () => {
+            fs.promises.writeFile.mockRejectedValue(fsError('EIO'));
+            res.headersSent = true;
+            res.send.mockImplementation(() => { throw new Error('ERR_HTTP_HEADERS_SENT'); });
+            Object.assign(req, submissions.text());
+
+            await expect(servicesCitationSaver(req, res)).resolves.toBeUndefined();
+            expect(res.send).not.toHaveBeenCalled();
+            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Something unexpected occurred.'));
         });
 
         it('has no callback-less fs.* calls left in the service', () => {

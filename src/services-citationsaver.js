@@ -8,8 +8,10 @@
  *
  * All submissions are:
  * - Validated for type and size constraints
- * - Stored in configured upload folder with random names
- * - Logged to Google Spreadsheet for administrative tracking
+ * - Stored in configured upload folder with random names (the folder is created if missing)
+ * - Logged to Google Spreadsheet for administrative tracking, only after the file is on disk
+ *
+ * A failed write or move replies { status: false } and never crashes the process.
  *
  * Each entry includes: date, timestamp, email, type, original name, filename, path
  *
@@ -86,14 +88,31 @@ function newUploadName(extension) {
     return randomUUID() + '.' + extension;
 }
 
-module.exports = function (req, res) {
+/*
+ * Stores a submission at `path` using `write(path)`, which must return a Promise.
+ * The upload folder is created first because nothing else guarantees it exists
+ * (e.g. a fresh ./uploads volume). Resolves only once the file is on disk; on failure
+ * removes any partial file and rethrows so the caller replies with unexpectedError().
+ */
+async function storeUpload(path, write) {
+    await fs.promises.mkdir(uploadFolderPath, { recursive: true });
+    try {
+        await write(path);
+    } catch (err) {
+        await fs.promises.rm(path, { force: true })
+            .catch(rmErr => logger.warn('Could not remove partial upload ' + path + ': ' + rmErr));
+        throw err;
+    }
+}
+
+module.exports = async function (req, res) {
     try {
         if (req.body?.url) {
-            handleURL(req, res);
+            await handleURL(req, res);
         } else if (req.body?.text) {
-            handleText(req, res);
+            await handleText(req, res);
         } else if (req.body?.file || req.files) {
-            handleFile(req, res);
+            await handleFile(req, res);
         } else {
             logger.info(loggerErrorMessage(req, res, 'Malformed form.', req.t('services-citation-saver.errors.empty')));
             res.send({
@@ -143,13 +162,17 @@ function loggerErrorMessage(req, res, start, reason) {
 
 function unexpectedError(req, res, err) {
     logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
+    // Never throw from here: the handler's returned Promise would reject unhandled.
+    if (res.headersSent) {
+        return;
+    }
     res.send({
         status: false,
         message: req.t('services-citation-saver.errors.default')
     });
 }
 
-function handleFile(req, res) {
+async function handleFile(req, res) {
 
     function sendExpectedError(message) {
         logger.info(loggerErrorMessage(req, res, 'Blocking submitted file.', message));
@@ -184,8 +207,8 @@ function handleFile(req, res) {
     const email = req.body?.email ?? '';
     const path = uploadFolderPath + '/' + newName;
 
-    uploadedFile.mv(path);
-
+    // Without a callback, express-fileupload's mv() returns a Promise.
+    await storeUpload(path, (target) => uploadedFile.mv(target));
 
     addToSpreadsheet([date, timestamp, email, 'File', originalName, newName, path])
         .then(() => {
@@ -208,7 +231,7 @@ function handleFile(req, res) {
 /*
  * Creates a .link file in the uploads folder which contains the submitted URL.
  */
-function handleURL(req, res) {
+async function handleURL(req, res) {
 
     function sendExpectedError(message) {
         logger.info(loggerErrorMessage(req, res, 'Blocking submitted URL.', message));
@@ -218,11 +241,8 @@ function handleURL(req, res) {
         });
     }
 
-    function saveLink(path, url, newName, date, timestamp, email, err) {
-        if (err) {
-            fs.unlink(path);
-            throw err;
-        }
+    async function saveLink(path, url, newName, date, timestamp, email) {
+        await storeUpload(path, (target) => fs.promises.writeFile(target, url));
         addToSpreadsheet([date, timestamp, email, 'Link', url, newName, path])
             .then(() => {
                 logger.info('URL saved: ' + newName + '\tOriginal: ' + url + '\tEmail: ' + email);
@@ -257,7 +277,7 @@ function handleURL(req, res) {
         redirect: 'error'
     };
 
-    isSsrfTarget(fetchUrl).then((isSsrf) => {
+    return isSsrfTarget(fetchUrl).then((isSsrf) => {
         if (isSsrf) {
             sendExpectedError(req.t('services-citation-saver.errors.URL.invalid'));
             return;
@@ -294,7 +314,7 @@ function handleURL(req, res) {
                 const email = req.body?.email ?? '';
                 const path = uploadFolderPath + '/' + newName;
 
-                fs.writeFile(path, url, (err) => saveLink(path, url, newName, date, timestamp, email, err));
+                return saveLink(path, url, newName, date, timestamp, email);
             });
 
     }).catch((err) => {
@@ -309,7 +329,7 @@ function handleURL(req, res) {
 
 }
 
-function handleText(req, res) {
+async function handleText(req, res) {
     const text = req.body.text;
 
     if (text.length > maxUploadSize) {
@@ -329,26 +349,22 @@ function handleText(req, res) {
     const path = uploadFolderPath + '/' + newName;
     const originalName = '';
 
-    fs.writeFile(path, text, err => {
-        if (err) {
-            fs.unlink(path);
-            throw err;
-        }
-        res.send({
-            status: true,
-            message: 'Text uploaded',
-            data: {
-                name: originalName,
-                mimetype: 'text/plain',
-                size: text.length
-            }
+    await storeUpload(path, (target) => fs.promises.writeFile(target, text));
+
+    addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
+        .then(() => {
+            logger.info('Text saved: ' + newName + '\tEmail: ' + email);
+        }).catch(err => {
+            logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err);
         });
 
-        addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
-            .then(() => {
-                logger.info('Text saved: ' + newName + '\tEmail: ' + email);
-            }).catch(err => {
-                logger.error('FAILED to save text: ' + newName + '\tEmail: ' + email + '\t Due to the following error: ' + err);
-            });
+    res.send({
+        status: true,
+        message: 'Text uploaded',
+        data: {
+            name: originalName,
+            mimetype: 'text/plain',
+            size: text.length
+        }
     });
 }
