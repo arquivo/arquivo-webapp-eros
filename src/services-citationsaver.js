@@ -32,6 +32,7 @@ const config = require('config');
 const fileUpload = require('express-fileupload');
 const { rateLimit } = require('express-rate-limit');
 const isValidUrl = require('./utils/is-valid-url');
+const localIsoDate = require('./utils/local-iso-date');
 const fs = require('fs');
 const addToSpreadsheet = require('./spreadsheet-client');
 const logger = require('./logger')('CitationSaver');
@@ -451,7 +452,7 @@ async function handleFile(req, res) {
     }
 
     const newName = newUploadName(outExtension);
-    const date = (new Date()).toLocaleDateString('en-CA');
+    const date = localIsoDate();
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
     const path = uploadFolderPath + '/' + newName;
@@ -534,7 +535,7 @@ async function handleURL(req, res) {
 
     const outExtension = 'link';
     const newName = newUploadName(outExtension);
-    const date = (new Date()).toLocaleDateString('en-CA');
+    const date = localIsoDate();
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
     const path = uploadFolderPath + '/' + newName;
@@ -614,7 +615,7 @@ async function handleText(req, res) {
 
     const outExtension = 'txt';
     const newName = newUploadName(outExtension);
-    const date = (new Date()).toLocaleDateString('en-CA');
+    const date = localIsoDate();
     const timestamp = Date.now();
     const email = req.body?.email ?? '';
     const path = uploadFolderPath + '/' + newName;

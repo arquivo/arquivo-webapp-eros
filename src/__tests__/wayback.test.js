@@ -216,6 +216,86 @@ describe('wayback handler', () => {
         expect(res.render).toHaveBeenCalled();
     });
 
+    describe('splitting the timestamp from the archived URL', () => {
+        it('keeps every later "/" in the archived URL', async () => {
+            req.url = '/wayback/20230101120000/example.com/a/b';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000/example.com/a/b`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000/example.com/a/b',
+                    url: 'example.com/a/b',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+
+        it('uses an empty archived URL when there is no "/" after the timestamp', async () => {
+            req.url = '/wayback/20230101120000';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000',
+                    url: '',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+    });
+
+    describe('stripping the pywb prefix from the fetched URL', () => {
+        it('strips only up to the first "replay/" when the archived URL also contains it', async () => {
+            req.url = '/wayback/20230101120000/example.com/replay/page';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000/example.com/replay/page`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000/example.com/replay/page',
+                    url: 'example.com/replay/page',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+
+        it('follows a redirect that leaves pywb with an empty path when "replay/" is absent', async () => {
+            mockFetch
+                .mockResolvedValueOnce({
+                    ok: true,
+                    url: 'https://other.example/20230101120000/example.com',
+                    headers: new Map()
+                })
+                .mockRejectedValueOnce(new Error('stop'));
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockFetch).toHaveBeenNthCalledWith(2, `${PYWB_URL}/`);
+            expect(res.status).toHaveBeenCalledWith(404);
+        });
+    });
+
     describe('non-numeric timestamp (#56)', () => {
         beforeEach(() => {
             req.url = '/wayback/20230101120000id_/example.com';
