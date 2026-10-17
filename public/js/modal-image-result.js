@@ -2,12 +2,8 @@ $(function () {
   if ($('#images-results').length) {
     let modalImageDetails = '';
     fetch('/partials/modal-image-details?l=' + lang)
-      .then((response) => response.ok ? response.text() : null)
-      .then((data) => {
-        if (data !== null) {
-          modalImageDetails = data
-        }
-      }, () => {});
+      .then((response) => response.ok ? response.text() : Promise.reject(response))
+      .then((data) => { modalImageDetails = data; }, () => {});
     const modal = $('#modal');
     document.onkeydown = (e) => {
       if ($.modal.isActive() && modal.find('.image-navigation-button').length) {

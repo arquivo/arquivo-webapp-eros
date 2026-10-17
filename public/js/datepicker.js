@@ -13,12 +13,8 @@ $(function () {
         
         //load modal datepicker template into local variable
         fetch('/partials/modal-datepicker?l='+lang)
-            .then((response) => response.ok ? response.text() : null)
-            .then((data) => {
-                if (data !== null) {
-                    modalDatepickerContent = data
-                }
-            }, () => {});
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
+            .then((data) => { modalDatepickerContent = data; }, () => {});
 
         //converts yyyymmdd into Date object
         let stringToDate = function (dateString) {

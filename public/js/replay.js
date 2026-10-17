@@ -251,11 +251,8 @@ class ArquivoReplay {
         const timestamp = replay.getConfig('requestedPage.timestamp');
         const fullUrl = replay.getConfig('requestedPage.fullUrl');
         fetch('/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
-            .then((response) => response.ok ? response.text() : null)
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
             .then((data) => {
-                if (data === null) {
-                    return;
-                }
                 if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
                     $('#technical-details').replaceWith(data);
                 }
@@ -343,9 +340,9 @@ class ArquivoReplay {
         const h3 = '<h3>' + $('#replay-left-nav > h3').html() + '</h3>';
         $('#replay-left-nav').html(h3 + replay.getConfig("loader.html"));
         fetch('/partials/replay-nav?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
-            .then((response) => response.ok ? response.text() : null)
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
             .then((data) => {
-                if (data !== null && replay.getConfig('requestedPage.fullUrl') == fullUrl) {
+                if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
                     $('#replay-left-nav').html(h3 + data);
                     replay.updateSelection(true);
                 }
