@@ -223,20 +223,21 @@ describe('search-pages handler', () => {
 describe('GET /partials/pages-search-results when the API callback throws', () => {
     let app;
     let stubServer;
-    let stubStatus;
-    let stubBody;
+    let stubHandler;
     const error = new Error('export failed');
+    const replyJson = (res, status, body) => {
+        res.writeHead(status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(body));
+    };
 
     beforeAll((done) => {
         app = require('../../app');
-        stubServer = http.createServer((req, res) => {
-            res.writeHead(stubStatus, { 'Content-Type': 'application/json' });
-            res.end(stubBody);
-        });
+        stubServer = http.createServer((req, res) => stubHandler(req, res));
         stubServer.listen(0, done);
     });
 
     afterAll((done) => {
+        stubServer.closeAllConnections();
         stubServer.close(done);
     });
 
@@ -248,23 +249,31 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
         makeExportObject.mockImplementation(() => { throw error; });
         const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
         PageSearchApiRequest.mockImplementation((backend) => {
-            const api = new ActualPageSearchApiRequest(backend);
+            // A short timeout, so the timeout path is quick to reach
+            const api = new ActualPageSearchApiRequest(backend, { timeout: 500 });
             api.apiUrl = `http://localhost:${stubServer.address().port}`;
             return api;
         });
     });
 
     it.each([
-        ['a 2xx status', 200, JSON.stringify({ response_items: [] })],
-        ['a non-2xx status', 503, JSON.stringify({ error: 'unavailable' })],
-    ])('replies with an error, instead of hanging or crashing, when the API replies %s', async (_name, status, body) => {
-        stubStatus = status;
-        stubBody = body;
+        ['replies with a 2xx status', (req, res) => replyJson(res, 200, { response_items: [] }), null],
+        ['replies with a non-2xx status', (req, res) => replyJson(res, 503, { error: 'unavailable' }), 'Invalid status code'],
+        ['resets the connection', (req) => req.socket.destroy(), 'Request error'],
+        ['does not reply in time', () => {}, 'Timeout'],
+    ])('replies with an error, instead of hanging or crashing, when the API %s', async (_name, handler, fallbackLog) => {
+        stubHandler = handler;
 
         const res = await request(app).get('/partials/pages-search-results?q=test').timeout(5000);
 
         expect(res.status).toBe(500);
         expect(makeExportObject).toHaveBeenCalledTimes(1);
+        // The API client took the expected path (its success path, or the fallback reply)
+        if (fallbackLog) {
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(fallbackLog));
+        } else {
+            expect(logger.error).not.toHaveBeenCalled();
+        }
         // Not swallowed and logged as a JSON parse error by the API client
         expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
     });
