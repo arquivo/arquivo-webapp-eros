@@ -843,7 +843,8 @@ describe('Citation Saver Service', () => {
             expect(res.send).toHaveBeenCalledTimes(1);
             expect(res.send).toHaveBeenCalledWith(failure);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
-            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining('Something unexpected occurred.'));
+            expect(mockLogger.error).toHaveBeenCalledWith(expect.stringMatching(
+                /Something unexpected occurred\. Reason: .*"code":"ENOSPC".*"message":"ENOSPC: simulated"/));
             const writtenPath = fs.promises.writeFile.mock.calls[0][0];
             expect(fs.promises.rm).toHaveBeenCalledWith(writtenPath, { force: true });
             expect(fs.unlink).not.toHaveBeenCalled();

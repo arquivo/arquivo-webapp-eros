@@ -161,7 +161,9 @@ function loggerErrorMessage(req, res, start, reason) {
 }
 
 function unexpectedError(req, res, err) {
-    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', err));
+    // JSON.stringify only keeps an Error's enumerable fields (e.g. code), so add message and stack.
+    const reason = err instanceof Error ? { ...err, message: err.message, stack: err.stack } : err;
+    logger.error(loggerErrorMessage(req, res, 'Something unexpected occurred.', reason));
     // Don't reply twice: a second res.send() would throw ERR_HTTP_HEADERS_SENT, and
     // router.js does not handle a rejection of the handler's Promise.
     if (res.headersSent) {
