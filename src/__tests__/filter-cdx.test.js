@@ -24,6 +24,17 @@ describe('filterCdx', () => {
             expect(result.length).toBe(1);
             expect(result[0].url).toBe('http://example.com');
         });
+
+        it('should drop a numeric timestamp without throwing', () => {
+            const valid = { status: '200', timestamp: `${validYear}0101120000`, digest: 'abc123', url: 'http://example.com' };
+            const data = [
+                { status: '200', timestamp: Number(`${validYear}0101100000`), digest: 'abc123', url: 'http://example.com' }, // same digest: dedup
+                valid,
+                { status: '301', timestamp: Number(`${validYear}0101113000`), digest: 'def456', url: 'http://example.com' } // near a 200: redirect check
+            ];
+            expect(() => filterCdx(data)).not.toThrow();
+            expect(filterCdx(data)).toEqual([valid]);
+        });
     });
 
     describe('Status code filtering', () => {

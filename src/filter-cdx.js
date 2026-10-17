@@ -12,8 +12,8 @@ module.exports = function (apiData) {
     
     const embargoCutoff = embargoCutoffTimestamp();
     const returnData = apiData
-        // Sanity check
-        .filter((item) => (item.status && item.timestamp && item.digest && item.url))
+        // Sanity check; timestamp must be a string, the later filters call .substring() on it
+        .filter((item) => (item.status && typeof item.timestamp === 'string' && item.timestamp && item.digest && item.url))
         // Only 200 and 300 requests are accepted
         .filter(item => (item.status[0] == '2' || item.status[0] == '3'))
         // Filter out redirects to itself
