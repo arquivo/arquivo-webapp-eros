@@ -1,12 +1,8 @@
 /**
  * Locale handling: which locale each request uses, the i18n cookie and the
  * /switchlang route.
- *
- * The locale is the one of the 'l' query parameter, else the i18n cookie, else
- * pt_PT. On /wayback paths the 'l' parameter is replaced by the cookie's
- * language. Accept-Language is never used.
  */
-const path = require('path');
+const path = require('node:path');
 const config = require('config');
 const createI18n = require('i18n-node-yaml');
 const logger = require('./logger');
@@ -16,6 +12,7 @@ const DEFAULT_LOCALE = 'pt_PT';
 const QUERY_PARAMETER = 'l';
 const COOKIE_NAME = 'i18n';
 const COOKIE_OPTIONS = { maxAge: 900000, httpOnly: false };
+const WAYBACK_PREFIX = '/wayback';
 
 /** 'en_GB' -> 'en' */
 const localeLanguage = (locale) => locale.split('_').shift();
@@ -54,7 +51,7 @@ function localeMiddleware({ debug }) {
         // so the rest of the app sees the request unchanged.
         const acceptLanguage = req.headers['accept-language'];
         const queryLanguage = req.query[QUERY_PARAMETER];
-        const replaceQueryLanguage = queryLanguage && req.url.startsWith('/wayback');
+        const replaceQueryLanguage = queryLanguage && req.url.startsWith(WAYBACK_PREFIX);
         if (acceptLanguage) {
             req.headers['accept-language'] = null;
         }
@@ -72,8 +69,9 @@ function localeMiddleware({ debug }) {
             }
         }
 
-        // Replaces the cookie set by i18n-node-yaml with the cookie's own value
-        // (or the default), so the 'l' parameter only applies to this request.
+        // Sets the i18n cookie again, after the one i18n-node-yaml set, to its own
+        // value (or the default). Browsers keep the last one, so the 'l'
+        // parameter only applies to this request.
         setLocaleCookie(res, cookieLocale);
         next();
     };
@@ -108,7 +106,7 @@ function switchLanguage(req, res) {
     res.clearCookie(COOKIE_NAME);
     setLocaleCookie(res, newLocale);
 
-    if (!refererUrl.pathname.startsWith('/wayback')) {
+    if (!refererUrl.pathname.startsWith(WAYBACK_PREFIX)) {
         refererUrl.searchParams.set(QUERY_PARAMETER, localeLanguage(newLocale));
     }
 

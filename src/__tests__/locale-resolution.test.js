@@ -225,5 +225,13 @@ describe('locale resolution (characterization, #85)', () => {
             expect(res.status).toBe(500);
             expect(res.text).toBe('Internal Server Error');
         });
+
+        it('puts Accept-Language back when i18n-node-yaml throws', () => {
+            const { localeMiddleware } = require('../locale');
+            const req = { url: '/', headers: { 'accept-language': 'en' }, query: { l: ['en', 'pt'] }, cookies: {} };
+            const res = { cookie: jest.fn(), locals: {} };
+            expect(() => localeMiddleware({ debug: false })(req, res, jest.fn())).toThrow(TypeError);
+            expect(req.headers['accept-language']).toBe('en');
+        });
     });
 });
