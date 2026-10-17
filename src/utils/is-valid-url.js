@@ -7,22 +7,20 @@ const { URL, domainToUnicode } = require('node:url');
 //   input (`<%- url %>` in services-archivepagenow-save.ejs), so they stay
 //   rejected;
 // - C0/C1 control characters (`\p{Cc}`) and invisible characters that can
-//   spoof the displayed URL: soft hyphen (U+00AD), combining grapheme joiner
-//   (U+034F), bidi marks (U+061C, U+200E, U+200F), Mongolian vowel separator
-//   (U+180E), zero-width space (U+200B), bidi embeddings and overrides
-//   (U+202A-U+202E), word joiner, invisible operators, bidi isolates and
-//   deprecated format characters (U+2060-U+206F), interlinear annotation
-//   characters (U+FFF9-U+FFFB) and tag characters (U+E0000-U+E007F). The BOM
-//   (U+FEFF) is already in `\s`. This is not a log-injection control: callers
-//   log the raw input before validating it.
-// Deliberately not a blanket `\p{Cf}` / `\p{Default_Ignorable_Code_Point}`:
-// ZWNJ/ZWJ (U+200C/U+200D) are needed by some IDNs, and variation selectors
-// (U+FE00-U+FE0F, the Mongolian U+180B-U+180D/U+180F) pick the glyph of the
-// visible character before them, as in the emoji `❤️`; UTS46 drops them from
-// the host.
-// A single character class, so matching is linear in the input length.
+//   spoof the displayed URL: every default-ignorable code point (soft hyphen,
+//   zero-width space, bidi marks, embeddings, overrides and isolates, word
+//   joiner, Hangul fillers, tag characters, the BOM, ...) and the interlinear
+//   annotation characters (U+FFF9-U+FFFB). This is not a log-injection
+//   control: callers log the raw input before validating it.
+// The lookahead lets through the default-ignorables that are allowed on
+// purpose: ZWNJ/ZWJ (U+200C/U+200D) are needed by some IDNs, and variation
+// selectors (U+FE00-U+FE0F, U+E0100-U+E01EF and the Mongolian
+// U+180B-U+180D/U+180F) pick the glyph of the visible character before them,
+// as in the emoji `❤️`; UTS46 drops them from the host.
+// Each position is checked against two character classes, with no
+// alternation or repetition, so matching is linear in the input length.
 const FORBIDDEN_CHAR =
-  /[\s\p{Cc}"'<>`\\^|[\]\u00AD\u034F\u061C\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u206F\uFFF9-\uFFFB\u{E0000}-\u{E007F}]/u;
+  /(?![\u180B-\u180D\u180F\u200C\u200D\uFE00-\uFE0F\u{E0100}-\u{E01EF}])[\s\p{Cc}\p{Default_Ignorable_Code_Point}"'<>`\\^|[\]\uFFF9-\uFFFB]/u;
 const HTTP_SCHEME = /^https?:\/\//i;
 // WHATWG drops extra leading slashes and an empty userinfo, so `//x.com`,
 // `https:///x.com` and `@x.com` would parse as `x.com`; it also allows

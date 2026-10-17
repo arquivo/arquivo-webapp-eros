@@ -234,6 +234,7 @@ describe('isValidUrl', () => {
       'https://example.com/a b',
       'publico.pt/a b',
       'exam\nple.com',
+      'publico.pt/\uFEFFx', // BOM
       'https://example.com/?a[]=1',
     ])('rejects quotes, angle brackets, brackets and inner whitespace: %j', (q) => {
       expect(isValidUrl(q)).toBe(false);
@@ -247,24 +248,35 @@ describe('isValidUrl', () => {
       ['NEL', 'publico.pt/\u0085x'],
       ['C1 control', 'publico.pt/\u009Fx'],
       ['soft hyphen', 'pub\u00ADlico.pt'],
-      ['zero-width space', 'publico\u200B.pt'],
-      ['LRE', 'publico.pt/\u202Ax'],
-      ['RLO', 'publico.pt/\u202Ex'],
-      ['LRI', 'publico.pt/\u2066x'],
-      ['PDI', 'publico.pt/\u2069x'],
-      ['BOM (in `\\s`)', 'publico.pt/\uFEFFx'],
       ['combining grapheme joiner in the host', 'publico\u034F.pt'],
       ['ALM', 'publico.pt/\u061Cx'],
+      ['Hangul choseong filler', 'publico.pt/\u115Fx'],
+      ['Hangul jungseong filler', 'publico.pt/\u1160x'],
+      ['Khmer inherent vowel AQ', 'publico.pt/\u17B4x'],
+      ['Khmer inherent vowel AA', 'publico.pt/\u17B5x'],
       ['Mongolian vowel separator', 'publico.pt/\u180Ex'],
+      ['zero-width space', 'publico\u200B.pt'],
       ['LRM', 'publico.pt/\u200Ex'],
       ['RLM', 'publico.pt/\u200Fx'],
+      ['LRE', 'publico.pt/\u202Ax'],
+      ['RLO', 'publico.pt/\u202Ex'],
       ['word joiner in the host', 'publico\u2060.pt'],
       ['invisible plus in the host', 'publico\u2064.pt'],
+      ['LRI', 'publico.pt/\u2066x'],
+      ['PDI', 'publico.pt/\u2069x'],
       ['deprecated format character', 'publico.pt/\u206Ax'],
+      ['Hangul filler', 'publico.pt/\u3164x'],
+      ['half-width Hangul filler', 'publico.pt/\uFFA0x'],
+      ['reserved default-ignorable code point', 'publico.pt/\uFFF0x'],
       ['interlinear annotation anchor', 'publico.pt/\uFFF9x'],
       ['interlinear annotation terminator', 'publico.pt/\uFFFBx'],
+      ['shorthand format letter overlap in the host', 'pub\u{1BCA0}lico.pt'],
+      ['shorthand format letter overlap', 'publico.pt/\u{1BCA0}x'],
+      ['musical symbol begin beam', 'publico.pt/\u{1D173}x'],
       ['tag character', 'publico.pt/\u{E0001}x'],
       ['cancel tag', 'publico.pt/\u{E007F}x'],
+      ['reserved default-ignorable code point', 'publico.pt/\u{E0080}x'],
+      ['reserved default-ignorable code point', 'publico.pt/\u{E0FFF}x'],
     ])('rejects a %s: %j', (_name, q) => {
       expect(isValidUrl(q)).toBe(false);
     });
@@ -282,6 +294,10 @@ describe('isValidUrl', () => {
       ['VS16 emoji in the path', 'example.com/\u2764\uFE0F'],
       ['VS16 emoji in the host', 'i\u2764\uFE0F.ws'],
       ['Mongolian free variation selector', 'example.com/\u1820\u180B'],
+      ['Mongolian free variation selector four', 'example.com/\u1820\u180F'],
+      ['VS1', 'example.com/\u2764\uFE00'],
+      ['ideographic variation selector', 'example.com/\u845B\u{E0100}'],
+      ['VS256', 'example.com/\u845B\u{E01EF}'],
     ])('accepts a %s: %j', (_name, q) => {
       expect(isValidUrl(q)).toBe(true);
     });
