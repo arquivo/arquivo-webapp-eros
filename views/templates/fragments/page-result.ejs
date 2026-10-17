@@ -8,6 +8,7 @@ if (typeof pageData != 'undefined'){
     
     const httpRegEx = /https?:\/\/(.*?)\/?$/;
     const surtRegEx = /^\(/;
+    const asciiHost = utils.asciiHost(pageData.originalURL);
     const filteredURL = surtRegEx.test(pageData.originalURL) ? surtToUrl(pageData.originalURL) : httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL;
     const resultTitle = !pageData.title ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa
     const year = pageData.tstamp.slice(0,4);
@@ -83,7 +84,7 @@ if (typeof pageData != 'undefined'){
     %>
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
         <li><a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link" aria-label="<%= resultTitle %> (<%= day %> <%= month %> <%= year %>)"></a></li>
-        <li><a class="results-url blockUrl" title="<%= filteredURL %>"><%= filteredURL %></a></li>
+        <li><a class="results-url blockUrl" title="<%= utils.displayUrl(pageData.originalURL, filteredURL) %>"><%= filteredURL %></a><% if (asciiHost) { %><span class="url-ascii-host" dir="ltr" translate="no">(<%= asciiHost %>)</span><% } %></li>
         <li><a class="results-title blockUrl"><%- (mime[0] !== 'text' ? '<span class="mime">['+mime[1].toUpperCase()+']</span>' : '') + emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><p class="results-summary blockUrl"><%- pageData.snippet %></p></li>
