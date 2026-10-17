@@ -26,7 +26,6 @@ const fetch = require('node-fetch');
 const dns = require('node:dns');
 const net = require('node:net');
 const { randomUUID } = require('node:crypto');
-const os = require('node:os');
 const nodePath = require('node:path');
 const config = require('config');
 const fileUpload = require('express-fileupload');
@@ -47,8 +46,11 @@ function positiveNumberSetting(key) {
 
 const maxUploadSize = positiveNumberSetting('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
-// Empty means the OS temporary folder.
-const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path') || os.tmpdir();
+// Uploads in progress. Empty means ".citationsaver-tmp" next to the upload folder: it is
+// on the same (writable) volume, so storing an upload is a rename, and it is not inside
+// the upload folder, so it is never taken for a submission.
+const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path')
+    || nodePath.join(nodePath.dirname(uploadFolderPath), '.citationsaver-tmp');
 
 
 function isPrivateIpv4(ip) {
@@ -189,18 +191,6 @@ const rateLimiter = rateLimit({
     },
 });
 
-// A private folder (mode 0700) for this process, created on the first upload.
-let uploadTempRoot;
-function getUploadTempRoot() {
-    if (!uploadTempRoot) {
-        uploadTempRoot = fs.promises.mkdir(uploadTempFolderPath, { recursive: true })
-            .then(() => fs.promises.mkdtemp(nodePath.join(uploadTempFolderPath, 'citationsaver-')));
-        // Try again on the next upload instead of failing every upload from now on.
-        uploadTempRoot.catch(() => { uploadTempRoot = undefined; });
-    }
-    return uploadTempRoot;
-}
-
 /*
  * Parses a multipart body (#177). The file streams into a temporary file and the
  * upload is cut off once it goes over maxUploadSize: express-fileupload then replies
@@ -209,32 +199,42 @@ function getUploadTempRoot() {
  *
  * Each request gets its own temporary folder, removed when the response is closed.
  * This covers every outcome: stored (the file was moved out), rejected, failed,
- * over the limit and aborted by the client.
+ * over the limit and aborted by the client. Only a crash can leave one behind.
  */
 function parseUpload(req, res, next) {
     if (!req.is('multipart/form-data')) {
         next();
         return;
     }
-    getUploadTempRoot().then((tempRoot) => {
-        const tempDir = nodePath.join(tempRoot, randomUUID());
-        // express-fileupload pipes the request into its parser (busboy).
-        let parser;
-        const pipe = req.pipe;
-        req.pipe = function (destination, options) {
-            parser = destination;
-            return pipe.call(this, destination, options);
-        };
-        res.on('close', () => {
-            if (!req.complete && parser) {
-                // The body was not fully read (client gone, or cut off at the limit).
-                // Otherwise express-fileupload keeps the partial file open until its
-                // 60 s upload timer fires.
-                parser.destroy(new Error('Upload not completed'));
-            }
-            fs.promises.rm(tempDir, { recursive: true, force: true })
-                .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
-        });
+    // A private folder (mode 0700) for this request.
+    const tempDir = nodePath.join(uploadTempFolderPath, randomUUID());
+    const removeTempDir = () => fs.promises.rm(tempDir, { recursive: true, force: true })
+        .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
+    // express-fileupload pipes the request into its parser (busboy).
+    let parser;
+    const pipe = req.pipe;
+    req.pipe = function (destination, options) {
+        parser = destination;
+        return pipe.call(this, destination, options);
+    };
+    let closed = false;
+    res.on('close', () => {
+        closed = true;
+        if (!req.complete && parser) {
+            // The body was not fully read (client gone, or cut off at the limit).
+            // Otherwise express-fileupload keeps the partial file open until its
+            // 60 s upload timer fires.
+            parser.destroy(new Error('Upload not completed'));
+        }
+        removeTempDir();
+    });
+
+    function parse() {
+        if (closed) {
+            // The client went away while the folder was being created.
+            removeTempDir();
+            return;
+        }
         // The 413 reply is sent with writeHead(), which keeps the headers already set.
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         const middleware = fileUpload({
@@ -272,13 +272,23 @@ function parseUpload(req, res, next) {
                 message: req.t('services-citation-saver.errors.default')
             });
         }
-    }, (err) => {
-        logger.error('Could not create the temporary upload folder in ' + uploadTempFolderPath + ': ' + err);
-        res.send({
-            status: false,
-            message: req.t('services-citation-saver.errors.default')
+    }
+
+    fs.promises.mkdir(uploadTempFolderPath, { recursive: true })
+        .then(() => fs.promises.mkdir(tempDir, { mode: 0o700 }))
+        .then(parse)
+        .catch((err) => {
+            // E.g. the temporary folder cannot be created. Never let it end the process.
+            logger.error('Could not parse the upload (temporary folder ' + uploadTempFolderPath + '): ' + err);
+            if (res.headersSent) {
+                res.destroy();
+                return;
+            }
+            res.status(500).send({
+                status: false,
+                message: req.t('services-citation-saver.errors.default')
+            });
         });
-    });
 }
 
 module.exports = async function citationSaver(req, res) {

@@ -22,12 +22,12 @@ const path = require('path');
 const config = require('config');
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-'));
-const uploadFolder = path.join(tmpRoot, 'uploads');
-const uploadTempFolder = path.join(tmpRoot, 'tmp');
+const uploadFolder = path.join(tmpRoot, 'uploads', 'CitationSaver');
+// The default temporary folder: next to the upload folder, not inside it.
+const uploadTempFolder = path.join(tmpRoot, 'uploads', '.citationsaver-tmp');
 // Larger than one read chunk (64 KiB), so a text file can span several chunks.
 const MAX_UPLOAD_SIZE = 256 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
-config.set('citation.saver.upload.temp.folder.path', uploadTempFolder);
 config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
 // Every test posts from the same IP; the rate limit has its own suite.
 config.set('citation.saver.rate.limit.max', 1000);
@@ -74,10 +74,11 @@ function tempFiles() {
 // The temporary folder of a request is removed once its response is closed, which
 // can happen just after the client got the reply.
 async function expectNoTempFiles() {
-    for (let i = 0; i < 50 && tempFiles().length > 0; i++) {
+    const tempEntries = () => fs.existsSync(uploadTempFolder) ? fs.readdirSync(uploadTempFolder) : [];
+    for (let i = 0; i < 50 && tempEntries().length > 0; i++) {
         await new Promise(resolve => setTimeout(resolve, 20));
     }
-    expect(tempFiles()).toEqual([]);
+    expect(tempEntries()).toEqual([]);
 }
 
 /*
@@ -309,6 +310,24 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.body).toEqual({ status: false, message: messages.default });
             expect(addToSpreadsheet).not.toHaveBeenCalled();
             fs.rmSync(uploadFolder);
+        });
+
+        it('replies 500 JSON and keeps serving when the temporary folder cannot be created', async () => {
+            fs.rmSync(uploadTempFolder, { recursive: true, force: true });
+            fs.mkdirSync(path.dirname(uploadTempFolder), { recursive: true });
+            fs.writeFileSync(uploadTempFolder, 'not a directory');
+            try {
+                const res = await post().attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' });
+
+                expect(res.status).toBe(500);
+                expect(res.body).toEqual({ status: false, message: messages.default });
+                expect(storedFiles()).toHaveLength(0);
+                expect(mockLogger.error).toHaveBeenCalledWith(expect.stringContaining(uploadTempFolder));
+            } finally {
+                fs.rmSync(uploadTempFolder);
+            }
+            const next = await post().field('text', 'still here');
+            expect(next.body).toEqual(expect.objectContaining({ status: true }));
         });
 
         it('removes the temporary file when the client goes away mid-upload', async () => {
