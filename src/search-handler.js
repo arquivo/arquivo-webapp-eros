@@ -23,7 +23,7 @@ module.exports = function makeSearchHandler({ createApiRequest, fetchResults, it
         const requestData = sanitizeInputs(req, res);
         const apiRequest = createApiRequest(requestData);
 
-        // fetchResults routes the errors of getting the results and of rendering them to next
+        // fetchResults routes errors thrown while getting or rendering the results to next
         fetchResults(apiRequest, requestData, next, (apiData, suggestion) => {
             if(!apiData[itemsKey] || apiData[itemsKey].length == 0){
                 logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
