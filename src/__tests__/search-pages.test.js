@@ -272,7 +272,8 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
         if (fallbackLog) {
             expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(fallbackLog));
         } else {
-            expect(logger.error).not.toHaveBeenCalled();
+            // Only the API client's own lines: the app's error middleware also logs the error
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(`localhost:${stubServer.address().port} :`));
         }
         // Not swallowed and logged as a JSON parse error by the API client
         expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
