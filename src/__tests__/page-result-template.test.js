@@ -186,6 +186,47 @@ describe('page result template: title and snippet shown as text', () => {
         expect(renderedTitle(html)).toBe(expected);
     });
 
+    it('should emphasize a term followed by > in the title', async () => {
+        const html = await renderPageResult('lisboa', 'Lisboa>Porto');
+
+        expect(renderedTitle(html)).toBe('<em>Lisboa</em>&gt;Porto');
+    });
+
+    it('should emphasize a term with accents in another case, keeping the case of the title', async () => {
+        const html = await renderPageResult('ação', 'AÇÃO e Ação');
+
+        expect(renderedTitle(html)).toBe('<em>AÇÃO</em> e Ação');
+    });
+
+    // ẞ lower cases to ß, which the search terms matched in lower case always found.
+    it('should emphasize a term in another case where the cases are different letters', async () => {
+        const html = await renderPageResult('straße', 'Rua STRAẞE');
+
+        expect(renderedTitle(html)).toBe('Rua <em>STRAẞE</em>');
+    });
+
+    // Lower casing İ gives two characters, so positions in the lower cased title are not
+    // positions in the title.
+    it('should emphasize the term itself after a character that changes length in lower case', async () => {
+        const html = await renderPageResult('lisboa', 'İstanbul Lisboa');
+
+        expect(renderedTitle(html)).toBe('İstanbul <em>Lisboa</em>');
+    });
+
+    it('should not split a character made of two code units', async () => {
+        const html = await renderPageResult('a', 'İa😀');
+
+        expect(renderedTitle(html)).toBe('İ<em>a</em>😀');
+        expect(text(html, '.results-title')).toBe('İa😀');
+        expect(text(html, '.results-title')).not.toContain('\uFFFD');
+    });
+
+    it('should show a title that is not a string', async () => {
+        const html = await renderPageResult('2005', 2005);
+
+        expect(renderedTitle(html)).toBe('<em>2005</em>');
+    });
+
     it('should not take the em of the emphasis for a search term', async () => {
         const html = await renderPageResult('lisboa em', 'Viver em Lisboa');
 
@@ -205,6 +246,18 @@ describe('page result template: title and snippet shown as text', () => {
         const html = await renderPageResult('lisboa', 'Lisboa', 'http://example.com/', { mimeType: 'application/pdf' });
 
         expect(renderedTitle(html)).toBe('<span class="mime">[PDF]</span><em>Lisboa</em>');
+    });
+
+    it('should show a format without a subtype', async () => {
+        const html = await renderPageResult('lisboa', 'Lisboa', 'http://example.com/', { mimeType: 'pdf' });
+
+        expect(renderedTitle(html)).toBe('<span class="mime">[PDF]</span><em>Lisboa</em>');
+    });
+
+    it('should show no format for an empty type', async () => {
+        const html = await renderPageResult('lisboa', 'Lisboa', 'http://example.com/', { mimeType: '' });
+
+        expect(renderedTitle(html)).toBe('<em>Lisboa</em>');
     });
 
     it('should escape the format of a result', async () => {
@@ -252,6 +305,23 @@ describe('page result template: snippet markup', () => {
 
         expect(renderedSnippet(html)).toBe(expected);
         expect(structure(html)).toEqual(structure(await renderSnippet('a <em>b</em> c')));
+    });
+
+    it('should keep an & right before the emphasis', async () => {
+        const html = await renderSnippet('a &<em>b</em>');
+
+        expect(renderedSnippet(html)).toBe('a &<em>b</em>');
+        expect(text(html, '.results-summary')).toBe('a &b');
+        expect(structure(html)).toEqual(structure(await renderSnippet('a <em>b</em> c')));
+    });
+
+    it('should close an emphasis left open before an ellipsis', async () => {
+        const html = await renderSnippet('<em>a<span class="ellipsis"> ... </span>');
+
+        expect(renderedSnippet(html)).toBe('<em>a<span class="ellipsis"> ... </span></em>');
+        const ellipsis = parse(html).querySelector('.results-summary > em > span.ellipsis');
+        expect(ellipsis.textContent).toBe(' ... ');
+        expect(structure(html)).toEqual(structure(await renderSnippet('<em>a</em><span class="ellipsis"> ... </span>')));
     });
 
     it('should show nothing for a result without a snippet', async () => {

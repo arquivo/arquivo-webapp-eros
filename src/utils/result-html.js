@@ -11,6 +11,7 @@ const escapeChars = (text, chars) => text.replace(chars, (c) => ENTITIES[c]);
 const EM_OPEN = '<em>';
 const EM_CLOSE = '</em>';
 const ELLIPSIS = '<span class="ellipsis"> ... </span>';
+// Must match exactly the EM_OPEN, EM_CLOSE and ELLIPSIS constants above.
 const SNIPPET_MARKUP = /<em>|<\/em>|<span class="ellipsis"> \.\.\. <\/span>/g;
 
 /**
@@ -24,14 +25,22 @@ const escapeHtml = (text) => escapeChars(String(text), /[&<>"']/g);
 /**
  * Text as HTML, with the given ranges of the text in `<em>`.
  *
+ * Each range is kept within the text and after the previous one, and an empty range is
+ * skipped, so overlapping, reversed or out of bounds ranges never nest or empty the emphasis.
+ *
  * @param {string} text - Text, e.g. a result title
- * @param {Array<[number, number]>} ranges - Ranges [start, end) of the text to emphasize, not overlapping
+ * @param {Array<[number, number]>} ranges - Ranges [start, end) of the text to emphasize
  * @returns {string} HTML showing the text as typed, with the ranges emphasized
  */
 const emphasizedHtml = (text, ranges) => {
     let html = '';
     let position = 0;
-    [...ranges].sort((a, b) => a[0] - b[0]).forEach(([start, end]) => {
+    [...ranges].sort((a, b) => a[0] - b[0]).forEach((range) => {
+        const start = Math.max(range[0], position);
+        const end = Math.min(Math.max(range[1], start), text.length);
+        if (end <= start) {
+            return;
+        }
         html += escapeHtml(text.substring(position, start)) + EM_OPEN + escapeHtml(text.substring(start, end)) + EM_CLOSE;
         position = end;
     });
@@ -60,9 +69,11 @@ const snippetHtml = (snippet) => {
     for (const match of text.matchAll(SNIPPET_MARKUP)) {
         const markup = match[0];
         html += escapeSnippetText(text.substring(position, match.index));
-        if (markup === ELLIPSIS || markup === (emphasisOpen ? EM_CLOSE : EM_OPEN)) {
+        if (markup === ELLIPSIS) {
             html += markup;
-            emphasisOpen = markup === ELLIPSIS ? emphasisOpen : !emphasisOpen;
+        } else if (markup === (emphasisOpen ? EM_CLOSE : EM_OPEN)) {
+            html += markup;
+            emphasisOpen = !emphasisOpen;
         } else {
             html += escapeSnippetText(markup);
         }

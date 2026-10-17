@@ -10,7 +10,7 @@ if (typeof pageData != 'undefined'){
     const surtRegEx = /^\(/;
     const asciiHost = utils.asciiHost(pageData.originalURL);
     const filteredURL = surtRegEx.test(pageData.originalURL) ? surtToUrl(pageData.originalURL) : httpRegEx.test(pageData.originalURL) ? pageData.originalURL.replace(httpRegEx,'$1') : pageData.originalURL;
-    const resultTitle = !pageData.title ? pageData.originalURL : pageData.title; //falta por em bold os termos da pesquisa
+    const resultTitle = String(!pageData.title ? pageData.originalURL : pageData.title);
     const year = pageData.tstamp.slice(0,4);
     const month = t('common.months.'+pageData.tstamp.slice(4,6));
     const day = parseInt(pageData.tstamp.slice(6,8));
@@ -20,7 +20,9 @@ if (typeof pageData != 'undefined'){
 
     const siteRegEx = /(^|\s)site:/;
     const newRequestData = new URLSearchParams(typeof requestData != 'undefined' ? requestData : {});
-    const mime = pageData.mimeType.split('/');
+    const mime = String(pageData.mimeType ?? '').split('/');
+    // the format shown before the title of a result that is not text, e.g. PDF (none for an empty type)
+    const mimeLabel = mime[0] !== 'text' ? (mime[1] ?? mime[0]).toUpperCase() : '';
 
     const searchTerms = query
         // removes "site" "type" "collection" "yearBalance" "language" and "minLanguageConfidence" special queries
@@ -54,21 +56,21 @@ if (typeof pageData != 'undefined'){
     // the title as text, with the search terms emphasized: they are matched on the title itself, and only
     // the text is escaped, so terms with characters such as & or < match as typed
     let emphasizeText = function(textToBeEmphasized,searchTerms) {
-        const lowerText = textToBeEmphasized.toLowerCase();
         // ranges [start, end) of the text to emphasize, which are not emphasized again
         const emphasized = [];
         // terms are matched in lower case, so the same term in another case is a duplicate
         const distinctTerms = [...new Set(searchTerms.map(term => term.toLowerCase()))].slice(0, MAX_EMPHASIZED_TERMS);
         distinctTerms.forEach(function(emphasizeWord) {
-            // can not use replace text with ignore case because it will change the case of the original text
+            // the term is matched ignoring case on the title itself, so the ranges are positions in the title
+            // (lower casing the title can change its length, e.g. for İ) and the title keeps its case
             // this regex makes that only full words (delimited by \b) are matched with the incoming terms
             // Removes partial matches such as "ugal" -> "Portugal"
             // the term is escaped, so it is matched literally and never as a regular expression
             const escapedWord = emphasizeWord.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
-            const wordDelim = new RegExp('\\b'+escapedWord+'\\b', 'g');
-            for (const match of lowerText.matchAll(wordDelim)) {
+            const wordDelim = new RegExp('\\b'+escapedWord+'\\b', 'giu');
+            for (const match of textToBeEmphasized.matchAll(wordDelim)) {
                 const from = match.index;
-                const to = from + emphasizeWord.length;
+                const to = from + match[0].length;
                 if (!emphasized.some(([start, end]) => from < end && to > start)) {
                     emphasized.push([from, to]);
                     break;
@@ -82,7 +84,7 @@ if (typeof pageData != 'undefined'){
     <ul class="page-search-result<%= subResult ? ' sub-results' : ''%>" data-index="<%= (index + 1) %>" data-tstamp="<%= pageData.tstamp %>" data-url="<%= pageData.originalURL %>">
         <li><a href="/page/view/<%= newRequestData.get('trackingId') %>_<%= (index + 1) %>/<%= pageData.tstamp %>/<%= encodeURIComponent(pageData.originalURL) %>" class="overlay-link" aria-label="<%= resultTitle %> (<%= day %> <%= month %> <%= year %>)"></a></li>
         <li><a class="results-url blockUrl" title="<%= utils.displayUrl(pageData.originalURL, filteredURL) %>"><%= filteredURL %></a><% if (asciiHost) { %><span class="url-ascii-host" dir="ltr" translate="no">(<%= asciiHost %>)</span><% } %></li>
-        <li><a class="results-title blockUrl"><% if (mime[0] !== 'text') { %><span class="mime">[<%= mime[1].toUpperCase() %>]</span><% } %><%- emphasizeText(resultTitle,searchTerms) %></a></li>
+        <li><a class="results-title blockUrl"><% if (mimeLabel) { %><span class="mime">[<%= mimeLabel %>]</span><% } %><%- emphasizeText(resultTitle,searchTerms) %></a></li>
         <li><p class="results-date"><%= day %> <%= month %> <%= year %></p></li>
         <li><p class="results-summary blockUrl"><%- utils.snippetHtml(pageData.snippet) %></p></li>
         <% if (subResult && !siteRegEx.test(query) ) { %>
