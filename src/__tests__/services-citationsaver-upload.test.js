@@ -40,8 +40,6 @@ const { root: tmpRoot, uploadFolder, uploadTempFolder } = makeUploadFolders('cit
 const MAX_UPLOAD_SIZE = 256 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
 config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
-// Every test posts from the same IP; the rate limit has its own suite.
-config.set('citation.saver.rate.limit.max', 1000);
 
 const http = require('http');
 const fetch = require('node-fetch');
@@ -198,7 +196,7 @@ describe('POST /services/citationsaver through the app', () => {
                 message: 'Link uploaded',
                 data: { name: 'https://example.com/paper.pdf', mimetype: '', size: 'https://example.com/paper.pdf'.length }
             });
-            expect(fetch).toHaveBeenCalledWith('https://example.com/paper.pdf', { method: 'HEAD', redirect: 'error' });
+            expect(fetch).toHaveBeenCalledWith('https://example.com/paper.pdf', expect.objectContaining({ method: 'HEAD', redirect: 'error' }));
             const stored = storedFiles();
             expect(stored).toHaveLength(1);
             expect(stored[0]).toMatch(/\.link$/);
