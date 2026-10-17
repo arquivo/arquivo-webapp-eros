@@ -124,7 +124,11 @@ class BaseApiRequest {
                     safeCallback(this.fallbackReply(requestData));
                 });
 
-                // Give up on a body that is too large, before it fills the memory
+                // Give up on a body that is too large, before it fills the memory.
+                // The chunks are already decoded strings (setEncoding above), so this counts their UTF-8
+                // re-encoding, not the bytes received. That is never less than what was received: valid
+                // UTF-8 re-encodes to the same bytes, and each invalid sequence (1 to 3 bytes) becomes
+                // U+FFFD (3 bytes). So the cap can only trip a little early, never late.
                 let receivedBytes = 0;
                 apiRes.on('data', (chunk) => {
                     receivedBytes += Buffer.byteLength(chunk);
