@@ -956,16 +956,20 @@ describe('Citation Saver Service', () => {
         });
 
         it.each([
-            ['file', { email }, { file: { name: fileName, mimetype: 'application/x-msdownload', size: 5000, mv: jest.fn() } }, 'file'],
-            ['text', { email, text: '' }, null, 'text'],
-        ])('logs the reason of a blocked %s, not the request', async (_kind, body, files, kind) => {
+            ['file', { email }, { file: { name: fileName, mimetype: 'application/x-msdownload', size: 5000, mv: jest.fn() } },
+                'Blocking submitted file. Reason: "services-citation-saver.errors.file.mimetype"'],
+            // Over the 100 KiB field limit
+            ['text', { email, text: text + ' ' + 'x'.repeat(100 * 1024) }, null,
+                'Blocking submitted text. Reason: "services-citation-saver.errors.text.toolong"'],
+        ])('logs the reason of a blocked %s, not the request', async (_kind, body, files, message) => {
             Object.assign(req, { body, files });
 
             await servicesCitationSaver(req, res);
             await flushPromises();
 
-            expect(mockLogger.info).toHaveBeenCalledWith(expect.stringMatching(
-                new RegExp(`^(Blocking submitted ${kind}\\.|Malformed form\\.) Reason: "services-citation-saver\\.errors\\.[\\w.]+"$`)));
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: false }));
+            expect(mockLogger.info).toHaveBeenCalledTimes(1);
+            expect(mockLogger.info).toHaveBeenCalledWith(message);
             expectNoPersonalData();
         });
 

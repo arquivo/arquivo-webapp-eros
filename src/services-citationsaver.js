@@ -224,13 +224,15 @@ function parseUpload(req, res, next) {
         removeTempDir();
     });
     // Replies { status: false } JSON, unless the response is already under way.
-    function reject(status, logMessage) {
-        // The parser's error may quote a request header, e.g. the Content-Type.
+    function reject(status, logMessage, err) {
+        // The error's message may quote the request, e.g. its Content-Type: debug only.
+        const line = logMessage + ' Reason: ' + describeError(err);
         if (status >= 500) {
-            logger.error(escapeForLog(logMessage));
+            logger.error(line);
         } else {
-            logger.info(escapeForLog(logMessage));
+            logger.info(line);
         }
+        logger.debug(logMessage + ' ' + escapeForLog(err?.stack ?? err));
         if (res.headersSent) {
             res.destroy();
             return;
@@ -287,7 +289,7 @@ function parseUpload(req, res, next) {
                 if (err) {
                     // busboy fails on a body it cannot parse, e.g. a malformed part header.
                     // An error writing the temporary file is ours.
-                    reject(err.syscall ? 500 : 400, 'Blocking submission: could not read the multipart request. ' + err);
+                    reject(err.syscall ? 500 : 400, 'Blocking submission: could not read the multipart request.', err);
                     return;
                 }
                 next();
@@ -295,7 +297,7 @@ function parseUpload(req, res, next) {
         } catch (err) {
             // busboy throws at once for a Content-Type it cannot parse, e.g. one without
             // a boundary. Uncaught here, it would be an unhandled rejection and end the process.
-            reject(400, 'Blocking submission: unreadable multipart request. ' + err);
+            reject(400, 'Blocking submission: unreadable multipart request.', err);
         }
     }
 
@@ -304,7 +306,7 @@ function parseUpload(req, res, next) {
         .then(parse)
         .catch((err) => {
             // E.g. the temporary folder cannot be created. Never let it end the process.
-            reject(500, 'Could not parse the upload (temporary folder ' + uploadTempFolderPath + '): ' + err);
+            reject(500, 'Could not parse the upload (temporary folder ' + uploadTempFolderPath + ').', err);
         });
 }
 

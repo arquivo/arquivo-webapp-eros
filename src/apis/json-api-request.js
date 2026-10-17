@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseApiRequest = require('./base-api-request');
+const escapeForLog = require('../utils/escape-for-log');
 
 /**
  * JsonApiRequest - HTTP client for APIs that reply with a JSON document
@@ -57,7 +58,9 @@ class JsonApiRequest extends BaseApiRequest {
                 const apiData = JSON.parse(apiReply);
                 safeCallback(apiData);
             } catch (e) {
-                this.logger.error(`${this.apiUrl} : JSON parse error: ${e.message}`);
+                // Not the message at error level: JSON.parse's quotes part of the reply.
+                this.logger.error(`${this.apiUrl} : JSON parse error (${apiReply.length} characters): ${e.name}`);
+                this.logger.debug(`${this.apiUrl} : JSON parse error: ${escapeForLog(e.message)}`);
                 safeCallback(this.fallbackReply(requestData));
             }
         });

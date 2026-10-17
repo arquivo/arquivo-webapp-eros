@@ -278,7 +278,7 @@ describe('Archive Page Now Service', () => {
                 expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('s3cr3t'), expect.any(Object));
                 expect(logger.error).toHaveBeenCalledTimes(1);
                 expect(logger.error).toHaveBeenCalledWith('Backend logging failed - '
-                    + 'name: "FetchError", type: "system", errno: "ECONNREFUSED", code: "ECONNREFUSED"');
+                    + 'name: "FetchError", type: "system", code: "ECONNREFUSED", errno: "ECONNREFUSED"');
                 const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].flat().join('\n');
                 ['s3cr3t', 'agent-under-test', '203.0.113.9']
                     .forEach(value => expect(logged).not.toContain(value));

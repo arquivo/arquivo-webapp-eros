@@ -16,34 +16,27 @@ describe('logger default config', () => {
     expect(info[MESSAGE]).toBe('16/Oct/2026:09:05:07\tINFO\tmy-label\t-\thello');
   });
 
-  describe('with the daily logger', () => {
-    // The daily transport's options with these settings, without creating any file
-    function dailyTransportOptions(settings = {}) {
-      let options;
+  describe('logger.level', () => {
+    // The defaults with this logger.level, in a fresh module registry
+    function defaultsWithLevel(level) {
+      let defaults;
       jest.isolateModules(() => {
-        const config = require('config');
-        Object.entries({ 'logger.type': 'daily', ...settings }).forEach(([key, value]) => config.set(key, value));
-        jest.doMock('winston-daily-rotate-file', () => {
-          require('winston').transports.DailyRotateFile = jest.fn(function (opts) { options = opts; });
-        });
-        require('../default.config');
+        if (level !== undefined) require('config').set('logger.level', level);
+        defaults = require('../default.config')('my-label');
       });
-      return options;
+      return defaults;
     }
 
-    it('should delete the files older than logger.maxFiles (30 days by default)', () => {
-      expect(dailyTransportOptions()).toEqual(expect.objectContaining({
-        dirname: 'logs/',
-        maxFiles: '30d',
-        auditFile: 'logs/.arquivo-webapp-audit.json',
-      }));
+    it('should write info and above by default, so debug lines (personal data) are dropped', () => {
+      expect(defaultsWithLevel().level).toBe('info');
     });
 
-    it('should keep its list of files when the retention changes', () => {
-      expect(dailyTransportOptions({ 'logger.maxFiles': '7d' })).toEqual(expect.objectContaining({
-        maxFiles: '7d',
-        auditFile: 'logs/.arquivo-webapp-audit.json',
-      }));
+    it('should take another level from the setting', () => {
+      expect(defaultsWithLevel('debug').level).toBe('debug');
+    });
+
+    it.each(['inf', 'DEBUG', '', 'constructor'])('should refuse to start with the unknown level "%s"', (level) => {
+      expect(() => defaultsWithLevel(level)).toThrow(/"logger\.level" \(LOGGER_LEVEL\) must be one of error, warn, info/);
     });
   });
 });

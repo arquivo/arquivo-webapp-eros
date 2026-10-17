@@ -328,7 +328,11 @@ describe('JsonApiRequest', () => {
 
       api.get(new URLSearchParams(), (data) => {
         expect(data).toBe(defaultReply);
-        expect(api.logger.error).toHaveBeenCalledWith(expect.stringContaining(`http://localhost:${serverPort}/invalid-json : JSON parse error:`));
+        // Not the parser's message, which quotes the reply: only at debug level, escaped
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/invalid-json : JSON parse error (13 characters): SyntaxError`);
+        expect(api.logger.error.mock.calls.flat().join('\n')).not.toContain('invalid json');
+        expect(api.logger.debug).toHaveBeenCalledWith(expect.stringMatching(
+          new RegExp(`^http://localhost:${serverPort}/invalid-json : JSON parse error: .*"invalid json\\{"`)));
         done();
       });
     });
@@ -543,7 +547,8 @@ describe('JsonApiRequest', () => {
         expect(data).toEqual({ status: 'ok', data: 'test' });
         setTimeout(() => {
           expect(calls).toBe(1);
-          expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/success : JSON parse error: boom from callback`);
+          expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/success : JSON parse error (29 characters): Error`);
+          expect(api.logger.debug).toHaveBeenCalledWith(`http://localhost:${serverPort}/success : JSON parse error: boom from callback`);
           done();
         }, 50);
         throw new Error('boom from callback');

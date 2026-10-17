@@ -63,6 +63,6 @@
     }
   },
   "logger": {
-    "maxFiles": "LOGGER_MAX_FILES"
+    "level": "LOGGER_LEVEL"
   }
 }

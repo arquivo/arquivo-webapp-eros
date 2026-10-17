@@ -10,13 +10,18 @@ const FIELDS = ['name', 'type', 'code', 'errno', 'syscall', 'status'];
  * got. Log the message (or the stack) at debug level only, with escapeForLog.
  *
  * @param {*} err - The error
- * @returns {string} E.g. 'name: "FetchError", type: "system", code: "ECONNREFUSED"'
+ * @returns {string} E.g. 'name: "FetchError", type: "system", code: "ECONNREFUSED"', or
+ *   'name: "HTTPError", response status: 403'
  */
 module.exports = function describeError(err) {
     if (err === null || typeof err !== 'object') {
         return 'type: ' + typeof err;
     }
-    return FIELDS.filter(field => err[field] != null && typeof err[field] !== 'object')
-        .map(field => field + ': "' + escapeForLog(err[field]) + '"')
-        .join(', ');
+    const parts = FIELDS.filter(field => err[field] != null && typeof err[field] !== 'object')
+        .map(field => field + ': "' + escapeForLog(err[field]) + '"');
+    // The HTTP status of an error that keeps the response, e.g. ky's HTTPError (Google Sheets)
+    if (typeof err.response?.status === 'number') {
+        parts.push('response status: ' + err.response.status);
+    }
+    return parts.length > 0 ? parts.join(', ') : 'type: object';
 };
