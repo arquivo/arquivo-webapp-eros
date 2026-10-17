@@ -20,4 +20,21 @@ describe('removeInlineTerms', () => {
   it('should not remove a parameter name without a value', () => {
     expect(removeInlineTerms('lisboa language:', ['language'])).toBe('lisboa language:');
   });
+
+  it('should remove the whitespace before a term and keep the rest of the whitespace', () => {
+    expect(removeInlineTerms(' \t language:pt lisboa  \u00a0language:en porto  ', ['language'])).toBe('lisboa porto');
+    expect(removeInlineTerms('lisboa  porto', ['language'])).toBe('lisboa  porto');
+  });
+
+  // Regression: a `\s+name:` pattern was quadratic on long whitespace runs.
+  it('should take linear time on long whitespace runs', () => {
+    const query = 'lisboa' + ' '.repeat(50000) + 'porto';
+
+    const start = process.hrtime.bigint();
+    const result = removeInlineTerms(query, ['collection', 'language']);
+    const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+    expect(result).toBe(query);
+    expect(elapsedMs).toBeLessThan(200);
+  });
 });
