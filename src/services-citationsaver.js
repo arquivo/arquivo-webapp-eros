@@ -191,6 +191,8 @@ const rateLimiter = rateLimit({
     },
 });
 
+const UPLOAD_IDLE_TIMEOUT_MS = 15000;
+
 /*
  * Parses a multipart body (#177). The file streams into a temporary file and the
  * upload is cut off once it goes over maxUploadSize: express-fileupload then replies
@@ -210,22 +212,9 @@ function parseUpload(req, res, next) {
     const tempDir = nodePath.join(uploadTempFolderPath, randomUUID());
     const removeTempDir = () => fs.promises.rm(tempDir, { recursive: true, force: true })
         .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
-    // express-fileupload pipes the request into its parser (busboy).
-    let parser;
-    const pipe = req.pipe;
-    req.pipe = function (destination, options) {
-        parser = destination;
-        return pipe.call(this, destination, options);
-    };
     let closed = false;
     res.on('close', () => {
         closed = true;
-        if (!req.complete && parser) {
-            // The body was not fully read (client gone, or cut off at the limit).
-            // Otherwise express-fileupload keeps the partial file open until its
-            // 60 s upload timer fires.
-            parser.destroy(new Error('Upload not completed'));
-        }
         removeTempDir();
     });
 
@@ -238,7 +227,6 @@ function parseUpload(req, res, next) {
         // The 413 reply is sent with writeHead(), which keeps the headers already set.
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
         const middleware = fileUpload({
-            createParentPath: true,
             // busboy cuts a file off once it reaches fileSize bytes, so + 1 still
             // accepts a file of exactly maxUploadSize, as the check in handleFile does.
             limits: { fileSize: maxUploadSize + 1, files: 1, fields: 10 },
@@ -249,6 +237,9 @@ function parseUpload(req, res, next) {
             }),
             useTempFiles: true,
             tempFileDir: tempDir,
+            // A file that gets no data for this long is dropped, e.g. once the client is
+            // gone. Its folder is already removed then, but the file is still open.
+            uploadTimeout: UPLOAD_IDLE_TIMEOUT_MS,
         });
         try {
             middleware(req, res, (err) => {

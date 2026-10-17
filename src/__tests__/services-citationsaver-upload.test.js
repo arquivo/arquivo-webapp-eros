@@ -15,6 +15,18 @@ jest.mock('node:dns');
 
 const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
 jest.mock('../logger', () => () => mockLogger);
+// After a client goes away mid-upload, express-fileupload drops the file only once its
+// idle timer fires. Unref the timer so it does not keep Jest running after the tests.
+jest.mock('express-fileupload/lib/uploadtimer', () => {
+    const UploadTimer = jest.requireActual('express-fileupload/lib/uploadtimer');
+    return class extends UploadTimer {
+        set() {
+            const started = super.set();
+            this.timer?.unref();
+            return started;
+        }
+    };
+});
 
 const fs = require('fs');
 const os = require('os');
