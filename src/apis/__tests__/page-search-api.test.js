@@ -492,6 +492,70 @@ describe('PageSearchApiRequest', () => {
             expect(sanitized.get('q')).toBe('simple test query');
         });
 
+        describe('inline terms are matched literally', () => {
+            it('should only remove the term with the exact value, not values matching it as a pattern', () => {
+                const requestData = new URLSearchParams({
+                    q: 'test site:axb site:a.b query',
+                    siteSearch: 'a.b'
+                });
+
+                const sanitized = api.sanitizeRequestData(requestData);
+
+                expect(sanitized.get('q')).toBe('test site:axb query');
+                expect(sanitized.get('siteSearch')).toBe('a.b');
+            });
+
+            it.each([
+                ['a(b'],
+                ['a*b'],
+                ['a+b'],
+                [String.raw`a\b`],
+                ['[a]?{1}|^$'],
+            ])('should remove the term with the value %s', (value) => {
+                const requestData = new URLSearchParams({
+                    q: `test site:${value} query`,
+                    siteSearch: value
+                });
+
+                const sanitized = api.sanitizeRequestData(requestData);
+
+                expect(sanitized.get('q')).toBe('test query');
+                expect(sanitized.get('siteSearch')).toBe(value);
+            });
+
+            it('should replace the term and the whitespace around it with a single space', () => {
+                const requestData = new URLSearchParams({
+                    q: 'test \t site:a.b  query',
+                    siteSearch: 'a.b'
+                });
+
+                expect(api.sanitizeRequestData(requestData).get('q')).toBe('test query');
+            });
+
+            // Regression: as a regular expression, this value took exponential time to match this query
+            it('should not take exponential time for values that are costly as a pattern', () => {
+                const value = '(a+)+b';
+                const requestData = new URLSearchParams({
+                    q: 'test site:' + 'a'.repeat(24),
+                    siteSearch: value
+                });
+
+                const start = process.hrtime.bigint();
+                const sanitized = api.sanitizeRequestData(requestData);
+                const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+                expect(sanitized.get('q')).toBe(requestData.get('q'));
+                expect(elapsedMs).toBeLessThan(200);
+            }, 1000);
+
+            it('should not fail when there is an inline term parameter but no query', () => {
+                const sanitized = api.sanitizeRequestData(new URLSearchParams({ siteSearch: 'a.b' }));
+
+                expect(sanitized.has('q')).toBe(false);
+                expect(sanitized.get('siteSearch')).toBe('a.b');
+            });
+        });
+
         it('should merge with default parameters', () => {
             const requestData = new URLSearchParams({
                 q: 'test query',
