@@ -169,6 +169,34 @@ describe('citation-saver.js', () => {
         expect(isShown('#citation-saver-progress-bar')).toBe(false);
         expect(isShown('#citation-saver-modal')).toBe(true);
     });
+
+    it.each([
+        ['413', 413, 'Payload Too Large', 'The file is too large.'],
+        ['429', 429, 'Too Many Requests', 'Too many submissions.'],
+    ])('shows the server message of a %s JSON reply', async (_case, status, statusText, message) => {
+        server.respond('/services/citationsaver', { status, statusText, ...json({ status: false, message }) });
+        giveConsent();
+
+        submit('file-form');
+        await flush();
+
+        expect(isShown('#modal p.text')).toBe(false);
+        expect(isShown('#modal p.error')).toBe(true);
+        expect($q('#modal p.error').textContent).toBe(message);
+        expect(isShown('#citation-saver-progress-bar')).toBe(false);
+        expect(isShown('#citation-saver-modal')).toBe(true);
+    });
+
+    it('shows the generic error for an HTTP error whose JSON has no message', async () => {
+        server.respond('/services/citationsaver', { status: 502, statusText: 'Bad Gateway', ...json({ error: 'upstream' }) });
+        giveConsent();
+
+        submit('url-form');
+        await flush();
+
+        expect($q('#modal p.error').textContent).toBe('{"status":502,"statusText":"Bad Gateway"}');
+    });
+
     it('shows the chosen file name', () => {
         const input = $q('#input-file-file');
         Object.defineProperty(input, 'files', { value: [{ name: 'paper.pdf' }] });

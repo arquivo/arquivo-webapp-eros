@@ -34,25 +34,33 @@ $(() => {
         $('#modal #citation-saver-modal').hide();
         $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
 
+        const showError = (text) => {
+            $('#modal p.text').hide();
+            $('#modal p.error').show();
+            $('#modal p.error').text(text);
+        };
         const success = (data) => {
             if(data.status){
                 $('#modal p.text').show();
                 $('#modal p.error').hide();
+            } else if(typeof data.message == 'string'){
+                showError(data.message);
             } else {
-                $('#modal p.text').hide();
-                $('#modal p.error').show();
-                if(typeof data.message == 'string'){
-                    $('#modal p.error').text(data.message);
-                } else {
-                    $('#modal p.error').text(JSON.stringify(data.message));
-                }
+                showError(JSON.stringify(data.message));
             }
         };
         const error = (status, statusText) => {
-            $('#modal p.text').hide();
-            $('#modal p.error').show();
-            $('#modal p.error').text(JSON.stringify({ status: status, statusText: statusText }));
+            showError(JSON.stringify({ status: status, statusText: statusText }));
         };
+        // An HTTP error such as 413 (file too large) or 429 (too many submissions) can
+        // come with the server's { status, message } JSON: show its message if it has one.
+        const httpError = (response) => response.json().then((data) => {
+            if (data && typeof data.message == 'string') {
+                showError(data.message);
+            } else {
+                error(response.status, response.statusText);
+            }
+        }, () => error(response.status, response.statusText));
 
         fetch(actionUrl, {
             method: 'POST',
@@ -63,8 +71,7 @@ $(() => {
             .then((response) => {
                 // As with $.ajax, an HTTP error status or a reply that is not JSON is an error.
                 if (!response.ok) {
-                    error(response.status, response.statusText);
-                    return;
+                    return httpError(response);
                 }
                 return response.json().then(success, () => error(response.status, 'parsererror'));
             }, () => error(0, 'error'))
