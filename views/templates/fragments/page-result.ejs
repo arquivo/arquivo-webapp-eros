@@ -47,20 +47,34 @@ if (typeof pageData != 'undefined'){
         // repeated spaces make empty terms, which would add an empty emphasis to the title
         .filter(term => term !== '')
 
+    // emphasizing is done once per distinct term, and only for the first terms, which is more than a normal query has
+    const MAX_EMPHASIZED_TERMS = 32;
+
     let emphasizeText = function(textToBeEmphasized,searchTerms) {
         let resultText = textToBeEmphasized;
-        searchTerms.forEach(function(emphasizeWord) {
+        // ranges [start, end) of resultText already wrapped in <em>...</em>, which are not emphasized again
+        const emphasized = [];
+        const emTagsLength = '<em></em>'.length;
+        // terms are matched in lower case, so the same term in another case is a duplicate
+        const distinctTerms = [...new Set(searchTerms.map(term => term.toLowerCase()))].slice(0, MAX_EMPHASIZED_TERMS);
+        distinctTerms.forEach(function(emphasizeWord) {
             // can not use replace text with ignore case because it will change the case of the original text
             // this regex makes that only full words (delimited by \b) are matched with the incoming terms
             // Removes partial matches such as "ugal" -> "Portugal"
             // the term is escaped, so it is matched literally and never as a regular expression
-            const escapedWord = emphasizeWord.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
-            var wordDelim = new RegExp('(?!<)(\\b)'+escapedWord+'(?!>)(\\b)')
-            let from = resultText.toLowerCase().search(wordDelim);
-            let to = from + emphasizeWord.toLowerCase().length;
-            if (from >= 0) {
-                const originalText = resultText.substring(from, to);
-                resultText = resultText.substring(0, from) + '<em>'+originalText+'</em>' + resultText.substring(to, resultText.length );
+            const escapedWord = emphasizeWord.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+            const wordDelim = new RegExp('(?!<)(\\b)'+escapedWord+'(?!>)(\\b)', 'g');
+            for (const match of resultText.toLowerCase().matchAll(wordDelim)) {
+                const from = match.index;
+                const to = from + emphasizeWord.length;
+                if (!emphasized.some(([start, end]) => from < end && to > start)) {
+                    const originalText = resultText.substring(from, to);
+                    resultText = resultText.substring(0, from) + '<em>'+originalText+'</em>' + resultText.substring(to, resultText.length );
+                    // the ranges after this one move by the length of the added tags
+                    emphasized.forEach(range => { if (range[0] >= to) { range[0] += emTagsLength; range[1] += emTagsLength; } });
+                    emphasized.push([from, to + emTagsLength]);
+                    break;
+                }
             }
         });
         return resultText;
