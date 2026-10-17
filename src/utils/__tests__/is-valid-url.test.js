@@ -219,8 +219,7 @@ describe('isValidUrl', () => {
       expect(isValidUrl(q)).toBe(false);
     });
 
-    // Invisible or control characters that could spoof the displayed URL or
-    // inject into log lines.
+    // Invisible or control characters that could spoof the displayed URL.
     it.each([
       ['C0 control', 'publico.pt/\u0000x'],
       ['DEL', 'publico.pt/\u007Fx'],
@@ -233,7 +232,19 @@ describe('isValidUrl', () => {
       ['RLO', 'publico.pt/\u202Ex'],
       ['LRI', 'publico.pt/\u2066x'],
       ['PDI', 'publico.pt/\u2069x'],
-      ['BOM', 'publico.pt/\uFEFFx'],
+      ['BOM (in `\\s`)', 'publico.pt/\uFEFFx'],
+      ['combining grapheme joiner in the host', 'publico\u034F.pt'],
+      ['ALM', 'publico.pt/\u061Cx'],
+      ['Mongolian vowel separator', 'publico.pt/\u180Ex'],
+      ['LRM', 'publico.pt/\u200Ex'],
+      ['RLM', 'publico.pt/\u200Fx'],
+      ['word joiner in the host', 'publico\u2060.pt'],
+      ['invisible plus in the host', 'publico\u2064.pt'],
+      ['deprecated format character', 'publico.pt/\u206Ax'],
+      ['interlinear annotation anchor', 'publico.pt/\uFFF9x'],
+      ['interlinear annotation terminator', 'publico.pt/\uFFFBx'],
+      ['tag character', 'publico.pt/\u{E0001}x'],
+      ['cancel tag', 'publico.pt/\u{E007F}x'],
     ])('rejects a %s: %j', (_name, q) => {
       expect(isValidUrl(q)).toBe(false);
     });
@@ -245,6 +256,15 @@ describe('isValidUrl', () => {
         expect(isValidUrl(q)).toBe(true);
       },
     );
+
+    // Nor are variation selectors: they pick the glyph of the character before them.
+    it.each([
+      ['VS16 emoji in the path', 'example.com/\u2764\uFE0F'],
+      ['VS16 emoji in the host', 'i\u2764\uFE0F.ws'],
+      ['Mongolian free variation selector', 'example.com/\u1820\u180B'],
+    ])('accepts a %s: %j', (_name, q) => {
+      expect(isValidUrl(q)).toBe(true);
+    });
 
     it('accepts a very long URL', () => {
       expect(isValidUrl('https://example.com/' + 'a/'.repeat(10000))).toBe(true);
