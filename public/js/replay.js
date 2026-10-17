@@ -250,18 +250,20 @@ class ArquivoReplay {
         const url = replay.getConfig('requestedPage.url');
         const timestamp = replay.getConfig('requestedPage.timestamp');
         const fullUrl = replay.getConfig('requestedPage.fullUrl');
-        $.ajax({
-            url: '/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp),
-            success: (data, textStatus, jqXHR) => {
+        fetch('/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
+            .then((response) => response.ok ? response.text() : null)
+            .then((data) => {
+                if (data === null) {
+                    return;
+                }
                 if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
-                    $('#technical-details').replaceWith(data); 
+                    $('#technical-details').replaceWith(data);
                 }
                 $('.modal').off('click').on('click','button.cancel',(e) => {
                     e.preventDefault();
                     $.modal.close();
                 });
-            }
-        });
+            }, () => {});
     }
 
     initCommunication() {
@@ -318,15 +320,14 @@ class ArquivoReplay {
         $('#menuListVersions').attr('href', '/page/search?q=' + url);
         const h3 = '<h3>' + $('#replay-left-nav > h3').html() + '</h3>';
         $('#replay-left-nav').html(h3 + replay.getConfig("loader.html"));
-        $.ajax({
-            url: '/partials/replay-nav?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp),
-            success: (data, textStatus, jqXHR) => {
-                if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
-                    $('#replay-left-nav').html(h3 + data);                    
+        fetch('/partials/replay-nav?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
+            .then((response) => response.ok ? response.text() : null)
+            .then((data) => {
+                if (data !== null && replay.getConfig('requestedPage.fullUrl') == fullUrl) {
+                    $('#replay-left-nav').html(h3 + data);
                     replay.updateSelection(true);
                 }
-            }
-        });
+            }, () => {});
     }
     updateTimestamp() {
         const replay = this;
