@@ -15,6 +15,9 @@ const alwaysRemovedTerm = new RegExp(String.raw`^(?:${ALWAYS_REMOVED_PARAMS.join
  * Removes every occurrence of a term from a query, matching it literally (never as a regular
  * expression), and replaces it and the whitespace around it with a single space
  *
+ * Splits on the literal string because an escaped `\s*term\s*` regular expression is quadratic on
+ * long whitespace runs, while this is linear.
+ *
  * @param {string} query - Search query
  * @param {string} term - Term to remove, e.g. "site:publico.pt"
  * @returns {string} Query without the term
