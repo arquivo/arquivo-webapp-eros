@@ -3,18 +3,20 @@
 const path = require('node:path');
 const ejs = require('ejs');
 const isValidUrl = require('../utils/is-valid-url');
-const displayUrl = require('../utils/display-url');
+const { asciiHost } = require('../utils/display-url');
 
 const TEMPLATE = path.join(__dirname, '../../views/partials/replay-technical-details.ejs');
 
 const renderTechnicalDetails = (apiData) => ejs.renderFile(TEMPLATE, {
     apiData,
     t: (key) => key,
-    utils: { isValidUrl, displayUrl },
+    utils: { isValidUrl, asciiHost },
 });
 
 const renderedRow = (html, key) =>
     html.match(new RegExp(`<li class="technical-details-row" data-key="${key}"><strong>${key}:</strong>(.*)</li>`))[1];
+
+const hint = (host) => `<span class="url-ascii-host" dir="ltr" translate="no">(${host})</span>`;
 
 describe('replay technical details template: addresses', () => {
     it('should link an ASCII address and show it as is', async () => {
@@ -24,26 +26,28 @@ describe('replay technical details template: addresses', () => {
             .toBe('<a href="https://www.publico.pt/">https://www.publico.pt/</a>');
     });
 
-    it('should show an internationalised host next to its punycode form, keeping the link', async () => {
-        const html = await renderTechnicalDetails({ originalURL: 'http://exämple.pt/' });
-
-        expect(renderedRow(html, 'originalURL'))
-            .toBe('<a href="http://exämple.pt/">http://exämple.pt/ (xn--exmple-cua.pt)</a>');
-    });
-
-    it('should show a mixed-script lookalike host in punycode', async () => {
+    it('should show the ASCII host of a mixed-script lookalike under the link, keeping the link', async () => {
         // `а` is CYRILLIC SMALL LETTER A (U+0430), not the Latin `a`.
         const html = await renderTechnicalDetails({ linkToArchive: 'http://pаypal.com/login' });
 
         expect(renderedRow(html, 'linkToArchive'))
-            .toBe('<a href="http://pаypal.com/login">http://pаypal.com/login (xn--pypal-4ve.com)</a>');
+            .toBe(`<a href="http://pаypal.com/login">http://pаypal.com/login</a>${hint('xn--pypal-4ve.com')}`);
     });
 
-    it('should show the punycode form for an address that is not linked', async () => {
+    it('should show the ASCII host of an address that is not linked', async () => {
         // A space in the query keeps this address from being linked.
         const html = await renderTechnicalDetails({ originalURL: 'http://exämple.pt/?q=a b' });
 
-        expect(renderedRow(html, 'originalURL')).toBe('http://exämple.pt/?q=a b (xn--exmple-cua.pt)');
+        expect(renderedRow(html, 'originalURL')).toBe(`http://exämple.pt/?q=a b${hint('xn--exmple-cua.pt')}`);
+    });
+
+    it('should keep the ASCII host out of a right-to-left override in the address', async () => {
+        const html = await renderTechnicalDetails({ originalURL: 'http://exämple.pt/?q=\u202Eabc' });
+
+        // The override keeps the address from being linked; the host is in
+        // its own element, with its own direction.
+        expect(renderedRow(html, 'originalURL'))
+            .toBe(`http://exämple.pt/?q=\u202Eabc${hint('xn--exmple-cua.pt')}`);
     });
 
     it('should show the other fields unchanged', async () => {
@@ -58,6 +62,6 @@ describe('replay technical details template: addresses', () => {
         const html = await renderTechnicalDetails({ originalURL: 'http://exämple.pt/"><b>' });
 
         expect(renderedRow(html, 'originalURL'))
-            .toBe('http://exämple.pt/&#34;&gt;&lt;b&gt; (xn--exmple-cua.pt)');
+            .toBe(`http://exämple.pt/&#34;&gt;&lt;b&gt;${hint('xn--exmple-cua.pt')}`);
     });
 });

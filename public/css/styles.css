@@ -2940,3 +2940,12 @@ body#landing-replay .preloader div::after {
     margin: auto 78px auto 70px !important;
   }
 }
+/* ASCII (punycode) form of an internationalised host, shown on its own line
+   under the URL so that it's never cut off with the URL's ellipsis. */
+.url-ascii-host {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 0.85em;
+  color: #595959;
+}

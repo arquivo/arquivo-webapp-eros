@@ -2,7 +2,7 @@
 
 const path = require('node:path');
 const ejs = require('ejs');
-const displayUrl = require('../utils/display-url');
+const { asciiHost, displayUrl } = require('../utils/display-url');
 
 const TEMPLATE = path.join(__dirname, '../../views/templates/fragments/page-result.ejs');
 
@@ -18,11 +18,11 @@ const renderPageResult = (query, title, originalURL = 'http://example.com/') => 
     prevUrl: null,
     index: 0,
     t: (key) => key,
-    utils: { displayUrl },
+    utils: { asciiHost, displayUrl },
 }, { views: [path.join(__dirname, '../../views')] });
 
 const renderedTitle = (html) => html.match(/<a class="results-title blockUrl">(.*)<\/a>/)[1];
-const renderedUrl = (html) => html.match(/<a class="results-url blockUrl" title="[^"]*">(.*)<\/a>/)[1];
+const renderedUrl = (html) => html.match(/<li><a class="results-url blockUrl" (.*)<\/li>/)[1];
 
 describe('page result template: search terms emphasized in the title', () => {
     it('should emphasize whole words of the query', async () => {
@@ -103,13 +103,15 @@ describe('page result template: result address', () => {
     it('should show the address without its scheme', async () => {
         const html = await renderPageResult('lisboa', 'Lisboa', 'https://www.publico.pt/');
 
-        expect(renderedUrl(html)).toBe('www.publico.pt');
+        expect(renderedUrl(html)).toBe('title="www.publico.pt">www.publico.pt</a>');
     });
 
-    it('should add the punycode form of an internationalised host', async () => {
+    it('should show the ASCII host of an internationalised host under the address and in its title', async () => {
         // `а` is CYRILLIC SMALL LETTER A (U+0430), not the Latin `a`.
         const html = await renderPageResult('paypal', 'PayPal', 'http://pаypal.com/login');
 
-        expect(renderedUrl(html)).toBe('pаypal.com/login (xn--pypal-4ve.com)');
+        expect(renderedUrl(html)).toBe(
+            'title="\u2068pаypal.com/login\u2069 (xn--pypal-4ve.com)">pаypal.com/login</a>'
+            + '<span class="url-ascii-host" dir="ltr" translate="no">(xn--pypal-4ve.com)</span>');
     });
 });
