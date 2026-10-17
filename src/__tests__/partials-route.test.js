@@ -104,12 +104,13 @@ describe('GET /partials/:id', () => {
         // (url-search-results) renders; it is never requested by id
         ['a template that is not allowlisted', 'url-list-results'],
         // ids are matched exactly
-        ['an upper-case generic partial id', 'MODAL-DATEPICKER'],
+        ['an upper-case modal partial id', 'MODAL-DATEPICKER'],
         ['an upper-case handler id', 'REPLAY-NAV'],
         ['a prototype key', 'constructor'],
         ['a traversal id', '..%2Fpages%2Fhome'],
-        // 'x.config' used to make Express require('config') as a view engine
-        ['a dotted id', 'x.config'],
+        // a real id plus a suffix: no prefix match or stripping after the dot;
+        // it also used to make Express require('config') as a view engine
+        ['a dotted id', 'modal-datepicker.config'],
     ])('returns 404 for %s: %s', async (_category, id) => {
         const { res, renderCalls } = await getPartialWithRenderCalls(id);
         expect(res.status).toBe(404);
