@@ -26,6 +26,7 @@ const mockConfig = {
   'session.secret': 'test-secret',
   'session.length': 604800000,
   'webapp.showContameHistoriasButton': false,
+  'express.trust.proxy': '',
   'google.tagmanager.id': 'GTM-5SZHXPRP',
   'google.tagmanager.auth': '',
   'google.tagmanager.preview': '',
@@ -33,7 +34,7 @@ const mockConfig = {
   'citation.saver.max.upload.size': 100000000,
   'citation.saver.upload.folder.path': 'uploads/CitationSaver',
   'citation.saver.upload.temp.folder.path': '',
-  'citation.saver.rate.limit.max': 10,
+  'citation.saver.rate.limit.max': '',
   'citation.saver.rate.limit.window.ms': 900000,
   'logger.type': 'console',
   'logger.dir': 'logs/'

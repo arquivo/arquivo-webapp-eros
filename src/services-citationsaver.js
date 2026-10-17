@@ -36,15 +36,17 @@ const addToSpreadsheet = require('./spreadsheet-client');
 const logger = require('./logger')('CitationSaver');
 
 // busboy ignores a fileSize limit that is not a number, so fail at startup instead.
-function positiveNumberSetting(key) {
+// Values from config/default.properties and environment variables are strings.
+function numberSetting(key, { allowZero = false } = {}) {
     const value = Number(config.get(key));
-    if (!Number.isFinite(value) || value <= 0) {
-        throw new Error('Configuration property "' + key + '" must be a positive number');
+    if (!Number.isFinite(value) || value < 0 || (value === 0 && !allowZero)) {
+        throw new Error('Configuration property "' + key + '" must be a '
+            + (allowZero ? 'non-negative' : 'positive') + ' number');
     }
     return value;
 }
 
-const maxUploadSize = positiveNumberSetting('citation.saver.max.upload.size');
+const maxUploadSize = numberSetting('citation.saver.max.upload.size');
 const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 // Uploads in progress. Empty means ".citationsaver-tmp" next to the upload folder: it is
 // on the same (writable) volume, so storing an upload is a rename, and it is not inside
@@ -172,14 +174,16 @@ async function storeUpload(path, write) {
 }
 
 /*
- * Per-IP limit on submissions (#177): each one stores a file and adds a Sheet row,
- * and a URL also costs an outbound HEAD request. Counted in memory, per process.
- * The key is req.ip: behind a reverse proxy, Express's "trust proxy" setting must
- * match the proxy hops, or every client shares the proxy's address.
+ * Optional per-IP limit on submissions (#177): each one stores a file and adds a Sheet
+ * row, and a URL also costs an outbound HEAD request. Counted in memory, per process.
+ * Off unless citation.saver.rate.limit.max is above 0. The key is req.ip: behind a
+ * reverse proxy, express.trust.proxy must match the proxy hops, or every client
+ * shares the proxy's address and bucket.
  */
-const rateLimiter = rateLimit({
-    windowMs: positiveNumberSetting('citation.saver.rate.limit.window.ms'),
-    limit: positiveNumberSetting('citation.saver.rate.limit.max'),
+const rateLimitMax = numberSetting('citation.saver.rate.limit.max', { allowZero: true });
+const rateLimiter = rateLimitMax === 0 ? (req, res, next) => next() : rateLimit({
+    windowMs: numberSetting('citation.saver.rate.limit.window.ms'),
+    limit: rateLimitMax,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     handler: (req, res, next, options) => {

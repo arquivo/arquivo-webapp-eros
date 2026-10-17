@@ -9,7 +9,11 @@
 
 ## Configuration
 
-Review `config/default.properties` to configure API endpoints and other settings before running the application.
+Review `config/default.properties` to configure API endpoints and other settings before running the application. `config/custom-environment-variables.json` lists the settings that environment variables can override, among them:
+
+- `EXPRESS_TRUST_PROXY` (`express.trust.proxy`): which reverse proxies may set the client IP with `X-Forwarded-For` (Express "trust proxy"). Empty by default: no proxy is trusted. Behind a proxy, set it to the number of proxy hops or to the proxy addresses/subnets.
+- `CITATION_SAVER_RATE_LIMIT_MAX` / `CITATION_SAVER_RATE_LIMIT_WINDOW_MS`: at most that many Citation Saver submissions per client IP in each window. Empty or `0` (the default) turns the limit off; only turn it on once the deployment forwards a trustworthy client IP, or every client shares one limit.
+- `CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH`: folder for uploads in progress. By default `.citationsaver-tmp` next to the upload folder, on the writable uploads volume.
 
 ## Docker (Recommended)
 

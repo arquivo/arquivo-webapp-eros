@@ -1,8 +1,9 @@
 'use strict';
 
-// POST /services/citationsaver is rate-limited per client IP (#177). Over the limit
-// the reply is a 429 with the { status, message } JSON that
-// public/js/citation-saver.js reads, and the submission is neither parsed nor stored.
+// POST /services/citationsaver can be rate-limited per client IP (#177). The limit is
+// off by default. Over the limit the reply is a 429 with the { status, message } JSON
+// that public/js/citation-saver.js reads, and the submission is neither parsed nor
+// stored. Each describe loads its own app, since the settings are read at load time.
 
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
@@ -14,80 +15,98 @@ const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: 
 jest.mock('../logger', () => () => mockLogger);
 
 const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const config = require('config');
-
-const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-rl-'));
-const uploadFolder = path.join(tmpRoot, 'uploads');
-const uploadTempFolder = path.join(tmpRoot, 'tmp');
-const LIMIT = 3;
-config.set('citation.saver.upload.folder.path', uploadFolder);
-config.set('citation.saver.upload.temp.folder.path', uploadTempFolder);
-config.set('citation.saver.rate.limit.max', LIMIT);
-config.set('citation.saver.rate.limit.window.ms', 60000);
-
 const request = require('supertest');
-const addToSpreadsheet = require('../spreadsheet-client');
-const app = require('../../app');
+const { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded } =
+    require('./helpers/citationsaver-app.cjs');
 
-const REQUEST_TIMEOUT_MS = 5000;
+const { root, uploadFolder, uploadTempFolder } = makeUploadFolders('citationsaver-177-rl-');
+const tooMany = { status: false, message: messages.default };
 
-const tooMany = { status: false, message: 'Algo correu mal, por favor tente novamente mais tarde.' };
-
-function post() {
-    return request(app).post('/services/citationsaver').timeout(REQUEST_TIMEOUT_MS);
+function loadApp(settings) {
+    let loaded;
+    jest.isolateModules(() => {
+        const config = require('config');
+        config.set('citation.saver.upload.folder.path', uploadFolder);
+        Object.entries(settings).forEach(([key, value]) => config.set(key, value));
+        loaded = { app: require('../../app'), addToSpreadsheet: require('../spreadsheet-client') };
+    });
+    loaded.addToSpreadsheet.mockResolvedValue();
+    return loaded;
 }
 
-function filesUnder(folder) {
-    if (!fs.existsSync(folder)) return [];
-    return fs.readdirSync(folder, { recursive: true })
-        .filter(name => fs.statSync(path.join(folder, name)).isFile());
-}
+beforeEach(() => {
+    fs.rmSync(uploadFolder, { recursive: true, force: true });
+});
+
+afterAll(() => {
+    fs.rmSync(root, { recursive: true, force: true });
+});
+
+describe('POST /services/citationsaver with the default settings', () => {
+    it('is not rate-limited', async () => {
+        const { app } = loadApp({});
+        for (let i = 0; i < 15; i++) {
+            const res = await post(app).type('form').send({ text: 'citation ' + i });
+            expect(res.status).toBe(200);
+            expect(res.headers).not.toHaveProperty('ratelimit');
+        }
+        expect(filesUnder(uploadFolder)).toHaveLength(15);
+    });
+
+    it.each(['ten', '-1'])('refuses to start with a rate limit of %p', (max) => {
+        expect(() => loadApp({ 'citation.saver.rate.limit.max': max }))
+            .toThrow('"citation.saver.rate.limit.max" must be a non-negative number');
+    });
+});
 
 describe('POST /services/citationsaver rate limit', () => {
+    const LIMIT = 3;
+    let app;
+    let addToSpreadsheet;
     let consoleError;
 
     beforeAll(async () => {
-        addToSpreadsheet.mockResolvedValue();
+        ({ app, addToSpreadsheet } = loadApp({
+            'citation.saver.rate.limit.max': String(LIMIT),
+            'citation.saver.rate.limit.window.ms': 60000,
+        }));
+        await translationsLoaded(app);
         // express-rate-limit reports an X-Forwarded-For header while "trust proxy" is off.
         consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
         for (let i = 0; i < LIMIT; i++) {
-            const res = await post().type('form').send({ text: 'citation ' + i });
+            const res = await post(app).type('form').send({ text: 'citation ' + i });
             expect(res.status).toBe(200);
             expect(res.body).toEqual(expect.objectContaining({ status: true }));
         }
-        expect(filesUnder(uploadFolder)).toHaveLength(LIMIT);
     });
 
     afterAll(() => {
         consoleError.mockRestore();
-        fs.rmSync(tmpRoot, { recursive: true, force: true });
     });
 
     it('replies 429 with the status:false JSON once the limit is reached', async () => {
-        const res = await post().type('form').send({ text: 'one too many' });
+        const res = await post(app).type('form').send({ text: 'one too many' });
 
         expect(res.status).toBe(429);
         expect(res.headers['content-type']).toMatch(/^application\/json/);
         expect(res.body).toEqual(tooMany);
         expect(res.headers['retry-after']).toMatch(/^\d+$/);
-        expect(filesUnder(uploadFolder)).toHaveLength(LIMIT);
+        expect(filesUnder(uploadFolder)).toEqual([]);
     });
 
     it('does not parse or store a file upload once the limit is reached', async () => {
-        const res = await post()
+        const res = await post(app)
             .attach('file', Buffer.from('%PDF-1.4\n%%EOF\n'), { filename: 'paper.pdf', contentType: 'application/pdf' });
 
         expect(res.status).toBe(429);
         expect(res.body).toEqual(tooMany);
         expect(filesUnder(uploadTempFolder)).toEqual([]);
-        expect(filesUnder(uploadFolder)).toHaveLength(LIMIT);
+        expect(filesUnder(uploadFolder)).toEqual([]);
     });
 
-    it('cannot be bypassed with a spoofed X-Forwarded-For header', async () => {
-        const res = await post().set('X-Forwarded-For', '203.0.113.7').type('form').send({ text: 'spoofed' });
+    it('cannot be bypassed with a spoofed X-Forwarded-For header while trust proxy is off', async () => {
+        const res = await post(app).set('X-Forwarded-For', '203.0.113.7').type('form').send({ text: 'spoofed' });
 
         expect(res.status).toBe(429);
         expect(res.body).toEqual(tooMany);
@@ -101,5 +120,16 @@ describe('POST /services/citationsaver rate limit', () => {
 
     it('does not add Sheet rows for the blocked submissions', () => {
         expect(addToSpreadsheet).toHaveBeenCalledTimes(LIMIT);
+    });
+});
+
+describe('POST /services/citationsaver rate limit behind a trusted proxy', () => {
+    it('counts each client IP from X-Forwarded-For separately', async () => {
+        const { app } = loadApp({ 'citation.saver.rate.limit.max': '1', 'express.trust.proxy': '1' });
+        const from = (ip) => post(app).set('X-Forwarded-For', ip).type('form').send({ text: 'from ' + ip });
+
+        expect((await from('203.0.113.7')).status).toBe(200);
+        expect((await from('203.0.113.7')).status).toBe(429);
+        expect((await from('198.51.100.20')).status).toBe(200);
     });
 });
