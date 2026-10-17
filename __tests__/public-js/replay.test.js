@@ -33,8 +33,11 @@ const CONFIGS = {
 
 const $id = (id) => document.getElementById(id);
 
-function post(data, origin = PYWB_ORIGIN) {
-    window.dispatchEvent(new MessageEvent('message', { data, origin }));
+const replayWindow = () => $id('replay-in-iframe') && $id('replay-in-iframe').contentWindow;
+
+// pywb posts the wb_type messages from the replay iframe's own window.
+function post(data, origin = PYWB_ORIGIN, source = replayWindow()) {
+    window.dispatchEvent(new MessageEvent('message', { data, origin, source }));
 }
 
 describe('replay.js', () => {
@@ -202,6 +205,47 @@ describe('replay.js', () => {
             expect(document.title).toBe('Arquivo.pt');
             expect(window.dataLayer).toBeUndefined();
             expect($id('replay-not-found').style.display).toBe('none');
+        });
+
+        it.each([
+            ['the page itself', () => window],
+            ['another frame on the page', () => {
+                const frame = document.createElement('iframe');
+                document.body.appendChild(frame);
+                return frame.contentWindow;
+            }],
+            ['a frame nested in the replayed page', () => {
+                const replayDocument = replayWindow().document;
+                const frame = replayDocument.createElement('iframe');
+                replayDocument.body.appendChild(frame);
+                return frame.contentWindow;
+            }],
+            ['no window', () => null],
+        ])('ignores replay messages on the pywb origin posted by %s', (_case, source) => {
+            const replay = newReplay();
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+            const sourceWindow = source();
+
+            post({ wb_type: 'load', url: 'https://example.org/', ts: '20210101000000', title: 'Evil' }, PYWB_ORIGIN, sourceWindow);
+            post({ wb_type: 'not-found' }, PYWB_ORIGIN, sourceWindow);
+
+            expect(setUrlAndTimestamp).not.toHaveBeenCalled();
+            expect(document.title).toBe('Arquivo.pt');
+            expect($id('replay-not-found').style.display).toBe('none');
+        });
+
+        it('follows the new iframe after refreshIframe replaces it', () => {
+            const replay = newReplay();
+            const oldWindow = replayWindow();
+            replay.refreshIframe();
+            const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
+
+            post({ wb_type: 'replace-url', url: 'https://example.org/old', ts: '20210101000000' }, PYWB_ORIGIN, oldWindow);
+            post({ wb_type: 'replace-url', url: 'https://example.org/new', ts: '20210101000000' });
+
+            expect(replayWindow()).not.toBe(oldWindow);
+            expect(setUrlAndTimestamp).toHaveBeenCalledTimes(1);
+            expect(setUrlAndTimestamp).toHaveBeenCalledWith('https://example.org/new', '20210101000000', true);
         });
 
         it('ignores section-loaded messages from the replay', () => {

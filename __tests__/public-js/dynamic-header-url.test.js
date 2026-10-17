@@ -21,9 +21,11 @@ const ARCHIVEPAGENOW_HEADER = `
 
 const $id = (id) => document.getElementById(id);
 
-// pywb posts these from the replay iframe.
-function postFromReplay(data, origin = REPLAY_ORIGIN) {
-    window.dispatchEvent(new MessageEvent('message', { data, origin }));
+const replayWindow = () => $id('replay_iframe') && $id('replay_iframe').contentWindow;
+
+// pywb posts these from the replay iframe's own window.
+function postFromReplay(data, origin = REPLAY_ORIGIN, source = replayWindow()) {
+    window.dispatchEvent(new MessageEvent('message', { data, origin, source }));
 }
 
 describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ setup }) => {
@@ -91,6 +93,32 @@ describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ se
         postFromReplay({ wb_type: 'load', url: 'https://example.com/', ts: '20200102030405' }, origin);
 
         expect(document.body.innerHTML).toBe(before);
+        expect(window.dateFromTimestamp).not.toHaveBeenCalled();
+    });
+
+    it.each([
+        ['the page itself', () => window],
+        ['another frame on the page', () => {
+            const frame = document.createElement('iframe');
+            document.body.appendChild(frame);
+            return frame.contentWindow;
+        }],
+        ['a frame nested in the replayed page', () => {
+            // jsdom does not load the replay, so its document is empty.
+            const replayDocument = replayWindow().document;
+            const frame = replayDocument.createElement('iframe');
+            replayDocument.appendChild(frame);
+            return frame.contentWindow;
+        }],
+        ['no window', () => null],
+    ])('ignores messages on the replay origin posted by %s', (_case, source) => {
+        setup();
+        const sourceWindow = source();
+        const before = $id('headerUrlContainer').innerHTML;
+
+        postFromReplay({ wb_type: 'load', url: 'https://example.com/', ts: '20200102030405' }, REPLAY_ORIGIN, sourceWindow);
+
+        expect($id('headerUrlContainer').innerHTML).toBe(before);
         expect(window.dateFromTimestamp).not.toHaveBeenCalled();
     });
 
@@ -174,6 +202,7 @@ describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ se
         const event = new Event('message');
         event.message = { wb_type: 'load', url: 'https://example.com/legacy' };
         event.origin = REPLAY_ORIGIN;
+        event.source = replayWindow();
 
         window.dispatchEvent(event);
 

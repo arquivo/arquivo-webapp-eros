@@ -268,9 +268,10 @@ class ArquivoReplay {
         const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
         const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
-        // pywb posts the wb_type messages from the replay iframe, on the origin of the
-        // configured pywb.url; init.js posts the arquivo_type ones from this page itself.
-        // Messages from any other origin are ignored.
+        // pywb posts the wb_type messages from the replay iframe's own window, on the
+        // origin of the configured pywb.url; init.js posts the arquivo_type ones from this
+        // page itself. Messages from any other origin, and wb_type messages from any other
+        // window (frames nested in the replayed page, windows it opens), are ignored.
         const isHttp = (url) => ['http:', 'https:'].includes(url.protocol);
         let pywbOrigin = null;
         try {
@@ -290,7 +291,10 @@ class ArquivoReplay {
 
         window[eventMethod](messageEvent, (e) => {
             const key = e.message ? "message" : "data";
-            const fromReplay = e.origin === pywbOrigin;
+            // Looked up on each message: refreshIframe replaces the iframe.
+            const iframe = document.getElementById('replay-in-iframe');
+            const fromReplay = e.origin === pywbOrigin && iframe !== null
+                && iframe.contentWindow !== null && e.source === iframe.contentWindow;
             const fromThisPage = e.origin === window.location.origin;
             if (fromReplay && e[key] && e[key].wb_type) {
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
