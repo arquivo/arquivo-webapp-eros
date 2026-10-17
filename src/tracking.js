@@ -9,8 +9,8 @@ const escapeForLog = require('./utils/escape-for-log');
  * 'archived URL'.
  * The IP is req.ip, the client address as derived through Express "trust proxy"
  * (express.trust.proxy), never an X-Forwarded-For header that the client may have set.
- * Control characters are escaped, so a value can't add a field or a line. Kept for as
- * long as the log files (logger.maxFiles).
+ * Control characters are escaped, so a value can't add a field or a line. As for every
+ * log, retention is up to the runtime environment.
  */
 module.exports = function (req, res, type) {
 

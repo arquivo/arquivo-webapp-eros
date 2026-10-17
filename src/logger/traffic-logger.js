@@ -8,6 +8,8 @@ const escapeForLog = require('../utils/escape-for-log');
 // The pattern of the route that handled the request, e.g. "/wayback/:url*", never the
 // path itself: paths carry archived URLs (/wayback/<timestamp>/<url>, /page/view/…) and
 // search terms (/wayback/*/<terms>). "-" when no route matched, e.g. an unknown path.
+// req.baseUrl is the matched mount path, not a pattern: this is safe only while every
+// router is mounted at a fixed path (today, "/").
 function routePattern(req) {
     return req.route ? escapeForLog(req.baseUrl + req.route.path) : '-';
 }

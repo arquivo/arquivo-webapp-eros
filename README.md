@@ -17,7 +17,7 @@ Review `config/default.properties` to configure API endpoints and other settings
 - `LOGGER_LEVEL` (`logger.level`): the lowest log level written, `info` by default. `debug` writes personal data (submitted URLs, error messages): enable it only briefly, never by default in production.
 - `CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH`: folder for uploads in progress. By default `.citationsaver-tmp` next to the upload folder, on the writable uploads volume. It must not be inside the upload folder. Anything that reads `uploads/` recursively should skip it.
 
-Logs go to stdout by default (`logger.type = console`). Their retention and rotation are up to the runtime environment (e.g. the container log driver), not the app.
+Logs go to stdout by default (`logger.type = console`). Their retention and rotation are up to the runtime environment (e.g. the container log driver), not the app. With `logger.type = file` or `daily`, the app writes the files under `logger.dir` (and rotates them daily for `daily`) but never deletes them: removing old files is also the runtime's job.
 
 The app requires a Google service account key file at `config/service_account.json` (used by the Citation Saver) and does not start without it. The path is fixed: there is no setting or environment variable for it.
 
