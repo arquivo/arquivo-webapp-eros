@@ -10,7 +10,7 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-page-search');
 jest.mock('../logger', () => {
-    const logger = { info: jest.fn(), error: jest.fn() };
+    const logger = { info: jest.fn(), error: jest.fn(), debug: jest.fn() };
     return jest.fn(() => logger);
 });
 
@@ -177,7 +177,7 @@ describe('search-pages handler', () => {
 
         searchPages(req, res);
 
-        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
     });
 
     it('logs a no-results message when the reply only has the image search responseItems key', () => {
@@ -187,7 +187,7 @@ describe('search-pages handler', () => {
 
         searchPages(req, res);
 
-        expect(logger.info).toHaveBeenCalledWith('No results found for the following query: "test query"');
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
     });
 
     it('renders synchronously in the API callback', () => {

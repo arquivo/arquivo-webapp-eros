@@ -4,7 +4,8 @@ const logger = require('../logger')('TimestampToText');
 const { parseArchiveTimestamp } = require('./archive-timestamp');
 function splitTimeStamp(timestamp) {
     if(typeof timestamp != 'string'){
-        logger.error(`Expected input to be 'string' but got '${typeof timestamp}': ${timestamp}`)
+        // Only the type: the value comes from the request.
+        logger.error(`Expected input to be 'string' but got '${typeof timestamp}'`)
         timestamp='';
     }
     return parseArchiveTimestamp(timestamp.padEnd(14, '0'));

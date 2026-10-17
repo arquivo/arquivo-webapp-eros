@@ -4,6 +4,8 @@ const config = require('config');
 const googleSheetId = config.get('citation.saver.google.sheet.id');
 const serviceAccountConfigs = require('../config/service_account.json');
 const logger = require('./logger')('CitationSaver');
+const escapeForLog = require('./utils/escape-for-log');
+const describeError = require('./utils/describe-error');
 
 // google-spreadsheet v5+ is ESM-only; _importDeps is extracted so tests can stub it
 async function addToSpreadsheet(row) {
@@ -19,7 +21,10 @@ async function addToSpreadsheet(row) {
         const sheet = doc.sheetsByIndex[0];
         await sheet.addRow(row);
     } catch (err) {
-        logger.error('Failed to connect to google services. Reason: "' + err + '". Data: ' + JSON.stringify(row));
+        // Never the row (it holds the email and the submission), nor the message, which
+        // may quote the values sent: debug only.
+        logger.error('Failed to connect to google services. Reason: ' + describeError(err));
+        logger.debug('Failed to connect to google services: ' + escapeForLog(err?.stack ?? err));
     }
 }
 

@@ -37,7 +37,8 @@ const mockConfig = {
   'citation.saver.rate.limit.max': '',
   'citation.saver.rate.limit.window.ms': 900000,
   'logger.type': 'console',
-  'logger.dir': 'logs/'
+  'logger.dir': 'logs/',
+  'logger.level': 'info'
 };
 
 module.exports = {
