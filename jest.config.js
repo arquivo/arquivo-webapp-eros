@@ -1,10 +1,11 @@
+'use strict';
+
 module.exports = {
   testEnvironment: 'node',
   globalSetup: '<rootDir>/jest.global-setup.js',
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.js',
-    '!src/logger/**',
     '!**/node_modules/**'
   ],
   testMatch: [

@@ -1,3 +1,5 @@
+'use strict';
+
 const base = require('@playwright/test');
 const { SearchBar } = require('./pages/SearchBar');
 const { PageSearchPage } = require('./pages/PageSearchPage');

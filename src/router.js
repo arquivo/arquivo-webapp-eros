@@ -1,3 +1,5 @@
+'use strict';
+
 const backendRoutes = require('./backend-routes');
 const healthcheckRoutes = require('./healthcheck-routes');
 const searchPages = require('./search-pages.js');
@@ -192,7 +194,7 @@ router.get('/services/complete-page', function (req, res) {
 });
 
 // 404: must be the last route, so it only catches unmatched requests
-router.use(function (req, res, next) {
+router.use(function (req, res) {
     res.status(404).render('pages/arquivo-404');
 });
 

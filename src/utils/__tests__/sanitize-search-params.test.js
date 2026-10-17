@@ -1,3 +1,5 @@
+'use strict';
+
 const sanitizeSearchParams = require('../sanitize-search-params');
 
 // Config is automatically mocked via __mocks__/config.js

@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../../fixtures');
 
 // Ported from docs/webapp/replay/menu/MenuImagesAdvancedSearchWaybackTest.md.

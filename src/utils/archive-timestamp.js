@@ -1,3 +1,5 @@
+'use strict';
+
 /** Splits a 'YYYYMMDDhhmmss' archive timestamp into string parts (month '03'); a partial one is not padded. */
 function parseArchiveTimestamp(timestamp) {
     const part = (start, end) => timestamp.substring(start, end);

@@ -1,3 +1,5 @@
+'use strict';
+
 const { archiveTimestampToDate } = require('./utils/archive-timestamp');
 // Legally sensitive: versions younger than this are never listed. Not configurable on purpose;
 // if it ever becomes configurable, validate it (minimum 1) and refuse to start on a bad value.

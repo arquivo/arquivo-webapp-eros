@@ -1,3 +1,10 @@
+'use strict';
+
+// ArquivoReplay is used by views/templates/body/body-replay.ejs.
+/* exported ArquivoReplay */
+// dateFromTimestamp: functions.js.
+/* global dateFromTimestamp */
+
 class ArquivoReplay {
     constructor(configs) {
         this.configs = configs;
@@ -64,11 +71,11 @@ class ArquivoReplay {
             window.location = e.target.href;
         }) 
 
-        $('#menuTechnicalDetails').click((e) => {
+        $('#menuTechnicalDetails').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'MoreInformationMenuClick');
         })
 
-        $('#menuScreenshot').click((e) => {
+        $('#menuScreenshot').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuClick');
         })
 
@@ -82,7 +89,7 @@ class ArquivoReplay {
             replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuCancel');
         });
 
-        $('#menuPrint').click((e) => {
+        $('#menuPrint').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuClick');
         })
 
@@ -130,7 +137,7 @@ class ArquivoReplay {
             replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuCancel');
         });
 
-        $('#menuCompleteThePage').click((e) => {
+        $('#menuCompleteThePage').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'Complete Page');
         })
 
@@ -149,7 +156,7 @@ class ArquivoReplay {
             window.location = e.target.href;
         }) 
 
-        $('#menuReplayWithOldBrowser').click((e) => {
+        $('#menuReplayWithOldBrowser').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'Replay with old browser');
         })
 
@@ -277,14 +284,14 @@ class ArquivoReplay {
         try {
             const pywbUrl = new URL(replay.getConfig('pywb.url'));
             pywbOrigin = isHttp(pywbUrl) ? pywbUrl.origin : null;
-        } catch (err) {
+        } catch {
             // No valid pywb.url: no replay messages are accepted.
         }
         // Only http(s) URLs end up in the page links and history.
         const isHttpUrl = (url) => {
             try {
                 return typeof url === 'string' && isHttp(new URL(url));
-            } catch (err) {
+            } catch {
                 return false;
             }
         };

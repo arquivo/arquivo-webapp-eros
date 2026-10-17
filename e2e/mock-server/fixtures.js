@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Canned data served by the e2e mock server (e2e/mock-server/index.js).
  *

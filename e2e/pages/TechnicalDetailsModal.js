@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Technical-details modal (views/partials/replay-technical-details.ejs),
  * opened via ReplayOptionsMenu#technicalDetailsLink.

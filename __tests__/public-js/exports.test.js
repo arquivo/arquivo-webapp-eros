@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript, loadScript } = require('./helpers/load-script.cjs');
 
 // The export links from views/templates/menu/options_right_nav_menu.ejs.

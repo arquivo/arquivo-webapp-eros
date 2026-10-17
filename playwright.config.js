@@ -1,3 +1,5 @@
+'use strict';
+
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
 

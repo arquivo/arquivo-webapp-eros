@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Page (full-text) search results page: /page/search.
  * Selectors from views/templates/body/body-pages-search-results.ejs,

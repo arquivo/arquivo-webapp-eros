@@ -1,3 +1,5 @@
+'use strict';
+
 if ($ && $.modal) {
     $.modal.prototype.open = function () {
         var m = this;

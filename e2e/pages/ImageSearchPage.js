@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Image search results page: /image/search.
  * Selectors from views/partials/images-search-results.ejs,

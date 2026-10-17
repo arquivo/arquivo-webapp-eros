@@ -1,3 +1,4 @@
+'use strict';
 
 const config = require('config');
 const fetch = require('node-fetch');

@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 
 /**
@@ -19,7 +21,7 @@ const { test, expect } = require('../../fixtures');
  * `@live` specs below.
  */
 
-test('converts a URL-shaped direct-URL query into a site: search', async ({ page, searchBar, imageSearchPage }) => {
+test('converts a URL-shaped direct-URL query into a site: search', async ({ searchBar, imageSearchPage }) => {
     await imageSearchPage.goto('fccn.pt', { locale: 'pt' });
 
     await expect(imageSearchPage.results.first()).toBeVisible();

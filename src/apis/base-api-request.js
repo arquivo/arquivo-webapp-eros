@@ -1,3 +1,5 @@
+'use strict';
+
 const https = require('node:https');
 const http = require('node:http');
 const logger = require('../logger');
@@ -180,11 +182,11 @@ class BaseApiRequest {
      * are strings) and response errors are already handled (fallback reply).
      *
      * @abstract
-     * @param {http.IncomingMessage} apiRes - HTTP response object
-     * @param {Function} safeCallback - Safe callback to invoke with result
-     * @param {URLSearchParams} requestData - Original request parameters (for context)
+     * @param {http.IncomingMessage} _apiRes - HTTP response object
+     * @param {Function} _safeCallback - Safe callback to invoke with result
+     * @param {URLSearchParams} _requestData - Original request parameters (for context)
      */
-    processResponse(apiRes, safeCallback, requestData) {
+    processResponse(_apiRes, _safeCallback, _requestData) {
         throw new Error('processResponse() must be implemented by subclass');
     }
 
@@ -192,10 +194,10 @@ class BaseApiRequest {
      * Reply passed to the callback when the request fails (non-2xx status, request
      * or response error, timeout, response too large, exception)
      *
-     * @param {URLSearchParams} requestData - Original request parameters (for context)
+     * @param {URLSearchParams} _requestData - Original request parameters (for context)
      * @returns {*} The default reply
      */
-    fallbackReply(requestData) {
+    fallbackReply(_requestData) {
         return this.defaultApiReply;
     }
 

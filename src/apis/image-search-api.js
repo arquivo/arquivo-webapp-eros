@@ -1,3 +1,4 @@
+'use strict';
 
 const JsonApiRequest = require('./json-api-request');
 const config = require('config');

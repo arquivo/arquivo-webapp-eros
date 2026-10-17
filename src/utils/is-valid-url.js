@@ -1,3 +1,5 @@
+'use strict';
+
 const { URL, domainToUnicode } = require('node:url');
 
 // Characters never accepted anywhere in a URL:

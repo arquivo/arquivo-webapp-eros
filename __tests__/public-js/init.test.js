@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript } = require('./helpers/load-script.cjs');
 
 // Trimmed copy of views/templates/fragments/loading-section.ejs, as the replay page

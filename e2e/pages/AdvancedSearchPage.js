@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Shared advanced-search form, used by both /page/advanced/search and
  * /image/advanced/search (views/templates/body/body-pages-advanced-search.ejs

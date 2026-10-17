@@ -1,3 +1,5 @@
+'use strict';
+
 const exportPageSearch = require('../export-page-search');
 
 describe('Page Search Export', () => {

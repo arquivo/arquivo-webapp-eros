@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Homepage / global search bar + search-type switcher.
  * Selectors from views/templates/fragments/search-tools-search-bar.ejs and

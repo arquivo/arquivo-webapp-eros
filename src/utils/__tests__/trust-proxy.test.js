@@ -1,3 +1,5 @@
+'use strict';
+
 const { parseTrustProxy } = require('../trust-proxy');
 
 describe('parseTrustProxy', () => {

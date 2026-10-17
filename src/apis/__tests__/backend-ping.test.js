@@ -1,3 +1,5 @@
+'use strict';
+
 jest.mock('config');
 const mockLogger = { error: jest.fn(), info: jest.fn() };
 jest.mock('../../logger', () => () => mockLogger);

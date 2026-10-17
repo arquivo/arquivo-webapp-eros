@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Removes every inline term (e.g. "collection:EAWP6") of the given parameters from a query,
  * together with the whitespace before it

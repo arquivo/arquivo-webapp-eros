@@ -1,5 +1,10 @@
 // Logic regarding the main search bar. 
 
+'use strict';
+
+// contaMeHistoriasURL: views/templates/javascript_and_css_links.ejs.
+/* global contaMeHistoriasURL */
+
 $(function(){
     // ContaMeHistorias monitoring
     $('#search-tools-narrative-button').click(() => {
@@ -12,7 +17,7 @@ $(function(){
         });
         $('#confirm-narrative-modal').modal();
     });
-    $('#search-form-narrative').submit(function (e) {
+    $('#search-form-narrative').submit(function () {
         if($('#search-form-narrative input[name=query]').val() == ''){
             $('#search-form-narrative input[name=query]').remove();
             $('#search-form-narrative').attr('action', contaMeHistoriasURL); // URL filled in javascript_and_css_links.ejs, it's contame.historias.url property

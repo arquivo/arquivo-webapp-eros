@@ -1,3 +1,5 @@
+'use strict';
+
 const todayYmd = require('../../../src/utils/today-ymd');
 
 // Jest runs in Pacific/Kiritimati (UTC+14, see jest.global-setup.js), so a UTC

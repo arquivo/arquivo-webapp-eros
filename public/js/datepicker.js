@@ -1,3 +1,8 @@
+'use strict';
+
+// lang and translations: views/templates/translatelibs.ejs. isMobile: functions.js.
+/* global lang, translations, isMobile */
+
 $(function () {
     //Make sure the targets exist
     if ($('#search-tools-date-slider').length) {
@@ -98,7 +103,7 @@ $(function () {
                     const minDay = Math.min(getDaysInMonth(m, y), d);
                     submitDate(new Date(y, m - 1, minDay));
                 },
-                onSelect: function (dateText, inst) {
+                onSelect: function (dateText) {
                     const newDateText = dateText.split('/').reverse().join('');
                     const newDate = stringToDate(newDateText);
                     submitDate(newDate);

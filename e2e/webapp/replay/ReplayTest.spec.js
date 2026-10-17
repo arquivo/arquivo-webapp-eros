@@ -1,4 +1,6 @@
-const { test, expect } = require('../../fixtures');
+'use strict';
+
+const { test } = require('../../fixtures');
 
 // The replayed page's iframe embedding is commented out in
 // views/templates/body/body-replay.ejs (`<iframe id="replay-in-iframe" ...>`
@@ -6,7 +8,7 @@ const { test, expect } = require('../../fixtures');
 // read from inside that iframe — cannot pass yet in either mocked or live
 // mode. Marked test.fixme() to preserve the original intent without
 // asserting against code that doesn't run.
-test.fixme('replays several 1996 archived pages and shows page-specific text @live', async ({ page }) => {
+test.fixme('replays several 1996 archived pages and shows page-specific text @live', async () => {
     // Original intent (from docs/webapp/replay/ReplayTest.md), to restore once the iframe is re-enabled:
     // - /wayback/19961013145650/http://www.fccn.pt/ → #replay_iframe text at
     //   `body > blockquote:nth-child(5) > h1 > a` contains 'rccn'

@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 const { setDatePicker } = require('./helpers');
 

@@ -1,3 +1,8 @@
+'use strict';
+
+// lang: views/templates/translatelibs.ejs. isMobile and dateFromTimestamp: functions.js.
+/* global lang, isMobile, dateFromTimestamp */
+
 $(function () {
   if ($('#images-results').length) {
     let modalImageDetails = '';
@@ -226,7 +231,7 @@ $(function () {
           }
 
         },
-        start: function (event,ui){
+        start: function (event){
           const description = modal.find('.image-details-description').first();
           if (event.toElement && description.find(event.toElement).length){
             target.scrolling = true;

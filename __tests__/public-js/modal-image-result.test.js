@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { loadScript } = require('./helpers/load-script.cjs');
 const { fakeServer, flush } = require('./helpers/fake-server.cjs');
 

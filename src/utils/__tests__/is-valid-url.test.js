@@ -1,3 +1,5 @@
+'use strict';
+
 const isValidUrl = require('../../../src/utils/is-valid-url');
 
 describe('isValidUrl', () => {

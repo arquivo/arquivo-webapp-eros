@@ -1,3 +1,5 @@
+'use strict';
+
 const logger = require('../logger')('TimestampToText');
 const { parseArchiveTimestamp } = require('./archive-timestamp');
 function splitTimeStamp(timestamp) {

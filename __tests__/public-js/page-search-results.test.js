@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript } = require('./helpers/load-script.cjs');
 
 // One result card, trimmed from views/templates/fragments/page-result.ejs. The overlay

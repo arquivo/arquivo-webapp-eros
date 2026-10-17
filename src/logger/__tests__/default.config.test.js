@@ -1,3 +1,5 @@
+'use strict';
+
 // winston stores the final line under Symbol.for('message') (triple-beam's MESSAGE)
 const MESSAGE = Symbol.for('message');
 const getDefaults = require('../default.config');

@@ -1,3 +1,5 @@
+'use strict';
+
 const exportResults = require('../export-results');
 
 describe('Export Results Utility', () => {

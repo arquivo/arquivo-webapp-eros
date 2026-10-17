@@ -1,3 +1,5 @@
+'use strict';
+
 // Bypasses __mocks__/config.js to verify that the real config library
 // can parse config/default.properties at startup. Catches accidental removal
 // of implicit runtime dependencies (e.g. the `properties` parser package).

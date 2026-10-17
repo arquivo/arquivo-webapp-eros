@@ -1,3 +1,4 @@
+'use strict';
 
 const utils = {
     isValidUrl: require('./is-valid-url'),

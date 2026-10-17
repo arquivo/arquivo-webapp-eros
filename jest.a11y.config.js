@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   ...require('./jest.config.js'),
   // Match on the repo-relative test file rather than a bare "accessibility" path pattern,

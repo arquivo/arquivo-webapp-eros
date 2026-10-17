@@ -1,5 +1,6 @@
+'use strict';
+
 const http = require('node:http');
-const https = require('node:https');
 const JsonApiRequest = require('../json-api-request');
 
 // Mock the logger

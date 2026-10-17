@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript } = require('./helpers/load-script.cjs');
 
 // The backend the replay iframe loads from (patching.url, services.archivepagenow.url).

@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * Turns the express.trust.proxy setting (a string from config/default.properties or
  * the EXPRESS_TRUST_PROXY environment variable) into a value for Express's

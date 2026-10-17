@@ -1,3 +1,5 @@
+'use strict';
+
 $(() => {
     var $consentFields = $('.citation-saver-input-selection .input-tab input, .citation-saver-input-selection .input-tab textarea, .citation-saver-input-selection .input-tab button');
 
@@ -94,9 +96,6 @@ $(() => {
     });
 });
 
-function getFile() {
-}
-  
 $(document).on("click", "#input-file-selector", function(e) {
     e.preventDefault();
     $("#input-file-file").click();

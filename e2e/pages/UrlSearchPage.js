@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * URL search results page: /url/search (list and table view modes).
  * Selectors from views/partials/url-list-results.ejs and

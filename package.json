@@ -50,11 +50,14 @@
     "test:e2e:chromium-mobile": "playwright test --project=\"Mobile Chrome\"",
     "test:e2e:webkit-mobile": "playwright test --project=\"Mobile Safari\"",
     "test:smoke": "node bin/smoke-test.js",
+    "lint": "eslint .",
     "sonar": "sonar-scanner"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
     "jest": "^29.7.0",
     "jest-axe": "^10.0.0",
     "jest-environment-jsdom": "^29.7.0",

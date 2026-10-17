@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Shared helpers for e2e/webapp/pagesearch specs.
  *

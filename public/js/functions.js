@@ -2,6 +2,21 @@
 // JavaScript functions for Arquivo.pt ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+'use strict';
+
+// Every function declared at the top level of this file is a global, called from the
+// templates (onclick attributes) and from the other scripts in public/js.
+/* exported setInlineStyle, setInlineStyleAll, openLeftMenuNav, closeLeftMenuNav,
+   openOptionstMenuNav, closeOptionsMenuNav, openReplayLeftMenuNav, closeReplayLeftMenuNav,
+   openReplayRightMenuNav, closeReplayRightMenuNav, copyURLToClipboard, alertsMessageIn,
+   alertsMessageOut, openAdvancedSearchForm, closeAdvancedSearch, opensFullScreen,
+   closesFullScreen, showTable, showList, removeSearchBoxShadow, showsSearchBoxShadow,
+   openImageDetailsModalWindow, closeImageDetailsModalWindow, dateFromTimestamp, isMobile,
+   onSectionLoad, isValidUrl */
+// `lang` is defined by views/templates/translatelibs.ejs. No page defines `urlParam`,
+// so showTable and showList throw a ReferenceError if they are called.
+/* global lang, urlParam */
+
 // Replace (not merge) the inline style of the first element with this id.
 // Does nothing when there is none.
 function setInlineStyle(id, css) {

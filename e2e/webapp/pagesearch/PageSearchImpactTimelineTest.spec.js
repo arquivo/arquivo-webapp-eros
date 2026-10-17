@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 const { MOCK_TIMELINE_LAST_YEAR, NO_RESULTS_QUERY } = require('../../mock-server/fixtures');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Backend Routes - PyWb redirects
  *

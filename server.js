@@ -1,3 +1,4 @@
+'use strict';
 
 const unhandledExceptionLogger = require('./src/logger')('UnhandledException');
 
