@@ -85,10 +85,10 @@ describe('search-images handler', () => {
         expect(ImageSearchApiRequest).toHaveBeenCalledWith();
     });
 
-    it('creates a default-backend PageSearchApiRequest with a short timeout for the suggestion', () => {
+    it('creates a PageSearchApiRequest with a short timeout for the suggestion', () => {
         searchImages(req, res);
 
-        expect(PageSearchApiRequest).toHaveBeenCalledWith(null, { timeout: 3000 });
+        expect(PageSearchApiRequest).toHaveBeenCalledWith({ timeout: 3000 });
     });
 
     it('requests the suggestion and the images in parallel', () => {

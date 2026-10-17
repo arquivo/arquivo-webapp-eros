@@ -7,7 +7,7 @@
  * imagesearch, cdx, pywb) server-side in Node, so Playwright's page.route()
  * can't intercept them. Instead, playwright.config.js points the app's
  * backend-derived config env vars (BACKEND_URL, WAYBACK_URL, PYWB_URL,
- * TEXT_SEARCH_API_SOLR/NUTCHWAX/DEFAULT, IMAGE_SEARCH_API, CDX_API) at this
+ * TEXT_SEARCH_API_DEFAULT, IMAGE_SEARCH_API, CDX_API) at this
  * process, and it serves deterministic canned data for all of them. See
  * fixtures.js for the exact data contract.
  */
@@ -69,7 +69,7 @@ function createMockServer() {
     return http.createServer((req, res) => {
         const url = new URL(req.url, 'http://localhost');
 
-        if (url.pathname === '/textsearch' || url.pathname === '/textsearchnutchwax') {
+        if (url.pathname === '/textsearch') {
             handleTextSearch(url.searchParams, res);
         } else if (url.pathname === '/imagesearch') {
             handleImageSearch(url.searchParams, res);

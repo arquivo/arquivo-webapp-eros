@@ -5,7 +5,7 @@ const makeExportObject = require('./export-page-search');
 const PageSearchApiRequest = require('./apis/page-search-api');
 
 module.exports = makeSearchHandler({
-    createApiRequest: (requestData) => new PageSearchApiRequest(requestData.get('api')),
+    createApiRequest: () => new PageSearchApiRequest(),
     // The spellchecked query comes in the same reply as the results.
     // Errors thrown in the API callback (e.g. by getSuggestion or makeExportObject) are routed to
     // next, like the images search does: left uncaught, the API client would swallow them (and the
