@@ -218,7 +218,7 @@ router.get('/services/archivepagenow', function (req, res) {
     });
 });
 
-// With a 'logging' query parameter this is a no-op logging endpoint
+// With a 'logging' query parameter the request is only acknowledged (empty 200), not archived
 router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     if (!requestData.has('logging')) {
