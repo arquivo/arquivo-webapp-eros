@@ -37,9 +37,8 @@ const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-'));
 const uploadFolder = path.join(tmpRoot, 'uploads', 'CitationSaver');
 // The default temporary folder: next to the upload folder, not inside it.
 const uploadTempFolder = path.join(tmpRoot, 'uploads', '.citationsaver-tmp');
-// Larger than one read chunk (64 KiB), so a text file can span several chunks, and
-// than busboy's default field size (1 MiB), so a text field of the limit is not cut short.
-const MAX_UPLOAD_SIZE = 1536 * 1024;
+// Larger than one read chunk (64 KiB), so a text file can span several chunks.
+const MAX_UPLOAD_SIZE = 256 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
 config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
 // Every test posts from the same IP; the rate limit has its own suite.
@@ -51,6 +50,7 @@ const fetch = require('node-fetch');
 const dns = require('node:dns');
 const addToSpreadsheet = require('../spreadsheet-client');
 const app = require('../../app');
+const { loadApp, translationsLoaded, post: helperPost } = require('./helpers/citationsaver-app.cjs');
 
 // Fail fast instead of hanging Jest if a request never gets a response
 const REQUEST_TIMEOUT_MS = 5000;
@@ -296,32 +296,14 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedFiles()).toHaveLength(1);
         });
 
-        it.each([
-            ['of exactly the limit', MAX_UPLOAD_SIZE, true],
-            // busboy used to cut a field off at 1 MB, so a text over the limit was stored truncated.
-            ['over the limit', MAX_UPLOAD_SIZE + 1, false],
-        ])('handles a multipart text %s without cutting it short', async (kind, size, accepted) => {
-            const text = 'x'.repeat(size);
-
-            const res = await post().field('text', text);
-
-            expect(res.status).toBe(200);
-            if (accepted) {
-                expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
-                expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
-            } else {
-                expect(res.body).toEqual({ status: false, message: messages.textFilesize });
-                expect(storedFiles()).toHaveLength(0);
-            }
-        });
-
         it('rejects a multipart body over the limit with 413 even when no single part is', async () => {
+            // Just over the limit, so the client is done writing by the time of the reply.
             let req = post();
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 5; i++) {
                 req = req.field('field' + i, 'x'.repeat(MAX_UPLOAD_SIZE));
             }
 
-            const res = await req.catch(err => err.response ?? Promise.reject(err));
+            const res = await req;
 
             expect(res.status).toBe(413);
             expect(res.body).toEqual({ status: false, message: messages.filesize });
@@ -396,6 +378,34 @@ describe('POST /services/citationsaver through the app', () => {
             await received;
 
             await expectNoTempFiles();
+            expect(storedFiles()).toHaveLength(0);
+        });
+    });
+
+    describe('multipart text fields (#177)', () => {
+        // Over busboy's default field size (1 MiB), which used to cut a text off silently.
+        const TEXT_LIMIT = 2 * 1024 * 1024;
+        let textApp;
+
+        beforeAll(async () => {
+            ({ app: textApp } = loadApp(uploadFolder, { 'citation.saver.max.upload.size': TEXT_LIMIT }));
+            await translationsLoaded(textApp);
+        });
+
+        it('stores a text of exactly the limit in full', async () => {
+            const text = 'x'.repeat(TEXT_LIMIT);
+
+            const res = await helperPost(textApp).field('text', text);
+
+            expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
+            expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
+        });
+
+        it('rejects a text over the limit instead of storing it cut short', async () => {
+            const res = await helperPost(textApp).field('text', 'x'.repeat(TEXT_LIMIT + 1));
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.textFilesize });
             expect(storedFiles()).toHaveLength(0);
         });
     });

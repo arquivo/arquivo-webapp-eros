@@ -53,4 +53,21 @@ async function translationsLoaded(app) {
     throw new Error('The translations did not load');
 }
 
-module.exports = { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded };
+/*
+ * Loads a new copy of the app with these config settings, since the Citation Saver
+ * reads them at load time. Call from a test file that mocks the Sheet client.
+ * The module paths are relative to this file.
+ */
+function loadApp(uploadFolder, settings = {}) {
+    let loaded;
+    jest.isolateModules(() => {
+        const config = require('config');
+        config.set('citation.saver.upload.folder.path', uploadFolder);
+        Object.entries(settings).forEach(([key, value]) => config.set(key, value));
+        loaded = { app: require('../../../app'), addToSpreadsheet: require('../../spreadsheet-client') };
+    });
+    loaded.addToSpreadsheet.mockResolvedValue();
+    return loaded;
+}
+
+module.exports = { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded, loadApp };

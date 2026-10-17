@@ -16,23 +16,13 @@ jest.mock('../logger', () => () => mockLogger);
 
 const fs = require('fs');
 const request = require('supertest');
-const { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded } =
-    require('./helpers/citationsaver-app.cjs');
+const helpers = require('./helpers/citationsaver-app.cjs');
+const { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded } = helpers;
 
 const { root, uploadFolder, uploadTempFolder } = makeUploadFolders('citationsaver-177-rl-');
 const tooMany = { status: false, message: messages.default };
 
-function loadApp(settings) {
-    let loaded;
-    jest.isolateModules(() => {
-        const config = require('config');
-        config.set('citation.saver.upload.folder.path', uploadFolder);
-        Object.entries(settings).forEach(([key, value]) => config.set(key, value));
-        loaded = { app: require('../../app'), addToSpreadsheet: require('../spreadsheet-client') };
-    });
-    loaded.addToSpreadsheet.mockResolvedValue();
-    return loaded;
-}
+const loadApp = (settings) => helpers.loadApp(uploadFolder, settings);
 
 beforeEach(() => {
     fs.rmSync(uploadFolder, { recursive: true, force: true });
