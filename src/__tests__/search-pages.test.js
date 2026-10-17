@@ -1,5 +1,7 @@
 'use strict';
 
+const http = require('node:http');
+const request = require('supertest');
 const searchPages = require('../search-pages');
 
 // Mock dependencies
@@ -7,7 +9,7 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-page-search');
 jest.mock('../logger', () => {
-    const logger = { info: jest.fn() };
+    const logger = { info: jest.fn(), error: jest.fn() };
     return jest.fn(() => logger);
 });
 
@@ -193,12 +195,82 @@ describe('search-pages handler', () => {
         expect(res.render).toHaveBeenCalledTimes(1);
     });
 
-    it('does not pass render errors to next: they are thrown from the API callback', () => {
+    it('passes render errors to next instead of throwing them from the API callback', () => {
         const next = jest.fn();
         const error = new Error('render failed');
         res.render.mockImplementationOnce(() => { throw error; });
 
-        expect(() => searchPages(req, res, next)).toThrow(error);
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+    });
+
+    it('passes suggestion errors to next without rendering', () => {
+        const next = jest.fn();
+        const error = new Error('suggestion failed');
+        mockApiRequest.getSuggestion.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+        expect(res.render).not.toHaveBeenCalled();
+    });
+
+    it('does not call next when the render succeeds', () => {
+        const next = jest.fn();
+
+        searchPages(req, res, next);
+
         expect(next).not.toHaveBeenCalled();
+    });
+});
+
+describe('GET /partials/pages-search-results when the API callback throws', () => {
+    let app;
+    let stubServer;
+    let stubStatus;
+    let stubBody;
+    const error = new Error('export failed');
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => {
+            res.writeHead(stubStatus, { 'Content-Type': 'application/json' });
+            res.end(stubBody);
+        });
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        // The real request flow and API client (with its success and fallback paths); only the
+        // API is a stub, and the export throws inside the API callback
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockImplementation(() => { throw error; });
+        const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
+        PageSearchApiRequest.mockImplementation((backend) => {
+            const api = new ActualPageSearchApiRequest(backend);
+            api.apiUrl = `http://localhost:${stubServer.address().port}`;
+            return api;
+        });
+    });
+
+    it.each([
+        ['a 2xx status', 200, JSON.stringify({ response_items: [] })],
+        ['a non-2xx status', 503, JSON.stringify({ error: 'unavailable' })],
+    ])('replies with an error, instead of hanging or crashing, when the API replies %s', async (_name, status, body) => {
+        stubStatus = status;
+        stubBody = body;
+
+        const res = await request(app).get('/partials/pages-search-results?q=test').timeout(5000);
+
+        expect(res.status).toBe(500);
+        expect(makeExportObject).toHaveBeenCalledTimes(1);
+        // Not swallowed and logged as a JSON parse error by the API client
+        expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
     });
 });
