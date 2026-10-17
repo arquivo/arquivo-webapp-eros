@@ -29,14 +29,13 @@ jest.mock('express-fileupload/lib/uploadtimer', () => {
 });
 
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const config = require('config');
+const { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post: postTo, translationsLoaded, loadApp } =
+    require('./helpers/citationsaver-app.cjs');
 
-const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-177-'));
-const uploadFolder = path.join(tmpRoot, 'uploads', 'CitationSaver');
-// The default temporary folder: next to the upload folder, not inside it.
-const uploadTempFolder = path.join(tmpRoot, 'uploads', '.citationsaver-tmp');
+// The temporary folder is the default one: next to the upload folder, not inside it.
+const { root: tmpRoot, uploadFolder, uploadTempFolder } = makeUploadFolders('citationsaver-177-');
 // Larger than one read chunk (64 KiB), so a text file can span several chunks.
 const MAX_UPLOAD_SIZE = 256 * 1024;
 config.set('citation.saver.upload.folder.path', uploadFolder);
@@ -45,30 +44,14 @@ config.set('citation.saver.max.upload.size', MAX_UPLOAD_SIZE);
 config.set('citation.saver.rate.limit.max', 1000);
 
 const http = require('http');
-const request = require('supertest');
 const fetch = require('node-fetch');
 const dns = require('node:dns');
 const addToSpreadsheet = require('../spreadsheet-client');
 const app = require('../../app');
-const { loadApp, translationsLoaded, post: helperPost } = require('./helpers/citationsaver-app.cjs');
-
-// Fail fast instead of hanging Jest if a request never gets a response
-const REQUEST_TIMEOUT_MS = 5000;
 
 const PDF = Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n');
 
-const messages = {
-    empty: 'Nenhum documento foi submetido.',
-    missing: 'O ficheiro não foi transferido, nenhum ficheiro foi submetido.',
-    mimetype: 'O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.',
-    filesize: 'O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.',
-    textFilesize: 'O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.',
-    default: 'Algo correu mal, por favor tente novamente mais tarde.',
-};
-
-function post() {
-    return request(app).post('/services/citationsaver').timeout(REQUEST_TIMEOUT_MS);
-}
+const post = () => postTo(app);
 
 function storedFiles() {
     return fs.existsSync(uploadFolder) ? fs.readdirSync(uploadFolder) : [];
@@ -76,13 +59,6 @@ function storedFiles() {
 
 function storedContent(name) {
     return fs.readFileSync(path.join(uploadFolder, name));
-}
-
-// Every file left under the temporary upload folder, at any depth.
-function tempFiles() {
-    if (!fs.existsSync(uploadTempFolder)) return [];
-    return fs.readdirSync(uploadTempFolder, { recursive: true })
-        .filter(name => fs.statSync(path.join(uploadTempFolder, name)).isFile());
 }
 
 // The temporary folder of a request is removed once its response is closed, which
@@ -143,6 +119,8 @@ function streamUploadWithoutEnding(port, size) {
 }
 
 describe('POST /services/citationsaver through the app', () => {
+    beforeAll(() => translationsLoaded(app));
+
     beforeEach(() => {
         jest.clearAllMocks();
         fs.rmSync(uploadFolder, { recursive: true, force: true });
@@ -370,10 +348,10 @@ describe('POST /services/citationsaver through the app', () => {
             req.write('--b177\r\nContent-Disposition: form-data; name="file"; filename="a.pdf"\r\n'
                 + 'Content-Type: application/pdf\r\n\r\n%PDF-' + 'a'.repeat(1024));
             // Wait for the partial file to reach the disk, then drop the connection.
-            for (let i = 0; i < 50 && tempFiles().length === 0; i++) {
+            for (let i = 0; i < 50 && filesUnder(uploadTempFolder).length === 0; i++) {
                 await new Promise(resolve => setTimeout(resolve, 20));
             }
-            expect(tempFiles()).toHaveLength(1);
+            expect(filesUnder(uploadTempFolder)).toHaveLength(1);
             req.destroy();
             await received;
 
@@ -395,14 +373,14 @@ describe('POST /services/citationsaver through the app', () => {
         it('stores a text of exactly the limit in full', async () => {
             const text = 'x'.repeat(TEXT_LIMIT);
 
-            const res = await helperPost(textApp).field('text', text);
+            const res = await postTo(textApp).field('text', text);
 
             expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
             expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
         });
 
         it('rejects a text over the limit instead of storing it cut short', async () => {
-            const res = await helperPost(textApp).field('text', 'x'.repeat(TEXT_LIMIT + 1));
+            const res = await postTo(textApp).field('text', 'x'.repeat(TEXT_LIMIT + 1));
 
             expect(res.status).toBe(200);
             expect(res.body).toEqual({ status: false, message: messages.textFilesize });
