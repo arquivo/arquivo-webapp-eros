@@ -51,8 +51,8 @@ module.exports = function (req, res) {
             // fixed endpoint, so the host and path can only come from config.
             // The backend answers with an empty body: what gets logged is the
             // raw request line. encodeURIComponent (space -> %20, `( ) ! ~ *`
-            // literal) keeps it byte-for-byte as before; URLSearchParams would
-            // not (space -> +, `( ) ! ~` escaped).
+            // literal) keeps the logged request line in its existing format;
+            // URLSearchParams would not (space -> +, `( ) ! ~` escaped).
             fetch(loggingEndpoint()
                 + '?url=' + encodeURIComponent(url)
                 + '&success=' + success
