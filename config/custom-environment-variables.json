@@ -21,8 +21,6 @@
   "text": {
     "search": {
       "api": {
-        "solr": "TEXT_SEARCH_API_SOLR",
-        "nutchwax": "TEXT_SEARCH_API_NUTCHWAX",
         "default": "TEXT_SEARCH_API_DEFAULT"
       }
     }

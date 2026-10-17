@@ -39,7 +39,7 @@ describe('search-images handler', () => {
             l: 'pt'
         });
         mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: 'pt', api: 'solr' };
+            const map = { q: 'test query', l: 'pt' };
             return map[key];
         });
 
@@ -79,16 +79,16 @@ describe('search-images handler', () => {
         expect(sanitizeInputs).toHaveBeenCalledWith(req, res);
     });
 
-    it('creates ImageSearchApiRequest instance, ignoring the api parameter', () => {
+    it('creates ImageSearchApiRequest instance', () => {
         searchImages(req, res);
 
         expect(ImageSearchApiRequest).toHaveBeenCalledWith();
     });
 
-    it('creates a default-backend PageSearchApiRequest with a short timeout for the suggestion', () => {
+    it('creates a PageSearchApiRequest with a short timeout for the suggestion', () => {
         searchImages(req, res);
 
-        expect(PageSearchApiRequest).toHaveBeenCalledWith(null, { timeout: 3000 });
+        expect(PageSearchApiRequest).toHaveBeenCalledWith({ timeout: 3000 });
     });
 
     it('requests the suggestion and the images in parallel', () => {
