@@ -1,4 +1,4 @@
-const { calculateImpactBars } = require('../search-impact-graph');
+const { calculateImpactBars } = require('../../public/js/search-impact-graph');
 
 describe('calculateImpactBars', () => {
     it('returns null when the impact map is empty', () => {
