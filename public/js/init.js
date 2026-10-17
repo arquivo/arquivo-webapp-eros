@@ -44,6 +44,9 @@
      * Only classic scripts are: no type, or a JavaScript MIME type (jQuery's rscriptType test).
      * Others, such as type="module", importmap or data blocks like application/ld+json and
      * text/template, stay inert, as jQuery 1.12 left them.
+     * Unlike jQuery's eval, a re-created script's top-level const/let become globals (a name the
+     * page already declares makes that script throw), and a <script src> runs async, so "in
+     * order" only holds for inline scripts. The current partials only have inline `var` scripts.
      */
     function replaceWithHtml(element, html) {
         const template = document.createElement('template');
