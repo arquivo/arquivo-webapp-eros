@@ -8,7 +8,12 @@ jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
 jest.mock('../../src/apis/suggestion-api');
-jest.mock('../services-citationsaver', () => jest.fn());
+jest.mock('../spreadsheet-client');
+// Replace only the handler: the route's middlewares stay the real ones.
+jest.mock('../services-citationsaver', () => {
+    const actual = jest.requireActual('../services-citationsaver');
+    return Object.assign(jest.fn(), { rateLimiter: actual.rateLimiter, parseUpload: actual.parseUpload });
+});
 
 const request = require('supertest');
 const citationSaver = require('../services-citationsaver');

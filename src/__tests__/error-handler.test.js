@@ -11,7 +11,11 @@ jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
 jest.mock('../../src/apis/suggestion-api');
 jest.mock('../replay-nav', () => jest.fn());
-jest.mock('../services-citationsaver', () => jest.fn());
+// The handler is a mock; the route's middlewares just pass the request on.
+jest.mock('../services-citationsaver', () => Object.assign(jest.fn(), {
+    rateLimiter: (req, res, next) => next(),
+    parseUpload: (req, res, next) => next(),
+}));
 
 const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
 jest.mock('../logger', () => jest.fn(() => mockLogger));

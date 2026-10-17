@@ -1,15 +1,19 @@
-const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 /**
  * Export Results Utility
- * 
+ *
  * Converts API request/response data into a structured array format for export.
+ */
+
+const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
+
+/**
  * Creates a table-like structure with:
  * - Query parameters section (query, dates, offset, maxItems, etc.)
  * - Empty separator line
  * - Results section header
  * - Column headers (translated field names)
  * - Data rows with extracted year/month/day from timestamp
- * 
+ *
  * @param {URLSearchParams} apiRequestData - Search parameters from the request
  * @param {Array} apiResponseItems - Result items from API response
  * @param {Function} translateFunction - i18n translation function
@@ -17,8 +21,6 @@ const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
  * @param {Array<string>} displayFields - List of fields to include in export
  * @returns {Array<Array>} 2D array suitable for CSV/JSON export
  */
-
-//makes export json from Api request and reply
 module.exports = function (apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
     const exportObject = [];
     const exportSERPSaveLine = function () {
@@ -58,9 +60,9 @@ module.exports = function (apiRequestData, apiResponseItems, translateFunction, 
         }
 
         const { year, month, day } = parseArchiveTimestamp(currentDocument[timstampField]);
-        currentDocument.year = parseInt(year);
+        currentDocument.year = Number.parseInt(year);
         currentDocument.month = translateFunction('common.months.' + month);
-        currentDocument.day = parseInt(day);
+        currentDocument.day = Number.parseInt(day);
 
         // append result so it can be exported
         exportSERPSaveLine(
