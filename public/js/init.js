@@ -80,9 +80,11 @@
         if (url) {
             // Same request as $.ajax: a same-origin GET (so with the cookies), with jQuery's
             // X-Requested-With header. Like before, a failed request or an HTTP error status
-            // leaves the section as it is.
+            // leaves the section as it is. The partial routes never redirect, so a redirect
+            // is treated as a failed request too: the response always comes from this origin.
             fetch(url, {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                redirect: 'error',
             })
                 .then(response => response.ok ? response.text() : Promise.reject(new Error('HTTP ' + response.status)))
                 .then(html => {

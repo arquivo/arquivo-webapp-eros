@@ -51,15 +51,15 @@ const settleAll = async () => {
 let requests;
 let respond;
 
-function record(url, method, headers) {
-    requests.push({ url, method, headers });
+function record(url, method, headers, redirect) {
+    requests.push({ url, method, headers, redirect });
     return respond(url);
 }
 
 function fakeFetch(url, init = {}) {
     const headers = Object.fromEntries(new Headers(init.headers || {}));
     return new Promise((resolve, reject) => setTimeout(() => {
-        const { status, body, networkError } = record(String(url), init.method || 'GET', headers);
+        const { status, body, networkError } = record(String(url), init.method || 'GET', headers, init.redirect || 'follow');
         if (networkError) {
             reject(new TypeError('Failed to fetch'));
             return;
@@ -208,6 +208,8 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
             expect(requests[0].method).toBe('GET');
             // jQuery marks same-origin requests with this header; kept for the server's sake.
             expect(requests[0].headers['x-requested-with']).toBe('XMLHttpRequest');
+            // The partial routes never redirect: a redirect fails the request.
+            expect(requests[0].redirect).toBe('error');
         });
 
         it('replaces the section with the response and then posts the onloadmessage', async () => {

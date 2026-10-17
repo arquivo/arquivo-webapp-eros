@@ -12,6 +12,7 @@ const { test, expect } = require('../../fixtures');
 
 const FIXTURE_PATH = '/__e2e__/init-fixture';
 const PARTIAL_PATH = '/__e2e__/init-partial';
+const REDIRECTED_PATH = '/__e2e__/init-redirected';
 
 // Fields that a form submission does and does not send, and values that need encoding.
 const LOADING_FORM_FIELDS = `
@@ -156,6 +157,33 @@ test.describe('fixture page', () => {
         await expect(page.locator('#loading-section')).toBeAttached();
         expect(await page.evaluate(() => [window.partialRuns, window.messages.length])).toEqual([undefined, 0]);
         expect(errors).toEqual([]);
+    });
+
+    test('leaves the section in place when the partial redirects', async ({ page, browserName }) => {
+        test.skip(browserName === 'webkit', 'Playwright cannot fulfill a route with a redirect in WebKit');
+        const redirected = [];
+        await page.unroute(`**${PARTIAL_PATH}?*`);
+        await page.route(`**${PARTIAL_PATH}?*`, (route) => route.fulfill({ status: 302, headers: { location: REDIRECTED_PATH } }));
+        await page.route(`**${REDIRECTED_PATH}`, (route) => {
+            redirected.push(route.request().url());
+            return route.fulfill({ contentType: 'text/html; charset=utf-8', body: PARTIAL });
+        });
+        // Record how init.js's fetch settles: redirect: 'error' rejects it on the redirect.
+        await page.addInitScript(() => {
+            const fetch = window.fetch;
+            window.fetch = (...args) => {
+                const result = fetch(...args);
+                window.fetchSettled = result.then(() => 'resolved', () => 'rejected');
+                return result;
+            };
+        });
+        await page.goto(FIXTURE_PATH);
+        await page.waitForFunction(() => window.fetchSettled);
+
+        expect(await page.evaluate(() => window.fetchSettled)).toBe('rejected');
+        await expect(page.locator('#loading-section')).toBeAttached();
+        expect(await page.evaluate(() => [window.partialRuns, window.messages.length])).toEqual([undefined, 0]);
+        expect(redirected).toEqual([]);
     });
 });
 
