@@ -190,9 +190,12 @@ describe('search-pages handler', () => {
     });
 
     it('renders synchronously in the API callback', () => {
-        searchPages(req, res);
+        const next = jest.fn();
+
+        searchPages(req, res, next);
 
         expect(res.render).toHaveBeenCalledTimes(1);
+        expect(next).not.toHaveBeenCalled();
     });
 
     it('passes render errors to next instead of throwing them from the API callback', () => {
@@ -214,14 +217,6 @@ describe('search-pages handler', () => {
         expect(next).toHaveBeenCalledTimes(1);
         expect(next).toHaveBeenCalledWith(error);
         expect(res.render).not.toHaveBeenCalled();
-    });
-
-    it('does not call next when the render succeeds', () => {
-        const next = jest.fn();
-
-        searchPages(req, res, next);
-
-        expect(next).not.toHaveBeenCalled();
     });
 });
 
