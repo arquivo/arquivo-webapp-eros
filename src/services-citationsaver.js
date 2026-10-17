@@ -552,9 +552,9 @@ async function handleURL(req, res) {
  */
 async function handleText(req, res) {
 
-    function sendExpectedError(message) {
+    function sendExpectedError(message, status = 200) {
         logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', message));
-        res.send({
+        res.status(status).send({
             status: false,
             message: message
         });
@@ -582,14 +582,10 @@ async function handleText(req, res) {
         size = textFile.size;
         write = (target) => textFile.mv(target);
     } else if (typeof text === 'string') {
-        const bytes = Buffer.byteLength(text);
-        if (bytes > maxUploadSize) {
-            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'));
-            return;
-        }
-        // Possibly cut short by busboy: never store part of a text.
-        if (bytes > MAX_FIELD_BYTES) {
-            sendExpectedError(req.t('services-citation-saver.errors.default'));
+        // Over MAX_FIELD_BYTES, busboy may have cut it short: never store part of a text.
+        // 413 like a text part over the limit, with the text size message.
+        if (Buffer.byteLength(text) > Math.min(maxUploadSize, MAX_FIELD_BYTES)) {
+            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'), 413);
             return;
         }
         size = text.length;

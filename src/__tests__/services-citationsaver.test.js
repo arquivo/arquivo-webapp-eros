@@ -50,6 +50,7 @@ describe('Citation Saver Service', () => {
         res = {
             send: jest.fn()
         };
+        res.status = jest.fn(() => res);
 
         // Setup mocks
         mockFetch = jest.fn().mockResolvedValue({
@@ -396,6 +397,7 @@ describe('Citation Saver Service', () => {
 
             servicesCitationSaver(req, res);
 
+            expect(res.status).toHaveBeenCalledWith(413);
             expect(res.send).toHaveBeenCalledWith({
                 status: false,
                 message: 'services-citation-saver.errors.text.filesize'
@@ -482,7 +484,6 @@ describe('Citation Saver Service', () => {
             ['a URL that is not a string', { url: { href: 'https://example.com/' } }, 'services-citation-saver.errors.URL.invalid'],
         ])('replies 400 for %s before logging or storing anything', async (_case, body, message) => {
             req.body = body;
-            res.status = jest.fn(() => res);
 
             await servicesCitationSaver(req, res);
 

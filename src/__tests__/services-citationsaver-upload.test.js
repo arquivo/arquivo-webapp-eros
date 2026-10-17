@@ -574,17 +574,22 @@ describe('POST /services/citationsaver through the app', () => {
 
             const res = await postTo(smallApp).type('form').send({ text: 'x'.repeat(11) });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(413);
             expect(res.body).toEqual({ status: false, message: messages.textFilesize });
             expect(storedFiles()).toHaveLength(0);
         });
 
-        it('rejects a multipart text field that the parser cut short instead of storing part of it', async () => {
-            const res = await postTo(textApp).field('text', 'x'.repeat(200 * 1024));
+        it.each([
+            ['just over 100 KiB', 100 * 1024 + 1],
+            ['that the parser cut short', 200 * 1024],
+        ])('rejects a multipart text field %s with 413 and the text size message, storing nothing', async (_case, length) => {
+            const res = await postTo(textApp).field('text', 'x'.repeat(length));
 
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(res.status).toBe(413);
+            expect(res.headers['content-type']).toMatch(/^application\/json/);
+            expect(res.body).toEqual({ status: false, message: messages.textFilesize });
             expect(storedFiles()).toHaveLength(0);
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
         });
 
         it('stores a multipart text field of 100 KiB in full', async () => {
