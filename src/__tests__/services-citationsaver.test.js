@@ -338,6 +338,17 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it('does not leak mimetype or filesize into the global scope (#56)', async () => {
+            req.body = { url: 'http://example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
+            expect(globalThis).not.toHaveProperty('mimetype');
+            expect(globalThis).not.toHaveProperty('filesize');
+        });
+
         it('writes .link file with URL content', async () => {
             req.body = { url: 'http://example.com', email: 'test@example.com' };
 
