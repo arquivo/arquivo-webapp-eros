@@ -82,6 +82,8 @@ describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ se
         ['no origin', ''],
         ['the replay origin on another port', REPLAY_ORIGIN + ':8443'],
         ['the replay host over http', REPLAY_ORIGIN.replace('https:', 'http:')],
+        ['a host that ends with the replay host', 'https://evil-backend.example.org'],
+        ['a host that starts with the replay host', REPLAY_ORIGIN + '.evil.example'],
     ])('ignores messages from %s', (_case, origin) => {
         setup();
         const before = document.body.innerHTML;
@@ -107,6 +109,8 @@ describeScript('js/dynamic-header-url.js', { html: COMPLETE_PAGE_HEADER }, ({ se
     it.each([
         ['a javascript: URL', 'javascript:alert(1)'],
         ['a JavaScript: URL with odd case and spaces', ' JavaScript:alert(1)'],
+        ['a javascript: URL after a control character', '\x01javascript:alert(1)'],
+        ['a javascript: URL with a tab in the scheme', 'java\tscript:alert(1)'],
         ['a data: URL', 'data:text/html,hi'],
         ['an ftp: URL', 'ftp://www.example.com/'],
         ['a URL without a scheme', 'www.example.com/a/b'],

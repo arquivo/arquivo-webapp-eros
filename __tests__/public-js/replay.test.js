@@ -189,6 +189,8 @@ describe('replay.js', () => {
             ['an opaque origin (sandboxed frame)', 'null'],
             ['no origin', ''],
             ['the pywb host on another port', PYWB_ORIGIN + ':8443'],
+            ['a host that ends with the pywb host', 'https://evil-replay.example.org'],
+            ['a host that starts with the pywb host', PYWB_ORIGIN + '.evil.example'],
         ])('ignores replay messages from %s', (_case, origin) => {
             const replay = newReplay();
             const setUrlAndTimestamp = jest.spyOn(replay, 'setUrlAndTimestamp');
@@ -236,6 +238,8 @@ describe('replay.js', () => {
 
         it.each([
             ['a javascript: URL', 'javascript:alert(1)'],
+            ['a javascript: URL after a control character', '\x01javascript:alert(1)'],
+            ['a javascript: URL with a tab in the scheme', 'java\tscript:alert(1)'],
             ['a data: URL', 'data:text/html,hi'],
             ['a URL without a scheme', 'example.org/a'],
             ['no URL', undefined],
