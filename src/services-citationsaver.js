@@ -332,6 +332,17 @@ async function handleURL(req, res) {
 async function handleText(req, res) {
     const text = req.body.text;
 
+    // A field sent more than once arrives as an array, which fs.promises.writeFile would
+    // join and store. Same reply as when the callback fs.writeFile rejected it.
+    if (typeof text !== 'string') {
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', 'text is not a string'));
+        res.send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+        return;
+    }
+
     if (text.length > maxUploadSize) {
         logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize')));
         res.send({

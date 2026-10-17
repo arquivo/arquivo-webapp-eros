@@ -382,6 +382,23 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it.each([
+            ['an array (field sent twice)', ['first', 'second']],
+            ['an object', { a: 'b' }]
+        ])('rejects text that is %s without storing it', async (kind, text) => {
+            req.body = { text, email: 'test@example.com' };
+
+            await servicesCitationSaver(req, res);
+
+            expect(fs.promises.writeFile).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+            expect(res.send).toHaveBeenCalledTimes(1);
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.default'
+            });
+        });
+
         it('writes .txt file with text content', async () => {
             req.body = { text: 'Sample text', email: 'test@example.com' };
 
