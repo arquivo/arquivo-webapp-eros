@@ -250,14 +250,28 @@ function parseUpload(req, res, next) {
             useTempFiles: true,
             tempFileDir: tempDir,
         });
-        middleware(req, res, (err) => {
-            // express-fileupload can call next() after the response is over, e.g. once
-            // the parser is destroyed for a client that went away. Nothing to do then.
-            if (res.writableEnded || res.destroyed) {
+        try {
+            middleware(req, res, (err) => {
+                // express-fileupload can call next() after the response is over, e.g. once
+                // the parser is destroyed for a client that went away. Nothing to do then.
+                if (res.writableEnded || res.destroyed) {
+                    return;
+                }
+                next(err);
+            });
+        } catch (err) {
+            // busboy throws at once for a Content-Type it cannot parse, e.g. one without
+            // a boundary. Uncaught here, it would be an unhandled rejection and end the process.
+            logger.info('Blocking submission: unreadable multipart request. ' + err);
+            if (res.headersSent) {
+                res.destroy();
                 return;
             }
-            next(err);
-        });
+            res.status(400).send({
+                status: false,
+                message: req.t('services-citation-saver.errors.default')
+            });
+        }
     }, (err) => {
         logger.error('Could not create the temporary upload folder in ' + uploadTempFolderPath + ': ' + err);
         res.send({

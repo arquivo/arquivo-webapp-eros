@@ -222,6 +222,18 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedFiles()).toHaveLength(0);
         });
 
+        it('replies 400 JSON and keeps serving for a multipart Content-Type without a boundary', async () => {
+            const res = await post().set('Content-Type', 'multipart/form-data; charset=utf-8').send('--x\r\n\r\n');
+
+            expect(res.status).toBe(400);
+            expect(res.headers['content-type']).toMatch(/^application\/json/);
+            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(storedFiles()).toHaveLength(0);
+            // The process is still up and serving.
+            const next = await post().field('text', 'still here');
+            expect(next.body).toEqual(expect.objectContaining({ status: true }));
+        });
+
         it('replies status:false for a file with an unsupported mimetype', async () => {
             const res = await post()
                 .attach('file', Buffer.from('PK\u0003\u0004'), { filename: 'doc.docx', contentType: 'application/zip' });
