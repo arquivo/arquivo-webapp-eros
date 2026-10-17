@@ -11,7 +11,7 @@ jest.mock('../../../src/logger', () => {
 });
 
 /**
- * JsonApiRequest Test Suite (formerly the ApiRequest suite, #55)
+ * JsonApiRequest Test Suite
  *
  * Covers the JSON API client and, through it, the request flow of BaseApiRequest:
  * constructor, GET success/error scenarios, parameter sanitization, error handling
@@ -263,8 +263,8 @@ describe('JsonApiRequest', () => {
   });
 
   /**
-   * Request flow regression tests (written against the pre-#55 client and kept through
-   * the base-class consolidation)
+   * Regression tests for the request flow, run through the JSON client: the request sent,
+   * the fallback reply on failure, body decoding, timeout and the known callback-throw gap
    */
   describe('request flow', () => {
     it('uses GET with a 3 minute timeout by default', () => {

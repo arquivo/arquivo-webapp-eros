@@ -317,7 +317,6 @@ describe('ImageSearchApiRequest', () => {
 
     /**
      * Regression tests: the request the client sends and what it returns on failure
-     * (written against the pre-#55 client and kept through the base-class consolidation)
      */
     describe('request sent and fallback reply', () => {
         let captureServer;

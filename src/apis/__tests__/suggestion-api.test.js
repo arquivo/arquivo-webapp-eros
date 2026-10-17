@@ -678,8 +678,7 @@ describe('SuggestionApiRequest', () => {
 
     /**
      * Regression tests for the error fallback of get(), which differs from the other API
-     * clients (the query instead of the default reply); written against the pre-#55 client
-     * and kept through the base-class consolidation.
+     * clients (the query instead of the default reply).
      */
     describe('error fallback of get()', () => {
         let statusServer;
