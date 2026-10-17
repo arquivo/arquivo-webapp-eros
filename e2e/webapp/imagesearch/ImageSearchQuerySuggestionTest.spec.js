@@ -9,7 +9,7 @@ const { test, expect } = require('../../fixtures');
  * 'lisboa' for its MISSPELLED_QUERY 'Lizboa' (e2e/mock-server/fixtures.js),
  * which is also a real misspelling on preprod, so this runs in both modes.
  */
-test('suggests the correct spelling for a misspelled query', async ({ page, searchBar, imageSearchPage }) => {
+test('suggests the correct spelling for a misspelled query', async ({ page, searchBar }) => {
     await searchBar.goto('pt');
     await searchBar.search('Lizboa');
     await searchBar.imagesTab.click();

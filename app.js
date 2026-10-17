@@ -1,4 +1,3 @@
-const { resolveInclude } = require('ejs');
 const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
@@ -63,7 +62,7 @@ app.use(router);
 // depends on NODE_ENV and never includes a stack or err.message. Client errors
 // with a 4xx status (e.g. a malformed JSON body) keep it and are logged at warn
 // without message or stack, since some messages quote the raw request body.
-app.use((err, req, res, next) => { // Express needs all four parameters
+app.use((err, req, res, _next) => { // Express needs all four parameters
     const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
     let line;
     try {

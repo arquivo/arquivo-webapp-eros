@@ -1,5 +1,4 @@
 const config = require('config');
-const { request } = require('express');
 const todayYmd = require('./today-ymd');
 
 // Inline query terms (e.g. "collection:FCCN") that are extracted into their own request parameter
@@ -13,7 +12,7 @@ const isValidMinLanguageConfidence = (v) => ['HIGH', 'MEDIUM', 'LOW'].includes(v
 // Converts old input parameters into new ones, the same as API request parameters 
 // (for compatibility with old arquivo searches)
 
-module.exports = function (req, res) {
+module.exports = function (req) {
     const requestData = new URLSearchParams(req.query);
 
     /**

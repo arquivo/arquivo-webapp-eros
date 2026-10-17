@@ -306,7 +306,7 @@ describe('CDXSearchApiRequest', () => {
             // Spy on logger.error
             const errorSpy = jest.spyOn(api.logger, 'error');
 
-            const verifyErrorLogging = (data) => {
+            const verifyErrorLogging = () => {
                 // Should have logged error with both JSON and error message
                 expect(errorSpy).toHaveBeenCalled();
                 const errorCall = errorSpy.mock.calls.find(call => 

@@ -1,4 +1,3 @@
-const config = require('config');
 const sanitizeInputs = require('./utils/sanitize-search-params');
 const CDXSearchApiRequest = require('./apis/cdx-api')
 const cdxFilter = require('./filter-cdx')

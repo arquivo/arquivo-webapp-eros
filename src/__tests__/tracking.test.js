@@ -5,8 +5,6 @@ const tracking = require('../tracking');
 // Mock config (auto-mocked)
 jest.mock('config');
 
-// Values from __mocks__/config.js
-const WAYBACK_URL = 'https://preprod.arquivo.pt/wayback';
 
 describe('tracking handler', () => {
     let req, res;
