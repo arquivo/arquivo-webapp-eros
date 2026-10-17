@@ -2,6 +2,7 @@
 
 const http = require('node:http');
 const request = require('supertest');
+const config = require('config');
 const searchPages = require('../search-pages');
 
 // Mock dependencies
@@ -70,10 +71,10 @@ describe('search-pages handler', () => {
         expect(sanitizeInputs).toHaveBeenCalledWith(req, res);
     });
 
-    it('creates PageSearchApiRequest instance', () => {
+    it('creates PageSearchApiRequest instance, ignoring the api parameter', () => {
         searchPages(req, res);
 
-        expect(PageSearchApiRequest).toHaveBeenCalledWith('solr');
+        expect(PageSearchApiRequest).toHaveBeenCalledWith();
     });
 
     it('requests API with spellcheck added to the sanitized request data', () => {
@@ -248,9 +249,9 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
         sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
         makeExportObject.mockImplementation(() => { throw error; });
         const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
-        PageSearchApiRequest.mockImplementation((backend) => {
+        PageSearchApiRequest.mockImplementation(() => {
             // A short timeout, so the timeout path is quick to reach
-            const api = new ActualPageSearchApiRequest(backend, { timeout: 500 });
+            const api = new ActualPageSearchApiRequest({ timeout: 500 });
             api.apiUrl = `http://localhost:${stubServer.address().port}`;
             return api;
         });
@@ -281,5 +282,54 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
         }
         // Not swallowed and logged as a JSON parse error by the API client
         expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
+    });
+});
+
+describe('GET /partials/pages-search-results with an api parameter', () => {
+    let app;
+    let stubServer;
+    let requestedUrls;
+    let defaultEndpoint;
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => {
+            requestedUrls.push(req.url);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ response_items: [] }));
+        });
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.closeAllConnections();
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        requestedUrls = [];
+        // The real request flow and API client, with its URL from the config pointed at the stub
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockReturnValue({});
+        const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
+        PageSearchApiRequest.mockImplementation((...args) => new ActualPageSearchApiRequest(...args));
+        defaultEndpoint = config.get('text.search.api.default');
+        config.set('text.search.api.default', `http://localhost:${stubServer.address().port}/textsearch`);
+    });
+
+    afterEach(() => {
+        config.set('text.search.api.default', defaultEndpoint);
+    });
+
+    it('requests the configured text search API, whatever the api parameter says', async () => {
+        const res = await request(app).get('/partials/pages-search-results?q=test&api=nutchwax').timeout(3000);
+
+        expect(res.status).toBe(200);
+        expect(requestedUrls).toHaveLength(1);
+        const requestedUrl = new URL(requestedUrls[0], 'http://localhost');
+        expect(requestedUrl.pathname).toBe('/textsearch');
+        expect(requestedUrl.searchParams.get('q')).toBe('test');
+        expect(requestedUrl.searchParams.has('api')).toBe(false);
     });
 });

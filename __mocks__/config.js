@@ -16,8 +16,6 @@ const mockConfig = {
   'image.search.api': 'https://preprod.arquivo.pt/imagesearch',
   'query.suggestion.api': 'https://preprod.arquivo.pt/spellchecker/checker',
   'query.suggestion.api_enabled': false,
-  'text.search.api.solr': 'https://preprod.arquivo.pt/textsearch',
-  'text.search.api.nutchwax': 'https://preprod.arquivo.pt/textsearchnutchwax',
   'text.search.api.default': 'https://preprod.arquivo.pt/textsearch',
   'text.search.api.yearBalance_enabled': false,
   'text.search.api.spellcheck_enabled': true,

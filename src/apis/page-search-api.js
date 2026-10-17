@@ -32,7 +32,7 @@ const removeLiteralTerm = (query, term) => query.split(term)
     .join(' ');
 
 class PageSearchApiRequest extends JsonApiRequest {
-    constructor(backend=null, options={}) {
+    constructor(options={}) {
         const yearBalanceEnabled = config.has('text.search.api.yearBalance_enabled') &&
                                   config.get('text.search.api.yearBalance_enabled') === true;
         const defaultApiParams = {
@@ -66,19 +66,7 @@ class PageSearchApiRequest extends JsonApiRequest {
                 impact: {}
             }
         };
-        let apiEndpoint;
-        switch (backend) {
-            case 'solr':
-                apiEndpoint = config.get('text.search.api.solr');
-                break;
-            case 'nutchwax':
-                apiEndpoint = config.get('text.search.api.nutchwax');
-                break;
-            default:
-                apiEndpoint = config.get('text.search.api.default');
-                break;
-        }
-        super(apiEndpoint,defaultApiParams,defaultApiReply);
+        super(config.get('text.search.api.default'),defaultApiParams,defaultApiReply);
         Object.assign(this.options, options);
 
         this.spellcheckEnabled = config.has('text.search.api.spellcheck_enabled') &&

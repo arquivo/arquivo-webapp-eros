@@ -12,7 +12,7 @@ module.exports = makeSearchHandler({
     createApiRequest: () => new ImageSearchApiRequest(),
     // The image search API doesn't spellcheck, so the suggestion comes from the page search API, in parallel
     fetchResults: (apiRequest, requestData, next, render) => {
-        const suggestionRequest = new PageSearchApiRequest(null, { timeout: SUGGESTION_TIMEOUT });
+        const suggestionRequest = new PageSearchApiRequest({ timeout: SUGGESTION_TIMEOUT });
 
         Promise.all([
             new Promise((resolve) => suggestionRequest.suggest(requestData, resolve)),
