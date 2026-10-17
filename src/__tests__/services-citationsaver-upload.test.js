@@ -336,6 +336,26 @@ describe('POST /services/citationsaver through the app', () => {
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
         });
 
+        it('logs a warning and keeps serving when the temporary folder cannot be removed', async () => {
+            const rm = jest.spyOn(fs.promises, 'rm').mockRejectedValueOnce(new Error('EBUSY'));
+            try {
+                const res = await post().field('text', 'some citations');
+
+                expect(res.body).toEqual(expect.objectContaining({ status: true }));
+                for (let i = 0; i < 50 && mockLogger.warn.mock.calls.length === 0; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 20));
+                }
+                expect(mockLogger.warn).toHaveBeenCalledWith(
+                    expect.stringMatching(/^Could not remove temporary upload folder .*: Error: EBUSY$/));
+            } finally {
+                rm.mockRestore();
+                // The folder the failed call left behind.
+                fs.rmSync(uploadTempFolder, { recursive: true, force: true });
+            }
+            const next = await post().field('text', 'still here');
+            expect(next.body).toEqual(expect.objectContaining({ status: true }));
+        });
+
         it('removes the temporary file when the client goes away mid-upload', async () => {
             const received = new Promise(resolve => server.once('request', (req, res) => res.once('close', resolve)));
             const req = http.request({

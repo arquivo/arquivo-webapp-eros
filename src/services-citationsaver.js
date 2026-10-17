@@ -200,8 +200,11 @@ function parseUpload(req, res, next) {
     }
     // A private folder (mode 0700) for this request.
     const tempDir = nodePath.join(uploadTempFolderPath, randomUUID());
-    const removeTempDir = () => fs.promises.rm(tempDir, { recursive: true, force: true })
-        .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
+    // Runs once the response is over, so a failure can only be logged.
+    function removeTempDir() {
+        fs.promises.rm(tempDir, { recursive: true, force: true })
+            .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
+    }
     let closed = false;
     res.on('close', () => {
         closed = true;
