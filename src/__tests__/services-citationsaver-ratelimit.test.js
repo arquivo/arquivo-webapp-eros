@@ -47,6 +47,10 @@ describe('POST /services/citationsaver with the default settings', () => {
         expect(() => loadApp({ 'citation.saver.rate.limit.max': max }))
             .toThrow('"citation.saver.rate.limit.max" must be a non-negative number');
     });
+
+    it('refuses to start with a trust proxy of "true"', () => {
+        expect(() => loadApp({ 'express.trust.proxy': 'TRUE' })).toThrow('"express.trust.proxy" (EXPRESS_TRUST_PROXY) must not be "true"');
+    });
 });
 
 describe('POST /services/citationsaver rate limit', () => {
