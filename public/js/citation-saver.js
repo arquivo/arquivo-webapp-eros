@@ -64,9 +64,12 @@ $(() => {
 
         const body = new FormData(this);
         // A text goes as a file part, which the server streams to disk under the upload
-        // limit like a file, instead of a form field that it keeps in memory.
+        // limit like a file, instead of a form field that it keeps in memory. An empty
+        // text is left out, so the server replies that no document was submitted.
         const text = body.get('text');
-        if (typeof text == 'string') {
+        if (text === '') {
+            body.delete('text');
+        } else if (typeof text == 'string') {
             body.set('text', new Blob([text], { type: 'text/plain' }), 'text.txt');
         }
 

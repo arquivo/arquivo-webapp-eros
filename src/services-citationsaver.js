@@ -565,6 +565,11 @@ async function handleText(req, res) {
     let size;
     let write;
     if (textFile) {
+        // As for an empty text field: the part has a file name, so the parser keeps it.
+        if (textFile.size === 0) {
+            sendExpectedError(req.t('services-citation-saver.errors.empty'));
+            return;
+        }
         if (textFile.truncated || textFile.size > maxUploadSize) {
             sendExpectedError(req.t('services-citation-saver.errors.text.filesize'));
             return;

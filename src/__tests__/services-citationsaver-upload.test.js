@@ -174,6 +174,20 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedContent(stored[0]).toString('utf8')).toBe(content);
         });
 
+        it('stores an empty uploaded text file, as before #177', async () => {
+            const res = await post().attach('file', Buffer.alloc(0), { filename: 'empty.txt', contentType: 'text/plain' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({
+                status: true,
+                message: 'File uploaded',
+                data: { name: 'empty.txt', mimetype: 'text/plain', size: 0 }
+            });
+            const stored = storedFiles();
+            expect(stored).toHaveLength(1);
+            expect(storedContent(stored[0])).toHaveLength(0);
+        });
+
         it('stores a text sent as a file part, as the page sends it', async () => {
             const res = await post()
                 .attach('text', Buffer.from('Citações: https://arquivo.pt\n'), { filename: 'text.txt', contentType: 'text/plain' })
@@ -258,6 +272,20 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedFiles()).toHaveLength(0);
             const next = await post().field('text', 'still here');
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
+        });
+
+        it.each([
+            // As a page sent it before the empty text was left out.
+            ['an empty text file part', (req) => req.attach('text', Buffer.alloc(0), { filename: 'text.txt', contentType: 'text/plain' }).field('email', 'a@b.pt')],
+            ['an empty multipart text field', (req) => req.field('text', '')],
+            ['an empty urlencoded text field', (req) => req.type('form').send({ text: '', email: 'a@b.pt' })],
+        ])('replies "no document" for %s and stores nothing', async (_case, send) => {
+            const res = await send(post());
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.empty });
+            expect(storedFiles()).toHaveLength(0);
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
         });
 
         it('replies status:false for a text file part with a NUL byte', async () => {

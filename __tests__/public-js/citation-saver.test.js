@@ -143,6 +143,33 @@ describe('citation-saver.js', () => {
         expect(body.get('email')).toBe('me@example.com');
     });
 
+    it('leaves an empty text out, so the server replies that nothing was submitted (#177)', async () => {
+        server.respond('/services/citationsaver', json({ status: false, message: 'No document was submitted.' }));
+        giveConsent();
+        $q('#input-text-email').value = 'me@example.com';
+
+        submit('text-form');
+        await flush();
+
+        const { body } = server.requests[0];
+        expect(body.has('text')).toBe(false);
+        expect(body.get('email')).toBe('me@example.com');
+        expect($q('#modal p.error').textContent).toBe('No document was submitted.');
+    });
+
+    it('still sends a text of only spaces, which the server stored before #177', async () => {
+        server.respond('/services/citationsaver', json({ status: true, message: 'Text uploaded' }));
+        giveConsent();
+        $q('#input-text-text').value = '  ';
+
+        submit('text-form');
+        await flush();
+
+        const text = server.requests[0].body.get('text');
+        expect(text).toBeInstanceOf(window.File);
+        expect(text.size).toBe(2);
+    });
+
     it('shows the thank-you text when the server accepts the submission', async () => {
         server.respond('/services/citationsaver', json({ status: true, message: 'File uploaded' }));
         giveConsent();
