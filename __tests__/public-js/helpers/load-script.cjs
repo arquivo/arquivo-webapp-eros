@@ -1,6 +1,9 @@
 // Shared helper for testing the classic (non-module) browser scripts in public/js
 // under the jsdom test environment (`/** @jest-environment jsdom */`).
 //
+// These tests live outside public/ on purpose: everything in public/ is served by
+// express.static and copied into the Docker image.
+//
 // The extension is .cjs on purpose: jest.config.js runs every `__tests__/**/*.js`
 // file as a test suite, and this file has no tests of its own.
 'use strict';
@@ -8,7 +11,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const PUBLIC_DIR = path.resolve(__dirname, '..', '..', '..');
+const PUBLIC_DIR = path.resolve(__dirname, '..', '..', '..', 'public');
 
 // The copy the pages load (written to public/vendor by the postinstall script).
 const JQUERY = 'vendor/js/jquery-1.12.4.js';
