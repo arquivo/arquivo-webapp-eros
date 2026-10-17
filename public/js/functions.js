@@ -2,8 +2,8 @@
 // JavaScript functions for Arquivo.pt ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Replace the inline style of the element with this id, like jQuery's $('#id').attr('style', css).
-// Does nothing when there is no such element, as jQuery did.
+// Replace (not merge) the inline style of the first element with this id.
+// Does nothing when there is none.
 function setInlineStyle(id, css) {
   const element = document.getElementById(id);
   if (element) {
@@ -11,8 +11,7 @@ function setInlineStyle(id, css) {
   }
 }
 
-// Replace the inline style of every element that matches the selector, like jQuery's
-// $(selector).attr('style', css).
+// Replace (not merge) the inline style of every element that matches the selector.
 function setInlineStyleAll(selector, css) {
   document.querySelectorAll(selector).forEach((element) => {
     element.style.cssText = css;
