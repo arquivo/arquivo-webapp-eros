@@ -22,6 +22,9 @@
  * - Page searches sent with timeline=true (as the app always does) also get
  *   MOCK_TIMELINE back, so the impact bars above the date slider render
  *   deterministically: 4 bars, every other year has no impact.
+ * - A page/image search containing IDN_QUERY, or a /wayback/ visit of a url
+ *   containing it, returns IDN_URL (a long URL with a non-ASCII host) as the
+ *   results' originalURL/pageURL and as the metadata's originalURL.
  */
 
 // Must not look like a URL/domain (no dot) — the app's /page/search route
@@ -31,6 +34,10 @@ const NO_RESULTS_QUERY = 'ddadfcfe qwzxjk nosuchresult';
 const MISSPELLED_QUERY = 'Lizboa';
 const SPELLCHECKED_QUERY = 'lisboa';
 const TOTAL_PAGE_RESULTS = 47;
+// No dot, for the same reason as NO_RESULTS_QUERY.
+const IDN_QUERY = 'idnhostmock';
+const IDN_URL = 'http://www.câmara-municipal-de-lisboa.pt/servicos/urbanismo/licenciamento/'
+    + 'pedidos-de-informacao-previa/formularios-e-documentos-necessarios.html';
 const TOTAL_IMAGE_RESULTS = 47;
 
 // Archive-link fields below are rendered directly into <img src> / <a href>
@@ -60,7 +67,7 @@ function buildPageResponseItem(index, query) {
     const tstamp = `20180101${String(100000 + index).slice(-6)}`;
     return {
         title: `Mock result ${index + 1} for ${query}`,
-        originalURL: `http://example.com/mock-page-${index + 1}`,
+        originalURL: query.includes(IDN_QUERY) ? IDN_URL : `http://example.com/mock-page-${index + 1}`,
         linkToArchive: `${MOCK_ORIGIN}/wayback/${tstamp}/http://example.com/mock-page-${index + 1}`,
         linkToNoFrameArchive: `${MOCK_ORIGIN}/noFrame/replay/${tstamp}/http://example.com/mock-page-${index + 1}`,
         snippet: `This is a mock snippet mentioning ${query} for result ${index + 1}.`,
@@ -117,7 +124,7 @@ function buildMetadataResult(metadata) {
         response_items: [
             {
                 title: 'Mock Archived Page',
-                originalURL: url,
+                originalURL: url.includes(IDN_QUERY) ? IDN_URL : url,
                 collection: 'MockCollection',
                 mimeType: 'text/html',
                 contentLength: 12345,
@@ -142,7 +149,7 @@ function buildImageResponseItem(index, query) {
         imgAlt: [`Mock image ${index + 1}`],
         imgCaption: '',
         imgLinkToArchive: `${MOCK_ORIGIN}/noFrame/replay/${tstamp}/http://example.com/mock-image-${index + 1}.jpg`,
-        pageURL: `http://example.com/mock-page-${index + 1}`,
+        pageURL: query.includes(IDN_QUERY) ? IDN_URL : `http://example.com/mock-page-${index + 1}`,
         pageTstamp: tstamp,
         pageLinkToArchive: `${MOCK_ORIGIN}/wayback/${tstamp}/http://example.com/mock-page-${index + 1}`,
         pageTitle: `Mock result ${index + 1} for ${query}`,
@@ -194,6 +201,8 @@ module.exports = {
     SPELLCHECKED_QUERY,
     TOTAL_PAGE_RESULTS,
     TOTAL_IMAGE_RESULTS,
+    IDN_QUERY,
+    IDN_URL,
     MOCK_TIMELINE,
     MOCK_TIMELINE_LAST_YEAR,
     isNoResultsQuery,
