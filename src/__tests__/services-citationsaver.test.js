@@ -448,6 +448,7 @@ describe('Citation Saver Service', () => {
             await servicesCitationSaver(req, res);
 
             expect(mv).not.toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(413);
             expect(res.send).toHaveBeenCalledWith({
                 status: false,
                 message: 'services-citation-saver.errors.text.filesize'

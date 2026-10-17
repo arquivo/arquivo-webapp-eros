@@ -585,7 +585,7 @@ async function handleText(req, res) {
             return;
         }
         if (textFile.truncated || textFile.size > maxUploadSize) {
-            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'));
+            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'), 413);
             return;
         }
         // As for an uploaded text file: no NUL byte.
