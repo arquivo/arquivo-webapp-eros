@@ -307,13 +307,17 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
         });
 
         it('shows the replayed date in the complete-page header (dynamic-header-url.js)', () => {
-            setup('<a id="headerUrl" href="https://start.pt/">start.pt</a><span id="headerTimestamp"></span>');
+            setup('<a id="headerUrl" href="https://start.pt/">start.pt</a><span id="headerTimestamp"></span>'
+                + '<iframe id="replay_iframe" src="https://backend.example.org/noFrame/patching/record/20000101000000/https://start.pt/"></iframe>');
             window.lang = 'pt';
             jest.spyOn(console, 'log').mockImplementation(() => {});
             loadScript('js/dynamic-header-url.js');
 
+            // dynamic-header-url.js only accepts messages from the replay iframe.
             window.dispatchEvent(new MessageEvent('message', {
                 data: { wb_type: 'load', url: 'https://example.com/', ts: '20200102030405' },
+                origin: 'https://backend.example.org',
+                source: document.getElementById('replay_iframe').contentWindow,
             }));
 
             expect(document.getElementById('headerTimestamp').textContent).toBe('2 Janeiro 03h04, 2020');
