@@ -177,6 +177,26 @@ describe('isValidUrl', () => {
     ])('rejects the IP / local host %j', (q) => {
       expect(isValidUrl(q)).toBe(false);
     });
+
+    // WHATWG (UTS46 without the STD3 rules) allows `,;!&+=*~$()` in a host;
+    // the old regex did not, and neither does a real hostname.
+    it.each([
+      'Lisboa,R.Augusta',
+      'Porto,Av.Boavista',
+      'ok,tudo.bem',
+      'Sim,Sr.Silva',
+      'Benfica(SLB).pt',
+      'AT&T.com',
+      'R&D.pt',
+      'Yahoo!.com',
+      '2+2.com',
+      'x=y.com',
+      'a*b.com',
+      'a~b.com',
+      'a$b.com',
+    ])('treats punctuation inside the host as text: %j', (q) => {
+      expect(isValidUrl(q)).toBe(false);
+    });
   });
 
   describe('non-http(s) schemes and unsafe input', () => {
@@ -305,6 +325,17 @@ describe('isValidUrl', () => {
       expect(isValidUrl(q)).toBe(true);
     });
 
+    // UTS46 maps the ideographic, full-width and half-width full stops to `.`
+    // and full-width letters to ASCII.
+    it.each([
+      ['ideographic full stop', 'publico\u3002pt'],
+      ['full-width full stop', 'publico\uFF0Ept'],
+      ['half-width ideographic full stop', 'publico\uFF61pt'],
+      ['full-width letters', '\uFF50\uFF55\uFF42\uFF4C\uFF49\uFF43\uFF4F.\uFF50\uFF54'],
+    ])('accepts a host with %s: %j', (_name, q) => {
+      expect(isValidUrl(q)).toBe(true);
+    });
+
     it('accepts the punycode form of an IDN', () => {
       // xn--pblico-pya.pt is público.pt.
       expect(isValidUrl('xn--pblico-pya.pt')).toBe(true);
@@ -333,6 +364,14 @@ describe('isValidUrl', () => {
     ])('rejects trailing punctuation and dotted dates/abbreviations: %j', (q) => {
       expect(isValidUrl(q)).toBe(false);
     });
+
+    // The `,` / `;` is inside the host, which allows only letters, digits, `-`, `_` and dots.
+    it.each(['sapo.pt,publico.pt', 'publico.pt;sapo.pt'])(
+      'rejects two domains joined by punctuation: %j',
+      (q) => {
+        expect(isValidUrl(q)).toBe(false);
+      },
+    );
 
     it.each([
       'e.g.',

@@ -28,6 +28,11 @@ const HTTP_SCHEME = /^https?:\/\//i;
 // `https:///x.com` and `@x.com` would parse as `x.com`; it also allows
 // `-x.com` and `*.x.com`. Requiring a letter or digit first keeps them text.
 const STARTS_WITH_LETTER_OR_DIGIT = /^[\p{L}\p{N}]/u;
+// WHATWG also allows `,;!&+=*~$()` in a host (`Lisboa,R.Augusta`,
+// `AT&T.com`, `sapo.pt,publico.pt`). A real hostname, once parsed (lower case,
+// IDNs in punycode), is only letters, digits, `-`, `_` and dots. Bracketed
+// IPv6 hosts never get this far: `[` is a forbidden character.
+const HOSTNAME = /^[a-z0-9._-]+$/;
 // A top-level domain is made of letters (`pt`, `com`, `рф`, `中国`) plus
 // combining marks (`\p{M}`), which some scripts need (`भारत`).
 const TOP_LEVEL_LABEL = /^[\p{L}\p{M}]{2,}$/u;
@@ -70,12 +75,12 @@ module.exports = function isValidUrl(s) {
   }
   // E-mail addresses and credentials are not URLs.
   if (url.username || url.password) return false;
+  if (!HOSTNAME.test(url.hostname)) return false;
 
   // Require a named host: at least one dot and a top-level label of 2+
   // letters. WHATWG parses numeric queries such as `3.14` or `2024` as IPv4
   // hosts (`3.0.0.14`, `0.0.7.232`); their numeric last label fails this
-  // check, as do bracketed IPv6 hosts, versions (`v2.0rc1`) and amounts
-  // (`3.5mm`, `3.50€`).
+  // check, as do versions (`v2.0rc1`) and amounts (`3.5mm`, `3.50€`).
   let hostname = domainToUnicode(url.hostname);
   if (hostname.endsWith('.')) hostname = hostname.slice(0, -1);
   const dot = hostname.lastIndexOf('.');
