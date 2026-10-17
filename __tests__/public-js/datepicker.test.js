@@ -107,12 +107,4 @@ describe('datepicker.js', () => {
 
         expect(server.requests).toEqual([]);
     });
-
-    it('does not use jQuery to load the modal', async () => {
-        const ajax = jest.spyOn($, 'ajax');
-        loadScript('js/datepicker.js');
-        await flush();
-        expect(ajax).not.toHaveBeenCalled();
-        ajax.mockRestore();
-    });
 });

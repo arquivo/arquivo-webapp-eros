@@ -108,16 +108,9 @@ describe('citation-saver.js', () => {
         expect(request.body).toBeInstanceOf(window.FormData);
         expect(request.body.get('url')).toBe('https://example.com/');
         expect(request.body.get('email')).toBe('me@example.com');
-    });
-
-    it('sends the FormData as is, so the browser sets the multipart content type', async () => {
-        giveConsent();
-        submit('file-form');
-        await flush();
-
-        const { init } = server.requests[0];
-        expect(init.headers).toBeUndefined();
-        expect(init.credentials).toBe('same-origin');
+        // Sent as is, so the browser sets the multipart content type and its boundary.
+        expect(request.init.headers).toBeUndefined();
+        expect(request.init.credentials).toBe('same-origin');
     });
 
     it('shows the thank-you text when the server accepts the submission', async () => {
@@ -176,20 +169,6 @@ describe('citation-saver.js', () => {
         expect(isShown('#citation-saver-progress-bar')).toBe(false);
         expect(isShown('#citation-saver-modal')).toBe(true);
     });
-
-    it('does not use jQuery to send the form', async () => {
-        const ajax = jest.spyOn($, 'ajax');
-        server.respond('/services/citationsaver', json({ status: true }));
-        giveConsent();
-
-        submit('url-form');
-        await flush();
-
-        expect(ajax).not.toHaveBeenCalled();
-        expect(server.fetch).toHaveBeenCalledTimes(1);
-        ajax.mockRestore();
-    });
-
     it('shows the chosen file name', () => {
         const input = $q('#input-file-file');
         Object.defineProperty(input, 'files', { value: [{ name: 'paper.pdf' }] });

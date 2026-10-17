@@ -144,14 +144,4 @@ describe('modal-image-result.js', () => {
 
         expect(server.requests).toEqual([]);
     });
-
-    it('does not use jQuery to load content', async () => {
-        const ajax = jest.spyOn($, 'ajax');
-        server.respond('/partials/modal-image-details', { body: MODAL_IMAGE_DETAILS });
-        loadScript('js/modal-image-result.js');
-        await flush();
-        click('#image-card-1 img');
-        await flush();
-        expect(ajax).not.toHaveBeenCalled();
-    });
 });

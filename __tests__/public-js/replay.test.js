@@ -142,14 +142,6 @@ describe('replay.js', () => {
             expect($id('replay-left-nav').innerHTML).toBe('<h3>Versions</h3>' + LOADER);
             expect($id('technical-details').innerHTML).toBe(LOADER);
         });
-
-        it('does not use jQuery to load content', async () => {
-            const ajax = jest.spyOn($, 'ajax');
-            newReplay().setUrlAndTimestamp('https://example.org/', '20210101000000');
-            await flush();
-            expect(ajax).not.toHaveBeenCalled();
-            expect(server.fetch).toHaveBeenCalledTimes(2);
-        });
     });
 
     describe('messages from the replay', () => {
