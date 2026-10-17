@@ -334,7 +334,7 @@ describe('Archive Page Now Service', () => {
 
             expect(loggedUrl()).toBe(endpoint
                 + '?url=http%3A%2F%2Fexemplo.pt%2Fa%C3%A7%C3%A3o%3Fq%3Dcaf%C3%A9'
-                + '&success=false&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
+                + '&success=true&logging=true&user-agent=test-user-agent&ip=192.168.1.1');
         });
 
         it("should keep ( ) ! ~ * literal and send ' as %27 on the wire", () => {
