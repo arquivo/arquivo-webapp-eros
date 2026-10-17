@@ -21,6 +21,13 @@ describe('pingBackend', () => {
                 res.end();
                 return;
             }
+            if (req.url === '/trickle') {
+                // a status line, then a header every 20ms, never ending the headers: the socket is never idle
+                req.socket.write('HTTP/1.1 200 OK\r\n');
+                const drip = setInterval(() => req.socket.write('X-Drip: 1\r\n'), 20);
+                req.socket.on('close', () => clearInterval(drip));
+                return;
+            }
             if (req.url === '/hang') {
                 // never respond, to trigger the caller's timeout
                 return;
@@ -63,5 +70,12 @@ describe('pingBackend', () => {
     it('resolves reachable:false on timeout', async () => {
         const result = await pingBackend(`${mockServerUrl}/hang`, 50);
         expect(result).toEqual({ reachable: false, error: 'timeout' });
+    });
+
+    it('resolves reachable:false on timeout when the backend keeps sending without completing its reply', async () => {
+        const start = Date.now();
+        const result = await pingBackend(`${mockServerUrl}/trickle`, 100);
+        expect(result).toEqual({ reachable: false, error: 'timeout' });
+        expect(Date.now() - start).toBeLessThan(1000);
     });
 });
