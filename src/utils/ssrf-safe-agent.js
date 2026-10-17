@@ -50,9 +50,10 @@ const NON_PUBLIC_IPV6 = [
     [[0xfec0], 10],                // fec0::/10 site-local (deprecated)
     [[0xff00], 8]                  // ff00::/8 multicast
 ];
-// 64:ff9b::/96, the NAT64 well-known prefix. Public IPv4 hosts are reached through it
-// on IPv6-only networks, so it is judged by the IPv4 address in its last 32 bits.
-const NAT64_PREFIX = [[0x64, 0xff9b], 96];
+// 64:ff9b::/96, the NAT64 well-known prefix, is not blocked as a whole: IPv6-only
+// networks reach public IPv4 hosts through it. Only the addresses that embed a
+// non-public IPv4 address in their last 32 bits are blocked.
+const NAT64_PREFIX = [0x64, 0xff9b, 0, 0, 0, 0];
 
 function ipv4Network(octets) {
     return [0, 1, 2, 3].map(i => octets[i] ?? 0).join('.');
@@ -65,31 +66,17 @@ function ipv6Network(groups) {
 const nonPublic = new net.BlockList();
 for (const [octets, prefix] of NON_PUBLIC_IPV4) {
     nonPublic.addSubnet(ipv4Network(octets), prefix, 'ipv4');
+    const [a = 0, b = 0, c = 0, d = 0] = octets;
+    nonPublic.addSubnet(ipv6Network([...NAT64_PREFIX, (a << 8) | b, (c << 8) | d]), 96 + prefix, 'ipv6');
 }
 for (const [groups, prefix] of NON_PUBLIC_IPV6) {
     nonPublic.addSubnet(ipv6Network(groups), prefix, 'ipv6');
-}
-const nat64 = new net.BlockList();
-nat64.addSubnet(ipv6Network(NAT64_PREFIX[0]), NAT64_PREFIX[1], 'ipv6');
-
-// The IPv4 address in the last 32 bits of an IPv6 address. The URL parser writes
-// IPv6 (without a zone index) in its canonical form, hex groups with zeros
-// compressed, whose last two fields are those 32 bits; an empty field is a
-// compressed zero.
-function embeddedIpv4(ipv6) {
-    const address = ipv6.split('%')[0];
-    const [high, low] = new URL('http://[' + address + ']').hostname.slice(1, -1).split(':').slice(-2)
-        .map(field => Number.parseInt(field || '0', 16));
-    return [high >> 8, high & 0xff, low >> 8, low & 0xff].join('.');
 }
 
 // Whether `ip` is an IP address outside the public internet. Not an IP: false.
 function isPrivateIp(ip) {
     const family = net.isIP(ip);
-    if (family === 4) return nonPublic.check(ip, 'ipv4');
-    if (family !== 6) return false;
-    if (nat64.check(ip, 'ipv6')) return nonPublic.check(embeddedIpv4(ip), 'ipv4');
-    return nonPublic.check(ip, 'ipv6');
+    return family !== 0 && nonPublic.check(ip, family === 4 ? 'ipv4' : 'ipv6');
 }
 
 function blockedAddressError(host) {

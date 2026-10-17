@@ -74,14 +74,14 @@ describe('isPrivateIp, reserved and IPv6 transition/translation ranges', () => {
     });
 
     describe('64:ff9b::/96 (NAT64), judged by the IPv4 address in its last 32 bits', () => {
-        it.each(['64:ff9b::8.8.8.8', '64:ff9b::808:808', '64:FF9B::5DB8:D822', '64:ff9b::dfff:ffff'])(
+        it.each(['64:ff9b::8.8.8.8', '64:ff9b::808:808', '64:FF9B::5DB8:D822', '64:ff9b::dfff:ffff', '64:ff9b::6480:0'])(
             'allows %s (public IPv4 address)', (ip) => {
                 expect(isPrivateIp(ip)).toBe(false);
             });
 
         it.each([
             '64:ff9b::', '64:ff9b::1', '64:ff9b::1:0', '64:ff9b::10.0.0.1', '64:ff9b::a00:1', '64:ff9b::7f00:1',
-            '64:ff9b::a9fe:a9fe', '64:FF9B::C0A8:101', '64:ff9b::c000:201', '64:ff9b::e000:0', '64:ff9b::a00:1%eth0'
+            '64:ff9b::a9fe:a9fe', '64:FF9B::C0A8:101', '64:ff9b::c000:201', '64:ff9b::e000:0', '64:ff9b::647f:ffff', '64:ff9b::a00:1%eth0'
         ])('blocks %s (non-public IPv4 address)', (ip) => {
             expect(isPrivateIp(ip)).toBe(true);
         });
