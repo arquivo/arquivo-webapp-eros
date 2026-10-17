@@ -419,6 +419,35 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it('moves a text file part to a .txt file', async () => {
+            const mv = jest.fn().mockResolvedValue();
+            req.body = { email: 'test@example.com' };
+            req.files = { text: { name: 'text.txt', mimetype: 'text/plain', size: 11, tempFilePath: '/tmp/x', truncated: false, mv } };
+            uploadedBytes(Buffer.from('Sample text'));
+
+            await servicesCitationSaver(req, res);
+
+            expect(mv).toHaveBeenCalledWith(expect.stringMatching(/\.txt$/));
+            expect(res.send).toHaveBeenCalledWith({
+                status: true,
+                message: 'Text uploaded',
+                data: { name: '', mimetype: 'text/plain', size: 11 }
+            });
+        });
+
+        it('rejects a text file part that was cut off at the limit', async () => {
+            const mv = jest.fn();
+            req.files = { text: { name: 'text.txt', mimetype: 'text/plain', size: 100, tempFilePath: '/tmp/x', truncated: true, mv } };
+
+            await servicesCitationSaver(req, res);
+
+            expect(mv).not.toHaveBeenCalled();
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.text.filesize'
+            });
+        });
+
         it('writes .txt file with text content', async () => {
             req.body = { text: 'Sample text', email: 'test@example.com' };
 
@@ -442,6 +471,36 @@ describe('Citation Saver Service', () => {
                 message: 'Text uploaded',
                 data: expect.any(Object)
             });
+        });
+    });
+
+    describe('Email and URL checks (#177)', () => {
+        it.each([
+            ['an email over 254 characters', { text: 'x', email: 'a'.repeat(255) }, 'services-citation-saver.errors.email.invalid'],
+            ['an email that is not a string', { text: 'x', email: ['a@b.pt', 'c@d.pt'] }, 'services-citation-saver.errors.email.invalid'],
+            ['a URL over 8192 characters', { url: 'https://example.com/' + 'a'.repeat(8192) }, 'services-citation-saver.errors.URL.invalid'],
+            ['a URL that is not a string', { url: { href: 'https://example.com/' } }, 'services-citation-saver.errors.URL.invalid'],
+        ])('replies 400 for %s before logging or storing anything', async (_case, body, message) => {
+            req.body = body;
+            res.status = jest.fn(() => res);
+
+            await servicesCitationSaver(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.send).toHaveBeenCalledWith({ status: false, message });
+            expect(mockLogger.info).toHaveBeenCalledTimes(1);
+            expect(mockLogger.info.mock.calls[0][0]).not.toContain('aaaa');
+            expect(fetch).not.toHaveBeenCalled();
+            expect(fs.promises.writeFile).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it('accepts a null email', async () => {
+            req.body = { text: 'Sample text', email: null };
+
+            await servicesCitationSaver(req, res);
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
         });
     });
 

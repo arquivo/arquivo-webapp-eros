@@ -62,10 +62,18 @@ $(() => {
             }
         }, () => error(response.status, response.statusText));
 
+        const body = new FormData(this);
+        // A text goes as a file part, which the server streams to disk under the upload
+        // limit like a file, instead of a form field that it keeps in memory.
+        const text = body.get('text');
+        if (typeof text == 'string') {
+            body.set('text', new Blob([text], { type: 'text/plain' }), 'text.txt');
+        }
+
         fetch(actionUrl, {
             method: 'POST',
             // Sent as is, so the browser sets the multipart content type and its boundary.
-            body: new FormData(this),
+            body: body,
             credentials: 'same-origin'
         })
             .then((response) => {

@@ -174,6 +174,26 @@ describe('POST /services/citationsaver through the app', () => {
             expect(storedContent(stored[0]).toString('utf8')).toBe(content);
         });
 
+        it('stores a text sent as a file part, as the page sends it', async () => {
+            const res = await post()
+                .attach('text', Buffer.from('Citações: https://arquivo.pt\n'), { filename: 'text.txt', contentType: 'text/plain' })
+                .field('email', 'a@b.pt');
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({
+                status: true,
+                message: 'Text uploaded',
+                data: { name: '', mimetype: 'text/plain', size: Buffer.byteLength('Citações: https://arquivo.pt\n') }
+            });
+            const stored = storedFiles();
+            expect(stored).toHaveLength(1);
+            expect(stored[0]).toMatch(/^[0-9a-f-]{36}\.txt$/);
+            expect(storedContent(stored[0]).toString('utf8')).toBe('Citações: https://arquivo.pt\n');
+            expect(addToSpreadsheet).toHaveBeenCalledWith([
+                expect.any(String), expect.any(Number), 'a@b.pt', 'Text', '', stored[0], expect.stringContaining(stored[0])
+            ]);
+        });
+
         it('stores a text sent as a multipart field', async () => {
             const res = await post().field('text', 'some citations').field('email', '');
 
@@ -240,6 +260,15 @@ describe('POST /services/citationsaver through the app', () => {
             expect(next.body).toEqual(expect.objectContaining({ status: true }));
         });
 
+        it('replies status:false for a text file part with a NUL byte', async () => {
+            const res = await post().attach('text', Buffer.from('a\u0000b'), { filename: 'text.txt', contentType: 'text/plain' });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(storedFiles()).toHaveLength(0);
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
         it('replies status:false for a file with an unsupported mimetype', async () => {
             const res = await post()
                 .attach('file', Buffer.from('PK\u0003\u0004'), { filename: 'doc.docx', contentType: 'application/zip' });
@@ -248,6 +277,73 @@ describe('POST /services/citationsaver through the app', () => {
             expect(res.body).toEqual({ status: false, message: messages.mimetype });
             expect(storedFiles()).toHaveLength(0);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('email and URL length limits (#177)', () => {
+        // Nothing may log or store the value before it is checked.
+        function expectNotLoggedOrStored(value) {
+            const logged = Object.values(mockLogger).flatMap(log => log.mock.calls.flat()).join('\n');
+            expect(logged).not.toContain(value.slice(0, 300));
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+            expect(fetch).not.toHaveBeenCalled();
+            expect(storedFiles()).toHaveLength(0);
+        }
+
+        const longEmail = 'a'.repeat(250) + '@b.pt';
+        const longUrl = 'https://example.com/' + 'a'.repeat(8192) + '.pdf';
+
+        it.each([
+            ['multipart', (req, fields) => Object.entries(fields).reduce((r, [k, v]) => r.field(k, v), req)],
+            ['urlencoded', (req, fields) => req.type('form').send(fields)],
+        ])('replies 400 JSON for an email over 254 characters (%s)', async (_kind, send) => {
+            const res = await send(post(), { text: 'some citations', email: longEmail });
+
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ status: false, message: messages.emailInvalid });
+            expectNotLoggedOrStored(longEmail);
+        });
+
+        it.each([
+            ['multipart', (req, fields) => Object.entries(fields).reduce((r, [k, v]) => r.field(k, v), req)],
+            ['urlencoded', (req, fields) => req.type('form').send(fields)],
+        ])('replies 400 JSON for a URL over 8192 characters (%s)', async (_kind, send) => {
+            const res = await send(post(), { url: longUrl, email: 'a@b.pt' });
+
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ status: false, message: messages.urlInvalid });
+            expectNotLoggedOrStored(longUrl);
+        });
+
+        it('replies 400 JSON for an email far over the field size, cut short by the parser', async () => {
+            const hugeEmail = 'e'.repeat(MAX_UPLOAD_SIZE) + '@b.pt';
+
+            const res = await post()
+                .attach('file', PDF, { filename: 'paper.pdf', contentType: 'application/pdf' })
+                .field('email', hugeEmail);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ status: false, message: messages.emailInvalid });
+            expectNotLoggedOrStored(hugeEmail);
+        });
+
+        it('replies 400 JSON for an email sent twice', async () => {
+            const res = await post().field('text', 'some citations').field('email', 'a@b.pt').field('email', 'c@d.pt');
+
+            expect(res.status).toBe(400);
+            expect(res.body).toEqual({ status: false, message: messages.emailInvalid });
+            expect(storedFiles()).toHaveLength(0);
+        });
+
+        it('accepts an email of 254 characters and a URL of 8192 characters', async () => {
+            const email = 'a'.repeat(249) + '@b.pt';
+            const url = 'https://example.com/' + 'a'.repeat(8192 - 24) + '.pdf';
+            expect([email.length, url.length]).toEqual([254, 8192]);
+
+            const res = await post().field('url', url).field('email', email);
+
+            expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Link uploaded' }));
+            expect(addToSpreadsheet).toHaveBeenCalledWith(expect.arrayContaining([email, url]));
         });
     });
 
@@ -272,7 +368,7 @@ describe('POST /services/citationsaver through the app', () => {
             expect(reply).not.toBe('no reply');
             expect(reply.status).toBe(413);
             expect(reply.contentType).toMatch(/^application\/json/);
-            expect(JSON.parse(reply.body)).toEqual({ status: false, message: messages.filesize });
+            expect(JSON.parse(reply.body)).toEqual({ status: false, message: messages.uploadFilesize });
             expect(storedFiles()).toHaveLength(0);
             expect(addToSpreadsheet).not.toHaveBeenCalled();
         });
@@ -297,7 +393,7 @@ describe('POST /services/citationsaver through the app', () => {
             const res = await req;
 
             expect(res.status).toBe(413);
-            expect(res.body).toEqual({ status: false, message: messages.filesize });
+            expect(res.body).toEqual({ status: false, message: messages.uploadFilesize });
             expect(storedFiles()).toHaveLength(0);
         });
 
@@ -414,7 +510,7 @@ describe('POST /services/citationsaver through the app', () => {
         });
     });
 
-    describe('multipart text fields (#177)', () => {
+    describe('texts (#177)', () => {
         // Over busboy's default field size (1 MiB), which used to cut a text off silently.
         const TEXT_LIMIT = 2 * 1024 * 1024;
         let textApp;
@@ -424,21 +520,52 @@ describe('POST /services/citationsaver through the app', () => {
             await translationsLoaded(textApp);
         });
 
-        it('stores a text of exactly the limit in full', async () => {
+        const attachText = (req, text) => req.attach('text', Buffer.from(text), { filename: 'text.txt', contentType: 'text/plain' });
+
+        it('stores a text file part of exactly the limit in full', async () => {
             const text = 'x'.repeat(TEXT_LIMIT);
 
-            const res = await postTo(textApp).field('text', text);
+            const res = await attachText(postTo(textApp), text);
 
             expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
             expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
         });
 
-        it('rejects a text over the limit instead of storing it cut short', async () => {
-            const res = await postTo(textApp).field('text', 'x'.repeat(TEXT_LIMIT + 1));
+        it('rejects a text file part over the limit with 413 and the file or text size message', async () => {
+            const res = await attachText(postTo(textApp), 'x'.repeat(TEXT_LIMIT + 1));
+
+            expect(res.status).toBe(413);
+            expect(res.body).toEqual({ status: false, message: messages.uploadFilesize });
+            expect(storedFiles()).toHaveLength(0);
+        });
+
+        it('rejects a text field over the limit with the text size message', async () => {
+            // An urlencoded body is not parsed by parseUpload; its size limit is express's.
+            const { app: smallApp } = loadApp(uploadFolder, { 'citation.saver.max.upload.size': 10 });
+            await translationsLoaded(smallApp);
+
+            const res = await postTo(smallApp).type('form').send({ text: 'x'.repeat(11) });
 
             expect(res.status).toBe(200);
             expect(res.body).toEqual({ status: false, message: messages.textFilesize });
             expect(storedFiles()).toHaveLength(0);
+        });
+
+        it('rejects a multipart text field that the parser cut short instead of storing part of it', async () => {
+            const res = await postTo(textApp).field('text', 'x'.repeat(200 * 1024));
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ status: false, message: messages.default });
+            expect(storedFiles()).toHaveLength(0);
+        });
+
+        it('stores a multipart text field of 100 KiB in full', async () => {
+            const text = 'x'.repeat(100 * 1024);
+
+            const res = await postTo(textApp).field('text', text);
+
+            expect(res.body).toEqual(expect.objectContaining({ status: true, message: 'Text uploaded' }));
+            expect(storedContent(storedFiles()[0]).toString('utf8')).toBe(text);
         });
     });
 

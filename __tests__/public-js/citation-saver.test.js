@@ -23,6 +23,13 @@ const PAGE = `
         <button type="submit">Send</button>
       </form>
     </div>
+    <div class="input-tab">
+      <form id="text-form" action="/services/citationsaver" method="post">
+        <textarea id="input-text-text" name="text"></textarea>
+        <input type="text" name="email" id="input-text-email">
+        <button type="submit">Send</button>
+      </form>
+    </div>
   </div>
   <div id="modal" style="display:none">
     <section id="citation-saver-progress-bar"><div class="loader"></div></section>
@@ -111,6 +118,29 @@ describe('citation-saver.js', () => {
         // Sent as is, so the browser sets the multipart content type and its boundary.
         expect(request.init.headers).toBeUndefined();
         expect(request.init.credentials).toBe('same-origin');
+    });
+
+    it('sends the text as a text/plain file part, so the server streams it to disk (#177)', async () => {
+        server.respond('/services/citationsaver', json({ status: true, message: 'Text uploaded' }));
+        giveConsent();
+        $q('#input-text-text').value = 'Citações: https://arquivo.pt';
+        $q('#input-text-email').value = 'me@example.com';
+
+        submit('text-form');
+        await flush();
+
+        const { body } = server.requests[0];
+        const text = body.get('text');
+        expect(text).toBeInstanceOf(window.File);
+        expect(text.name).toBe('text.txt');
+        expect(text.type).toBe('text/plain');
+        const content = await new Promise((resolve) => {
+            const reader = new window.FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsText(text);
+        });
+        expect(content).toBe('Citações: https://arquivo.pt');
+        expect(body.get('email')).toBe('me@example.com');
     });
 
     it('shows the thank-you text when the server accepts the submission', async () => {
