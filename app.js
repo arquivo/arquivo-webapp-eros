@@ -7,6 +7,7 @@ const cookies = require('cookie-parser');
 const path = require('path');
 const router = require('./src/router');
 const trafficLogger = require('./src/logger/traffic-logger');
+const errorLogger = require('./src/logger')('UnhandledException');
 const { validateSessionSecret } = require('./src/utils/session-secret-validator');
 
 validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
@@ -14,11 +15,6 @@ validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 const app = express();
 
 app.disable('x-powered-by');
-
-app.use((err, req, res, next) => {
-    require('./src/logger')('UnhandledException').error(err.stack);
-    next(err);
-});
 
 const i18n = require('i18n-node-yaml')({
     debug: app.get('environment') !== 'production',
@@ -97,5 +93,32 @@ app.use((req, res, next) => {
 });
 
 app.use(router);
+
+// Error handler: must be registered after every route so it receives their
+// errors (#56). It replies with the generic status text itself, so the body never
+// depends on NODE_ENV and never includes a stack or err.message. Client errors
+// with a 4xx status (e.g. a malformed JSON body) keep it and are logged at warn
+// without message or stack, since some messages quote the raw request body.
+app.use((err, req, res, next) => { // Express needs all four parameters
+    const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+    let line;
+    try {
+        line = status < 500 ? `Client error ${status} ${err.name}` : err.stack || String(err);
+    } catch {
+        line = '[non-Error value]'; // e.g. an object without toString passed to next()
+    }
+    if (status < 500) {
+        errorLogger.warn(line);
+    } else {
+        errorLogger.error(line);
+    }
+    if (res.headersSent) {
+        // Too late for an error reply: drop the connection, as Express's default
+        // handler would, without logging the error a second time.
+        res.destroy();
+        return;
+    }
+    res.sendStatus(status);
+});
 
 module.exports = app;
