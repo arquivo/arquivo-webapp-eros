@@ -207,11 +207,8 @@ function changePosition(position, childrenCount, nCols){
         cards[selectedPosition].style.borderWidth = "0px";
     }
     selectedPosition = position
-    if (cards[selectedPosition]) {
-        cards[selectedPosition].style.borderWidth = "5px";
-        cards[selectedPosition].style.borderColor = "black";
-    }
-
+    cards[selectedPosition].style.borderWidth = "5px";
+    cards[selectedPosition].style.borderColor = "black";
     cards[selectedPosition].scrollIntoView(false);
 }
 
