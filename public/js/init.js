@@ -16,8 +16,25 @@
      * spaces as '+'. FormData also has the files of file inputs, which serialize() leaves out.
      */
     function serializeForm(form) {
-        const fields = form ? Array.from(new FormData(form)).filter(([, value]) => typeof value === 'string') : [];
+        const fields = Array.from(new FormData(form)).filter(([, value]) => typeof value === 'string');
         return new URLSearchParams(fields).toString();
+    }
+
+    /*
+     * The URL of the partial that the loading form points to: its action, with its fields as
+     * the query. The partial's scripts run in this page, so it is null unless the URL is on
+     * the page's own origin, as well as when there is no form, no action or no valid URL.
+     * Nothing is requested then, and the section stays as it is.
+     */
+    function partialUrl(form) {
+        const action = form?.getAttribute('action');
+        if (!action) return null;
+        try {
+            const url = new URL(action + '?' + serializeForm(form), document.location.href);
+            return url.origin === document.location.origin ? url : null;
+        } catch {
+            return null;
+        }
     }
 
     /*
@@ -59,18 +76,20 @@
                 });
             };
         }
-        const loadingForm = document.getElementById('loading-form');
-        // Same request as $.ajax: a same-origin GET (so with the cookies), with jQuery's
-        // X-Requested-With header. Like before, a failed request or an HTTP error status
-        // leaves the section as it is.
-        fetch(document.location.origin + loadingForm?.getAttribute('action') + '?' + serializeForm(loadingForm), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        })
-            .then(response => response.ok ? response.text() : Promise.reject(new Error('HTTP ' + response.status)))
-            .then(html => {
-                replaceWithHtml(loadingSection, html);
-                afterReplace();
-            }, () => {});
+        const url = partialUrl(document.getElementById('loading-form'));
+        if (url) {
+            // Same request as $.ajax: a same-origin GET (so with the cookies), with jQuery's
+            // X-Requested-With header. Like before, a failed request or an HTTP error status
+            // leaves the section as it is.
+            fetch(url, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            })
+                .then(response => response.ok ? response.text() : Promise.reject(new Error('HTTP ' + response.status)))
+                .then(html => {
+                    replaceWithHtml(loadingSection, html);
+                    afterReplace();
+                }, () => {});
+        }
     }
 
     document.body.addEventListener('submit', (e) => {

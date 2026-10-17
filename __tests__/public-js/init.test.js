@@ -299,6 +299,39 @@ describeScript('js/init.js', { html: PAGE, globals: ['generateId', 'getClientId'
             expect(messages).toEqual([]);
         });
 
+        it('requests an absolute action on the page\'s own origin', async () => {
+            setup(LOADING_SECTION.replace('action="/partials/replay-nav"', 'action="http://localhost/partials/x"'));
+            await settleAll();
+
+            expect(requests.map((r) => r.url)).toEqual(['http://localhost/partials/x?q=arquivo+pt&l=en']);
+        });
+
+        it.each([
+            ['on another origin', 'action="https://evil.example/partials/replay-nav"'],
+            ['protocol-relative', 'action="//evil.example/partials/replay-nav"'],
+            ['a javascript: URL', 'action="javascript:window.actionRan=true"'],
+            ['not a valid URL', 'action="http://[::1/partials/replay-nav"'],
+            ['empty', 'action=""'],
+            ['missing', ''],
+        ])('makes no request and leaves the section when the loading form\'s action is %s', async (_label, attribute) => {
+            setup(LOADING_SECTION.replace('action="/partials/replay-nav"', attribute));
+            await settleAll();
+
+            expect(requests).toEqual([]);
+            expect($id('loading-section')).not.toBeNull();
+            expect(messages).toEqual([]);
+            expect(window.actionRan).toBeUndefined();
+        });
+
+        it('makes no request and leaves the section when the page has no #loading-form', async () => {
+            setup('<section id="loading-section" onloadmessage="date"><div class="preloader"></div></section>');
+            await settleAll();
+
+            expect(requests).toEqual([]);
+            expect($id('loading-section')).not.toBeNull();
+            expect(messages).toEqual([]);
+        });
+
         it('makes no request on pages without a #loading-section', async () => {
             setup();
             await settleAll();
