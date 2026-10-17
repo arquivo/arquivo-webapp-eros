@@ -70,27 +70,19 @@ const relevanceButton = (card, label) => card.querySelector(`input[type=button][
 const press = (code) => document.dispatchEvent(new KeyboardEvent('keydown', { code, bubbles: true }));
 
 describeScript('js/annotate.js', { html: SEARCH_TOOLS + pagesResults(3) }, ({ setup, whileParsing }) => {
-    let hadScrollIntoView;
-
     beforeEach(() => {
         jest.useFakeTimers();
         jest.spyOn(console, 'log').mockImplementation(() => {});
         localStorage.clear();
         // jsdom does not lay out pages, so it has no scrollIntoView.
-        hadScrollIntoView = 'scrollIntoView' in Element.prototype;
-        if (!hadScrollIntoView) {
-            Element.prototype.scrollIntoView = function () {};
-        }
-        jest.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(() => {});
+        Element.prototype.scrollIntoView = jest.fn();
     });
 
     afterEach(() => {
         jest.clearAllTimers();
         jest.useRealTimers();
         jest.restoreAllMocks();
-        if (!hadScrollIntoView) {
-            delete Element.prototype.scrollIntoView;
-        }
+        delete Element.prototype.scrollIntoView;
         localStorage.clear();
         history.replaceState(null, '', '/');
     });
