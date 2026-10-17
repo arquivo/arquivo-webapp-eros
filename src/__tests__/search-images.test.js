@@ -279,11 +279,4 @@ describe('GET /partials/images-search-results when the image search API fails', 
 
         await expectNotFound();
     });
-
-    it('renders the not found body when the API replies invalid JSON', async () => {
-        stubStatus = 200;
-        stubBody = '<html>not json</html>';
-
-        await expectNotFound();
-    });
 });

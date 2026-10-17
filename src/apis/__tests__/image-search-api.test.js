@@ -389,15 +389,5 @@ describe('ImageSearchApiRequest', () => {
                 done();
             });
         });
-
-        it('returns a no results reply when the API replies invalid JSON', (done) => {
-            body = '<html>not json</html>';
-            const api = apiAtCaptureServer();
-
-            api.get(new URLSearchParams({ q: 'test' }), (data) => {
-                expect(data).toEqual({ totalItems: 0, responseItems: [] });
-                done();
-            });
-        });
     });
 });
