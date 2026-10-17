@@ -1,10 +1,10 @@
 'use strict';
 
 // Characterizes GET /partials/:id dispatching: named ids go to their
-// handler (with the exact same arguments), an explicit allowlist of generic
-// partials is rendered as 'partials/<id>', and every other id (unknown,
-// case variants, prototype keys, '../' traversal, dotted) falls through to
-// the 404 page without the view engine ever being asked to render it (#174).
+// handler (with the exact same arguments), the two modal partials render
+// their own template, and every other id (unknown, case variants, prototype
+// keys, '../' traversal, dotted) falls through to the 404 page without the
+// view engine ever being asked to render it (#174).
 
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
@@ -78,7 +78,7 @@ describe('GET /partials/:id', () => {
     }
 
     it.each(['modal-datepicker', 'modal-image-details'])(
-        'renders the allowlisted generic partial %s with layout: false',
+        'renders the modal partial %s with layout: false',
         async (id) => {
             const { res, renderCalls } = await getPartialWithRenderCalls(id);
             expect(res.status).toBe(200);

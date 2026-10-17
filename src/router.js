@@ -239,11 +239,18 @@ router.post('/services/citationsaver', function (req, res) {
 
 // ============================================================================
 // Partial Content Routes
-// Dynamic partials loaded via AJAX for search results and wayback navigation
+// Partials loaded via AJAX: search results, wayback replay navigation and
+// the datepicker and image details modals
 // ============================================================================
 
+/** Render a partial template as-is, without the page layout */
+const renderPartial = (view) => (req, res) => res.render(view, { layout: false });
+
 /**
- * Partial handlers keyed by partial id.
+ * Partial handlers keyed by partial id. This is the allowlist: any other id
+ * falls through to the 404 page. The id comes straight from the URL (Express
+ * decodes '%2F', and a '.' changes the view engine Express require()s), so it
+ * is never used to build a view name (#174).
  * A Map (not a plain object) so ids like 'constructor' or '__proto__'
  * never resolve to prototype properties.
  */
@@ -255,32 +262,21 @@ const partialHandlers = new Map([
     // Wayback replay partials
     ['replay-nav', replayNav],
     ['replay-technical-details', replayTechnicalDetails],
-]);
-
-/**
- * Generic partials rendered as-is from views/partials/<id>.ejs.
- * An explicit allowlist: the id comes straight from the URL (Express decodes
- * '%2F', and a '.' changes the view engine Express require()s), so it must
- * never be used to build a view name unless it is one of these (#174).
- */
-const genericPartials = new Set([
-    'modal-datepicker',     // public/js/datepicker.js
-    'modal-image-details',  // public/js/modal-image-result.js
+    // Modal partials
+    ['modal-datepicker', renderPartial('partials/modal-datepicker')],       // public/js/datepicker.js
+    ['modal-image-details', renderPartial('partials/modal-image-details')], // public/js/modal-image-result.js
 ]);
 
 /**
  * Dynamic Partials Router
- * Routes partial template requests to appropriate handlers or renders an
- * allowlisted generic partial; any other id falls through to the 404 page.
+ * Routes partial template requests to their handler; any other id falls
+ * through to the 404 page.
  * Used for AJAX content loading without full page refresh
  */
 router.get('/partials/:id', function (req, res, next) {
-    const id = req.params.id;
-    const handler = partialHandlers.get(id);
+    const handler = partialHandlers.get(req.params.id);
     if (handler) {
         handler(req, res, next);
-    } else if (genericPartials.has(id)) {
-        res.render('partials/' + id, { layout: false });
     } else {
         next();
     }
