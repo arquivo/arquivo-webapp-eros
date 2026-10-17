@@ -15,8 +15,8 @@ jest.mock('../../../src/logger', () => {
  *
  * Covers the JSON API client and, through it, the request flow of BaseApiRequest:
  * constructor, GET success/error scenarios, parameter sanitization, error handling
- * (network errors, exceptions, single callback invocation, response errors), timeout,
- * and the known gap where a throw from the callback is swallowed.
+ * (network errors, exceptions, single callback invocation, response errors), timeouts,
+ * the response size cap, and the known gap where a throw from the callback is swallowed.
  */
 
 /**
@@ -51,6 +51,14 @@ function handleMockApiRequest(req, res, serverPort) {
   } else if (url.pathname === '/error-with-body') {
     res.writeHead(500, { 'Content-Type': 'text/plain' });
     res.end('x'.repeat(1024));
+  } else if (url.pathname === '/drip') {
+    // never ends: a space (valid JSON whitespace) every 20ms, so the connection is never idle
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    const drip = setInterval(() => res.write(' '), 20);
+    res.on('close', () => clearInterval(drip));
+  } else if (url.pathname === '/large') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ text: 'x'.repeat(2048) }));
   } else if (url.pathname === '/echo') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ url: req.url }));
@@ -272,6 +280,22 @@ describe('JsonApiRequest', () => {
       expect(api.options).toEqual({ method: 'GET', timeout: 180000 });
     });
 
+    it.each([
+      ['missing', { method: 'GET' }],
+      ['0', { method: 'GET', timeout: 0 }],
+    ])('falls back to the 3 minute deadline when options.timeout is %s', (_, options, done) => {
+      const timeoutSpy = jest.spyOn(AbortSignal, 'timeout');
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/success`);
+      api.options = options;
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toEqual({ status: 'ok', data: 'test' });
+        expect(timeoutSpy).toHaveBeenCalledWith(180000);
+        timeoutSpy.mockRestore();
+        done();
+      });
+    });
+
     it('requests apiUrl + "?" + the sanitized request data', (done) => {
       const api = new JsonApiRequest(`http://localhost:${serverPort}/echo`, { a: '1', b: null, c: '3', d: null });
       const requestData = new URLSearchParams({ c: 'x', b: 'y', ignored: 'z' });
@@ -351,6 +375,155 @@ describe('JsonApiRequest', () => {
           expect(calls).toBe(1);
           done();
         }, 100);
+      });
+    });
+
+    it('treats options.timeout as a total deadline: a body that keeps trickling in is cut', (done) => {
+      const defaultReply = { fallback: 'deadline' };
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/drip`, {}, defaultReply);
+      api.options.timeout = 150;
+      const start = Date.now();
+      let calls = 0;
+
+      api.get(new URLSearchParams(), (data) => {
+        calls++;
+        expect(data).toBe(defaultReply);
+        expect(Date.now() - start).toBeLessThan(1000);
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/drip : Timeout (150ms)`);
+        setTimeout(() => {
+          expect(calls).toBe(1);
+          done();
+        }, 100);
+      });
+    });
+
+    it('gives up after options.idleTimeout without data, before the deadline, and returns the default reply once', (done) => {
+      const defaultReply = { fallback: 'idle' };
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/timeout`, {}, defaultReply);
+      api.options.idleTimeout = 100;
+      const start = Date.now();
+      let calls = 0;
+
+      api.get(new URLSearchParams(), (data) => {
+        calls++;
+        expect(data).toBe(defaultReply);
+        expect(Date.now() - start).toBeLessThan(2000);
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/timeout : Timeout (no data for 100ms)`);
+        setTimeout(() => {
+          expect(calls).toBe(1);
+          done();
+        }, 100);
+      });
+    });
+
+    it('without options.idleTimeout, is not cut by the socket timeout of the agent (5s for the global agent)', (done) => {
+      const server = http.createServer((req, res) => {
+        const reply = setTimeout(() => res.end('{"ok":true}'), 300);
+        res.on('close', () => clearTimeout(reply));
+      });
+      // like Node 20's http.globalAgent ({ keepAlive: true, timeout: 5000 }), with a shorter timeout
+      const agent = new http.Agent({ keepAlive: true, timeout: 100 });
+
+      server.listen(0, () => {
+        const api = new JsonApiRequest(`http://localhost:${server.address().port}/`, {}, { fallback: true });
+        api.options = { method: 'GET', timeout: 2000, agent };
+
+        api.get(new URLSearchParams(), (data) => {
+          expect(data).toEqual({ ok: true });
+          agent.destroy();
+          server.close(done);
+        });
+      });
+    });
+
+    it('gives up on a body larger than options.maxResponseBytes and returns the default reply once', (done) => {
+      const defaultReply = { fallback: 'too large' };
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/large`, {}, defaultReply);
+      api.options.maxResponseBytes = 1024;
+      let calls = 0;
+
+      api.get(new URLSearchParams(), (data) => {
+        calls++;
+        expect(data).toBe(defaultReply);
+        expect(api.logger.error).toHaveBeenCalledWith(`http://localhost:${serverPort}/large : Response too large (over 1024 bytes)`);
+        setTimeout(() => {
+          expect(calls).toBe(1);
+          done();
+        }, 100);
+      });
+    });
+
+    it('accepts a body up to options.maxResponseBytes', (done) => {
+      const api = new JsonApiRequest(`http://localhost:${serverPort}/large`);
+      api.options.maxResponseBytes = 4096;
+
+      api.get(new URLSearchParams(), (data) => {
+        expect(data).toEqual({ text: 'x'.repeat(2048) });
+        done();
+      });
+    });
+
+    it('also bounds the drain of a non-2xx body that never ends with the deadline', (done) => {
+      let api;
+      let callbackCalled = false;
+      const server = http.createServer((req, res) => {
+        // an error page that keeps trickling in: only the deadline can close the connection
+        res.writeHead(500);
+        const drip = setInterval(() => res.write('.'), 20);
+        res.on('close', () => {
+          clearInterval(drip);
+          // the deadline is what closed the connection, after the default reply
+          expect(callbackCalled).toBe(true);
+          expect(api.logger.error).toHaveBeenLastCalledWith(`${api.apiUrl} : Timeout (150ms)`);
+          expect(Date.now() - start).toBeLessThan(1000);
+          server.close(done);
+        });
+      });
+      let start;
+
+      server.listen(0, () => {
+        const defaultReply = { fallback: true };
+        api = new JsonApiRequest(`http://localhost:${server.address().port}/`, {}, defaultReply);
+        api.options.timeout = 150;
+        start = Date.now();
+
+        api.get(new URLSearchParams(), (data) => {
+          // the default reply comes right away, without waiting for the body: the status
+          // has been logged and the deadline has not fired yet
+          callbackCalled = true;
+          expect(data).toBe(defaultReply);
+          expect(api.logger.error).toHaveBeenCalledWith(`${api.apiUrl} : Invalid status code: 500`);
+          expect(api.logger.error).not.toHaveBeenCalledWith(`${api.apiUrl} : Timeout (150ms)`);
+        });
+      });
+    });
+
+    it('does not abort a finished request when its deadline passes, so its keep-alive socket is reused', (done) => {
+      let connections = 0;
+      const server = http.createServer((req, res) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end('{"ok":true}');
+      });
+      server.on('connection', () => connections++);
+      const agent = new http.Agent({ keepAlive: true, maxSockets: 1 });
+
+      server.listen(0, () => {
+        const api = new JsonApiRequest(`http://localhost:${server.address().port}/`, {}, { fallback: true });
+        api.options = { method: 'GET', timeout: 100, agent };
+
+        api.get(new URLSearchParams(), (first) => {
+          expect(first).toEqual({ ok: true });
+          // past the first request's deadline
+          setTimeout(() => {
+            api.get(new URLSearchParams(), (second) => {
+              expect(second).toEqual({ ok: true });
+              expect(connections).toBe(1);
+              expect(api.logger.error).not.toHaveBeenCalled();
+              agent.destroy();
+              server.close(done);
+            });
+          }, 200);
+        });
       });
     });
 
