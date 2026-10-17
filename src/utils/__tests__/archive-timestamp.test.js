@@ -35,8 +35,13 @@ describe('archive-timestamp', () => {
                 .toBe(archiveTimestampToDate('20240101000000').getTime());
         });
 
-        it('should give an Invalid Date for a partial timestamp', () => {
+        it('should give an Invalid Date for a timestamp shorter than 13 characters', () => {
             expect(archiveTimestampToDate('20240315').getTime()).toBeNaN();
+            expect(archiveTimestampToDate('202403151430').getTime()).toBeNaN();
+        });
+
+        it('should read the seconds from the last digit of a 13-character timestamp', () => {
+            expect(archiveTimestampToDate('2025101612005')).toEqual(new Date(2025, 9, 16, 12, 0, 5));
         });
     });
 });

@@ -23,11 +23,10 @@ if(loggerType == 'daily'){
 module.exports = (label='-') => ({
     transports: transports,
     format: winston.format.combine(
-        winston.format.timestamp({format:'dd/MMM/YYYY:HH:mm:ss'}),
+        winston.format.timestamp({format:'DD/MMM/YYYY:HH:mm:ss'}),
         winston.format.printf(info => {
           return `${info.timestamp}\t${info.level.toUpperCase()}\t${label}\t-\t${info.stack  || info.message}`;
         }),
         winston.format.splat()
     ),
-    colorize: false // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
   })
