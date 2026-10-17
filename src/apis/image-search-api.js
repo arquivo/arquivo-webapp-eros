@@ -34,6 +34,19 @@ class ImageSearchApiRequest extends JsonApiRequest {
         super(config.get('image.search.api'),defaultApiParams,DEFAULT_API_REPLY);
     }
 
+    // Replies the default reply, instead of a 2xx reply without a responseItems array (e.g. {} or null)
+    // that the results partial can't render.
+    processResponse(apiRes, safeCallback, requestData) {
+        super.processResponse(apiRes, (apiData) => {
+            if (Array.isArray(apiData?.responseItems)) {
+                safeCallback(apiData);
+                return;
+            }
+            this.logger.error(`${this.apiUrl} : Reply without a responseItems array`);
+            safeCallback(this.fallbackReply(requestData));
+        }, requestData);
+    }
+
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
         if (apiRequestData.has('q')) {

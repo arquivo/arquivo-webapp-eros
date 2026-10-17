@@ -389,5 +389,14 @@ describe('ImageSearchApiRequest', () => {
                 done();
             });
         });
+
+        // A 2xx reply the results partial can't render; the totalItems of a reply without responseItems isn't kept
+        it.each(['{}', 'null', '{"totalItems":3}'])('returns a no results reply when the API replies %s', async (reply) => {
+            body = reply;
+            const api = apiAtCaptureServer();
+
+            const data = await new Promise((resolve) => api.get(new URLSearchParams({ q: 'test' }), resolve));
+            expect(data).toEqual({ totalItems: 0, responseItems: [] });
+        });
     });
 });

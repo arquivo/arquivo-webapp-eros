@@ -273,9 +273,13 @@ describe('GET /partials/images-search-results when the image search API fails', 
         );
     };
 
-    it('renders the not found body when the API replies a non-2xx status', async () => {
-        stubStatus = 503;
-        stubBody = JSON.stringify({ error: 'unavailable' });
+    it.each([
+        ['a non-2xx status', 503, JSON.stringify({ error: 'unavailable' })],
+        ['{}', 200, '{}'],
+        ['null', 200, 'null'],
+    ])('renders the not found body when the API replies %s', async (_name, status, body) => {
+        stubStatus = status;
+        stubBody = body;
 
         await expectNotFound();
     });
