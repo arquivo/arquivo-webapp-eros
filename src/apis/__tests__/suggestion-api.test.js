@@ -434,8 +434,9 @@ describe('SuggestionApiRequest', () => {
         });
 
         it('should handle request errors (invalid host) and return original query', (done) => {
-            // Use an invalid host to trigger request error
-            api.apiUrl = 'http://invalid-host-that-does-not-exist-12345.local';
+            // Use a host under the reserved .invalid TLD (RFC 6761), which fails to resolve right away
+            // (a .local name waits ~5s for mDNS, keeping jest from exiting after the 1s timeout)
+            api.apiUrl = 'http://invalid-host-that-does-not-exist-12345.invalid';
             
             api.getSuggestion('test', 'pt', (suggestion) => {
                 expect(suggestion).toBe('test');
