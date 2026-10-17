@@ -3,6 +3,7 @@ const { archiveTimestampToDate } = require('./utils/archive-timestamp');
 // if it ever becomes configurable, validate it (minimum 1) and refuse to start on a bad value.
 const EMBARGO_YEARS = 1;
 // A well-formed 'YYYYMMDDhhmmss' archive timestamp (years 1900-2099); anything else is embargoed
+// The month/day/hour/minute/second ranges only reject junk rows; order and embargo rely solely on fixed-width 14-digit string comparison
 const ARCHIVE_TIMESTAMP = /^(19|20)\d\d(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])[0-5]\d[0-5]\d$/;
 // makes export json from Api request and reply
 module.exports = function (apiData) {
