@@ -9,7 +9,9 @@
  * which the client sets even behind a proxy that appends to the header.
  * See https://expressjs.com/en/guide/behind-proxies.html
  */
-function parseTrustProxy(value) {
+// Returns false, a number or a string on purpose: Express takes each as is, and express-rate-limit
+// checks for exactly false to report an unexpected X-Forwarded-For header.
+function parseTrustProxy(value) { // NOSONAR: javascript:S3800, see above
     const setting = String(value ?? '').trim();
     const lowerCase = setting.toLowerCase();
     if (lowerCase === '' || lowerCase === 'false') return false;
