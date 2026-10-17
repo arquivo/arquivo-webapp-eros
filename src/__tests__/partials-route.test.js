@@ -1,8 +1,10 @@
 'use strict';
 
 // Characterizes GET /partials/:id dispatching: named ids go to their
-// handler (with the exact same arguments), anything else falls back to
-// rendering the generic 'partials/<id>' template.
+// handler (with the exact same arguments), an explicit allowlist of generic
+// partials is rendered as 'partials/<id>', and every other id (unknown,
+// prototype keys, '../' traversal, dotted) falls through to the 404 page
+// without the view engine ever being asked to render it (#174).
 
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
@@ -23,6 +25,16 @@ const searchUrl = require('../search-url');
 const replayNav = require('../replay-nav');
 const replayTechnicalDetails = require('../replay-technical-details');
 const app = require('../../app');
+
+// A dotted id like 'x.foo' makes Express's View require() a module named
+// after the extension ('foo') to use as a view engine. This virtual module
+// records whether that ever happens for 'x.partials-route-ext-probe'.
+const PROBE_EXT = 'partials-route-ext-probe';
+const probeLoads = [];
+jest.mock('partials-route-ext-probe', () => {
+    probeLoads.push(Date.now());
+    return {};
+}, { virtual: true });
 
 const handlers = {
     'pages-search-results': searchPages,
@@ -63,34 +75,72 @@ describe('GET /partials/:id', () => {
         expect(typeof args[2]).toBe('function');
     });
 
-    it('renders an existing generic partial template with layout: false', async () => {
+    // Spy on the view engine entry point (res.render -> app.render) and
+    // return the names of the views it was asked to render.
+    async function renderedViews(id) {
         const renderSpy = jest.spyOn(app, 'render');
         try {
-            const res = await getPartial('modal-datepicker');
-            expect(res.status).toBe(200);
-            expect(renderSpy).toHaveBeenCalledWith(
-                'partials/modal-datepicker',
-                expect.objectContaining({ layout: false }),
-                expect.any(Function)
-            );
-            allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
+            const res = await getPartial(id);
+            return { res, views: renderSpy.mock.calls.map(([view]) => view), calls: renderSpy.mock.calls };
         } finally {
             renderSpy.mockRestore();
         }
-    });
+    }
 
-    it('falls back to the generic render for an unknown id (missing template)', async () => {
-        const res = await getPartial('does-not-exist');
-        expect(res.status).toBe(500);
-        allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
-    });
-
-    it.each(['constructor', 'toString', 'hasOwnProperty', '__proto__'])(
-        'treats the prototype key %s as a generic partial, not a handler',
+    it.each(['modal-datepicker', 'modal-image-details'])(
+        'renders the allowlisted generic partial %s with layout: false',
         async (id) => {
-            const res = await getPartial(id);
-            expect(res.status).toBe(500);
+            const { res, calls } = await renderedViews(id);
+            expect(res.status).toBe(200);
+            expect(calls).toHaveLength(1);
+            expect(calls[0]).toEqual([
+                'partials/' + id,
+                expect.objectContaining({ layout: false }),
+                expect.any(Function),
+            ]);
             allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
         }
     );
+
+    // Every id below must reach the 404 handler, and the only view rendered
+    // must be the 404 page: nothing under 'partials/' (or outside views/)
+    // is handed to the view engine.
+    const expectNotFound = async (id) => {
+        const { res, views } = await renderedViews(id);
+        expect(res.status).toBe(404);
+        expect(views).toEqual(['pages/arquivo-404']);
+        allHandlers.forEach(h => expect(h).not.toHaveBeenCalled());
+    };
+
+    it.each([
+        'does-not-exist',
+        // real templates that exist under views/partials/ but are only ever
+        // rendered by their own handler, never requested by id
+        'url-list-results',
+        'url-table-results',
+    ])('returns 404 for the non-allowlisted id %s', expectNotFound);
+
+    it.each(['constructor', 'toString', 'hasOwnProperty', '__proto__'])(
+        'returns 404 for the prototype key %s',
+        expectNotFound
+    );
+
+    it.each([
+        '..%2Fpages%2Fhome',
+        '..%2Ftemplates%2Fhead',
+        '..%2F..%2F..%2Ftmp%2Fx',
+        '..%5Cpages%5Chome',
+        '%2E%2E%2Fpages%2Fhome',
+    ])('returns 404 for the traversal id %s', expectNotFound);
+
+    it.each(['x.foo', 'x.config', 'modal-datepicker.ejs', 'modal-datepicker.'])(
+        'returns 404 for the dotted id %s',
+        expectNotFound
+    );
+
+    it('does not require() a module named after a dotted id\'s extension', async () => {
+        await expectNotFound('x.' + PROBE_EXT);
+        expect(probeLoads).toHaveLength(0);
+        expect(app.engines['.' + PROBE_EXT]).toBeUndefined();
+    });
 });
