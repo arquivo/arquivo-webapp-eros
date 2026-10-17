@@ -22,5 +22,5 @@ module.exports = function escapeForLog(value) {
     } catch {
         return '[unprintable]'; // e.g. an object without a prototype, or whose toString throws
     }
-    return text.replace(ESCAPED, c => '\\u' + c.codePointAt(0).toString(16).padStart(4, '0'));
+    return text.replace(ESCAPED, c => String.raw`\u` + c.codePointAt(0).toString(16).padStart(4, '0'));
 };
