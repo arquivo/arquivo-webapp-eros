@@ -6,13 +6,23 @@ const { URL, domainToUnicode } = require('node:url');
 //   would silently percent-encode or strip them, but callers render the raw
 //   input (`<%- url %>` in services-archivepagenow-save.ejs), so they stay
 //   rejected;
-// - C0/C1 control characters (`\p{Cc}`) and invisible format characters that
-//   can spoof the displayed URL or inject into log lines: bidi embeddings and
-//   overrides (U+202A-U+202E), bidi isolates (U+2066-U+2069), zero-width space
-//   (U+200B), BOM (U+FEFF) and soft hyphen (U+00AD). Not all of `\p{Cf}`:
-//   ZWJ/ZWNJ (U+200D/U+200C) are needed by some legitimate IDNs.
+// - C0/C1 control characters (`\p{Cc}`) and invisible characters that can
+//   spoof the displayed URL: soft hyphen (U+00AD), combining grapheme joiner
+//   (U+034F), bidi marks (U+061C, U+200E, U+200F), Mongolian vowel separator
+//   (U+180E), zero-width space (U+200B), bidi embeddings and overrides
+//   (U+202A-U+202E), word joiner, invisible operators, bidi isolates and
+//   deprecated format characters (U+2060-U+206F), interlinear annotation
+//   characters (U+FFF9-U+FFFB) and tag characters (U+E0000-U+E007F). The BOM
+//   (U+FEFF) is already in `\s`. This is not a log-injection control: callers
+//   log the raw input before validating it.
+// Deliberately not a blanket `\p{Cf}` / `\p{Default_Ignorable_Code_Point}`:
+// ZWNJ/ZWJ (U+200C/U+200D) are needed by some IDNs, and variation selectors
+// (U+FE00-U+FE0F, the Mongolian U+180B-U+180D/U+180F) pick the glyph of the
+// visible character before them, as in the emoji `❤️`; UTS46 drops them from
+// the host.
 // A single character class, so matching is linear in the input length.
-const FORBIDDEN_CHAR = /[\s\p{Cc}"'<>`\\^|[\]\u00AD\u200B\u202A-\u202E\u2066-\u2069\uFEFF]/u;
+const FORBIDDEN_CHAR =
+  /[\s\p{Cc}"'<>`\\^|[\]\u00AD\u034F\u061C\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u206F\uFFF9-\uFFFB\u{E0000}-\u{E007F}]/u;
 const HTTP_SCHEME = /^https?:\/\//i;
 // WHATWG drops extra leading slashes and an empty userinfo, so `//x.com`,
 // `https:///x.com` and `@x.com` would parse as `x.com`; it also allows
@@ -49,24 +59,23 @@ module.exports = function isValidUrl(s) {
 
   let url;
   try {
-    // Without a scheme, `javascript:alert(1)` ends up as an invalid port
-    // (throws) and `javascript:80/x.com` as a dotless host (rejected below).
+    // `javascript:` input never gets through: without a scheme,
+    // `javascript:alert(1)` is an invalid port (throws here),
+    // `javascript:80/x.com` has the dotless host `javascript` (TLD check) and
+    // `javascript:x@evil.com` is user `javascript` on host `evil.com`
+    // (credentials check).
     url = new URL('https://' + rest);
   } catch {
     return false;
   }
-  // E-mail addresses and credentials are not URLs. This check is also what
-  // rejects `javascript:x@evil.com` and `javascript:@evil.com`, which parse
-  // as user `javascript` on host `evil.com`.
+  // E-mail addresses and credentials are not URLs.
   if (url.username || url.password) return false;
 
   // Require a named host: at least one dot and a top-level label of 2+
   // letters. WHATWG parses numeric queries such as `3.14` or `2024` as IPv4
   // hosts (`3.0.0.14`, `0.0.7.232`); their numeric last label fails this
   // check, as do bracketed IPv6 hosts, versions (`v2.0rc1`) and amounts
-  // (`3.5mm`, `3.50€`). Together with the credentials check above, this is
-  // what keeps `javascript:` input out: its "host" is the dotless
-  // `javascript`.
+  // (`3.5mm`, `3.50€`).
   let hostname = domainToUnicode(url.hostname);
   if (hostname.endsWith('.')) hostname = hostname.slice(0, -1);
   const dot = hostname.lastIndexOf('.');
