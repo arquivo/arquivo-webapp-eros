@@ -108,45 +108,27 @@ const mimeToExtension = new Map([
 ]);
 
 const PDF_MAGIC = Buffer.from('%PDF-');
-
-// The uploaded bytes, up to `end` (inclusive) if given: from the temporary file, or
-// from memory for a file object without one.
-async function* uploadedBytes(uploadedFile, end) {
-    if (uploadedFile.tempFilePath) {
-        yield* fs.createReadStream(uploadedFile.tempFilePath, { start: 0, end });
-    } else {
-        const data = uploadedFile.data ?? Buffer.alloc(0);
-        yield end === undefined ? data : data.subarray(0, end + 1);
-    }
-}
+// PDF readers look for the header anywhere in the first 1024 bytes.
+const PDF_HEADER_WINDOW = 1024;
 
 /*
  * Checks the bytes against the declared mimetype, which is only what the client
- * claims (#177): a PDF must start with "%PDF-"; a text or HTML file must be valid
- * UTF-8 with no NUL byte. The file is read in chunks, never whole into memory.
+ * claims (#177): a PDF must have "%PDF-" in its first 1024 bytes; a text or HTML file
+ * must have no NUL byte, which rules out binaries but keeps any 8-bit encoding (e.g.
+ * Windows-1252 or ISO-8859-1). The temporary file is read in chunks, never whole.
  */
 async function contentMatchesMimetype(uploadedFile) {
     if (uploadedFile.mimetype === 'application/pdf') {
         const chunks = [];
-        for await (const chunk of uploadedBytes(uploadedFile, PDF_MAGIC.length - 1)) {
+        for await (const chunk of fs.createReadStream(uploadedFile.tempFilePath, { start: 0, end: PDF_HEADER_WINDOW - 1 })) {
             chunks.push(chunk);
         }
-        return Buffer.concat(chunks).equals(PDF_MAGIC);
+        return Buffer.concat(chunks).includes(PDF_MAGIC);
     }
-    const decoder = new TextDecoder('utf-8', { fatal: true });
-    try {
-        for await (const chunk of uploadedBytes(uploadedFile)) {
-            if (chunk.includes(0)) {
-                return false;
-            }
-            decoder.decode(chunk, { stream: true });
-        }
-        decoder.decode(); // Fails on a multi-byte sequence cut off at the end
-    } catch (err) {
-        if (err.code === 'ERR_ENCODING_INVALID_ENCODED_DATA') {
+    for await (const chunk of fs.createReadStream(uploadedFile.tempFilePath)) {
+        if (chunk.includes(0)) {
             return false;
         }
-        throw err;
     }
     return true;
 }

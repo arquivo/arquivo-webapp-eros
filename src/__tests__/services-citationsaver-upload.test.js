@@ -367,44 +367,8 @@ describe('POST /services/citationsaver through the app', () => {
     });
 
     describe('content sniffing (#177)', () => {
-        it.each([
-            ['HTML', Buffer.from('<!doctype html><script>alert(1)</script>')],
-            ['a PNG image', Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00])],
-        ])('rejects %s sent as application/pdf', async (label, content) => {
-            const res = await post()
-                .attach('file', content, { filename: 'paper.pdf', contentType: 'application/pdf' });
-
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual({ status: false, message: messages.mimetype });
-            expect(storedFiles()).toHaveLength(0);
-            expect(addToSpreadsheet).not.toHaveBeenCalled();
-        });
-
-        it.each([
-            ['text/plain', 'notes.txt', 'binary bytes', Buffer.from([0x00, 0x01, 0x02, 0xff, 0xfe])],
-            ['text/html', 'page.html', 'invalid UTF-8', Buffer.from('<p>caf\xe9</p>', 'latin1')],
-        ])('rejects a %s file (%s) with %s', async (mimetype, filename, label, content) => {
-            const res = await post().attach('file', content, { filename, contentType: mimetype });
-
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual({ status: false, message: messages.mimetype });
-            expect(storedFiles()).toHaveLength(0);
-        });
-
-        it('accepts a UTF-8 text file whose characters span read chunks', async () => {
-            // An odd offset puts a 2-byte character across each 64 KiB chunk boundary.
-            const content = Buffer.from('a' + 'é'.repeat(100 * 1024), 'utf8');
-
-            const res = await post().attach('file', content, { filename: 'long.txt', contentType: 'text/plain' });
-
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual(expect.objectContaining({ status: true }));
-            const stored = storedFiles();
-            expect(stored).toHaveLength(1);
-            // Buffer#equals: Jest's toEqual compares a large Buffer byte by byte, slowly.
-            expect(storedContent(stored[0]).equals(content)).toBe(true);
-        });
-
+        // The other cases are in services-citationsaver.test.js; this one needs a real
+        // temporary file read in several chunks.
         it('rejects a long text file with a NUL byte after the first chunk', async () => {
             const content = Buffer.concat([Buffer.alloc(100 * 1024, 'a'), Buffer.from([0x00]), Buffer.from('b')]);
 

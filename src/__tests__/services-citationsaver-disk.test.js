@@ -19,6 +19,9 @@ const path = require('path');
 const config = require('config');
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'citationsaver-176-'));
+// The temporary file express-fileupload would have written for an uploaded file.
+const uploadedTempFile = path.join(tmpRoot, 'uploaded.tmp');
+fs.writeFileSync(uploadedTempFile, 'file body');
 const uploadFolder = path.join(tmpRoot, 'missing', 'CitationSaver');
 const originalUploadFolder = config.get('citation.saver.upload.folder.path');
 config.set('citation.saver.upload.folder.path', uploadFolder);
@@ -76,7 +79,7 @@ describe('Citation Saver with a missing upload folder (#176)', () => {
         ['text', { text: 'hello' }, null, 'hello', /\.txt$/],
         ['URL', { url: 'http://example.com' }, null, 'http://example.com', /\.link$/],
         ['file', {}, { file: {
-            name: 'doc.txt', mimetype: 'text/plain', size: 9,
+            name: 'doc.txt', mimetype: 'text/plain', size: 9, tempFilePath: uploadedTempFile,
             // Like express-fileupload's mv(): returns a Promise when called without a callback.
             mv: (target) => fs.promises.writeFile(target, 'file body')
         } }, 'file body', /\.txt$/]
@@ -95,7 +98,7 @@ describe('Citation Saver with a missing upload folder (#176)', () => {
     it.each([
         ['text', { text: 'hello' }, null],
         ['URL', { url: 'http://example.com' }, null],
-        ['file', {}, { file: { name: 'doc.txt', mimetype: 'text/plain', size: 9, mv: (target) => fs.promises.writeFile(target, 'x') } }]
+        ['file', {}, { file: { name: 'doc.txt', mimetype: 'text/plain', size: 9, tempFilePath: uploadedTempFile, mv: (target) => fs.promises.writeFile(target, 'x') } }]
     ])('returns status:false and keeps running when the upload folder is unusable (%s)', async (kind, body, files) => {
         // A regular file where a parent directory should be: mkdir and writes fail with ENOTDIR/EEXIST.
         fs.writeFileSync(path.join(tmpRoot, 'missing'), 'not a directory');
