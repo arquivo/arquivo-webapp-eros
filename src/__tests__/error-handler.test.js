@@ -127,6 +127,17 @@ describe('error middleware', () => {
         }
     });
 
+    it('stays robust to a non-Error value passed to next()', async () => {
+        replayNav.mockImplementation((req, res, next) => next(Object.create(null)));
+
+        const res = await request(app).get('/partials/replay-nav').timeout(REQUEST_TIMEOUT_MS);
+
+        expect(res.status).toBe(500);
+        expect(res.text).toBe('Internal Server Error');
+        expect(mockLogger.error).toHaveBeenCalledTimes(1);
+        expect(mockLogger.error).toHaveBeenCalledWith('[non-Error value]');
+    });
+
     it('drops the connection and logs once when headers were already sent', async () => {
         replayNav.mockImplementation((req, res, next) => {
             res.status(200).type('text/plain');

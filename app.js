@@ -101,10 +101,16 @@ app.use(router);
 // without message or stack, since some messages quote the raw request body.
 app.use((err, req, res, next) => { // Express needs all four parameters
     const status = Number.isInteger(err.status) && err.status >= 400 && err.status < 500 ? err.status : 500;
+    let line;
+    try {
+        line = status < 500 ? `Client error ${status} ${err.name}` : err.stack || String(err);
+    } catch {
+        line = '[non-Error value]'; // e.g. an object without toString passed to next()
+    }
     if (status < 500) {
-        errorLogger.warn(`Client error ${status} ${err.name}`);
+        errorLogger.warn(line);
     } else {
-        errorLogger.error(err.stack || String(err));
+        errorLogger.error(line);
     }
     if (res.headersSent) {
         // Too late for an error reply: drop the connection, as Express's default
