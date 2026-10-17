@@ -37,8 +37,8 @@ describe('ImageSearchApiRequest', () => {
             
             // Mock successful image search response
             const mockResponse = {
-                estimated_nr_results: 50,
-                response_items: [
+                totalItems: 50,
+                responseItems: [
                     {
                         imgSrc: 'http://example.com/image.jpg',
                         imgMimeType: 'image/jpeg',
@@ -108,9 +108,11 @@ describe('ImageSearchApiRequest', () => {
             expect(api.defaultApiParams.trackingId).toBeNull();
         });
 
-        it('should have empty object as default reply', () => {
+        it('should have a no results default reply, frozen as all requests share it', () => {
             const api = new ImageSearchApiRequest();
-            expect(api.defaultApiReply).toEqual({});
+            expect(api.defaultApiReply).toEqual({ totalItems: 0, responseItems: [] });
+            expect(Object.isFrozen(api.defaultApiReply)).toBe(true);
+            expect(Object.isFrozen(api.defaultApiReply.responseItems)).toBe(true);
         });
     });
 
@@ -234,11 +236,11 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                expect(data).toHaveProperty('estimated_nr_results');
-                expect(data).toHaveProperty('response_items');
+                expect(data).toHaveProperty('totalItems');
+                expect(data).toHaveProperty('responseItems');
                 expect(data).toHaveProperty('request_parameters');
-                expect(data.response_items).toBeInstanceOf(Array);
-                expect(data.response_items.length).toBeGreaterThan(0);
+                expect(data.responseItems).toBeInstanceOf(Array);
+                expect(data.responseItems.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -249,7 +251,7 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                const firstImage = data.response_items[0];
+                const firstImage = data.responseItems[0];
                 expect(firstImage).toHaveProperty('imgSrc');
                 expect(firstImage).toHaveProperty('imgMimeType');
                 expect(firstImage).toHaveProperty('imgHeight');
@@ -322,12 +324,13 @@ describe('ImageSearchApiRequest', () => {
         let captureServer;
         let captured;
         let status;
+        let body;
 
         beforeAll((done) => {
             captureServer = http.createServer((req, res) => {
                 captured.push(req.url);
                 res.writeHead(status, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+                res.end(body);
             });
             captureServer.listen(0, done);
         });
@@ -339,6 +342,7 @@ describe('ImageSearchApiRequest', () => {
         beforeEach(() => {
             captured = [];
             status = 200;
+            body = JSON.stringify({ totalItems: 1, responseItems: [] });
         });
 
         const apiAtCaptureServer = () => {
@@ -358,7 +362,7 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                expect(data).toEqual({ totalItems: 1, responseItems: [] });
                 const expected = new URLSearchParams([
                     ['q', 'gato size:lg'],
                     ['from', '19910806'],
@@ -376,14 +380,23 @@ describe('ImageSearchApiRequest', () => {
             });
         });
 
-        it('returns an empty object when the API fails', (done) => {
+        it('returns a no results reply when the API fails', (done) => {
             status = 503;
             const api = apiAtCaptureServer();
 
             api.get(new URLSearchParams({ q: 'test' }), (data) => {
-                expect(data).toEqual({});
+                expect(data).toEqual({ totalItems: 0, responseItems: [] });
                 done();
             });
+        });
+
+        // A 2xx reply the results partial can't render; the totalItems of a reply without responseItems isn't kept
+        it.each(['{}', 'null', '{"totalItems":3}'])('returns a no results reply when the API replies %s', async (reply) => {
+            body = reply;
+            const api = apiAtCaptureServer();
+
+            const data = await new Promise((resolve) => api.get(new URLSearchParams({ q: 'test' }), resolve));
+            expect(data).toEqual({ totalItems: 0, responseItems: [] });
         });
     });
 });

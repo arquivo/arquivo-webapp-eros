@@ -20,8 +20,9 @@ module.exports = function (req, res) {
             const url = fullUrl.split('/').filter((a, i) => i > 0).join('/');
 
             if(/^\d+$/.test(timestamp) == false){
-                newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
+                const newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
                 res.redirect(newUrl);
+                return;
             }
 
             //Api request for technical details.

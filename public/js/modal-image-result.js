@@ -1,12 +1,9 @@
 $(function () {
   if ($('#images-results').length) {
     let modalImageDetails = '';
-    $.ajax({
-      url: '/partials/modal-image-details?l=' + lang,
-      success: function (data) {
-        modalImageDetails = data
-      }
-    });
+    fetch('/partials/modal-image-details?l=' + lang)
+      .then((response) => response.ok ? response.text() : Promise.reject(response))
+      .then((data) => { modalImageDetails = data; }, () => {});
     const modal = $('#modal');
     document.onkeydown = (e) => {
       if ($.modal.isActive() && modal.find('.image-navigation-button').length) {
@@ -87,7 +84,8 @@ $(function () {
 
       const form = $('#search-result-form-' + imageData.index);
       if (form.length) {
-        $.ajax(form.attr('action'));
+        // Logs the view (src/tracking.js); the reply is not used.
+        fetch(form.attr('action')).catch(() => {});
       }
 
       let setModalText = function (selector, fieldName, transform = (v) => v) {

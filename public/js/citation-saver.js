@@ -34,42 +34,44 @@ $(() => {
         $('#modal #citation-saver-modal').hide();
         $('#modal').modal({escapeClose: false, clickClose: false, showClose: false });
 
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: new FormData(this),
-            processData: false,
-            contentType: false,
-            success: (data) => {
-                if(data.status){
-                    $('#modal p.text').show();
-                    $('#modal p.error').hide();
-                } else {
-                    $('#modal p.text').hide();
-                    $('#modal p.error').show();
-                    if(typeof data.message == 'string'){
-                        $('#modal p.error').text(data.message);
-                    } else {
-                        $('#modal p.error').text(JSON.stringify(data.message));
-                    }
-                }
-                
-            },
-            error: (err) => {
-                // alert('ERROR!! ' +JSON.stringify(err));
+        const success = (data) => {
+            if(data.status){
+                $('#modal p.text').show();
+                $('#modal p.error').hide();
+            } else {
                 $('#modal p.text').hide();
                 $('#modal p.error').show();
-                if(typeof err == 'string'){
-                    $('#modal p.error').text(err);
+                if(typeof data.message == 'string'){
+                    $('#modal p.error').text(data.message);
                 } else {
-                    $('#modal p.error').text(JSON.stringify(err));
+                    $('#modal p.error').text(JSON.stringify(data.message));
                 }
-            },
-            complete: () => {
+            }
+        };
+        const error = (status, statusText) => {
+            $('#modal p.text').hide();
+            $('#modal p.error').show();
+            $('#modal p.error').text(JSON.stringify({ status: status, statusText: statusText }));
+        };
+
+        fetch(actionUrl, {
+            method: 'POST',
+            // Sent as is, so the browser sets the multipart content type and its boundary.
+            body: new FormData(this),
+            credentials: 'same-origin'
+        })
+            .then((response) => {
+                // As with $.ajax, an HTTP error status or a reply that is not JSON is an error.
+                if (!response.ok) {
+                    error(response.status, response.statusText);
+                    return;
+                }
+                return response.json().then(success, () => error(response.status, 'parsererror'));
+            }, () => error(0, 'error'))
+            .finally(() => {
                 $('#modal #citation-saver-progress-bar').hide();
                 $('#modal #citation-saver-modal').show();
-            }
-        });
+            });
 
     });
 });

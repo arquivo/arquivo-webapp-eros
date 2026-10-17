@@ -2,6 +2,9 @@ const BaseApiRequest = require('./base-api-request');
 const config = require('config');
 const todayYmd = require('../utils/today-ymd');
 
+// How much of a malformed capture goes into the parse-error log line
+const MAX_LOGGED_FRAGMENT_LENGTH = 200;
+
 /**
  * CDXSearchApiRequest - HTTP client for CDX API with streaming JSON parsing
  * 
@@ -29,8 +32,12 @@ class CDXSearchApiRequest extends BaseApiRequest {
             fields: 'url,timestamp,status,digest'
         };
         const defaultApiReply = [];
-        
-        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', { method: 'GET' });
+        // The reply is streamed: the largest ones (the server stops at 100,000 captures, about 13 MB)
+        // take about 10 s, with gaps under 0.5 s. Give up when no data comes for 5 s, after 1 minute
+        // in total, or past 64 MB.
+        const options = { method: 'GET', timeout: 60000, idleTimeout: 5000, maxResponseBytes: 64 * 1024 * 1024 };
+
+        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', options);
     }
 
     /**
@@ -58,8 +65,12 @@ class CDXSearchApiRequest extends BaseApiRequest {
                     let currentData = JSON.parse(currentJson);
                     apiData.push(currentData);
                 } catch (e) {
-                    // Log and skip malformed JSON, continue processing
-                    this.logger.error(`Failed to parse JSON object: ${currentJson}. Error: ${e.message}`);
+                    // Log and skip malformed JSON, continue processing. Log only the start of the
+                    // fragment, so a malformed reply can't write a huge log line.
+                    const fragment = currentJson.length > MAX_LOGGED_FRAGMENT_LENGTH
+                        ? `${currentJson.slice(0, MAX_LOGGED_FRAGMENT_LENGTH)}... (${currentJson.length} chars)`
+                        : currentJson;
+                    this.logger.error(`Failed to parse JSON object: ${fragment}. Error: ${e.message}`);
                 }
                 apiReply = apiReply.slice(endIndex + 1);
                 endIndex = apiReply.indexOf('}') + 1;

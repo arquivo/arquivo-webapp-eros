@@ -5,13 +5,17 @@ const PageSearchApiRequest = require('./apis/page-search-api');
 module.exports = makeSearchHandler({
     createApiRequest: (requestData) => new PageSearchApiRequest(requestData.get('api')),
     // The spellchecked query comes in the same reply as the results.
-    // Known gap: unlike the images search, there is no .catch/next here. A throw inside the API
-    // callback (e.g. in getSuggestion or makeExportObject) is swallowed by json-api-request.js, logged as
-    // a misleading "JSON parse error", and the request hangs. Fixing it needs router.js to pass
-    // next to this handler, so that render errors can be routed with next(err).
+    // Errors thrown in the API callback (e.g. by getSuggestion or makeExportObject) are routed to
+    // next, like the images search does: left uncaught, the API client would swallow them (and the
+    // request would hang) or, on its error paths, crash the process.
     fetchResults: (apiRequest, requestData, next, render) => {
-        apiRequest.get(apiRequest.withSpellcheck(requestData),
-            (apiData) => render(apiData, apiRequest.getSuggestion(apiData, requestData)));
+        apiRequest.get(apiRequest.withSpellcheck(requestData), (apiData) => {
+            try {
+                render(apiData, apiRequest.getSuggestion(apiData, requestData));
+            } catch (err) {
+                next(err);
+            }
+        });
     },
     itemsKey: 'response_items',
     template: 'partials/pages-search-results',

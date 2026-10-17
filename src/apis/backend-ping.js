@@ -32,7 +32,9 @@ function pingBackend(url, timeoutMs = 3000) {
 
         let req;
         try {
-            req = request(url, { method: 'GET', timeout: timeoutMs }, (res) => {
+            // A total deadline (not a socket idle timeout), so a backend that keeps sending bytes
+            // without completing its reply can't hold the health check
+            req = request(url, { method: 'GET', signal: AbortSignal.timeout(timeoutMs) }, (res) => {
                 res.resume(); // discard the response body, we only care about the status code
                 const reachable = res.statusCode >= 200 && res.statusCode < 300;
                 if (reachable) {
@@ -49,14 +51,18 @@ function pingBackend(url, timeoutMs = 3000) {
         }
 
         req.on('error', (e) => {
+            // The deadline also covers the drain of the body. Once the status has been reported,
+            // a later error (the deadline cutting a body that is still coming) is not a failure
+            if (settled) {
+                return;
+            }
+            if (e.name === 'AbortError') {
+                logger.error(`${url} : Timeout (${timeoutMs}ms)`);
+                resolveOnce({ reachable: false, error: 'timeout' });
+                return;
+            }
             logger.error(`${url} : Request error: ${e.message}`);
             resolveOnce({ reachable: false, error: e.message });
-        });
-
-        req.on('timeout', () => {
-            logger.error(`${url} : Timeout (${timeoutMs}ms)`);
-            req.destroy();
-            resolveOnce({ reachable: false, error: 'timeout' });
         });
 
         req.end();
