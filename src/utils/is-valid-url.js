@@ -16,7 +16,7 @@ const { URL, domainToUnicode } = require('node:url');
 // purpose: ZWNJ/ZWJ (U+200C/U+200D) are needed by some IDNs, and variation
 // selectors (U+FE00-U+FE0F, U+E0100-U+E01EF and the Mongolian
 // U+180B-U+180D/U+180F) pick the glyph of the visible character before them,
-// as in the emoji `❤️`; UTS46 drops them from the host.
+// as in the emoji U+2764 U+FE0F; UTS46 drops them from the host.
 // Each position is checked against two character classes, with no
 // alternation or repetition, so matching is linear in the input length.
 const FORBIDDEN_CHAR =
