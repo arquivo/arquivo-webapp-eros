@@ -19,7 +19,6 @@
  */
 
 const fetch = require('node-fetch');
-const dns = require('node:dns');
 const net = require('node:net');
 const { randomUUID } = require('node:crypto');
 const config = require('config');
@@ -31,8 +30,7 @@ const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
 
 
-// The early check below gives a clear reply; ssrfSafeAgent enforces it on the connection.
-const { BLOCKED_ADDRESS, isPrivateIp, ssrfSafeAgent } = require('./utils/ssrf-safe-agent');
+const { BLOCKED_ADDRESS, isPrivateIp, pinnedLookup, ssrfSafeAgent } = require('./utils/ssrf-safe-agent');
 
 function isSsrfTarget(urlString) {
     let parsedUrl;
@@ -48,12 +46,8 @@ function isSsrfTarget(urlString) {
     if (net.isIP(hostname)) {
         return Promise.resolve(isPrivateIp(hostname));
     }
-    return new Promise((resolve) => {
-        dns.lookup(hostname, { all: true }, (err, addresses) => {
-            if (err) return resolve(true);
-            resolve(addresses.some(a => isPrivateIp(a.address)));
-        });
-    });
+    // Same rule as the agent: a DNS error, no address or any private address.
+    return new Promise(resolve => pinnedLookup(hostname, { all: true }, err => resolve(Boolean(err))));
 }
 
 const mimeToExtension = new Map([

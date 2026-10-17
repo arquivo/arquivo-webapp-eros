@@ -580,6 +580,20 @@ describe('Citation Saver Service', () => {
             });
         });
 
+        it('blocks when DNS lookup returns no address', async () => {
+            dns.lookup.mockImplementationOnce((hostname, opts, cb) => cb(null, []));
+            req.body = { url: 'http://empty.example.com', email: 'test@example.com' };
+
+            servicesCitationSaver(req, res);
+            await flushPromises();
+
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.URL.invalid'
+            });
+            expect(mockFetch).not.toHaveBeenCalled();
+        });
+
         it('blocks URL with IP literal resolving to loopback (127.0.0.1)', async () => {
             req.body = { url: 'http://127.0.0.1/secret', email: 'test@example.com' };
 
