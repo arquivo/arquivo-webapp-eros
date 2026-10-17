@@ -155,6 +155,28 @@ describe('sanitizeSearchParams', () => {
             expect(result.get('adv_phr')).toBe('last phrase');
             expect(result.get('adv_and')).toContain('"first phrase"');
         });
+
+        it('should keep a repeated phrase once', () => {
+            mockReq.query = { q: '"a b" lisboa "c" "a b"' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('adv_phr')).toBe('c');
+            expect(result.get('adv_and')).toBe('lisboa "a b"');
+        });
+
+        // Regression: phrases were removed one at a time, rescanning the query for each one (~1 s
+        // here). Jest's timeout can't interrupt synchronous code, so the elapsed time is asserted.
+        it('should take linear time in the number of phrases', () => {
+            const phrases = Array.from({ length: 12000 }, (_, i) => `"${i}"`);
+            mockReq.query = { q: phrases.join(' ') };
+
+            const start = process.hrtime.bigint();
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+            expect(result.get('adv_phr')).toBe('11999');
+            expect(result.get('adv_and')).toBe(phrases.slice(0, -1).join(' '));
+            expect(elapsedMs).toBeLessThan(200);
+        });
     });
 
     describe('Query parsing - exclusion terms', () => {

@@ -80,14 +80,10 @@ module.exports = function (req, res) {
         
         let adv_and = q;
 
-        //Handling exact phrases (between double quotes)
-        const phraseRegEx = /"[^"]*"/;
-        let phrases = [];
-        while(phraseRegEx.test(adv_and)){
-            const phrase = adv_and.match(phraseRegEx)[0];
-            adv_and = adv_and.split(phrase).join('');
-            phrases.push(phrase.slice(1,-1));
-        }
+        //Handling exact phrases (between double quotes), each distinct phrase once, in a single pass
+        const phraseRegEx = /"([^"]*)"/g;
+        const phrases = [...new Set(Array.from(adv_and.matchAll(phraseRegEx), m => m[1]))];
+        adv_and = adv_and.replaceAll(phraseRegEx, '');
         if(phrases.length){
             requestData.set('adv_phr',phrases.pop());
         }
