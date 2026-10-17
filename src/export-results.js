@@ -6,7 +6,6 @@
 
 const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 
-//makes export json from Api request and reply
 /**
  * Creates a table-like structure with:
  * - Query parameters section (query, dates, offset, maxItems, etc.)
