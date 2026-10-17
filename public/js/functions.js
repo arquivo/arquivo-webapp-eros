@@ -162,24 +162,19 @@ function closeImageDetailsModalWindow() {
 }
 
 
-// Month names for dateFromTimestamp, by page language (the global `lang`, set in
-// views/templates/translatelibs.ejs). They are the jQuery UI datepicker names the dates
-// used before, so this file does not need jQuery UI:
-// - pt: jQuery.datepicker.regional.pt, which translatelibs.ejs sets from translations/libs.yml.
-// - en: jQuery UI's own English names (jQuery.datepicker.regional.en).
-// __tests__/public-js/functions.test.js checks that they still match.
-const MONTH_NAMES = {
-  pt: {
-    monthNames: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
-    monthNamesShort: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
-  },
-  en: {
-    monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-    monthNamesShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-  },
-};
-
 function dateFromTimestamp(timestamp,format='long'){
+  // Month names by page language (the global `lang`): the ones the jQuery UI datepicker
+  // used (pt from translations/libs.yml). __tests__/public-js/functions.test.js checks them.
+  const MONTH_NAMES = {
+    pt: {
+      monthNames: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+      monthNamesShort: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+    },
+    en: {
+      monthNames: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+      monthNamesShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    },
+  };
   const availableFormats = ['long','medium','short'];
 
   if(!availableFormats.includes(format)){

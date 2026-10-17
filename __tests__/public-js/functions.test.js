@@ -1,4 +1,5 @@
 /** @jest-environment jsdom */
+const fs = require('node:fs');
 const path = require('node:path');
 const ejs = require('ejs');
 const { describeScript, loadScript } = require('./helpers/load-script.cjs');
@@ -113,7 +114,8 @@ beforeAll(async () => {
     translateLibsScript = await renderTranslateLibs('pt_PT');
 });
 
-describe('MONTH_NAMES', () => {
+// The dates use the month names the jQuery UI datepicker had, without needing jQuery UI.
+describe('dateFromTimestamp month names', () => {
     beforeEach(() => {
         delete window.jQuery;
         delete window.$;
@@ -124,23 +126,20 @@ describe('MONTH_NAMES', () => {
     afterEach(() => {
         delete window.jQuery;
         delete window.$;
+        delete window.lang;
     });
 
-    it.each(['pt', 'en'])('has the jQuery UI datepicker month names for "%s"', (language) => {
-        const { MONTH_NAMES } = loadScript('js/functions.js', { globals: ['MONTH_NAMES'] });
-        const regional = window.jQuery.datepicker.regional[language];
+    it.each(['pt', 'en'])('are the jQuery UI datepicker month names in "%s"', (language) => {
+        loadScript('js/functions.js');
+        window.lang = language;
+        const { monthNames, monthNamesShort } = window.jQuery.datepicker.regional[language];
 
-        expect(MONTH_NAMES[language].monthNames).toEqual(regional.monthNames);
-        expect(MONTH_NAMES[language].monthNamesShort).toEqual(regional.monthNamesShort);
-    });
-
-    it('has the languages of the site', () => {
-        const { MONTH_NAMES } = loadScript('js/functions.js', { globals: ['MONTH_NAMES'] });
-
-        expect(Object.keys(MONTH_NAMES).sort()).toEqual(['en', 'pt']);
-        Object.values(MONTH_NAMES).forEach((months) => {
-            expect(months.monthNames).toHaveLength(12);
-            expect(months.monthNamesShort).toHaveLength(12);
+        expect(monthNames).toHaveLength(12);
+        expect(monthNamesShort).toHaveLength(12);
+        monthNames.forEach((name, i) => {
+            const month = String(i + 1).padStart(2, '0');
+            expect(dateFromTimestamp(`2020${month}10`, 'medium')).toBe(`10 ${name} 2020`);
+            expect(dateFromTimestamp(`2020${month}10`, 'short')).toBe(`10 ${monthNamesShort[i]}`);
         });
     });
 });
@@ -326,22 +325,6 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
             expect(dateFromTimestamp('20200102030405')).toBe('2 Janeiro 03h04, 2020');
         });
 
-        it.each([
-            ['pt', ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-                ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']],
-            ['en', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']],
-        ])('in "%s", names every month', (language, longNames, shortNames) => {
-            setup('');
-            window.lang = language;
-
-            longNames.forEach((name, i) => {
-                const month = String(i + 1).padStart(2, '0');
-                expect(dateFromTimestamp(`2020${month}10`, 'medium')).toBe(`10 ${name} 2020`);
-                expect(dateFromTimestamp(`2020${month}10`, 'short')).toBe(`10 ${shortNames[i]}`);
-            });
-        });
-
         it('shows the replayed date in the complete-page header (dynamic-header-url.js)', () => {
             setup('<a id="headerUrl" href="https://start.pt/">start.pt</a><span id="headerTimestamp"></span>');
             window.lang = 'pt';
@@ -391,5 +374,20 @@ describeScript('js/functions.js', { html: PAGE }, ({ setup }) => {
 
         post({ arquivo_type: 'section-loaded', message: 'url-results-table' });
         expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    // A top-level const or let in a classic script throws a SyntaxError when the script
+    // runs a second time on the same page.
+    it('can be included twice on a page', () => {
+        const code = fs.readFileSync(path.join(ROOT, 'public/js/functions.js'), 'utf8');
+
+        [1, 2].forEach(() => {
+            const script = document.createElement('script');
+            script.textContent = code;
+            document.body.append(script);
+        });
+
+        // describeScript fails the test on any uncaught error, such as that SyntaxError.
+        expect(typeof dateFromTimestamp).toBe('function');
     });
 });
