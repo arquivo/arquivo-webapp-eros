@@ -51,7 +51,9 @@ if (typeof pageData != 'undefined'){
             // can not use replace text with ignore case because it will change the case of the original text
             // this regex makes that only full words (delimited by \b) are matched with the incoming terms
             // Removes partial matches such as "ugal" -> "Portugal"
-            var wordDelim = new RegExp('(?!<)(\\b)'+emphasizeWord.toLowerCase()+'(?!>)(\\b)')
+            // the term is escaped, so it is matched literally and never as a regular expression
+            const escapedWord = emphasizeWord.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+            var wordDelim = new RegExp('(?!<)(\\b)'+escapedWord+'(?!>)(\\b)')
             let from = resultText.toLowerCase().search(wordDelim);
             let to = from + emphasizeWord.toLowerCase().length;
             if (from >= 0) {
