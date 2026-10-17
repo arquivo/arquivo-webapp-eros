@@ -3,8 +3,9 @@ const BaseApiRequest = require('./base-api-request');
 /**
  * JsonApiRequest - HTTP client for APIs that reply with a JSON document
  *
- * The request flow (status check, errors, timeout) is BaseApiRequest's; this class only
- * parses the whole response body as JSON, replying with defaultApiReply when it can't.
+ * The request flow (status check, errors, timeout, and decoding the body as UTF-8 with
+ * setEncoding) is BaseApiRequest's; this class only parses the whole response body as
+ * JSON, replying with defaultApiReply when it can't.
  *
  * @class
  * @extends BaseApiRequest

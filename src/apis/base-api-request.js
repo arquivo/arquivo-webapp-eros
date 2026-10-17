@@ -13,8 +13,8 @@ const logger = require('../logger');
  * - Memory leak prevention
  * 
  * This is the single place for the request flow (status check, request and response errors,
- * timeout, body decoding);
- * subclasses only parse the response. JSON APIs extend JsonApiRequest.
+ * timeout, UTF-8 body decoding); subclasses only parse the response. JSON APIs extend
+ * JsonApiRequest.
  *
  * Subclasses must implement:
  * - processResponse(apiRes, safeCallback, requestData) - Process the HTTP response
