@@ -51,6 +51,11 @@ function pingBackend(url, timeoutMs = 3000) {
         }
 
         req.on('error', (e) => {
+            // The deadline also covers the drain of the body. Once the status has been reported,
+            // a later error (the deadline cutting a body that is still coming) is not a failure
+            if (settled) {
+                return;
+            }
             if (e.name === 'AbortError') {
                 logger.error(`${url} : Timeout (${timeoutMs}ms)`);
                 resolveOnce({ reachable: false, error: 'timeout' });
