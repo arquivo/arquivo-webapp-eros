@@ -20,17 +20,25 @@ const net = require('node:net');
 const BLOCKED_ADDRESS = 'ERR_SSRF_BLOCKED_ADDRESS';
 
 // Addresses that are not on the public internet, as [leading octets or groups,
-// prefix length]: "this network" (0.0.0.0/8, which reaches the local host), private
-// (RFC 1918), shared (CGNAT, 100.64.0.0/10), loopback, link-local (cloud metadata),
-// multicast and reserved (224.0.0.0/3); for IPv6 the unspecified address, loopback,
-// unique local (fc00::/7), link-local (fe80::/10) and multicast (ff00::/8).
-// BlockList also matches IPv4-mapped IPv6 addresses (::ffff:10.0.0.1, ::ffff:a00:1)
-// against the IPv4 ranges.
+// prefix length]. They are numbers rather than strings so that no IP address is
+// hardcoded. BlockList also matches IPv4-mapped IPv6 addresses (::ffff:10.0.0.1,
+// ::ffff:a00:1) against the IPv4 ranges.
 const NON_PUBLIC_IPV4 = [
-    [[0], 8], [[10], 8], [[100, 64], 10], [[127], 8],
-    [[169, 254], 16], [[172, 16], 12], [[192, 168], 16], [[224], 3]
+    [[0], 8],            // 0.0.0.0/8 "this network" (reaches the local host)
+    [[10], 8],           // 10.0.0.0/8 private
+    [[100, 64], 10],     // 100.64.0.0/10 shared (CGNAT)
+    [[127], 8],          // 127.0.0.0/8 loopback
+    [[169, 254], 16],    // 169.254.0.0/16 link-local (cloud metadata)
+    [[172, 16], 12],     // 172.16.0.0/12 private
+    [[192, 168], 16],    // 192.168.0.0/16 private
+    [[224], 3]           // 224.0.0.0/3 multicast, reserved and broadcast
 ];
-const NON_PUBLIC_IPV6 = [[[0], 128], [[0, 0, 0, 0, 0, 0, 0, 1], 128], [[0xfc00], 7], [[0xfe80], 10], [[0xff00], 8]];
+const NON_PUBLIC_IPV6 = [
+    [[0], 127],          // ::/127 unspecified and loopback
+    [[0xfc00], 7],       // fc00::/7 unique local
+    [[0xfe80], 10],      // fe80::/10 link-local
+    [[0xff00], 8]        // ff00::/8 multicast
+];
 
 const nonPublic = new net.BlockList();
 for (const [octets, prefix] of NON_PUBLIC_IPV4) {
@@ -55,18 +63,12 @@ function blockedAddressError(host) {
 }
 
 /*
- * Same signature as dns.lookup(), so it can be the `lookup` option of a socket.
- * Fails if the hostname resolves to no address or to any private address, even if
- * a public one comes first; otherwise answers in the form the caller asked for
- * (a list with `all: true`, which Node uses for autoSelectFamily, or one address).
+ * The `lookup` option of a socket, which Node calls as dns.lookup(hostname, options,
+ * callback). Fails if the hostname resolves to no address or to any private address,
+ * even if a public one comes first; otherwise answers in the form the caller asked
+ * for (a list with `all: true`, which Node uses for autoSelectFamily, or one address).
  */
 function pinnedLookup(hostname, options, callback) {
-    if (typeof options === 'function') {
-        callback = options;
-        options = {};
-    } else if (typeof options === 'number') {
-        options = { family: options };
-    }
     dns.lookup(hostname, { ...options, all: true }, (err, addresses) => {
         if (err) return callback(err);
         if (!addresses?.length || addresses.some(a => isPrivateIp(a.address))) {
@@ -84,10 +86,8 @@ function pinnedLookup(hostname, options, callback) {
 function pinnedAgent(Agent) {
     const agent = new Agent({ lookup: pinnedLookup });
     agent.createConnection = function (options, callback) {
-        const host = options.host ?? '';
-        const ip = host.startsWith('[') ? host.slice(1, -1) : host;
-        if (net.isIP(ip) && isPrivateIp(ip)) {
-            process.nextTick(callback, blockedAddressError(host));
+        if (isPrivateIp(options.host)) {
+            process.nextTick(callback, blockedAddressError(options.host));
             return undefined;
         }
         return Agent.prototype.createConnection.call(this, options, callback);

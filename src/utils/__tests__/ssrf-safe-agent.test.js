@@ -67,16 +67,8 @@ describe('pinnedLookup', () => {
         ]]);
     });
 
-    it('accepts the (hostname, callback) and (hostname, family, callback) forms', async () => {
-        resolvesTo('93.184.216.34');
-
-        await expect(new Promise((resolve) => pinnedLookup('example.com', (err, address) => resolve(address))))
-            .resolves.toBe('93.184.216.34');
-        await expect(lookup('example.com', 4)).resolves.toEqual(['93.184.216.34', 4]);
-        expect(dns.lookup).toHaveBeenLastCalledWith('example.com', { family: 4, all: true }, expect.any(Function));
-    });
-
-    it.each(['127.0.0.1', '10.0.0.1', '169.254.169.254', '::1', 'fd00::1', 'fe80::1', '::ffff:10.0.0.1'])(
+    // isPrivateIp's own table covers the ranges; these cover the lookup path.
+    it.each(['10.0.0.1', 'fd00::1'])(
         'rejects a hostname resolving to %s', async (address) => {
             resolvesTo(address);
 
