@@ -93,7 +93,7 @@
                     if(row < tableData[year].length ){
                       const title = utils.timestampToText(t).long(tableData[year][row].timestamp);
                       %> 
-              <td class="year-month-data" headers="year-<%= year %>" id="table-cell-<%- tableData[year][row].timestamp %>"> <a href="/wayback/<%-tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>">
+              <td class="year-month-data" headers="year-<%= year %>" id="table-cell-<%= tableData[year][row].timestamp %>"> <a href="/wayback/<%= tableData[year][row].timestamp+'/'+tableData[year][row].url %>" title="<%= title %>">
                 <%= utils.timestampToText(t).short(tableData[year][row].timestamp); %>
               </a></td>
                       <% } else { %>

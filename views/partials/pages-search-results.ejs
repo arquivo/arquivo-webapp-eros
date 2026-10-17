@@ -28,24 +28,12 @@
 
     <% if (typeof exportObject != 'undefined'){ %>
         <!-- starts the result hidden in json format  -->
-        <% let exportJson = JSON.stringify(exportObject)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;"); %>
-        <div style="display:none" id="options-export-json"><%- exportJson %></div>
+        <div style="display:none" id="options-export-json"><%= JSON.stringify(exportObject) %></div>
         <!-- ends the results in json format -->
     <% } %>
 
     <!-- starts the search impact timeline in hidden json format -->
-    <% let timelineJson = JSON.stringify((apiData.timeline || {}).impact || {})
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;"); %>
-    <div style="display:none" id="search-impact-timeline-json"><%- timelineJson %></div>
+    <div style="display:none" id="search-impact-timeline-json"><%= JSON.stringify((apiData.timeline || {}).impact || {}) %></div>
     <!-- ends the search impact timeline in hidden json format -->
 
     <!-- starts navigation tools --> 

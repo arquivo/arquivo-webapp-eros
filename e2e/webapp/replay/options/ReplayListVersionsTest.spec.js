@@ -6,7 +6,7 @@ const { test, expect } = require('../../../fixtures');
 //
 // The legacy doc's `#replayMenuButton` and swiper-based selectors are stale.
 // Current selector: replayOptionsMenu.listVersionsLink (#menuListVersions,
-// href="/page/search?q=<requestedPage.url>" per
+// href="/page/search?q=<encoded requestedPage.url>" per
 // views/templates/menu/replay_right_nav_menu.ejs). Its click handler
 // (public/js/replay.js) does `e.preventDefault(); window.location =
 // e.target.href` — i.e. it navigates to the *same* href already exposed on
@@ -32,7 +32,7 @@ test('list-versions link points to and navigates to a URL search for the archive
 
     const href = await replayOptionsMenu.listVersionsLink.getAttribute('href');
     expect.soft(href).toContain('/page/search');
-    expect.soft(href).toContain(WAYBACK_SITE);
+    expect.soft(new URL(href, page.url()).searchParams.get('q')).toBe(WAYBACK_SITE);
 
     await replayOptionsMenu.listVersionsLink.click();
 
