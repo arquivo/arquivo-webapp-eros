@@ -275,6 +275,10 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
             // Only the API client's own lines: the app's error middleware also logs the error
             expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(`localhost:${stubServer.address().port} :`));
         }
+        if (fallbackLog !== 'Timeout') {
+            // A timeout also logs a request error ("socket hang up"), so rule it out
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(' : Timeout ('));
+        }
         // Not swallowed and logged as a JSON parse error by the API client
         expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
     });
