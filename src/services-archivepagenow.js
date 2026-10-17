@@ -29,20 +29,6 @@ const loggingEndpoint = function () {
     return new URL(config.get('backend.url') + '/services/archivepagenow').href;
 }
 
-/**
- * Encodes one logging query value.
- *
- * The backend answers the logging request with an empty body: what gets logged
- * is the raw request line. Values are encoded with encodeURIComponent (space ->
- * %20, `( ) ! ~ *` kept literal) and not with URLSearchParams#toString (space
- * -> +, `( ) ! ~` escaped), so the logged query string stays byte-for-byte the
- * same. `'` is the only character encodeURIComponent leaves that node-fetch
- * (via `URL`) escapes before sending, so it is sent as %27 here already.
- */
-const encodeLogValue = function (value) {
-    return encodeURIComponent(value).replaceAll("'", '%27');
-}
-
 module.exports = function (req, res) {
     const requestData = new URLSearchParams(req.body);
     const url = (requestData.get('url') ?? '').trim();
@@ -51,8 +37,10 @@ module.exports = function (req, res) {
     const userAgent = req.get('user-agent');
     const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
+    // Never log error.message: node-fetch puts the full request URL in it, i.e.
+    // backend.url (which may hold credentials) plus the user's URL, UA and IP.
     const logError = function (error) {
-        logger.error('FetchError - ' + ['message', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
+        logger.error('Backend logging failed - ' + ['name', 'type', 'errno', 'code'].map(x => x + ': ' + JSON.stringify(error[x])).join(', '));
     }
     // Logging is fail-safe: it runs after the page has been rendered, so neither
     // a rejected fetch nor a synchronous throw (e.g. `new URL` on a malformed
@@ -61,15 +49,24 @@ module.exports = function (req, res) {
         try {
             // Each request value is encoded right where it is appended to the
             // fixed endpoint, so the host and path can only come from config.
+            // The backend answers with an empty body: what gets logged is the
+            // raw request line. encodeURIComponent (space -> %20, `( ) ! ~ *`
+            // literal) keeps the logged request line in its existing format;
+            // URLSearchParams would not (space -> +, `( ) ! ~` escaped).
             fetch(loggingEndpoint()
-                + '?url=' + encodeLogValue(url)
+                + '?url=' + encodeURIComponent(url)
                 + '&success=' + success
                 + '&logging=true'
-                + '&user-agent=' + encodeLogValue(userAgent)
-                + '&ip=' + encodeLogValue(userIp), { method: 'POST' })
+                + '&user-agent=' + encodeURIComponent(userAgent)
+                + '&ip=' + encodeURIComponent(userIp), { method: 'POST' })
                 .catch(logError);
         } catch (error) {
-            logError(error);
+            if (error.code === 'ERR_INVALID_URL') {
+                // Never log the value (error.input): backend.url may hold credentials.
+                logger.error('Invalid backend.url configuration');
+            } else {
+                logError(error);
+            }
         }
     }
     const renderError = function (errorType = 'default') {

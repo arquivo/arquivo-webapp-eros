@@ -12,9 +12,16 @@ const logger = require('../logger');
  * - Request parameter sanitization
  * - Memory leak prevention
  * 
+ * This is the single place for the request flow (status check, request and response errors,
+ * timeout, UTF-8 body decoding); subclasses only parse the response. JSON APIs extend
+ * JsonApiRequest.
+ *
  * Subclasses must implement:
  * - processResponse(apiRes, safeCallback, requestData) - Process the HTTP response
- * 
+ *
+ * Subclasses may override:
+ * - fallbackReply(requestData) - What to reply on errors (defaults to defaultApiReply)
+ *
  * @abstract
  * @class
  */
@@ -83,9 +90,20 @@ class BaseApiRequest {
                 // Handle non-2xx status codes
                 if (apiRes.statusCode < 200 || apiRes.statusCode >= 300) {
                     this.logger.error(`${this.apiUrl} : Invalid status code: ${apiRes.statusCode}`);
-                    safeCallback(this.defaultApiReply);
+                    // Discard the body, so the socket is released instead of held until it times out
+                    apiRes.resume();
+                    safeCallback(this.fallbackReply(requestData));
                     return;
                 }
+
+                // Decode the body as UTF-8 text across chunks, so a multibyte character split
+                // between two chunks isn't garbled (subclasses get string chunks)
+                apiRes.setEncoding('utf8');
+
+                apiRes.on('error', (e) => {
+                    this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
+                    safeCallback(this.fallbackReply(requestData));
+                });
 
                 // Delegate response processing to subclass
                 this.processResponse(apiRes, safeCallback, requestData);
@@ -97,14 +115,14 @@ class BaseApiRequest {
                 if (!apiReq.destroyed) {
                     apiReq.destroy();
                 }
-                safeCallback(this.defaultApiReply);
+                safeCallback(this.fallbackReply(requestData));
             });
 
             // Handle timeout
             apiReq.on('timeout', () => {
                 this.logger.error(`${this.apiUrl} : Timeout (${this.options.timeout}ms)`);
                 apiReq.destroy();
-                safeCallback(this.defaultApiReply);
+                safeCallback(this.fallbackReply(requestData));
             });
 
             // Configure timeout if specified
@@ -116,13 +134,16 @@ class BaseApiRequest {
 
         } catch (e) {
             this.logger.error(`${this.apiUrl} : Exception: ${e.message}`);
-            safeCallback(this.defaultApiReply);
+            safeCallback(this.fallbackReply(requestData));
         }
     }
 
     /**
      * Process HTTP response - must be implemented by subclass
-     * 
+     *
+     * Called for 2xx responses only. The body is already set to UTF-8 (the 'data' chunks
+     * are strings) and response errors are already handled (fallback reply).
+     *
      * @abstract
      * @param {http.IncomingMessage} apiRes - HTTP response object
      * @param {Function} safeCallback - Safe callback to invoke with result
@@ -130,6 +151,17 @@ class BaseApiRequest {
      */
     processResponse(apiRes, safeCallback, requestData) {
         throw new Error('processResponse() must be implemented by subclass');
+    }
+
+    /**
+     * Reply passed to the callback when the request fails (non-2xx status, request
+     * or response error, timeout, exception)
+     *
+     * @param {URLSearchParams} requestData - Original request parameters (for context)
+     * @returns {*} The default reply
+     */
+    fallbackReply(requestData) {
+        return this.defaultApiReply;
     }
 
     /**

@@ -1,5 +1,5 @@
 
-const ApiRequest = require('./api-request');
+const JsonApiRequest = require('./json-api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');
 const todayYmd = require('../utils/today-ymd');
@@ -8,7 +8,7 @@ const todayYmd = require('../utils/today-ymd');
 // collection is sent in its own parameter, the others only apply to page search.
 const PAGE_ONLY_INLINE_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence'];
 
-class ImageSearchApiRequest extends ApiRequest {
+class ImageSearchApiRequest extends JsonApiRequest {
     constructor() {
         const defaultApiParams = {
             q: '',
