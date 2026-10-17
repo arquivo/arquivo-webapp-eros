@@ -26,7 +26,6 @@ const mockConfig = {
   'session.secret': 'test-secret',
   'session.length': 604800000,
   'webapp.showContameHistoriasButton': false,
-  'embargo-offset': '0001-00-00',
   'google.tagmanager.id': 'GTM-5SZHXPRP',
   'google.tagmanager.auth': '',
   'google.tagmanager.preview': '',
