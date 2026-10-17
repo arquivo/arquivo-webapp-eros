@@ -32,11 +32,34 @@ var relevance = {
 var defaultRelevance = -1
 var selectedPosition = 0
 
+// The result cards the keyboard navigation moves through: the divChild children of divResId.
+function annotationCards(){
+    var cards = []
+    if (divResId) {
+        document.querySelectorAll(divResId).forEach(function (parent) {
+            cards.push.apply(cards, parent.querySelectorAll(':scope > ' + divChild))
+        })
+    }
+    return cards
+}
+
+// An attribute's value, or undefined (not null) when the element or the attribute is missing.
+function attributeOrUndefined(element, name){
+    var value = element ? element.getAttribute(name) : null
+    return value === null ? undefined : value
+}
+
 function changeRelevance(relevanceLocal, id){
     var results = JSON.parse(window.localStorage.getItem('annotations'))
     results[type]["queries"][queryString]["results"][id]["relevance"] = relevanceLocal
     window.localStorage.setItem('annotations', JSON.stringify(results))
-    $('[id="' + id + '"]').parent().parent().attr("style", "background-color: " + relevance[relevanceLocal].colorB +" !important;"); 
+    // Every element with this id (there can be several), compared as text instead of put in a selector.
+    document.querySelectorAll('[id]').forEach(function (element) {
+        var card = element.id === String(id) && element.parentElement && element.parentElement.parentElement
+        if (card) {
+            card.setAttribute("style", "background-color: " + relevance[relevanceLocal].colorB +" !important;");
+        }
+    })
 }
 
 
@@ -53,32 +76,33 @@ function prepareAnnotator(type, div){
         results[type]["queries"][queryString]["results"] = {}
     }
     
-    $(div).each(function( index ) {
+    document.querySelectorAll(div).forEach(function( card ) {
         var position = null
         var id = null
         var metadata = {}
         if (type == 'page'){
-            position = parseInt($( this ).attr("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
-            id = $( this ).find("a.overlay-link")[0].href.split("/").slice(6).join('/')
-            //console.log($(this))
-            //id = $( this )[0].href.split("/").slice(6).join('/')
+            position = parseInt(card.getAttribute("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
+            var overlayLinks = card.querySelectorAll("a.overlay-link")
+            id = overlayLinks[0].href.split("/").slice(6).join('/')
             metadata["url"] = id.split("/").slice(1).join('/')
             metadata["timestamp"] = id.split("/")[0]
             metadata["position"] = position
-            $( this ).find("a.overlay-link").attr("style","height:calc(100% - 100px)");
+            overlayLinks.forEach(function (link) {
+                link.setAttribute("style","height:calc(100% - 100px)");
+            })
         } else if (type == 'image'){
-            position = parseInt($( this ).attr("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
-            //<li class="image-card" id="image-card-1" data-index="1" data-tstamp="20170624094538" data-url="http://www.primebrands.pt/uploads/marcas/teste/59381b31bfd5d.jpg"> 
-            //id = $( "#insert-card-" + position ).find("img").attr("data-src")
-            id = $( "#image-card-" + position ).find("img").attr("src")
-            metadata["url"] = $(this).attr("data-url");//id.split("/").slice(1).join('/')
-            metadata["timestamp"] = $(this).attr("data-timestamp");//id.split("/")[0].substring(0,"20081029060647".length)
+            position = parseInt(card.getAttribute("data-index")) + parseInt((new URLSearchParams(window.location.search)).get('offset') ?? 0)
+            //<li class="image-card" id="image-card-1" data-index="1" data-tstamp="20170624094538" data-url="http://www.primebrands.pt/uploads/marcas/teste/59381b31bfd5d.jpg">
+            var imageCard = document.getElementById("image-card-" + position)
+            id = attributeOrUndefined(imageCard && imageCard.querySelector("img"), "src")
+            metadata["url"] = attributeOrUndefined(card, "data-url");//id.split("/").slice(1).join('/')
+            metadata["timestamp"] = attributeOrUndefined(card, "data-timestamp");//id.split("/")[0].substring(0,"20081029060647".length)
             //id = metadata["timestamp"] + '/' + metadata["url"]
             metadata["position"] = position
         }
 
-        var buttonDiv = $(document.createElement('div'))
-        $( this ).append(buttonDiv)
+        var buttonDiv = document.createElement('div')
+        card.appendChild(buttonDiv)
         for (var relevanceLocal=-2; relevanceLocal < 3; relevanceLocal++){
             if (relevanceLocal != -1){
                 var button = document.createElement('input')
@@ -90,17 +114,17 @@ function prepareAnnotator(type, div){
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    var relevanceLocal = parseInt($( this ).attr("alt"))
+                    var relevanceLocal = parseInt(this.getAttribute("alt"))
                     changeRelevance(relevanceLocal, id)
                 }, false);
-                buttonDiv.append(button)
+                buttonDiv.appendChild(button)
             }
         }
         var divId = document.createElement('div')
         divId.id = id
         divId.setAttribute('class', 'ids');
 
-        buttonDiv.append(divId)
+        buttonDiv.appendChild(divId)
 
         if (!results[type]["queries"][queryString]["results"][id]){
             var relevanceLocal = defaultRelevance
@@ -119,12 +143,12 @@ function prepareAnnotator(type, div){
 }
 
 function toggleRelevance(diff){
-    var divId = $($($(divResId).children(divChild)[selectedPosition])[0])
+    var card = annotationCards()[selectedPosition]
     var id = ""
     if (type == 'page'){
-        id = divId.find("a")[0].href.split("/").slice(6).join('/')
+        id = card.querySelector("a").href.split("/").slice(6).join('/')
     } else if (type == 'image'){
-        id = divId.find("img")[0].attr("data-src").split("/").slice(4).join('/')
+        id = card.querySelector("img").getAttribute("data-src").split("/").slice(4).join('/')
     }
     var results = JSON.parse(window.localStorage.getItem('annotations'))
     var relevanceLocal = (results[type]["queries"][queryString]["results"][id]["relevance"]+diff)%(Object.keys(relevance).length-1)
@@ -184,12 +208,17 @@ function changePosition(position, childrenCount, nCols){
         position = position%childrenCount
     }
     
-    $($(divResId).children(divChild)[selectedPosition]).css("border-width", "0px");
+    var cards = annotationCards()
+    if (cards[selectedPosition]) {
+        cards[selectedPosition].style.borderWidth = "0px";
+    }
     selectedPosition = position
-    $($(divResId).children(divChild)[selectedPosition]).css("border-width", "5px");
-    $($(divResId).children(divChild)[selectedPosition]).css("border-color", "black");
+    if (cards[selectedPosition]) {
+        cards[selectedPosition].style.borderWidth = "5px";
+        cards[selectedPosition].style.borderColor = "black";
+    }
 
-    $($(divResId).children(divChild)[selectedPosition])[0].scrollIntoView(false);
+    cards[selectedPosition].scrollIntoView(false);
 }
 
 function clearAnnotations(){
@@ -200,46 +229,50 @@ function clearAnnotations(){
 }
 
 
-$( document ).ready(function() {
+(function (init) {
+    // Same timing as jQuery's $(document).ready: once the DOM is parsed, or now if it already is.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(function() {
 
     const urlQueryString = window.location.search;
     const urlParams = new URLSearchParams(urlQueryString);
     const annotateQS = urlParams.get('annotate')
-    queryString = $("#submit-search-input")[0].value + " " + $("#start-date")[0].value + " " + $("#end-date")[0].value
+    queryString = document.getElementById("submit-search-input").value + " " + document.getElementById("start-date").value + " " + document.getElementById("end-date").value
 
     if (annotateQS == "true"){
         window.localStorage.setItem('annotate', "true");
-    } 
+    }
 
     const annotate = (window.localStorage.getItem('annotate') == "true")
     console.log("ANNOTATE: "+ annotate);
     if (annotate){
-        $('#search-form-pages').hide();
-        $('#search-form-images').hide();
-        $('#search-tools-narrative-button').hide();
+        ['search-form-pages', 'search-form-images', 'search-tools-narrative-button'].forEach(function (id) {
+            var element = document.getElementById(id)
+            if (element) {
+                element.style.display = 'none';
+            }
+        })
 
-        
+        // <a id="..." style="..." href="#" onclick="..."><button>label</button></a>
+        const annotationsButton = function(id, style, onclick, label){
+            var link = document.createElement('a')
+            link.setAttribute("id", id)
+            link.setAttribute("style", style)
+            link.setAttribute("href", "#")
+            link.setAttribute("onclick", onclick)
+            var button = document.createElement('button')
+            button.textContent = label
+            link.appendChild(button)
+            return link
+        };
 
-        var clearAnnotationsButton = $(document.createElement('a'))
-        clearAnnotationsButton.attr("id", "clearAnnotationsButton")
-        clearAnnotationsButton.attr("style", "margin-left:-7px")
-        clearAnnotationsButton.attr("href", "#")
-        clearAnnotationsButton.attr("onclick", "clearAnnotations()")
-        clearAnnotationsButton.html("<button>Limpar anotações</button>")
-
-        var exportAnnotationsButton = $(document.createElement('a'))
-        exportAnnotationsButton.attr("id", "exportAnnotationsButton")
-        exportAnnotationsButton.attr("style", "margin-left: 5px;")
-        exportAnnotationsButton.attr("href", "#")
-        exportAnnotationsButton.attr("onclick", "exportAnnotations()")
-        exportAnnotationsButton.html("<button>Exportar anotações</button>")
-
-        var turnOffAnnotationsButton = $(document.createElement('a'))
-        turnOffAnnotationsButton.attr("id", "turnOffAnnotationsButton")
-        turnOffAnnotationsButton.attr("style", "margin-left:5px")
-        turnOffAnnotationsButton.attr("href", "#")
-        turnOffAnnotationsButton.attr("onclick", "turnOffAnnotations()")
-        turnOffAnnotationsButton.html("<button>Desligar modo anotação</button>")
+        var clearAnnotationsButton = annotationsButton("clearAnnotationsButton", "margin-left:-7px", "clearAnnotations()", "Limpar anotações")
+        var exportAnnotationsButton = annotationsButton("exportAnnotationsButton", "margin-left: 5px;", "exportAnnotations()", "Exportar anotações")
+        var turnOffAnnotationsButton = annotationsButton("turnOffAnnotationsButton", "margin-left:5px", "turnOffAnnotations()", "Desligar modo anotação")
 
         const urlqueryString = window.location.search;
         const urlParams = new URLSearchParams(urlqueryString);
@@ -254,11 +287,11 @@ $( document ).ready(function() {
 
         let api = urlParams.get('api');
         if(!!api){
-            let apiInput = $(document.createElement('input'));
-            apiInput.attr('type','hidden');
-            apiInput.attr('name','api');
-            apiInput.attr('value',api);
-            $('#search-form').append(apiInput);
+            let apiInput = document.createElement('input');
+            apiInput.setAttribute('type','hidden');
+            apiInput.setAttribute('name','api');
+            apiInput.setAttribute('value',api);
+            document.getElementById('search-form')?.appendChild(apiInput);
         }
 
         var nRes = 0
@@ -278,29 +311,39 @@ $( document ).ready(function() {
             nRes = parseInt((new URLSearchParams(window.location.search)).get('maxItems') ?? "10");
         }
 
-        var start = $(document.createElement('p'))
-        start.attr("id", "startend")
-        start.html("<span>" + startValue + " até " + (startValue+nRes-1) + "</span>")
-        start.attr("style", "margin-left: 60px; margin-top: 5px;");
+        var start = document.createElement('p')
+        start.setAttribute("id", "startend")
+        var startEnd = document.createElement('span')
+        startEnd.textContent = startValue + " até " + (startValue+nRes-1)
+        start.appendChild(startEnd)
+        start.setAttribute("style", "margin-left: 60px; margin-top: 5px;");
 
-        
-        $("#search-tools-buttons").append(clearAnnotationsButton)
-        $("#search-tools-buttons").append(exportAnnotationsButton)
-        $("#search-tools-buttons").append(turnOffAnnotationsButton)
-        $("#search-tools-buttons").append(start)
+        document.getElementById("search-tools-buttons")?.append(clearAnnotationsButton, exportAnnotationsButton, turnOffAnnotationsButton, start)
 
         var interval = window.setInterval(function(){
-            if ($(div).length > 0){
+            if (div && document.querySelectorAll(div).length > 0){
                 clearInterval(interval)
                 prepareAnnotator(type, div)
             }
         }, 500);
 
+        // Give every result that is not annotated yet this relevance.
+        const annotateUnannotated = function(relevanceLocal){
+            if (!divResId) return
+            document.querySelectorAll(divResId).forEach(function (parent) {
+                parent.querySelectorAll(".ids").forEach(function (divId) {
+                    var results = JSON.parse(window.localStorage.getItem('annotations'))
+                    if (results[type]["queries"][queryString]["results"][divId.id]["relevance"] == -1)
+                        changeRelevance(relevanceLocal, divId.id)
+                })
+            })
+        };
+
         document.addEventListener('keydown', function(event) {
             if (event.code == 'F1') {
                 toggleKeyboardNavigation()
             } else if (window.localStorage.getItem('annotateKeyboard') == "true") {
-                var childrenCount = $(divResId).children(divChild).length
+                var childrenCount = annotationCards().length
                 var nCols = Math.ceil(childrenCount/nRows)
                 if (event.code == 'KeyW') {
                     changePosition(selectedPosition-nCols, childrenCount, nCols)
@@ -315,31 +358,17 @@ $( document ).ready(function() {
                 } else if (event.code == 'KeyE') {
                     toggleRelevance(-1)
                 } else if (event.code == 'Digit1') {
-                    $(divResId).find(".ids").each(function( index ) {
-                        var results = JSON.parse(window.localStorage.getItem('annotations'))
-                        if (results[type]["queries"][queryString]["results"][$( this )[0].id]["relevance"] == -1)
-                            changeRelevance(0, $( this )[0].id)
-                    })
+                    annotateUnannotated(0)
                 } else if (event.code == 'Digit2') {
-                    $(divResId).find(".ids").each(function( index ) {
-                        var results = JSON.parse(window.localStorage.getItem('annotations'))
-                        if (results[type]["queries"][queryString]["results"][$( this )[0].id]["relevance"] == -1)
-                            changeRelevance(1, $( this )[0].id)
-                    })
+                    annotateUnannotated(1)
                 } else if (event.code == 'Digit3') {
-                    $(divResId).find(".ids").each(function( index ) {
-                        var results = JSON.parse(window.localStorage.getItem('annotations'))
-                        if (results[type]["queries"][queryString]["results"][$( this )[0].id]["relevance"] == -1)
-                            changeRelevance(2, $( this )[0].id)
-                    })
+                    annotateUnannotated(2)
                 } else if (event.code == 'KeyR') {
-                    document.location = $("#nextImage").children()[0].href
+                    document.location = document.getElementById("nextImage").children[0].href
                 } else if (event.code == 'KeyT') {
-                    document.location = $("#previousImage").children()[0].href
+                    document.location = document.getElementById("previousImage").children[0].href
                 }
             }
         });
     }
 })
-
-
