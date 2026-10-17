@@ -37,8 +37,8 @@ describe('ImageSearchApiRequest', () => {
             
             // Mock successful image search response
             const mockResponse = {
-                estimated_nr_results: 50,
-                response_items: [
+                totalItems: 50,
+                responseItems: [
                     {
                         imgSrc: 'http://example.com/image.jpg',
                         imgMimeType: 'image/jpeg',
@@ -236,11 +236,11 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                expect(data).toHaveProperty('estimated_nr_results');
-                expect(data).toHaveProperty('response_items');
+                expect(data).toHaveProperty('totalItems');
+                expect(data).toHaveProperty('responseItems');
                 expect(data).toHaveProperty('request_parameters');
-                expect(data.response_items).toBeInstanceOf(Array);
-                expect(data.response_items.length).toBeGreaterThan(0);
+                expect(data.responseItems).toBeInstanceOf(Array);
+                expect(data.responseItems.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -251,7 +251,7 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                const firstImage = data.response_items[0];
+                const firstImage = data.responseItems[0];
                 expect(firstImage).toHaveProperty('imgSrc');
                 expect(firstImage).toHaveProperty('imgMimeType');
                 expect(firstImage).toHaveProperty('imgHeight');
@@ -342,7 +342,7 @@ describe('ImageSearchApiRequest', () => {
         beforeEach(() => {
             captured = [];
             status = 200;
-            body = JSON.stringify({ estimated_nr_results: 1, response_items: [] });
+            body = JSON.stringify({ totalItems: 1, responseItems: [] });
         });
 
         const apiAtCaptureServer = () => {
@@ -362,7 +362,7 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                expect(data).toEqual({ totalItems: 1, responseItems: [] });
                 const expected = new URLSearchParams([
                     ['q', 'gato size:lg'],
                     ['from', '19910806'],
