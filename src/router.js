@@ -10,6 +10,7 @@ const tracking = require('./tracking');
 const replayNav = require('./replay-nav');
 const replayTechnicalDetails = require('./replay-technical-details');
 const isValidUrl = require('./utils/is-valid-url');
+const { switchLanguage } = require('./locale');
 const express = require('express');
 const router = express.Router();
 
@@ -110,56 +111,8 @@ router.get('/image/view/:url*', function (req, res) {
     tracking(req, res,'ImageView');
 });
 
-/**
- * Switch Language Route
- * Toggles between available locales and redirects back to referrer with:
- * - Updated i18n cookie
- * - Language parameter in URL (for non-wayback routes)
- * - Cache headers to prevent stale content
- * - Security: validates referrer hostname against whitelist
- */
-router.get('/switchlang', function (req, res) {
-    if(!!req.headers && req.headers.referer){
-        let oldUrl = req.headers.referer;
-        let parsedUrl = new URL(oldUrl);
-
-        const config = require('config')
-
-        // Security: only allow switching from trusted hosts
-        const validHosts = [
-            'localhost', // to allow local testing
-            (new URL(config.get('backend.url'))).hostname
-        ]
-        if(!validHosts.includes(parsedUrl.hostname)){
-            return res.redirect('/');
-        }
-        
-        // Toggle to the other available locale
-        let currentLocale = req.getLocale();
-        let newLocale = req.getLocales().find(l => l!=currentLocale);
-        
-        // Update language cookie
-        res.clearCookie('i18n');
-        res.cookie('i18n', newLocale, { maxAge: 900000, httpOnly: false });
-        
-        // Add language parameter to URL (except for wayback routes)
-        if(!parsedUrl.pathname.startsWith('/wayback')){
-            parsedUrl.searchParams.set('l',newLocale.split('_').shift());
-        }
-
-        const newUrl = parsedUrl.href.slice(parsedUrl.origin.length);
-
-        // Prevent browser caching from showing stale language
-        res.set('Cache-control', 'no-cache, no-store, must-revalidate');
-        res.set('Pragma', 'no-cache');
-        res.set('Expires', '0');
-
-        res.redirect(newUrl);
-        
-    } else {
-        res.redirect('/');
-    }
-});
+// Switches to the other language and redirects back (see src/locale.js)
+router.get('/switchlang', switchLanguage);
 
 router.get('/services/citationsaver', function (req, res) {
     res.render('pages/services-citation-saver');
