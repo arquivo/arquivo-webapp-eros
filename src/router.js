@@ -258,17 +258,31 @@ const partialHandlers = new Map([
 ]);
 
 /**
+ * Generic partials rendered as-is from views/partials/<id>.ejs.
+ * An explicit allowlist: the id comes straight from the URL (Express decodes
+ * '%2F', and a '.' changes the view engine Express require()s), so it must
+ * never be used to build a view name unless it is one of these (#174).
+ */
+const genericPartials = new Set([
+    'modal-datepicker',     // public/js/datepicker.js
+    'modal-image-details',  // public/js/modal-image-result.js
+]);
+
+/**
  * Dynamic Partials Router
- * Routes partial template requests to appropriate handlers or renders generic partial
+ * Routes partial template requests to appropriate handlers or renders an
+ * allowlisted generic partial; any other id falls through to the 404 page.
  * Used for AJAX content loading without full page refresh
  */
 router.get('/partials/:id', function (req, res, next) {
-    const handler = partialHandlers.get(req.params.id);
+    const id = req.params.id;
+    const handler = partialHandlers.get(id);
     if (handler) {
         handler(req, res, next);
+    } else if (genericPartials.has(id)) {
+        res.render('partials/' + id, { layout: false });
     } else {
-        // Generic partial template
-        res.render('partials/' + req.params.id, { layout: false });
+        next();
     }
 });
 
