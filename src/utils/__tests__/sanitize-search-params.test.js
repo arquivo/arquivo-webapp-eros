@@ -163,8 +163,7 @@ describe('sanitizeSearchParams', () => {
             expect(result.get('adv_and')).toBe('lisboa "a b"');
         });
 
-        // Regression: phrases were removed one at a time, rescanning the query for each one (~1 s
-        // here). Jest's timeout can't interrupt synchronous code, so the elapsed time is asserted.
+        // Regression: phrases were removed one at a time, rescanning the query for each one.
         it('should take linear time in the number of phrases', () => {
             const phrases = Array.from({ length: 12000 }, (_, i) => `"${i}"`);
             mockReq.query = { q: phrases.join(' ') };

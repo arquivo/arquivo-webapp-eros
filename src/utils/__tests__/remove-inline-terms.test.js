@@ -26,8 +26,7 @@ describe('removeInlineTerms', () => {
     expect(removeInlineTerms('lisboa  porto', ['language'])).toBe('lisboa  porto');
   });
 
-  // Regression: a `\s+name:` pattern was quadratic on long whitespace runs (~1 s here). Jest's
-  // timeout can't interrupt synchronous code, so the elapsed time is asserted instead.
+  // Regression: a `\s+name:` pattern was quadratic on long whitespace runs.
   it('should take linear time on long whitespace runs', () => {
     const query = 'lisboa' + ' '.repeat(50000) + 'porto';
 
