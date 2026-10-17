@@ -533,6 +533,8 @@ describe('PageSearchApiRequest', () => {
             });
 
             // Regression: as a regular expression, this value took exponential time to match this query
+            // (~0.8 s here). Jest's timeout can't interrupt synchronous code, so the elapsed time is
+            // asserted instead; a longer value would make a regression take several seconds to fail.
             it('should not take exponential time for values that are costly as a pattern', () => {
                 const value = '(a+)+b';
                 const requestData = new URLSearchParams({
@@ -546,7 +548,7 @@ describe('PageSearchApiRequest', () => {
 
                 expect(sanitized.get('q')).toBe(requestData.get('q'));
                 expect(elapsedMs).toBeLessThan(200);
-            }, 1000);
+            });
 
             it('should not fail when there is an inline term parameter but no query', () => {
                 const sanitized = api.sanitizeRequestData(new URLSearchParams({ siteSearch: 'a.b' }));

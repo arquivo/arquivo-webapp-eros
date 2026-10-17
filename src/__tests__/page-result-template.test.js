@@ -43,12 +43,14 @@ describe('page result template: search terms emphasized in the title', () => {
     });
 
     // Regression: as a regular expression, this term took exponential time to match this title
+    // (~1.6 s here). Jest's timeout can't interrupt the synchronous rendering, so the elapsed time
+    // is asserted instead.
     it('should not take exponential time for terms that are costly as a pattern', async () => {
         const start = process.hrtime.bigint();
-        const html = await renderPageResult('(a+)+b', 'a'.repeat(24));
+        const html = await renderPageResult('(a+)+b', 'a'.repeat(26));
         const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
 
-        expect(renderedTitle(html)).toBe('a'.repeat(24));
+        expect(renderedTitle(html)).toBe('a'.repeat(26));
         expect(elapsedMs).toBeLessThan(200);
-    }, 1000);
+    });
 });
