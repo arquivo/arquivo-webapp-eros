@@ -20,7 +20,7 @@ const { parseArchiveTimestamp } = require('./utils/archive-timestamp');
 
 //makes export json from Api request and reply
 module.exports = function (apiRequestData, apiResponseItems, translateFunction, timstampField, displayFields) {
-    exportObject = []
+    const exportObject = [];
     const exportSERPSaveLine = function () {
         let line = [];
         for (var i = 0; i < arguments.length; i++) {
