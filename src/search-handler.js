@@ -10,6 +10,7 @@ const makeLogger = require('./logger');
  *
  * @param {Object} search - What differs between the searches
  * @param {Function} search.createApiRequest - (requestData) => API request for the results
+ *     (the page and image searches ignore requestData)
  * @param {Function} search.fetchResults - (apiRequest, requestData, next, render) => gets the
  *     results and the suggestion and calls render(apiData, suggestion)
  * @param {string} search.itemsKey - Key of the result items in the API reply

@@ -19,7 +19,7 @@ const todayYmd = require('../../utils/today-ymd');
  * - No custom response processing needed - works with standard JSON responses
  * 
  * COVERAGE:
- * - Constructor with the configured endpoint (2 tests)
+ * - Constructor with the configured endpoint (1 test)
  * - Default parameters and reply structure (2 tests)
  * - Inline parameter sanitization for site, type, collection, safe, size (7 tests)
  * - Parameter merging with defaults (1 test)
@@ -77,11 +77,6 @@ describe('PageSearchApiRequest', () => {
         it('should create instance with the configured endpoint', () => {
             const api = new PageSearchApiRequest();
             expect(api).toBeInstanceOf(PageSearchApiRequest);
-            expect(api.apiUrl).toBe(config.get('text.search.api.default'));
-        });
-
-        it('should keep the configured endpoint when given request options', () => {
-            const api = new PageSearchApiRequest({ timeout: 3000 });
             expect(api.apiUrl).toBe(config.get('text.search.api.default'));
         });
 
@@ -312,6 +307,7 @@ describe('PageSearchApiRequest', () => {
         it('should apply custom request options', () => {
             const api = new PageSearchApiRequest({ timeout: 3000 });
             expect(api.options).toMatchObject({ method: 'GET', timeout: 3000 });
+            expect(api.apiUrl).toBe(config.get('text.search.api.default'));
         });
     });
 

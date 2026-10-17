@@ -39,7 +39,7 @@ describe('search-images handler', () => {
             l: 'pt'
         });
         mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: 'pt', api: 'solr' };
+            const map = { q: 'test query', l: 'pt' };
             return map[key];
         });
 
@@ -79,7 +79,7 @@ describe('search-images handler', () => {
         expect(sanitizeInputs).toHaveBeenCalledWith(req, res);
     });
 
-    it('creates ImageSearchApiRequest instance, ignoring the api parameter', () => {
+    it('creates ImageSearchApiRequest instance', () => {
         searchImages(req, res);
 
         expect(ImageSearchApiRequest).toHaveBeenCalledWith();

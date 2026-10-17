@@ -283,25 +283,49 @@ describe('GET /partials/pages-search-results when the API callback throws', () =
         // Not swallowed and logged as a JSON parse error by the API client
         expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
     });
-    it('requests the configured text search API, whatever the api parameter says', async () => {
-        const requestedUrls = [];
-        stubHandler = (req, res) => {
+});
+
+describe('GET /partials/pages-search-results with an api parameter', () => {
+    let app;
+    let stubServer;
+    let requestedUrls;
+    let defaultEndpoint;
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => {
             requestedUrls.push(req.url);
-            replyJson(res, 200, { response_items: [] });
-        };
-        const defaultEndpoint = config.get('text.search.api.default');
-        config.set('text.search.api.default', `http://localhost:${stubServer.address().port}/textsearch`);
-        // The real API client, with its URL from the config
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ response_items: [] }));
+        });
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.closeAllConnections();
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        requestedUrls = [];
+        // The real request flow and API client, with its URL from the config pointed at the stub
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockReturnValue({});
         const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
         PageSearchApiRequest.mockImplementation((...args) => new ActualPageSearchApiRequest(...args));
+        defaultEndpoint = config.get('text.search.api.default');
+        config.set('text.search.api.default', `http://localhost:${stubServer.address().port}/textsearch`);
+    });
 
-        try {
-            await request(app).get('/partials/pages-search-results?q=test&api=nutchwax').timeout(3000);
-        } finally {
-            config.set('text.search.api.default', defaultEndpoint);
-        }
+    afterEach(() => {
+        config.set('text.search.api.default', defaultEndpoint);
+    });
 
-        expect(PageSearchApiRequest).toHaveBeenCalledWith();
+    it('requests the configured text search API, whatever the api parameter says', async () => {
+        const res = await request(app).get('/partials/pages-search-results?q=test&api=nutchwax').timeout(3000);
+
+        expect(res.status).toBe(200);
         expect(requestedUrls).toHaveLength(1);
         const requestedUrl = new URL(requestedUrls[0], 'http://localhost');
         expect(requestedUrl.pathname).toBe('/textsearch');
