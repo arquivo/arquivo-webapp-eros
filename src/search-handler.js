@@ -23,8 +23,7 @@ module.exports = function makeSearchHandler({ createApiRequest, fetchResults, it
         const requestData = sanitizeInputs(req, res);
         const apiRequest = createApiRequest(requestData);
 
-        // next is threaded through for fetchResults to route errors, but only the images search
-        // uses it: the pages search doesn't (see the known gap in search-pages.js)
+        // fetchResults routes errors thrown while getting or rendering the results to next
         fetchResults(apiRequest, requestData, next, (apiData, suggestion) => {
             if(!apiData[itemsKey] || apiData[itemsKey].length == 0){
                 logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));

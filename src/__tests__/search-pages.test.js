@@ -1,5 +1,7 @@
 'use strict';
 
+const http = require('node:http');
+const request = require('supertest');
 const searchPages = require('../search-pages');
 
 // Mock dependencies
@@ -7,7 +9,7 @@ jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
 jest.mock('../export-page-search');
 jest.mock('../logger', () => {
-    const logger = { info: jest.fn() };
+    const logger = { info: jest.fn(), error: jest.fn() };
     return jest.fn(() => logger);
 });
 
@@ -188,17 +190,96 @@ describe('search-pages handler', () => {
     });
 
     it('renders synchronously in the API callback', () => {
-        searchPages(req, res);
+        const next = jest.fn();
+
+        searchPages(req, res, next);
 
         expect(res.render).toHaveBeenCalledTimes(1);
+        expect(next).not.toHaveBeenCalled();
     });
 
-    it('does not pass render errors to next: they are thrown from the API callback', () => {
+    it('passes render errors to next instead of throwing them from the API callback', () => {
         const next = jest.fn();
         const error = new Error('render failed');
         res.render.mockImplementationOnce(() => { throw error; });
 
-        expect(() => searchPages(req, res, next)).toThrow(error);
-        expect(next).not.toHaveBeenCalled();
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+    });
+
+    it('passes suggestion errors to next without rendering', () => {
+        const next = jest.fn();
+        const error = new Error('suggestion failed');
+        mockApiRequest.getSuggestion.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+        expect(res.render).not.toHaveBeenCalled();
+    });
+});
+
+describe('GET /partials/pages-search-results when the API callback throws', () => {
+    let app;
+    let stubServer;
+    let stubHandler;
+    const error = new Error('export failed');
+    const replyJson = (res, status, body) => {
+        res.writeHead(status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(body));
+    };
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => stubHandler(req, res));
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.closeAllConnections();
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        // The real request flow and API client (with its success and fallback paths); only the
+        // API is a stub, and the export throws inside the API callback
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockImplementation(() => { throw error; });
+        const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
+        PageSearchApiRequest.mockImplementation((backend) => {
+            // A short timeout, so the timeout path is quick to reach
+            const api = new ActualPageSearchApiRequest(backend, { timeout: 500 });
+            api.apiUrl = `http://localhost:${stubServer.address().port}`;
+            return api;
+        });
+    });
+
+    it.each([
+        ['replies with a 2xx status', (req, res) => replyJson(res, 200, { response_items: [] }), null],
+        ['replies with a non-2xx status', (req, res) => replyJson(res, 503, { error: 'unavailable' }), 'Invalid status code'],
+        ['resets the connection', (req) => req.socket.destroy(), 'Request error'],
+        ['does not reply in time', () => {}, 'Timeout'],
+    ])('replies with an error, instead of hanging or crashing, when the API %s', async (_name, handler, fallbackLog) => {
+        stubHandler = handler;
+
+        const res = await request(app).get('/partials/pages-search-results?q=test').timeout(3000);
+
+        expect(res.status).toBe(500);
+        expect(makeExportObject).toHaveBeenCalledTimes(1);
+        // The API client took the expected path (its success path, or the fallback reply)
+        if (fallbackLog) {
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(fallbackLog));
+        } else {
+            // Only the API client's own lines: the app's error middleware also logs the error
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(`localhost:${stubServer.address().port} :`));
+        }
+        if (fallbackLog !== 'Timeout') {
+            // A timeout also logs a request error ("socket hang up"), so rule it out
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(' : Timeout ('));
+        }
+        // Not swallowed and logged as a JSON parse error by the API client
+        expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
     });
 });
