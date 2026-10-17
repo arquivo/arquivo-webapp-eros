@@ -56,7 +56,7 @@
  </div>
 </header>
   <div id="iframe_div">
-    <iframe name="replay_iframe" id="replay_iframe" src="<%- url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent">
+    <iframe name="replay_iframe" id="replay_iframe" src="<%= url %>" seamless="seamless" frameborder="0" scrolling="yes" class="wb_iframe noprint" target="_parent">
     </iframe>
 
   </div>
@@ -72,7 +72,7 @@
       <h4 id="archivepagenow-slogan"><%= t('services-archivepagenow.recorder.popup.slogan') %></h4>
 
       <p><%= t('services-archivepagenow.recorder.popup.text') %></p>
-      <p style="word-break: break-all; margin-top: 5px;"><a id="recording-url" href="<%- recordingUrl %>" target="_blank"><%= recordingUrl %></a></p>
+      <p style="word-break: break-all; margin-top: 5px;"><a id="recording-url" href="<%= recordingUrl %>" target="_blank"><%= recordingUrl %></a></p>
       <form action="/services/archivepagenow">
         <button type="submit" id="copyUrl" onclick="navigator.clipboard.writeText($('#recording-url').attr('href'))"><span class="fas fa-copy" aria-hidden="true"></span>&nbsp;<%= t('services-archivepagenow.recorder.popup.button') %></button>
         <input type="hidden" name="l" value="<%- getLanguage() %>">

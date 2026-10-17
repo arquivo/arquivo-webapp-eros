@@ -5,8 +5,8 @@ const { URL, domainToUnicode } = require('node:url');
 // Characters never accepted anywhere in a URL:
 // - whitespace, quotes, angle brackets, backtick, backslash, caret, pipe and
 //   square brackets (the set the previous regex rejected). The WHATWG parser
-//   would silently percent-encode or strip them, but callers render the raw
-//   input (`<%- url %>` in services-archivepagenow-save.ejs), so they stay
+//   would silently percent-encode or strip them, but the input is shown back
+//   to the user as typed (the ArchivePageNow save page), so they stay
 //   rejected;
 // - C0/C1 control characters (`\p{Cc}`) and invisible characters that can
 //   spoof the displayed URL: every default-ignorable code point (soft hyphen,
