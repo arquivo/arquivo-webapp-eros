@@ -6,7 +6,8 @@ function parseArchiveTimestamp(timestamp) {
 }
 
 /**
- * Local time Date; a partial timestamp gives an Invalid Date. Does not validate its input
+ * Local time Date. A timestamp shorter than 13 characters gives an Invalid Date; a 13-character
+ * one is valid, with the seconds read from its last digit. Does not validate its input
  * (lenient parseInt, Date rollover), so never feed it user input for access decisions.
  */
 function archiveTimestampToDate(timestamp) {
