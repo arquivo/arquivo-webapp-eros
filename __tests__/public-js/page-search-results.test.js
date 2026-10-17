@@ -511,13 +511,13 @@ describeScript('js/page-search-results.js', { html: RESULTS }, ({ setup, whilePa
             expect(data().selecting).toBe(true);
         });
 
-        it('exposes the helper functions as globals, as before', () => {
+        it('keeps its helper functions out of the global scope', () => {
             setup();
 
-            expect(typeof window.getElementAndOffsetFromPoint).toBe('function');
-            expect(typeof window.checkNode).toBe('function');
-            expect(typeof window.checkNodePosition).toBe('function');
-            expect(typeof window.updateSelection).toBe('function');
+            expect(window.getElementAndOffsetFromPoint).toBeUndefined();
+            expect(window.checkNode).toBeUndefined();
+            expect(window.checkNodePosition).toBeUndefined();
+            expect(window.updateSelection).toBeUndefined();
         });
     });
 });

@@ -7,8 +7,9 @@
 //     redirection on the click event for click duration longer than 
 //     page_search_result_data.threshold milliseconds.
 
+// The script's state, an explicit global as before (nothing else on the page reads it).
 // The semicolon matters: the next line starts with "(".
-page_search_result_data = {};
+window.page_search_result_data = {};
 (function (init) {
     // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
     if (document.readyState === 'loading') {
@@ -84,7 +85,8 @@ page_search_result_data = {};
         }
     });
 
-    getElementAndOffsetFromPoint = function (x,y){
+    // The helpers below are local to this function: nothing else on the page uses them.
+    function getElementAndOffsetFromPoint(x,y){
         var el = document.elementFromPoint(x, y);
         var nodes = el.childNodes;
         for(let i=0; i<nodes.length;i++){
@@ -93,7 +95,7 @@ page_search_result_data = {};
         }
         return [el,0];
     }
-    checkNode = function (n, x, y){
+    function checkNode(n, x, y){
         if (!checkNodePosition(n,x,y)){ return false; }
         if (n.nodeType != 3){
             if(!n.childNodes.length){ return [n,0]; }
@@ -117,7 +119,7 @@ page_search_result_data = {};
             return false;
         }
     }
-    checkNodePosition = function(n,x,y){
+    function checkNodePosition(n,x,y){
         var r = document.createRange();
         r.selectNode(n);
         var rect = r.getBoundingClientRect();
@@ -126,7 +128,7 @@ page_search_result_data = {};
         }
         return false;
     }
-    updateSelection = function(){
+    function updateSelection(){
         let start = page_search_result_data.start;
         let end = page_search_result_data.end;
         if(!start) { return; }
