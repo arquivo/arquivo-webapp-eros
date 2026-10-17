@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock config module for Jest tests
 const mockConfig = {
   'backend.url': 'https://preprod.arquivo.pt',

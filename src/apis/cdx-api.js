@@ -1,3 +1,5 @@
+'use strict';
+
 const BaseApiRequest = require('./base-api-request');
 const config = require('config');
 const todayYmd = require('../utils/today-ymd');

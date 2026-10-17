@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Standalone HTTP fixture server used by Playwright's "mocked" mode.
  *

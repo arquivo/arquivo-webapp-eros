@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript } = require('./helpers/load-script.cjs');
 
 // Trimmed copy of the form in views/templates/body/body-pages-advanced-search.ejs.

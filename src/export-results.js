@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Export Results Utility
  *

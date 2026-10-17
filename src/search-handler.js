@@ -1,3 +1,5 @@
+'use strict';
+
 const sanitizeInputs = require('./utils/sanitize-search-params');
 const makeLogger = require('./logger');
 

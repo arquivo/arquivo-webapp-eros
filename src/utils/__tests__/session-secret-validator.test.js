@@ -1,3 +1,5 @@
+'use strict';
+
 const { validateSessionSecret } = require('../session-secret-validator');
 
 const PLACEHOLDER = 'dontWorryThisIsDifferentInProduction';

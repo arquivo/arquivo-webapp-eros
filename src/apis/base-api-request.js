@@ -1,3 +1,5 @@
+'use strict';
+
 const https = require('node:https');
 const http = require('node:http');
 const logger = require('../logger');

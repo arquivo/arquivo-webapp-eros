@@ -1,3 +1,4 @@
+'use strict';
 
 const winston = require('winston');
 const getDefaults = require('./default.config');

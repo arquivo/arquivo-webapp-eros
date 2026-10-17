@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Replay page's right-hand options menu + toolbar modals.
  * Selectors from views/templates/menu/options-button.ejs,

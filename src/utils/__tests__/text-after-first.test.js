@@ -1,3 +1,5 @@
+'use strict';
+
 const textAfterFirst = require('../text-after-first');
 
 // The split/filter/join idiom textAfterFirst replaces, kept as the reference.

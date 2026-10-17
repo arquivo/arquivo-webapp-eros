@@ -1,3 +1,5 @@
+'use strict';
+
 const removeInlineTerms = require('../../../src/utils/remove-inline-terms');
 
 describe('removeInlineTerms', () => {

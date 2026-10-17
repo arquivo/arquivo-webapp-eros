@@ -1,3 +1,5 @@
+'use strict';
+
 const { parseArchiveTimestamp, archiveTimestampToDate } = require('../archive-timestamp');
 
 describe('archive-timestamp', () => {

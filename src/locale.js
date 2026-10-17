@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Locale handling: which locale each request uses, the i18n cookie and the
  * /switchlang route.

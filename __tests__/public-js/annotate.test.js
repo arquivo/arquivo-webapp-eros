@@ -1,4 +1,7 @@
 /** @jest-environment jsdom */
+
+'use strict';
+
 const { describeScript } = require('./helpers/load-script.cjs');
 
 // annotate.js adds a relevance annotation mode to both search results pages, turned on

@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 const { default: AxeBuilder } = require('@axe-core/playwright');
 

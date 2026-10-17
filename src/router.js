@@ -1,3 +1,5 @@
+'use strict';
+
 const backendRoutes = require('./backend-routes');
 const healthcheckRoutes = require('./healthcheck-routes');
 const searchPages = require('./search-pages.js');

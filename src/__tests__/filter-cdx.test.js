@@ -1,3 +1,5 @@
+'use strict';
+
 const filterCdx = require('../filter-cdx');
 
 // Every ordering of the given items

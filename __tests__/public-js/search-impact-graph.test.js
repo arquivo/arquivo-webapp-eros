@@ -1,3 +1,5 @@
+'use strict';
+
 const { calculateImpactBars } = require('../../public/js/search-impact-graph');
 
 describe('calculateImpactBars', () => {

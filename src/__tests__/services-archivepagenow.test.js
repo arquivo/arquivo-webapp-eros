@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock dependencies before requiring the module
 jest.mock('config');
 jest.mock('node-fetch');

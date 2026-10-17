@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * HTTP(S) agents that only connect to public addresses.
  *

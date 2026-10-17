@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Left navigation menu — shared between homepage and replay pages (same
  * button id/partial: views/templates/menu/menu-button.ejs +

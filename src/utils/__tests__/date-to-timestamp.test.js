@@ -1,3 +1,5 @@
+'use strict';
+
 const dateToTimestamp = require('../../../src/utils/date-to-timestamp');
 
 describe('dateToTimestamp', () => {

@@ -1,3 +1,5 @@
+'use strict';
+
 const http = require('node:http');
 const JsonApiRequest = require('../json-api-request');
 

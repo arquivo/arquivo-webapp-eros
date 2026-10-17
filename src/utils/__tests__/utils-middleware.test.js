@@ -1,3 +1,5 @@
+'use strict';
+
 const utilsMiddleware = require('../utils-middleware');
 
 describe('utilsMiddleware', () => {

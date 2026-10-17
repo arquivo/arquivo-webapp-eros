@@ -1,3 +1,5 @@
+'use strict';
+
 const JsonApiRequest = require('./json-api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');

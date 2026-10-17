@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 
 // public/js/init.js runs on every page (views/templates/javascript_and_css_links.ejs). It:

@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock config before requiring modules
 jest.mock('config');
 

@@ -1,3 +1,4 @@
+'use strict';
 
 const expressWinston = require('express-winston');
 const getDefaults = require('./default.config');

@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 
 // The number of results field is sent to /imagesearch as maxItems.

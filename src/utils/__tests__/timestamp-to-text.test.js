@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock the logger to avoid config dependency issues
 jest.mock('../../../src/logger', () => {
   return jest.fn(() => ({

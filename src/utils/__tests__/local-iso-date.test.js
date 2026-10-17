@@ -1,3 +1,5 @@
+'use strict';
+
 const localIsoDate = require('../local-iso-date');
 
 // Jest runs with TZ=Pacific/Kiritimati (UTC+14, see jest.global-setup.js), so

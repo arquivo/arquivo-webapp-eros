@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 
 // The collection field becomes a collection: query term, also sent to

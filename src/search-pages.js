@@ -1,3 +1,5 @@
+'use strict';
+
 const makeSearchHandler = require('./search-handler');
 const makeExportObject = require('./export-page-search');
 const PageSearchApiRequest = require('./apis/page-search-api');

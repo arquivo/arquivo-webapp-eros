@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 
 // public/js/page-search-results.js lets the user select the text of a result card even

@@ -1,3 +1,5 @@
+'use strict';
+
 const makeSearchHandler = require('./search-handler');
 const PageSearchApiRequest = require('./apis/page-search-api');
 const ImageSearchApiRequest = require('./apis/image-search-api');

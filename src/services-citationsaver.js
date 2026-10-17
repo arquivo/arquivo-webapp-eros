@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Citation Saver Service
  *

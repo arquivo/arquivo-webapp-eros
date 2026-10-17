@@ -1,3 +1,5 @@
+'use strict';
+
 const { test, expect } = require('../../fixtures');
 const { TOTAL_IMAGE_RESULTS } = require('../../mock-server/fixtures');
 

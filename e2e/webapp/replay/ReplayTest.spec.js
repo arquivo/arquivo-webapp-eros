@@ -1,3 +1,5 @@
+'use strict';
+
 const { test } = require('../../fixtures');
 
 // The replayed page's iframe embedding is commented out in

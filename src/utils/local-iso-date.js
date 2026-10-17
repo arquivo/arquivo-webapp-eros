@@ -1,3 +1,5 @@
+'use strict';
+
 // The given date (now by default) as YYYY-MM-DD, in the server's local time zone.
 module.exports = function localIsoDate(date = new Date()) {
     return [

@@ -1,3 +1,5 @@
+'use strict';
+
 const PLACEHOLDER = 'dontWorryThisIsDifferentInProduction';
 
 function validateSessionSecret(secret, nodeEnv) {

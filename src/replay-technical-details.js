@@ -1,3 +1,4 @@
+'use strict';
 
 const PageSearchApiRequest = require('./apis/page-search-api');
 

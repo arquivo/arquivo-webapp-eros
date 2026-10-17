@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
