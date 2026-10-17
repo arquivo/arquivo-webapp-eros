@@ -50,6 +50,48 @@ describe('isPrivateIp', () => {
         });
 });
 
+describe('isPrivateIp, reserved and IPv6 transition/translation ranges', () => {
+    // Each range with addresses at its edges and, where the neighbour is public, the
+    // nearest addresses outside it.
+    it.each([
+        ['192.0.0.0/24', ['192.0.0.0', '192.0.0.255'], ['191.255.255.255', '192.0.1.0']],
+        ['192.0.2.0/24', ['192.0.2.0', '192.0.2.255'], ['192.0.1.255', '192.0.3.0']],
+        ['192.88.99.0/24', ['192.88.99.0', '192.88.99.255'], ['192.88.98.255', '192.88.100.0']],
+        ['198.18.0.0/15', ['198.18.0.0', '198.19.255.255'], ['198.17.255.255', '198.20.0.0']],
+        ['198.51.100.0/24', ['198.51.100.0', '198.51.100.255'], ['198.51.99.255', '198.51.101.0']],
+        ['203.0.113.0/24', ['203.0.113.0', '203.0.113.255'], ['203.0.112.255', '203.0.114.0']],
+        ['::ffff:192.0.2.0/120 (IPv4-mapped)', ['::ffff:192.0.2.1', '::ffff:c612:1'], ['::ffff:192.0.3.0']],
+        ['::/96', ['::8.8.8.8', '::ffff:ffff'], ['::1:0:0']],
+        ['::ffff:0:0:0/96', ['::ffff:0:0:0', '::ffff:0:808:808', '::ffff:0:ffff:ffff'], ['::fffe:ffff:ffff:ffff', '::ffff:1:0:0']],
+        ['64:ff9b:1::/48', ['64:ff9b:1::', '64:ff9b:1:ffff:ffff:ffff:ffff:ffff'], ['64:ff9b:0:ffff:ffff:ffff:ffff:ffff', '64:ff9b:2::']],
+        ['2001::/32', ['2001::', '2001:0:ffff:ffff:ffff:ffff:ffff:ffff'], ['2000:ffff:ffff:ffff:ffff:ffff:ffff:ffff', '2001:1::']],
+        ['2002::/16', ['2002::', '2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff'], ['2003::']],
+        // Between fe80::/10 (link-local) and ff00::/8 (multicast): no public neighbour.
+        ['fec0::/10', ['fec0::', 'FEFF:ffff:ffff:ffff:ffff:ffff:ffff:ffff'], []]
+    ])('%s', (range, inside, outside) => {
+        for (const ip of inside) expect([ip, isPrivateIp(ip)]).toEqual([ip, true]);
+        for (const ip of outside) expect([ip, isPrivateIp(ip)]).toEqual([ip, false]);
+    });
+
+    describe('64:ff9b::/96 (NAT64), judged by the IPv4 address in its last 32 bits', () => {
+        it.each(['64:ff9b::8.8.8.8', '64:ff9b::808:808', '64:FF9B::5DB8:D822', '64:ff9b::dfff:ffff'])(
+            'allows %s (public IPv4 address)', (ip) => {
+                expect(isPrivateIp(ip)).toBe(false);
+            });
+
+        it.each([
+            '64:ff9b::', '64:ff9b::1', '64:ff9b::1:0', '64:ff9b::10.0.0.1', '64:ff9b::a00:1', '64:ff9b::7f00:1',
+            '64:ff9b::a9fe:a9fe', '64:FF9B::C0A8:101', '64:ff9b::c000:201', '64:ff9b::e000:0', '64:ff9b::a00:1%eth0'
+        ])('blocks %s (non-public IPv4 address)', (ip) => {
+            expect(isPrivateIp(ip)).toBe(true);
+        });
+
+        it('does not decode an address just outside the prefix', () => {
+            expect(isPrivateIp('64:ff9b:0:0:0:1:a00:1')).toBe(false);
+        });
+    });
+});
+
 describe('pinnedLookup', () => {
     it('answers with the first address when one address is asked for', async () => {
         resolvesTo('93.184.216.34', '2001:4860:4860::8888');

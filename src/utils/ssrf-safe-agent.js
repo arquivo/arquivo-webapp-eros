@@ -24,36 +24,72 @@ const BLOCKED_ADDRESS = 'ERR_SSRF_BLOCKED_ADDRESS';
 // hardcoded. BlockList also matches IPv4-mapped IPv6 addresses (::ffff:10.0.0.1,
 // ::ffff:a00:1) against the IPv4 ranges.
 const NON_PUBLIC_IPV4 = [
-    [[0], 8],            // 0.0.0.0/8 "this network" (reaches the local host)
-    [[10], 8],           // 10.0.0.0/8 private
-    [[100, 64], 10],     // 100.64.0.0/10 shared (CGNAT)
-    [[127], 8],          // 127.0.0.0/8 loopback
-    [[169, 254], 16],    // 169.254.0.0/16 link-local (cloud metadata)
-    [[172, 16], 12],     // 172.16.0.0/12 private
-    [[192, 168], 16],    // 192.168.0.0/16 private
-    [[224], 3]           // 224.0.0.0/3 multicast, reserved and broadcast
+    [[0], 8],              // 0.0.0.0/8 "this network" (reaches the local host)
+    [[10], 8],             // 10.0.0.0/8 private
+    [[100, 64], 10],       // 100.64.0.0/10 shared (CGNAT)
+    [[127], 8],            // 127.0.0.0/8 loopback
+    [[169, 254], 16],      // 169.254.0.0/16 link-local (cloud metadata)
+    [[172, 16], 12],       // 172.16.0.0/12 private
+    [[192, 0, 0], 24],     // 192.0.0.0/24 IETF protocol assignments
+    [[192, 0, 2], 24],     // 192.0.2.0/24 documentation (TEST-NET-1)
+    [[192, 88, 99], 24],   // 192.88.99.0/24 6to4 relay anycast (deprecated)
+    [[192, 168], 16],      // 192.168.0.0/16 private
+    [[198, 18], 15],       // 198.18.0.0/15 benchmarking
+    [[198, 51, 100], 24],  // 198.51.100.0/24 documentation (TEST-NET-2)
+    [[203, 0, 113], 24],   // 203.0.113.0/24 documentation (TEST-NET-3)
+    [[224], 3]             // 224.0.0.0/3 multicast, reserved and broadcast
 ];
 const NON_PUBLIC_IPV6 = [
-    [[0], 127],          // ::/127 unspecified and loopback
-    [[0xfc00], 7],       // fc00::/7 unique local
-    [[0xfe80], 10],      // fe80::/10 link-local
-    [[0xff00], 8]        // ff00::/8 multicast
+    [[0], 96],                     // ::/96 unspecified, loopback and IPv4-compatible (deprecated)
+    [[0, 0, 0, 0, 0xffff], 96],    // ::ffff:0:0:0/96 IPv4-translated (SIIT)
+    [[0x64, 0xff9b, 1], 48],       // 64:ff9b:1::/48 local-use IPv4/IPv6 translation
+    [[0x2001], 32],                // 2001::/32 Teredo
+    [[0x2002], 16],                // 2002::/16 6to4 (deprecated)
+    [[0xfc00], 7],                 // fc00::/7 unique local
+    [[0xfe80], 10],                // fe80::/10 link-local
+    [[0xfec0], 10],                // fec0::/10 site-local (deprecated)
+    [[0xff00], 8]                  // ff00::/8 multicast
 ];
+// 64:ff9b::/96, the NAT64 well-known prefix. Public IPv4 hosts are reached through it
+// on IPv6-only networks, so it is judged by the IPv4 address in its last 32 bits.
+const NAT64_PREFIX = [[0x64, 0xff9b], 96];
+
+function ipv4Network(octets) {
+    return [0, 1, 2, 3].map(i => octets[i] ?? 0).join('.');
+}
+
+function ipv6Network(groups) {
+    return [0, 1, 2, 3, 4, 5, 6, 7].map(i => (groups[i] ?? 0).toString(16)).join(':');
+}
 
 const nonPublic = new net.BlockList();
 for (const [octets, prefix] of NON_PUBLIC_IPV4) {
-    const network = [0, 1, 2, 3].map(i => octets[i] ?? 0).join('.');
-    nonPublic.addSubnet(network, prefix, 'ipv4');
+    nonPublic.addSubnet(ipv4Network(octets), prefix, 'ipv4');
 }
 for (const [groups, prefix] of NON_PUBLIC_IPV6) {
-    const network = [0, 1, 2, 3, 4, 5, 6, 7].map(i => (groups[i] ?? 0).toString(16)).join(':');
-    nonPublic.addSubnet(network, prefix, 'ipv6');
+    nonPublic.addSubnet(ipv6Network(groups), prefix, 'ipv6');
+}
+const nat64 = new net.BlockList();
+nat64.addSubnet(ipv6Network(NAT64_PREFIX[0]), NAT64_PREFIX[1], 'ipv6');
+
+// The IPv4 address in the last 32 bits of an IPv6 address. The URL parser writes
+// IPv6 (without a zone index) in its canonical form, hex groups with zeros
+// compressed, whose last two fields are those 32 bits; an empty field is a
+// compressed zero.
+function embeddedIpv4(ipv6) {
+    const address = ipv6.split('%')[0];
+    const [high, low] = new URL('http://[' + address + ']').hostname.slice(1, -1).split(':').slice(-2)
+        .map(field => Number.parseInt(field || '0', 16));
+    return [high >> 8, high & 0xff, low >> 8, low & 0xff].join('.');
 }
 
 // Whether `ip` is an IP address outside the public internet. Not an IP: false.
 function isPrivateIp(ip) {
     const family = net.isIP(ip);
-    return family !== 0 && nonPublic.check(ip, family === 4 ? 'ipv4' : 'ipv6');
+    if (family === 4) return nonPublic.check(ip, 'ipv4');
+    if (family !== 6) return false;
+    if (nat64.check(ip, 'ipv6')) return nonPublic.check(embeddedIpv4(ip), 'ipv4');
+    return nonPublic.check(ip, 'ipv6');
 }
 
 function blockedAddressError(host) {
