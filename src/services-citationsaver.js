@@ -16,19 +16,75 @@
  * Each entry includes: date, timestamp, email, type, original name, filename, path
  *
  * Response format: { status: boolean, message: string, data?: object }
+ *
+ * Multipart bodies are parsed only for this POST, by parseUpload (#177). Uploads
+ * stream into a temporary file and are cut off at citation.saver.max.upload.size.
+ * The page sends a text as a file part too, so the other fields stay small.
+ * An uploaded file is stored only if its bytes match its declared mimetype.
  */
 
 const fetch = require('node-fetch');
 const dns = require('node:dns');
 const net = require('node:net');
 const { randomUUID } = require('node:crypto');
+const nodePath = require('node:path');
 const config = require('config');
+const fileUpload = require('express-fileupload');
+const { rateLimit } = require('express-rate-limit');
 const isValidUrl = require('./utils/is-valid-url');
 const fs = require('fs');
 const addToSpreadsheet = require('./spreadsheet-client');
-const maxUploadSize = config.get('citation.saver.max.upload.size');
-const uploadFolderPath = config.get('citation.saver.upload.folder.path');
 const logger = require('./logger')('CitationSaver');
+
+// busboy ignores a fileSize limit that is not a number, so fail at startup instead.
+// Values from config/default.properties and environment variables are strings.
+function numberSetting(key, { allowZero = false } = {}) {
+    const value = Number(config.get(key));
+    if (!Number.isFinite(value) || value < 0 || (value === 0 && !allowZero)) {
+        throw new Error('Configuration property "' + key + '" must be a '
+            + (allowZero ? 'non-negative' : 'positive') + ' number');
+    }
+    return value;
+}
+
+const maxUploadSize = numberSetting('citation.saver.max.upload.size');
+const uploadFolderPath = config.get('citation.saver.upload.folder.path');
+// Uploads in progress. Empty means ".citationsaver-tmp" next to the upload folder: it is
+// on the same (writable) volume, so storing an upload is a rename, and it is not inside
+// the upload folder, so it is never taken for a submission.
+const uploadTempFolderPath = config.get('citation.saver.upload.temp.folder.path')
+    || nodePath.join(nodePath.dirname(uploadFolderPath), '.citationsaver-tmp');
+// The absolute path with symlinks resolved, as far as it exists.
+function realPath(path) {
+    const resolved = nodePath.resolve(path);
+    try {
+        return fs.realpathSync(resolved);
+    } catch {
+        const parent = nodePath.dirname(resolved);
+        return parent === resolved ? resolved : nodePath.join(realPath(parent), nodePath.basename(resolved));
+    }
+}
+function isInside(folder, path) {
+    const relative = nodePath.relative(folder, path);
+    return !nodePath.isAbsolute(relative) && relative !== '..' && !relative.startsWith('..' + nodePath.sep);
+}
+// Checked as written and with symlinks resolved.
+if (isInside(nodePath.resolve(uploadFolderPath), nodePath.resolve(uploadTempFolderPath))
+    || isInside(realPath(uploadFolderPath), realPath(uploadTempFolderPath))) {
+    // Its partial uploads would be taken for submissions.
+    throw new Error('Configuration property "citation.saver.upload.temp.folder.path" must not be '
+        + 'inside "citation.saver.upload.folder.path" (' + uploadFolderPath + ')');
+}
+
+// busboy cuts every multipart field at this size (a file part has the upload limit).
+// The same as express.urlencoded's default limit for a whole body, so a text field
+// longer than this can only be one that was cut short.
+const MAX_FIELD_BYTES = 100 * 1024;
+// Fields that go into the logs and the Sheet row: checked before anything is logged.
+const FIELD_LENGTH_LIMITS = [
+    ['email', 254, 'services-citation-saver.errors.email.invalid'],
+    ['url', 8192, 'services-citation-saver.errors.URL.invalid'],
+];
 
 
 function isPrivateIpv4(ip) {
@@ -83,6 +139,32 @@ const mimeToExtension = new Map([
     ["text/html", "html"]
 ]);
 
+const PDF_MAGIC = Buffer.from('%PDF-');
+// PDF readers look for the header anywhere in the first 1024 bytes.
+const PDF_HEADER_WINDOW = 1024;
+
+/*
+ * Checks the bytes against the declared mimetype, which is only what the client
+ * claims (#177): a PDF must have "%PDF-" in its first 1024 bytes; a text or HTML file
+ * must have no NUL byte, which rules out binaries but keeps any 8-bit encoding (e.g.
+ * Windows-1252 or ISO-8859-1). The temporary file is read in chunks, never whole.
+ */
+async function contentMatchesMimetype(uploadedFile) {
+    if (uploadedFile.mimetype === 'application/pdf') {
+        const chunks = [];
+        for await (const chunk of fs.createReadStream(uploadedFile.tempFilePath, { start: 0, end: PDF_HEADER_WINDOW - 1 })) {
+            chunks.push(chunk);
+        }
+        return Buffer.concat(chunks).includes(PDF_MAGIC);
+    }
+    for await (const chunk of fs.createReadStream(uploadedFile.tempFilePath)) {
+        if (chunk.includes(0)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // Extensions only come from mimeToExtension or literals, so the name can never contain "/".
 function newUploadName(extension) {
     return randomUUID() + '.' + extension;
@@ -105,11 +187,169 @@ async function storeUpload(path, write) {
     }
 }
 
+/*
+ * Optional per-IP limit on submissions (#177): each one stores a file and adds a Sheet
+ * row, and a URL also costs an outbound HEAD request. Counted in memory, per process.
+ * Off unless citation.saver.rate.limit.max is above 0. The key is req.ip: behind a
+ * reverse proxy, express.trust.proxy must match the proxy hops, or every client
+ * shares the proxy's address and bucket.
+ */
+const rateLimitMax = numberSetting('citation.saver.rate.limit.max', { allowZero: true });
+const rateLimiter = rateLimitMax === 0 ? (req, res, next) => next() : rateLimit({
+    windowMs: numberSetting('citation.saver.rate.limit.window.ms'),
+    limit: rateLimitMax,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (req, res, next, options) => {
+        logger.info('Blocking submission: too many submissions from the same client.');
+        res.status(options.statusCode).send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+    },
+});
+
+const UPLOAD_IDLE_TIMEOUT_MS = 15000;
+// Room for the multipart framing and the small form fields next to the file or text.
+const MULTIPART_OVERHEAD_BYTES = 1024 * 1024;
+
+/*
+ * Parses a multipart body (#177). The file (or the text, which the page sends as a
+ * file part) streams into a temporary file and the upload is cut off once it goes
+ * over maxUploadSize: express-fileupload then replies 413 with responseOnLimit, closes
+ * the connection and deletes the partial file. At most one file and 10 fields of
+ * MAX_FIELD_BYTES are read, and the whole body may not go over maxUploadSize plus
+ * MULTIPART_OVERHEAD_BYTES, e.g. with parts past the limit, which are skipped.
+ *
+ * Each request gets its own temporary folder, removed when the response is closed.
+ * This covers every outcome: stored (the file was moved out), rejected, failed,
+ * over the limit and aborted by the client. Only a crash can leave one behind.
+ */
+function parseUpload(req, res, next) {
+    if (!req.is('multipart/form-data')) {
+        next();
+        return;
+    }
+    // A private folder (mode 0700) for this request.
+    const tempDir = nodePath.join(uploadTempFolderPath, randomUUID());
+    // Runs once the response is over, so a failure can only be logged.
+    function removeTempDir() {
+        fs.promises.rm(tempDir, { recursive: true, force: true })
+            .catch(err => logger.warn('Could not remove temporary upload folder ' + tempDir + ': ' + err));
+    }
+    let closed = false;
+    res.on('close', () => {
+        closed = true;
+        removeTempDir();
+    });
+    // Replies { status: false } JSON, unless the response is already under way.
+    function reject(status, logMessage) {
+        if (status >= 500) {
+            logger.error(logMessage);
+        } else {
+            logger.info(logMessage);
+        }
+        if (res.headersSent) {
+            res.destroy();
+            return;
+        }
+        res.status(status).send({
+            status: false,
+            message: req.t('services-citation-saver.errors.default')
+        });
+    }
+
+    function parse() {
+        if (closed) {
+            // The client went away while the folder was being created.
+            removeTempDir();
+            return;
+        }
+        // The 413 reply is sent with writeHead(), which keeps the headers already set.
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        // express-fileupload does not say which part went over the limit: a file or a text.
+        const responseOnLimit = JSON.stringify({
+            status: false,
+            message: req.t('services-citation-saver.errors.filesize')
+        });
+        const middleware = fileUpload({
+            // busboy cuts a file or field off once it reaches this many bytes, so + 1
+            // still accepts exactly the limit, as handleFile and handleText check.
+            limits: { fileSize: maxUploadSize + 1, fieldSize: MAX_FIELD_BYTES + 1, files: 1, fields: 10, parts: 11 },
+            abortOnLimit: true,
+            responseOnLimit,
+            useTempFiles: true,
+            tempFileDir: tempDir,
+            // A file that gets no data for this long is dropped, e.g. once the client is
+            // gone. Its folder is already removed then, but the file is still open.
+            uploadTimeout: UPLOAD_IDLE_TIMEOUT_MS,
+        });
+        // Counted from here on: the middleware pipes the request in this same tick.
+        let received = 0;
+        req.on('data', (chunk) => {
+            received += chunk.length;
+            if (received > maxUploadSize + MULTIPART_OVERHEAD_BYTES && !res.headersSent) {
+                logger.info('Blocking submission: multipart body over the limit.');
+                req.unpipe();
+                res.writeHead(413, { Connection: 'close' });
+                res.end(responseOnLimit);
+            }
+        });
+        try {
+            middleware(req, res, (err) => {
+                // express-fileupload can call next() after the response is over, e.g. once
+                // the parser is destroyed for a client that went away. Nothing to do then.
+                if (res.writableEnded || res.destroyed) {
+                    return;
+                }
+                if (err) {
+                    // busboy fails on a body it cannot parse, e.g. a malformed part header.
+                    // An error writing the temporary file is ours.
+                    reject(err.syscall ? 500 : 400, 'Blocking submission: could not read the multipart request. ' + err);
+                    return;
+                }
+                next();
+            });
+        } catch (err) {
+            // busboy throws at once for a Content-Type it cannot parse, e.g. one without
+            // a boundary. Uncaught here, it would be an unhandled rejection and end the process.
+            reject(400, 'Blocking submission: unreadable multipart request. ' + err);
+        }
+    }
+
+    fs.promises.mkdir(uploadTempFolderPath, { recursive: true })
+        .then(() => fs.promises.mkdir(tempDir, { mode: 0o700 }))
+        .then(parse)
+        .catch((err) => {
+            // E.g. the temporary folder cannot be created. Never let it end the process.
+            reject(500, 'Could not parse the upload (temporary folder ' + uploadTempFolderPath + '): ' + err);
+        });
+}
+
+// The first of the email and url fields that is not a string within its length limit.
+function invalidField(req) {
+    return FIELD_LENGTH_LIMITS.find(([name, maxLength]) => {
+        const value = req.body?.[name];
+        return value != null && (typeof value !== 'string' || value.length > maxLength);
+    });
+}
+
 module.exports = async function citationSaver(req, res) {
+    const rejectedField = invalidField(req);
+    if (rejectedField) {
+        // The value itself is never logged.
+        const [name, maxLength, messageKey] = rejectedField;
+        logger.info('Blocking submission: "' + name + '" is not a string of at most ' + maxLength + ' characters.');
+        res.status(400).send({
+            status: false,
+            message: req.t(messageKey)
+        });
+        return;
+    }
     try {
         if (req.body?.url) {
             await handleURL(req, res);
-        } else if (req.body?.text) {
+        } else if (req.body?.text || req.files?.text) {
             await handleText(req, res);
         } else if (req.body?.file || req.files) {
             await handleFile(req, res);
@@ -184,12 +424,13 @@ async function handleFile(req, res) {
             message: message
         });
     }
-    if (!req.files) {
+    // A file sent under another field name is treated as missing.
+    const uploadedFile = req.files?.file;
+    if (!uploadedFile) {
         sendExpectedError(req.t('services-citation-saver.errors.file.missing'));
         return;
     }
 
-    const uploadedFile = req.files.file;
     const originalName = uploadedFile.name;
     const outExtension = mimeToExtension.get(uploadedFile.mimetype);
 
@@ -198,9 +439,14 @@ async function handleFile(req, res) {
         return;
     }
 
-    if (uploadedFile.size > maxUploadSize) {
-
+    // parseUpload already cuts off a file over the limit; this is a second check.
+    if (uploadedFile.truncated || uploadedFile.size > maxUploadSize) {
         sendExpectedError(req.t('services-citation-saver.errors.file.filesize'));
+        return;
+    }
+
+    if (!(await contentMatchesMimetype(uploadedFile))) {
+        sendExpectedError(req.t('services-citation-saver.errors.file.mimetype'));
         return;
     }
 
@@ -313,26 +559,56 @@ async function handleURL(req, res) {
     });
 }
 
+/*
+ * Saves a text as a .txt file. public/js/citation-saver.js sends it as a file part
+ * named "text", which streams to a temporary file under the upload limit. A text
+ * field is still read: from an urlencoded form or a page loaded before that change.
+ */
 async function handleText(req, res) {
-    const text = req.body.text;
 
-    // A field sent more than once arrives as an array, which fs.promises.writeFile would
-    // join and store. Reject it with the default error reply instead.
-    if (typeof text !== 'string') {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', 'text is not a string'));
-        res.send({
+    function sendExpectedError(message, status = 200) {
+        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', message));
+        res.status(status).send({
             status: false,
-            message: req.t('services-citation-saver.errors.default')
+            message: message
         });
-        return;
     }
 
-    if (text.length > maxUploadSize) {
-        logger.info(loggerErrorMessage(req, res, 'Blocking submitted text.', req.t('services-citation-saver.errors.file.filesize')));
-        res.send({
-            status: false,
-            message: req.t('services-citation-saver.errors.text.filesize')
-        });
+    const textFile = req.files?.text;
+    const text = req.body?.text;
+    let size;
+    let write;
+    if (textFile) {
+        // As for an empty text field: the part has a file name, so the parser keeps it.
+        if (textFile.size === 0) {
+            sendExpectedError(req.t('services-citation-saver.errors.empty'));
+            return;
+        }
+        if (textFile.truncated || textFile.size > maxUploadSize) {
+            sendExpectedError(req.t('services-citation-saver.errors.text.filesize'), 413);
+            return;
+        }
+        // As for an uploaded text file: no NUL byte.
+        if (!(await contentMatchesMimetype({ mimetype: 'text/plain', tempFilePath: textFile.tempFilePath }))) {
+            sendExpectedError(req.t('services-citation-saver.errors.default'));
+            return;
+        }
+        size = textFile.size;
+        write = (target) => textFile.mv(target);
+    } else if (typeof text === 'string') {
+        // Over MAX_FIELD_BYTES, busboy may have cut it short: never store part of a text.
+        // 413 like a text part over the limit. The limit here is not the upload limit
+        // that the size messages state, so the message gives no size.
+        if (Buffer.byteLength(text) > Math.min(maxUploadSize, MAX_FIELD_BYTES)) {
+            sendExpectedError(req.t('services-citation-saver.errors.text.toolong'), 413);
+            return;
+        }
+        size = text.length;
+        write = (target) => fs.promises.writeFile(target, text);
+    } else {
+        // A field sent more than once arrives as an array, which fs.promises.writeFile
+        // would join and store. Reject it with the default error reply instead.
+        sendExpectedError(req.t('services-citation-saver.errors.default'));
         return;
     }
 
@@ -344,7 +620,7 @@ async function handleText(req, res) {
     const path = uploadFolderPath + '/' + newName;
     const originalName = '';
 
-    await storeUpload(path, (target) => fs.promises.writeFile(target, text));
+    await storeUpload(path, write);
 
     addToSpreadsheet([date, timestamp, email, 'Text', originalName, newName, path])
         .then(() => {
@@ -359,7 +635,9 @@ async function handleText(req, res) {
         data: {
             name: originalName,
             mimetype: 'text/plain',
-            size: text.length
+            size: size
         }
     });
 }
+module.exports.rateLimiter = rateLimiter;
+module.exports.parseUpload = parseUpload;

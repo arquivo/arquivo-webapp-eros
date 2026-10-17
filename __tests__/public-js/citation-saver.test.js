@@ -23,6 +23,13 @@ const PAGE = `
         <button type="submit">Send</button>
       </form>
     </div>
+    <div class="input-tab">
+      <form id="text-form" action="/services/citationsaver" method="post">
+        <textarea id="input-text-text" name="text"></textarea>
+        <input type="text" name="email" id="input-text-email">
+        <button type="submit">Send</button>
+      </form>
+    </div>
   </div>
   <div id="modal" style="display:none">
     <section id="citation-saver-progress-bar"><div class="loader"></div></section>
@@ -113,6 +120,56 @@ describe('citation-saver.js', () => {
         expect(request.init.credentials).toBe('same-origin');
     });
 
+    it('sends the text as a text/plain file part, so the server streams it to disk (#177)', async () => {
+        server.respond('/services/citationsaver', json({ status: true, message: 'Text uploaded' }));
+        giveConsent();
+        $q('#input-text-text').value = 'Citações: https://arquivo.pt';
+        $q('#input-text-email').value = 'me@example.com';
+
+        submit('text-form');
+        await flush();
+
+        const { body } = server.requests[0];
+        const text = body.get('text');
+        expect(text).toBeInstanceOf(window.File);
+        expect(text.name).toBe('text.txt');
+        expect(text.type).toBe('text/plain');
+        const content = await new Promise((resolve) => {
+            const reader = new window.FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsText(text);
+        });
+        expect(content).toBe('Citações: https://arquivo.pt');
+        expect(body.get('email')).toBe('me@example.com');
+    });
+
+    it('leaves an empty text out, so the server replies that nothing was submitted (#177)', async () => {
+        server.respond('/services/citationsaver', json({ status: false, message: 'No document was submitted.' }));
+        giveConsent();
+        $q('#input-text-email').value = 'me@example.com';
+
+        submit('text-form');
+        await flush();
+
+        const { body } = server.requests[0];
+        expect(body.has('text')).toBe(false);
+        expect(body.get('email')).toBe('me@example.com');
+        expect($q('#modal p.error').textContent).toBe('No document was submitted.');
+    });
+
+    it('still sends a text of only spaces, which the server stored before #177', async () => {
+        server.respond('/services/citationsaver', json({ status: true, message: 'Text uploaded' }));
+        giveConsent();
+        $q('#input-text-text').value = '  ';
+
+        submit('text-form');
+        await flush();
+
+        const text = server.requests[0].body.get('text');
+        expect(text).toBeInstanceOf(window.File);
+        expect(text.size).toBe(2);
+    });
+
     it('shows the thank-you text when the server accepts the submission', async () => {
         server.respond('/services/citationsaver', json({ status: true, message: 'File uploaded' }));
         giveConsent();
@@ -169,6 +226,34 @@ describe('citation-saver.js', () => {
         expect(isShown('#citation-saver-progress-bar')).toBe(false);
         expect(isShown('#citation-saver-modal')).toBe(true);
     });
+
+    it.each([
+        ['413', 413, 'Payload Too Large', 'The file is too large.'],
+        ['429', 429, 'Too Many Requests', 'Too many submissions.'],
+    ])('shows the server message of a %s JSON reply', async (_case, status, statusText, message) => {
+        server.respond('/services/citationsaver', { status, statusText, ...json({ status: false, message }) });
+        giveConsent();
+
+        submit('file-form');
+        await flush();
+
+        expect(isShown('#modal p.text')).toBe(false);
+        expect(isShown('#modal p.error')).toBe(true);
+        expect($q('#modal p.error').textContent).toBe(message);
+        expect(isShown('#citation-saver-progress-bar')).toBe(false);
+        expect(isShown('#citation-saver-modal')).toBe(true);
+    });
+
+    it('shows the generic error for an HTTP error whose JSON has no message', async () => {
+        server.respond('/services/citationsaver', { status: 502, statusText: 'Bad Gateway', ...json({ error: 'upstream' }) });
+        giveConsent();
+
+        submit('url-form');
+        await flush();
+
+        expect($q('#modal p.error').textContent).toBe('{"status":502,"statusText":"Bad Gateway"}');
+    });
+
     it('shows the chosen file name', () => {
         const input = $q('#input-file-file');
         Object.defineProperty(input, 'files', { value: [{ name: 'paper.pdf' }] });

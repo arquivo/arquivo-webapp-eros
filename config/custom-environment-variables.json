@@ -39,5 +39,29 @@
     "archivepagenow": {
       "url": "SERVICES_ARCHIVEPAGENOW_URL"
     }
+  },
+  "citation": {
+    "saver": {
+      "upload": {
+        "temp": {
+          "folder": {
+            "path": "CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH"
+          }
+        }
+      },
+      "rate": {
+        "limit": {
+          "max": "CITATION_SAVER_RATE_LIMIT_MAX",
+          "window": {
+            "ms": "CITATION_SAVER_RATE_LIMIT_WINDOW_MS"
+          }
+        }
+      }
+    }
+  },
+  "express": {
+    "trust": {
+      "proxy": "EXPRESS_TRUST_PROXY"
+    }
   }
 }

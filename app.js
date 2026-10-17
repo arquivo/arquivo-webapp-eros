@@ -1,5 +1,4 @@
 const { resolveInclude } = require('ejs');
-const fileUpload = require('express-fileupload');
 const express = require('express');
 const config = require('config');
 const session = require('cookie-session');
@@ -9,12 +8,15 @@ const router = require('./src/router');
 const trafficLogger = require('./src/logger/traffic-logger');
 const errorLogger = require('./src/logger')('UnhandledException');
 const { validateSessionSecret } = require('./src/utils/session-secret-validator');
+const { parseTrustProxy } = require('./src/utils/trust-proxy');
 
 validateSessionSecret(config.get('session.secret'), process.env.NODE_ENV);
 
 const app = express();
 
 app.disable('x-powered-by');
+// Which proxies may set the client IP (req.ip) with X-Forwarded-For. Off by default.
+app.set('trust proxy', parseTrustProxy(config.get('express.trust.proxy')));
 
 const i18n = require('i18n-node-yaml')({
     debug: app.get('environment') !== 'production',
@@ -42,9 +44,7 @@ app.use((req, res, next) => {
 
 app.use(cookies());
 
-app.use(fileUpload({
-    createParentPath: true,
-}));
+// Multipart bodies are only parsed on the Citation Saver POST (src/router.js, #177).
 
 app.use((req, res, next) => {
     let requestLanguage = '';

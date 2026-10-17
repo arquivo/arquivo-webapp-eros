@@ -2,7 +2,11 @@
 
 jest.mock('config');
 jest.mock('node-fetch');
-jest.mock('fs');
+// Automocked, but for the check of the temporary folder setting, which runs on load.
+jest.mock('fs', () => ({
+    ...jest.createMockFromModule('fs'),
+    realpathSync: jest.requireActual('fs').realpathSync,
+}));
 jest.mock('../spreadsheet-client');
 jest.mock('../utils/is-valid-url');
 jest.mock('node:dns');
@@ -10,6 +14,7 @@ jest.mock('node:dns');
 const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
 jest.mock('../logger', () => () => mockLogger);
 
+const { Readable } = require('node:stream');
 const servicesCitationSaver = require('../services-citationsaver');
 const fetch = require('node-fetch');
 const fs = require('fs');
@@ -19,6 +24,15 @@ const isValidUrl = require('../utils/is-valid-url');
 
 // jest's automock of 'fs' does not include the fs.promises getter, so provide it explicitly.
 fs.promises = { mkdir: jest.fn(), writeFile: jest.fn(), rm: jest.fn() };
+
+// The bytes of an uploaded PDF must contain the PDF magic (#177).
+const PDF_DATA = Buffer.from('%PDF-1.4\n%%EOF\n');
+
+// Makes fs.createReadStream() read `data` as the uploaded temporary file.
+function uploadedBytes(data) {
+    fs.createReadStream.mockImplementation((path, { start = 0, end = Infinity } = {}) =>
+        Readable.from([data.subarray(start, end + 1)]));
+}
 
 const flushPromises = async () => {
     for (let i = 0; i < 5; i++) await new Promise(resolve => setImmediate(resolve));
@@ -40,6 +54,7 @@ describe('Citation Saver Service', () => {
         res = {
             send: jest.fn()
         };
+        res.status = jest.fn(() => res);
 
         // Setup mocks
         mockFetch = jest.fn().mockResolvedValue({
@@ -55,6 +70,7 @@ describe('Citation Saver Service', () => {
         fs.promises.mkdir.mockResolvedValue(undefined);
         fs.promises.writeFile.mockResolvedValue(undefined);
         fs.promises.rm.mockResolvedValue(undefined);
+        uploadedBytes(PDF_DATA);
 
         isValidUrl.mockReturnValue(true);
         addToSpreadsheet.mockResolvedValue();
@@ -385,9 +401,10 @@ describe('Citation Saver Service', () => {
 
             servicesCitationSaver(req, res);
 
+            expect(res.status).toHaveBeenCalledWith(413);
             expect(res.send).toHaveBeenCalledWith({
                 status: false,
-                message: 'services-citation-saver.errors.text.filesize'
+                message: 'services-citation-saver.errors.text.toolong'
             });
         });
 
@@ -405,6 +422,36 @@ describe('Citation Saver Service', () => {
             expect(res.send).toHaveBeenCalledWith({
                 status: false,
                 message: 'services-citation-saver.errors.default'
+            });
+        });
+
+        it('moves a text file part to a .txt file', async () => {
+            const mv = jest.fn().mockResolvedValue();
+            req.body = { email: 'test@example.com' };
+            req.files = { text: { name: 'text.txt', mimetype: 'text/plain', size: 11, tempFilePath: '/tmp/x', truncated: false, mv } };
+            uploadedBytes(Buffer.from('Sample text'));
+
+            await servicesCitationSaver(req, res);
+
+            expect(mv).toHaveBeenCalledWith(expect.stringMatching(/\.txt$/));
+            expect(res.send).toHaveBeenCalledWith({
+                status: true,
+                message: 'Text uploaded',
+                data: { name: '', mimetype: 'text/plain', size: 11 }
+            });
+        });
+
+        it('rejects a text file part that was cut off at the limit', async () => {
+            const mv = jest.fn();
+            req.files = { text: { name: 'text.txt', mimetype: 'text/plain', size: 100, tempFilePath: '/tmp/x', truncated: true, mv } };
+
+            await servicesCitationSaver(req, res);
+
+            expect(mv).not.toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(413);
+            expect(res.send).toHaveBeenCalledWith({
+                status: false,
+                message: 'services-citation-saver.errors.text.filesize'
             });
         });
 
@@ -431,6 +478,35 @@ describe('Citation Saver Service', () => {
                 message: 'Text uploaded',
                 data: expect.any(Object)
             });
+        });
+    });
+
+    describe('Email and URL checks (#177)', () => {
+        it.each([
+            ['an email over 254 characters', { text: 'x', email: 'a'.repeat(255) }, 'services-citation-saver.errors.email.invalid'],
+            ['an email that is not a string', { text: 'x', email: ['a@b.pt', 'c@d.pt'] }, 'services-citation-saver.errors.email.invalid'],
+            ['a URL over 8192 characters', { url: 'https://example.com/' + 'a'.repeat(8192) }, 'services-citation-saver.errors.URL.invalid'],
+            ['a URL that is not a string', { url: { href: 'https://example.com/' } }, 'services-citation-saver.errors.URL.invalid'],
+        ])('replies 400 for %s before logging or storing anything', async (_case, body, message) => {
+            req.body = body;
+
+            await servicesCitationSaver(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.send).toHaveBeenCalledWith({ status: false, message });
+            expect(mockLogger.info).toHaveBeenCalledTimes(1);
+            expect(mockLogger.info.mock.calls[0][0]).not.toContain('aaaa');
+            expect(fetch).not.toHaveBeenCalled();
+            expect(fs.promises.writeFile).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it('accepts a null email', async () => {
+            req.body = { text: 'Sample text', email: null };
+
+            await servicesCitationSaver(req, res);
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
         });
     });
 
@@ -715,6 +791,53 @@ describe('Citation Saver Service', () => {
             });
         });
 
+    });
+
+    describe('Content sniffing (#177)', () => {
+        const submit = async (mimetype, data) => {
+            uploadedBytes(data);
+            req.files = { file: { name: 'upload', mimetype, size: data.length, tempFilePath: '/tmp/upload', mv: jest.fn() } };
+            servicesCitationSaver(req, res);
+            await flushPromises();
+        };
+
+        it.each([
+            ['application/pdf', 'HTML', Buffer.from('<!doctype html><script>alert(1)</script>')],
+            ['application/pdf', 'an executable', Buffer.from([0x4d, 0x5a, 0x90, 0x00, 0x03])],
+            ['application/pdf', 'the magic after the first 1024 bytes', Buffer.concat([Buffer.alloc(1020, ' '), Buffer.from('%PDF-1.4\n')])],
+            ['application/pdf', 'a file shorter than the magic', Buffer.from('%PDF')],
+            ['application/pdf', 'an empty file', Buffer.alloc(0)],
+            ['text/plain', 'a NUL byte', Buffer.from('abc\u0000def')],
+            ['text/plain', 'UTF-16', Buffer.from('\ufeffhello', 'utf16le')],
+            ['text/html', 'a NUL byte', Buffer.from('<p>a\u0000b</p>')],
+        ])('rejects a %s file with %s', async (mimetype, label, data) => {
+            await submit(mimetype, data);
+
+            expect(res.send).toHaveBeenCalledWith({ status: false, message: 'services-citation-saver.errors.file.mimetype' });
+            expect(req.files.file.mv).not.toHaveBeenCalled();
+            expect(addToSpreadsheet).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['application/pdf', 'the magic at the start', PDF_DATA],
+            ['application/pdf', 'the magic after leading bytes', Buffer.concat([Buffer.alloc(1000, ' '), PDF_DATA])],
+            ['text/plain', 'UTF-8 with accents and emoji', Buffer.from('Citações — 📚 https://arquivo.pt')],
+            ['text/plain', 'a UTF-8 BOM', Buffer.from('\ufeffhello')],
+            ['text/plain', 'Windows-1252 bytes', Buffer.from('Cita\xe7\xf5es \x93aspas\x94', 'latin1')],
+            ['text/plain', 'no bytes', Buffer.alloc(0)],
+            ['text/html', 'ISO-8859-1 HTML', Buffer.from('<p>Ol\xe1</p>', 'latin1')],
+        ])('accepts a %s file with %s', async (mimetype, label, data) => {
+            await submit(mimetype, data);
+
+            expect(res.send).toHaveBeenCalledWith(expect.objectContaining({ status: true }));
+            expect(req.files.file.mv).toHaveBeenCalledTimes(1);
+        });
+
+        it('reads only the first 1024 bytes of a PDF', async () => {
+            await submit('application/pdf', PDF_DATA);
+
+            expect(fs.createReadStream).toHaveBeenCalledWith('/tmp/upload', { start: 0, end: 1023 });
+        });
     });
 
     describe('Spreadsheet logging', () => {

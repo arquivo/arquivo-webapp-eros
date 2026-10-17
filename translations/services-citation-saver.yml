@@ -117,6 +117,16 @@ errors:
     filesize:
       en: The text was not uploaded. The text size must be under 100 MB.
       pt: O texto não foi submetido. A dimensão do texto não pode exceder os 100 MB.
+    toolong:
+      en: The text was not submitted because it is too long.
+      pt: O texto não foi submetido porque é demasiado longo.
+  filesize:
+    en: The file or text was not submitted. Its size must be under 100 MB.
+    pt: O ficheiro ou texto não foi submetido. A dimensão não pode exceder os 100 MB.
+  email:
+    invalid:
+      en: The email address is not valid.
+      pt: O endereço de e-mail não é válido.
   empty:
     en: No document was submitted.
     pt: Nenhum documento foi submetido.
