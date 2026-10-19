@@ -5,6 +5,7 @@ const { archiveTimestampToDate } = require('./utils/archive-timestamp');
 // if it ever becomes configurable, validate it (minimum 1) and refuse to start on a bad value.
 const EMBARGO_YEARS = 1;
 // A well-formed 'YYYYMMDDhhmmss' archive timestamp (years 1900-2099); anything else is embargoed
+// Shorter ones (e.g. 12-digit 'YYYYMMDDhhmm' in some 2000-2001 captures) are right-padded with zeros before this check
 // The month/day/hour/minute/second ranges only reject junk rows; order and embargo rely solely on fixed-width 14-digit string comparison
 const ARCHIVE_TIMESTAMP = /^(19|20)\d\d(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01]\d|2[0-3])[0-5]\d[0-5]\d$/;
 module.exports = function (apiData) {
@@ -16,6 +17,8 @@ module.exports = function (apiData) {
     const returnData = apiData
         // Sanity check; timestamp must be a string, the later filters call .substring() on it
         .filter((item) => (item.status && typeof item.timestamp === 'string' && item.timestamp && item.digest && item.url))
+        // Right-pad shorter timestamps with zeros, so every later step sees 14 digits; the caller's items are not changed
+        .map(item => (item.timestamp.length < 14 ? { ...item, timestamp: item.timestamp.padEnd(14, '0') } : item))
         // Only 200 and 300 requests are accepted
         .filter(item => (item.status[0] == '2' || item.status[0] == '3'))
         // Filter out redirects to itself
