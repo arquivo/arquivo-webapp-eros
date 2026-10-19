@@ -124,13 +124,42 @@ describe('filterCdx', () => {
             expect(result[0].status).toBe('200');
         });
 
-        it('should filter out partial timestamps (they are not zero-padded into a valid date)', () => {
+        it('should filter out timestamps too short to hold a day (zero-padding gives a 00 month or day)', () => {
             const data = [
-                { status: '200', timestamp: `${validYear}0101`, digest: 'abc123', url: 'http://example.com' },
+                { status: '200', timestamp: `${validYear}01`, digest: 'abc123', url: 'http://example.com' },
                 { status: '200', timestamp: `${validYear}`, digest: 'def456', url: 'http://example.com' }
             ];
             const result = filterCdx(data);
             expect(result).toEqual([]);
+        });
+
+        it.each([
+            ['8', '20000101', '20000101000000'],
+            ['10', '2000010112', '20000101120000'],
+            ['12', '200001011230', '20000101123000'],
+            ['13', '2000010112304', '20000101123040'],
+        ])('should keep %s-digit timestamps, right-padded with zeros, without changing the given items', (_, timestamp, padded) => {
+            const short = { status: '200', timestamp, digest: 'abc123', url: 'http://example.com' };
+            expect(filterCdx([short])).toEqual([{ ...short, timestamp: padded }]);
+            expect(short.timestamp).toBe(timestamp);
+        });
+
+        it.each([
+            ['an invalid month', '200013011200'],
+            ['an invalid minute', '200001011260'],
+            ['non-digits', '20000101120a'],
+        ])('should filter out shorter timestamps with %s', (_, timestamp) => {
+            expect(filterCdx([{ status: '200', timestamp, digest: 'abc123', url: 'http://example.com' }])).toEqual([]);
+        });
+
+        it('should compare redirects, duplicates and order across shorter and 14-digit timestamps', () => {
+            const data = [
+                { status: '200', timestamp: '20000101130000', digest: 'abc123', url: 'http://example.com' }, // same digest and day as the 12:00 one (filtered)
+                { status: '301', timestamp: '200001011130', digest: 'def456', url: 'http://example.com' }, // 30 min before a 200 (filtered)
+                { status: '200', timestamp: '200001011200', digest: 'abc123', url: 'http://example.com' },
+                { status: '200', timestamp: '20000101115959', digest: 'ghi789', url: 'http://example.com' }
+            ];
+            expect(filterCdx(data).map(item => item.timestamp)).toEqual(['20000101115959', '20000101120000']);
         });
     });
 
@@ -207,6 +236,15 @@ describe('filterCdx', () => {
             expect(filterCdx([item('20240101120000')]).length).toBe(1);
         });
 
+        it('should apply the embargo to shorter timestamps once right-padded with zeros', () => {
+            expect(filterCdx([item('202503101159')]).length).toBe(1);
+            expect(filterCdx([item('202503101200')])).toEqual([]);
+            expect(filterCdx([item('2025031011')]).length).toBe(1);
+            expect(filterCdx([item('2025031012')])).toEqual([]);
+            expect(filterCdx([item('20250310')]).length).toBe(1); // '20250310000000', before the cutoff
+            expect(filterCdx([item('20250311')])).toEqual([]);
+        });
+
         it('should clamp the cutoff to 28 Feb when today is 29 Feb', () => {
             jest.setSystemTime(new Date('2028-02-29T12:00:00Z')); // cutoff '20270228120000', not 1 Mar
             expect(filterCdx([item('20270228115959')]).length).toBe(1);
@@ -219,10 +257,12 @@ describe('filterCdx', () => {
             ['a 00 year', '00260310120000'],
             ['non-digits', '2024031012000a'],
             ['an invalid month', '20241310120000'],
-            ['too short', '2024031012000'],
+            ['too short to hold a month', '2024'],
             ['too long', '202403101200000'],
             ['a trailing newline', '20240310120000\n'],
             ['fullwidth digits', '\uFF12\uFF10\uFF12\uFF14\uFF10\uFF13\uFF11\uFF10\uFF11\uFF12\uFF10\uFF10\uFF10\uFF10'],
+            // Only one non-ASCII digit, past the (19|20) prefix: fails if \d becomes \p{Nd}
+            ['a fullwidth digit among ASCII ones', '2019031\uFF10120000'],
         ])('should filter out timestamps with %s', (_, timestamp) => {
             expect(filterCdx([item(timestamp)])).toEqual([]);
         });
