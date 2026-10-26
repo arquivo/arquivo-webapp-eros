@@ -1,9 +1,11 @@
+'use strict';
+
 module.exports = {
   testEnvironment: 'node',
+  globalSetup: '<rootDir>/jest.global-setup.js',
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.js',
-    '!src/logger/**',
     '!**/node_modules/**'
   ],
   testMatch: [
@@ -19,6 +21,6 @@ module.exports = {
       statements: 65
     }
   },
-  testPathIgnorePatterns: ['/node_modules/', 'accessibility'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src/__tests__/accessibility.test.js', '<rootDir>/e2e/'],
   verbose: true
 };

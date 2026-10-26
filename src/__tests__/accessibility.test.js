@@ -4,10 +4,12 @@
 
 'use strict';
 
-// jsdom does not ship TextEncoder/TextDecoder; polyfill before any require that needs them
+// jsdom does not ship TextEncoder/TextDecoder or setImmediate (used by express/serve-static);
+// polyfill before any require that needs them
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+global.setImmediate = global.setImmediate || ((fn, ...args) => setTimeout(fn, 0, ...args));
 
 const request = require('supertest');
 const { axe, toHaveNoViolations } = require('jest-axe');
@@ -81,8 +83,12 @@ const cdxSearchFixture = [
     },
 ];
 
+// Return a suggestion that differs from the query so the "did you mean" block is rendered and audited
 PageSearchApiRequest.mockImplementation(() => ({
     get: (requestData, callback) => callback(pageSearchFixture),
+    withSpellcheck: (data) => data,
+    getSuggestion: (apiData, requestData) => `${requestData.get('q')} sugestão`,
+    suggest: (requestData, callback) => callback(`${requestData.get('q')} sugestão`),
     sanitizeRequestData: (data) => data,
 }));
 
@@ -96,7 +102,7 @@ CDXSearchApiRequest.mockImplementation(() => ({
 }));
 
 SuggestionApi.mockImplementation(() => ({
-    getSuggestion: (query, lang, callback) => callback(null),
+    getSuggestion: (query, lang, callback) => callback(`${query} sugestão`),
 }));
 
 expect.extend(toHaveNoViolations);
@@ -112,6 +118,8 @@ const WCAG_OPTIONS = {
 
 async function getHtml(url) {
     const res = await request(app).get(url);
+    // Otherwise an error page (e.g. from a stale API mock) would be audited instead
+    expect(res.status).toBe(200);
     return res.text;
 }
 

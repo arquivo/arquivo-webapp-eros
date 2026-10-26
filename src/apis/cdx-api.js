@@ -1,5 +1,12 @@
+'use strict';
+
 const BaseApiRequest = require('./base-api-request');
 const config = require('config');
+const todayYmd = require('../utils/today-ymd');
+const escapeForLog = require('../utils/escape-for-log');
+
+// How much of a malformed capture goes into the parse-error debug line
+const MAX_LOGGED_FRAGMENT_LENGTH = 200;
 
 /**
  * CDXSearchApiRequest - HTTP client for CDX API with streaming JSON parsing
@@ -23,13 +30,17 @@ class CDXSearchApiRequest extends BaseApiRequest {
             output: 'json',
             from: config.get('search.start.date'),
             url: '',
-            to: (new Date()).toLocaleDateString('en-CA').split('-').join(''),
+            to: todayYmd(),
             filter: '!:~status:4|5',
             fields: 'url,timestamp,status,digest'
         };
         const defaultApiReply = [];
-        
-        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', { method: 'GET' });
+        // The reply is streamed: the largest ones (the server stops at 100,000 captures, about 13 MB)
+        // take about 10 s, with gaps under 0.5 s. Give up when no data comes for 5 s, after 1 minute
+        // in total, or past 64 MB.
+        const options = { method: 'GET', timeout: 60000, idleTimeout: 5000, maxResponseBytes: 64 * 1024 * 1024 };
+
+        super(apiUrl, defaultApiParams, defaultApiReply, 'CDXSearchApiRequest', options);
     }
 
     /**
@@ -47,7 +58,7 @@ class CDXSearchApiRequest extends BaseApiRequest {
 
         // STREAMING JSON PARSING: Process data chunks as they arrive
         apiRes.on('data', (chunk) => {
-            apiReply += chunk.toString();
+            apiReply += chunk;
             
             // Parse complete JSON objects (newline-delimited)
             let endIndex = apiReply.indexOf('}') + 1;
@@ -57,8 +68,14 @@ class CDXSearchApiRequest extends BaseApiRequest {
                     let currentData = JSON.parse(currentJson);
                     apiData.push(currentData);
                 } catch (e) {
-                    // Log and skip malformed JSON, continue processing
-                    this.logger.error(`Failed to parse JSON object: ${currentJson}. Error: ${e.message}`);
+                    // Log and skip malformed JSON, continue processing. A capture holds the
+                    // searched URL, and so does the parser's message: both only go to the debug
+                    // log, and only the start of the fragment, so it can't write a huge line.
+                    const fragment = currentJson.length > MAX_LOGGED_FRAGMENT_LENGTH
+                        ? `${currentJson.slice(0, MAX_LOGGED_FRAGMENT_LENGTH)}... (${currentJson.length} chars)`
+                        : currentJson;
+                    this.logger.error(`Failed to parse JSON object (${currentJson.length} chars). Error: ${e.name}`);
+                    this.logger.debug(escapeForLog(`Failed to parse JSON object: ${fragment}. Error: ${e.message}`));
                 }
                 apiReply = apiReply.slice(endIndex + 1);
                 endIndex = apiReply.indexOf('}') + 1;
@@ -68,12 +85,6 @@ class CDXSearchApiRequest extends BaseApiRequest {
         // Return parsed array on end
         apiRes.on('end', () => {
             safeCallback(apiData);
-        });
-
-        // Handle response errors
-        apiRes.on('error', (e) => {
-            this.logger.error(`${this.apiUrl} : Response error: ${e.message}`);
-            safeCallback(this.defaultApiReply);
         });
     }
 

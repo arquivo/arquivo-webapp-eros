@@ -1,27 +1,26 @@
-const sanitizeInputs = require('./utils/sanitize-search-params');
+'use strict';
+
+const makeSearchHandler = require('./search-handler');
 const makeExportObject = require('./export-page-search');
-const SuggestionApi = require('./apis/suggestion-api');
 const PageSearchApiRequest = require('./apis/page-search-api');
-const logger = require('./logger')('PageSearch');
 
-module.exports = function (req, res) {
-    const requestData = sanitizeInputs(req, res);
-    const apiRequest = new PageSearchApiRequest(requestData.get('api'));
-    const suggestionRequest = new SuggestionApi();
-
-    suggestionRequest.getSuggestion(requestData.get('q'), requestData.get('l') ?? 'pt',
-        (suggestion) => {
-            apiRequest.get(requestData,
-                (apiData) => {
-                    if(!apiData.response_items || apiData.response_items.length == 0){
-                        logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
-                    }
-                    res.render('partials/pages-search-results', {
-                        requestData: requestData,
-                        apiData: apiData,
-                        suggestion: suggestion,
-                        exportObject: makeExportObject(apiRequest.sanitizeRequestData(requestData), apiData, req.t)
-                    });
-                })
+module.exports = makeSearchHandler({
+    createApiRequest: () => new PageSearchApiRequest(),
+    // The spellchecked query comes in the same reply as the results.
+    // Errors thrown in the API callback (e.g. by getSuggestion or makeExportObject) are routed to
+    // next, like the images search does: left uncaught, the API client would swallow them (and the
+    // request would hang) or, on its error paths, crash the process.
+    fetchResults: (apiRequest, requestData, next, render) => {
+        apiRequest.get(apiRequest.withSpellcheck(requestData), (apiData) => {
+            try {
+                render(apiData, apiRequest.getSuggestion(apiData, requestData));
+            } catch (err) {
+                next(err);
+            }
         });
-}
+    },
+    itemsKey: 'response_items',
+    template: 'partials/pages-search-results',
+    makeExportObject: makeExportObject,
+    loggerLabel: 'PageSearch',
+});

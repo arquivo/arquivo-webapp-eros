@@ -1,0 +1,78 @@
+'use strict';
+
+// Shared setup for the Citation Saver suites that go through the real app (#177).
+// A .cjs file, so Jest does not run it as a test suite.
+
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const request = require('supertest');
+
+// Fail fast instead of hanging Jest if a request never gets a response
+const REQUEST_TIMEOUT_MS = 5000;
+
+const messages = {
+    empty: 'Nenhum documento foi submetido.',
+    missing: 'O ficheiro não foi transferido, nenhum ficheiro foi submetido.',
+    mimetype: 'O ficheiro não foi transferido. O formato do documento tem de ser PDF ou TXT.',
+    filesize: 'O ficheiro não foi transferido. A dimensão do documento não pode exceder os 100 MB.',
+    // A text field over its own limit, which is not the upload limit.
+    textTooLong: 'O texto não foi submetido porque é demasiado longo.',
+    // The 413 sent while the upload is streaming, for a file or a text.
+    uploadFilesize: 'O ficheiro ou texto não foi submetido. A dimensão não pode exceder os 100 MB.',
+    emailInvalid: 'O endereço de e-mail não é válido.',
+    urlInvalid: 'URL não encontrado. Verifique se o endereço está correto.',
+    default: 'Algo correu mal, por favor tente novamente mais tarde.',
+};
+
+// A new temporary folder with the upload folders laid out as in production. The
+// temporary upload folder is the default one, next to the upload folder.
+function makeUploadFolders(prefix) {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
+    return {
+        root,
+        uploadFolder: path.join(root, 'uploads', 'CitationSaver'),
+        uploadTempFolder: path.join(root, 'uploads', '.citationsaver-tmp'),
+    };
+}
+
+// Every file under `folder`, at any depth.
+function filesUnder(folder) {
+    if (!fs.existsSync(folder)) return [];
+    return fs.readdirSync(folder, { recursive: true })
+        .filter(name => fs.statSync(path.join(folder, name)).isFile());
+}
+
+function post(app) {
+    return request(app).post('/services/citationsaver').timeout(REQUEST_TIMEOUT_MS);
+}
+
+// The translations load asynchronously once the app is created. Until then the replies
+// carry untranslated messages, so wait for them before the first test.
+async function translationsLoaded(app) {
+    for (let i = 0; i < 100; i++) {
+        const res = await request(app).get('/services/citationsaver').timeout(REQUEST_TIMEOUT_MS);
+        if (res.text.includes('Formatos aceites')) return;
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    throw new Error('The translations did not load');
+}
+
+/*
+ * Loads a new copy of the app with these config settings, since the Citation Saver
+ * reads them at load time. Call from a test file that mocks the Sheet client.
+ * The module paths are relative to this file.
+ */
+function loadApp(uploadFolder, settings = {}) {
+    let loaded;
+    jest.isolateModules(() => {
+        const config = require('config');
+        config.set('citation.saver.upload.folder.path', uploadFolder);
+        Object.entries(settings).forEach(([key, value]) => config.set(key, value));
+        loaded = { app: require('../../../app'), addToSpreadsheet: require('../../spreadsheet-client') };
+    });
+    loaded.addToSpreadsheet.mockResolvedValue();
+    return loaded;
+}
+
+module.exports = { REQUEST_TIMEOUT_MS, messages, makeUploadFolders, filesUnder, post, translationsLoaded, loadApp };

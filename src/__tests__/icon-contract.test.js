@@ -4,52 +4,56 @@ const fs = require('fs');
 const path = require('path');
 
 describe('Font Awesome Icon Contract Test', () => {
-    let kitJs;
+    const root = path.join(__dirname, '..', '..');
+    const cssPath = path.join(root, 'public/vendor/css/fontawesome-all.min.css');
+    const webfontsDir = path.join(root, 'public/vendor/webfonts');
+
+    let cssContent;
 
     beforeAll(() => {
-        const jsPath = path.join(__dirname, '../../public/vendor/js/font_awesome.js');
-        kitJs = fs.readFileSync(jsPath, 'utf-8');
+        cssContent = fs.readFileSync(cssPath, 'utf-8');
     });
 
-    describe('Font Awesome Kit JS integrity', () => {
-        it('JS file is not empty', () => {
-            expect(kitJs.length).toBeGreaterThan(0);
+    describe('CSS file integrity', () => {
+        it('CSS file is not empty', () => {
+            expect(cssContent.length).toBeGreaterThan(0);
         });
 
-        it('contains FontAwesomeKitConfig', () => {
-            expect(kitJs).toContain('FontAwesomeKitConfig');
+        it('references webfonts with relative path', () => {
+            expect(cssContent).toContain('../webfonts/');
         });
 
-        it('uses CSS delivery method', () => {
-            expect(kitJs).toMatch(/\bmethod\s*:\s*"css"/);
+        it('includes solid icon styles', () => {
+            expect(cssContent).toContain('.fa-solid');
         });
 
-        it('loads icons synchronously (asyncLoading disabled)', () => {
-            expect(kitJs).toMatch(/asyncLoading\s*:\s*\{[^}]*enabled\s*:\s*false/);
+        it('includes brand icon styles', () => {
+            expect(cssContent).toContain('.fa-brands');
+        });
+    });
+
+    describe('webfonts directory', () => {
+        it('solid webfont exists', () => {
+            expect(fs.existsSync(path.join(webfontsDir, 'fa-solid-900.woff2'))).toBe(true);
         });
 
-        it('includes v4 shim for backward-compatible fa- class names', () => {
-            expect(kitJs).toMatch(/v4shim\s*:\s*\{[^}]*enabled\s*:\s*true/);
+        it('regular webfont exists', () => {
+            expect(fs.existsSync(path.join(webfontsDir, 'fa-regular-400.woff2'))).toBe(true);
         });
 
-        it('includes v4 font-face shim', () => {
-            expect(kitJs).toMatch(/v4FontFaceShim\s*:\s*\{[^}]*enabled\s*:\s*true/);
+        it('brands webfont exists', () => {
+            expect(fs.existsSync(path.join(webfontsDir, 'fa-brands-400.woff2'))).toBe(true);
         });
+    });
 
-        it('targets Font Awesome 5 version', () => {
-            expect(kitJs).toMatch(/\bversion\s*:\s*"5\./);
-        });
-
-        it('uses free license', () => {
-            expect(kitJs).toMatch(/\blicense\s*:\s*"free"/);
-        });
-
-        it('has a kit token configured', () => {
-            expect(kitJs).toMatch(/\btoken\s*:\s*"\w+"/);
-        });
-
-        it('enables auto-accessibility attributes', () => {
-            expect(kitJs).toMatch(/autoA11y\s*:\s*\{[^}]*enabled\s*:\s*true/);
+    describe('template wiring', () => {
+        it('javascript_and_css_links.ejs loads FA via CSS link, not a JS script', () => {
+            const template = fs.readFileSync(
+                path.join(root, 'views/templates/javascript_and_css_links.ejs'),
+                'utf-8'
+            );
+            expect(template).toContain('/vendor/css/fontawesome-all.min.css');
+            expect(template).not.toContain('font_awesome.js');
         });
     });
 });

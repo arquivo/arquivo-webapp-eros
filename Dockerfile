@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for arquivo-webapp-eros
 
 # Stage 1: Base image with common dependencies
-FROM node:20-alpine3.21 AS base
+FROM node:24-alpine3.24 AS base
 LABEL maintainer="Arquivo.pt"
 
 # Install dumb-init and curl for proper signal handling and healthchecks

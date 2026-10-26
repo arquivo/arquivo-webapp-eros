@@ -1,30 +1,31 @@
+'use strict';
+
 // Mock config before requiring modules
 jest.mock('config');
 
 const PageSearchApiRequest = require('../page-search-api');
 const config = require('config');
 const http = require('node:http');
+const todayYmd = require('../../utils/today-ymd');
 
 /**
  * PageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 22 TESTS PASSING (100%)
- * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Overrides sanitizeRequestData() to clean inline parameters from queries
- * - Uses constructor to configure backend endpoints (solr, nutchwax, default)
+ * - Uses the configured text search endpoint (text.search.api.default)
  * - Maintains all default parameter handling through parent class
  * - No custom response processing needed - works with standard JSON responses
  * 
  * COVERAGE:
- * - Constructor with different backends (3 tests)
+ * - Constructor with the configured endpoint (1 test)
  * - Default parameters and reply structure (2 tests)
  * - Inline parameter sanitization for site, type, collection, safe, size (7 tests)
  * - Parameter merging with defaults (1 test)
  * - Full API integration (3 tests)
  * 
- * This serves as the model for how to properly extend ApiRequest after the refactor.
+ * This serves as the model for how to properly extend JsonApiRequest.
  */
 describe('PageSearchApiRequest', () => {
     let mockServer;
@@ -48,9 +49,15 @@ describe('PageSearchApiRequest', () => {
                 request_parameters: {
                     q: url.searchParams.get('q'),
                     from: url.searchParams.get('from'),
-                    to: url.searchParams.get('to')
+                    to: url.searchParams.get('to'),
+                    offset: url.searchParams.get('offset'),
+                    maxItems: url.searchParams.get('maxItems'),
+                    fields: url.searchParams.get('fields')
                 }
             };
+            if ((url.searchParams.get('fields') ?? '').split(',').includes('spellcheck')) {
+                mockResponse.suggested_query = url.searchParams.get('q').trim() === 'Lizboa' ? 'lisboa ' : '';
+            }
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(mockResponse));
@@ -67,20 +74,10 @@ describe('PageSearchApiRequest', () => {
     });
 
     describe('Constructor', () => {
-        it('should create instance with default backend', () => {
+        it('should create instance with the configured endpoint', () => {
             const api = new PageSearchApiRequest();
             expect(api).toBeInstanceOf(PageSearchApiRequest);
             expect(api.apiUrl).toBe(config.get('text.search.api.default'));
-        });
-
-        it('should create instance with solr backend', () => {
-            const api = new PageSearchApiRequest('solr');
-            expect(api.apiUrl).toBe(config.get('text.search.api.solr'));
-        });
-
-        it('should create instance with nutchwax backend', () => {
-            const api = new PageSearchApiRequest('nutchwax');
-            expect(api.apiUrl).toBe(config.get('text.search.api.nutchwax'));
         });
 
         it('should have correct default parameters', () => {
@@ -100,8 +97,217 @@ describe('PageSearchApiRequest', () => {
             expect(api.defaultApiReply).toMatchObject({
                 estimated_nr_results: 0,
                 response_items: [],
-                request_parameters: expect.any(Object)
+                request_parameters: expect.any(Object),
+                timeline: { impact: {} }
             });
+        });
+    });
+
+    describe('yearBalance feature toggle', () => {
+        afterEach(() => {
+            config.set('text.search.api.yearBalance_enabled', false);
+        });
+
+        it('should not include yearBalance param when disabled', () => {
+            config.set('text.search.api.yearBalance_enabled', false);
+            const api = new PageSearchApiRequest();
+
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'test query' }));
+
+            expect(sanitized.has('yearBalance')).toBe(false);
+        });
+
+        it('should include yearBalance=true param when enabled', () => {
+            config.set('text.search.api.yearBalance_enabled', true);
+            const api = new PageSearchApiRequest();
+
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'test query' }));
+
+            expect(sanitized.get('yearBalance')).toBe('true');
+        });
+    });
+
+    describe('spellcheck', () => {
+        afterEach(() => {
+            config.set('text.search.api.spellcheck_enabled', true);
+        });
+
+        describe('withSpellcheck', () => {
+            it('should add spellcheck to the requested fields', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa' }));
+
+                expect(requestData.get('fields')).toBe('spellcheck');
+                expect(requestData.get('q')).toBe('Lizboa');
+            });
+
+            it('should keep other requested fields', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa', fields: 'title, originalURL' }));
+
+                expect(requestData.get('fields')).toBe('title,originalURL,spellcheck');
+            });
+
+            it('should not repeat spellcheck if already requested', () => {
+                const api = new PageSearchApiRequest();
+
+                const requestData = api.withSpellcheck(new URLSearchParams({ q: 'Lizboa', fields: 'spellcheck' }));
+
+                expect(requestData.get('fields')).toBe('spellcheck');
+            });
+
+            it('should not modify the original request data', () => {
+                const api = new PageSearchApiRequest();
+                const original = new URLSearchParams({ q: 'Lizboa' });
+
+                api.withSpellcheck(original);
+
+                expect(original.has('fields')).toBe(false);
+            });
+
+            it('should leave request data unchanged when disabled', () => {
+                config.set('text.search.api.spellcheck_enabled', false);
+                const api = new PageSearchApiRequest();
+                const original = new URLSearchParams({ q: 'Lizboa' });
+
+                expect(api.withSpellcheck(original)).toBe(original);
+            });
+        });
+
+        describe('getSuggestion', () => {
+            const params = (q, extra = {}) => new URLSearchParams({ q, ...extra });
+
+            it('should return the suggested query', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, params('Lizboa'))).toBe('lisboa');
+            });
+
+            it('should return the original query when the suggestion is empty', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: '' }, params('Lisboa'))).toBe('Lisboa');
+                expect(api.getSuggestion({ suggested_query: ' ' }, params('Lisboa'))).toBe('Lisboa');
+            });
+
+            it('should return the original query when there is no suggestion', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ response_items: [] }, params('Lisboa'))).toBe('Lisboa');
+                expect(api.getSuggestion(undefined, params('Lisboa'))).toBe('Lisboa');
+            });
+
+            it('should trim the suggested query', () => {
+                const api = new PageSearchApiRequest();
+                expect(api.getSuggestion({ suggested_query: 'ronaldo ' }, params('Ronaldi'))).toBe('ronaldo');
+            });
+
+            it('should add back the inline terms the API did not spellcheck, as typed', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Ronaldi collection:Roteiro', { collection: 'Roteiro' });
+
+                expect(api.getSuggestion({ suggested_query: 'ronaldo ' }, requestData)).toBe('ronaldo collection:Roteiro');
+            });
+
+            it('should add back every inline term, whatever their position in the query', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('site:www.publico.pt Lizboa type:pdf -futebol', {
+                    siteSearch: 'www.publico.pt',
+                    type: 'pdf',
+                });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa -futebol' }, requestData))
+                    .toBe('lisboa -futebol site:www.publico.pt type:pdf');
+            });
+
+            it('should add back the language, year balance and every collection term, as typed', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Lizboa language:pt minLanguageConfidence:MEDIUM yearBalance:0.5 collection:EAWP6 collection:EAWP8', {
+                    language: 'pt',
+                    minLanguageConfidence: 'MEDIUM',
+                    yearBalance: '0.5',
+                    collection: 'EAWP6,EAWP8',
+                });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, requestData))
+                    .toBe('lisboa language:pt minLanguageConfidence:MEDIUM yearBalance:0.5 collection:EAWP6 collection:EAWP8');
+            });
+
+            it('should not add terms that are only parameters, not typed in the query', () => {
+                const api = new PageSearchApiRequest();
+                const requestData = params('Lizboa', { collection: 'Roteiro', siteSearch: 'www.publico.pt' });
+
+                expect(api.getSuggestion({ suggested_query: 'lisboa' }, requestData)).toBe('lisboa');
+            });
+        });
+
+        describe('suggest', () => {
+            let api;
+
+            beforeEach(() => {
+                api = new PageSearchApiRequest();
+                api.apiUrl = `http://localhost:${mockServerPort}`;
+            });
+
+            it('should return the suggested query', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('lisboa');
+                    done();
+                });
+            });
+
+            it('should keep the inline terms in the suggested query', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lizboa size:lg', size: 'lg' }), (suggestion) => {
+                    expect(suggestion).toBe('lisboa size:lg');
+                    done();
+                });
+            });
+
+            it('should return the original query when there is no suggestion', (done) => {
+                api.suggest(new URLSearchParams({ q: 'Lisboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lisboa');
+                    done();
+                });
+            });
+
+            it('should request spellcheck without results or timeline', (done) => {
+                const getSpy = jest.spyOn(api, 'get');
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa', offset: '50', maxItems: '25' }), () => {
+                    const requestData = getSpy.mock.calls[0][0];
+                    expect(requestData.get('fields')).toBe('spellcheck');
+                    expect(requestData.get('maxItems')).toBe('0');
+                    expect(requestData.get('offset')).toBe('0');
+                    expect(requestData.get('timeline')).toBe('false');
+                    done();
+                });
+            });
+
+            it('should return the original query when the API fails', (done) => {
+                api.apiUrl = 'http://localhost:1';
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lizboa');
+                    done();
+                });
+            });
+
+            it('should return the original query without calling the API when disabled', (done) => {
+                config.set('text.search.api.spellcheck_enabled', false);
+                api = new PageSearchApiRequest();
+                const getSpy = jest.spyOn(api, 'get');
+
+                api.suggest(new URLSearchParams({ q: 'Lizboa' }), (suggestion) => {
+                    expect(suggestion).toBe('Lizboa');
+                    expect(getSpy).not.toHaveBeenCalled();
+                    done();
+                });
+            });
+        });
+
+        it('should apply custom request options', () => {
+            const api = new PageSearchApiRequest({ timeout: 3000 });
+            expect(api.options).toMatchObject({ method: 'GET', timeout: 3000 });
+            expect(api.apiUrl).toBe(config.get('text.search.api.default'));
         });
     });
 
@@ -157,6 +363,18 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).toContain('query');
         });
 
+        it('should remove every collection: term and send them in the collection parameter', () => {
+            const requestData = new URLSearchParams({
+                q: 'teste collection:EAWP6 collection:EAWP8 query',
+                collection: 'EAWP6,EAWP8'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('teste query');
+            expect(sanitized.get('collection')).toBe('EAWP6,EAWP8');
+        });
+
         it('should remove safe: inline parameter (safeSearch) from query', () => {
             const requestData = new URLSearchParams({
                 q: 'test safe:on query',
@@ -201,6 +419,63 @@ describe('PageSearchApiRequest', () => {
             expect(queryParam).toContain('query');
         });
 
+        it('should send yearBalance, language and minLanguageConfidence as their own parameters', () => {
+            const requestData = new URLSearchParams({
+                q: 'test yearBalance:0.25 language:pt minLanguageConfidence:MEDIUM query',
+                yearBalance: '0.25',
+                language: 'pt',
+                minLanguageConfidence: 'MEDIUM'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test query');
+            expect(sanitized.get('yearBalance')).toBe('0.25');
+            expect(sanitized.get('language')).toBe('pt');
+            expect(sanitized.get('minLanguageConfidence')).toBe('MEDIUM');
+        });
+
+        it('should remove yearBalance, language and minLanguageConfidence terms dropped as invalid', () => {
+            const requestData = new URLSearchParams({
+                q: 'yearBalance:2 test language:portuguese minLanguageConfidence:NONE'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test');
+            expect(sanitized.has('yearBalance')).toBe(false);
+            expect(sanitized.has('language')).toBe(false);
+            expect(sanitized.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should remove image search size and safe terms, even when dropped as defaults', () => {
+            const requestData = new URLSearchParams({ q: 'size:all test safe:on' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('test');
+            expect(sanitized.has('size')).toBe(false);
+            expect(sanitized.has('safeSearch')).toBe(false);
+        });
+
+        it('should not remove words that only contain an inline term name', () => {
+            const requestData = new URLSearchParams({ q: 'mylanguage:pt test' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+
+            expect(sanitized.get('q')).toBe('mylanguage:pt test');
+        });
+
+        it('should let a requested yearBalance override the enabled default', () => {
+            config.set('text.search.api.yearBalance_enabled', true);
+            const enabledApi = new PageSearchApiRequest();
+            config.set('text.search.api.yearBalance_enabled', false);
+
+            const sanitized = enabledApi.sanitizeRequestData(new URLSearchParams({ q: 'test', yearBalance: 'false' }));
+
+            expect(sanitized.get('yearBalance')).toBe('false');
+        });
+
         it('should handle query without inline parameters', () => {
             const requestData = new URLSearchParams({
                 q: 'simple test query'
@@ -208,6 +483,70 @@ describe('PageSearchApiRequest', () => {
 
             const sanitized = api.sanitizeRequestData(requestData);
             expect(sanitized.get('q')).toBe('simple test query');
+        });
+
+        describe('inline terms are matched literally', () => {
+            it('should only remove the term with the exact value, not values matching it as a pattern', () => {
+                const requestData = new URLSearchParams({
+                    q: 'test site:axb site:a.b query',
+                    siteSearch: 'a.b'
+                });
+
+                const sanitized = api.sanitizeRequestData(requestData);
+
+                expect(sanitized.get('q')).toBe('test site:axb query');
+                expect(sanitized.get('siteSearch')).toBe('a.b');
+            });
+
+            it.each([
+                ['a(b'],
+                ['a*b'],
+                ['a+b'],
+                [String.raw`a\b`],
+                ['[a]?{1}|^$'],
+            ])('should remove the term with the value %s', (value) => {
+                const requestData = new URLSearchParams({
+                    q: `test site:${value} query`,
+                    siteSearch: value
+                });
+
+                const sanitized = api.sanitizeRequestData(requestData);
+
+                expect(sanitized.get('q')).toBe('test query');
+                expect(sanitized.get('siteSearch')).toBe(value);
+            });
+
+            it('should replace the term and the whitespace around it with a single space', () => {
+                const requestData = new URLSearchParams({
+                    q: 'test \t site:a.b  query',
+                    siteSearch: 'a.b'
+                });
+
+                expect(api.sanitizeRequestData(requestData).get('q')).toBe('test query');
+            });
+
+            // Regression: as a regular expression, this value took exponential time to match this query.
+            it('should not take exponential time for values that are costly as a pattern', () => {
+                const value = '(a+)+b';
+                const requestData = new URLSearchParams({
+                    q: 'test site:' + 'a'.repeat(24),
+                    siteSearch: value
+                });
+
+                const start = process.hrtime.bigint();
+                const sanitized = api.sanitizeRequestData(requestData);
+                const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+                expect(sanitized.get('q')).toBe(requestData.get('q'));
+                expect(elapsedMs).toBeLessThan(200);
+            });
+
+            it('should not fail when there is an inline term parameter but no query', () => {
+                const sanitized = api.sanitizeRequestData(new URLSearchParams({ siteSearch: 'a.b' }));
+
+                expect(sanitized.has('q')).toBe(false);
+                expect(sanitized.get('siteSearch')).toBe('a.b');
+            });
         });
 
         it('should merge with default parameters', () => {
@@ -255,6 +594,84 @@ describe('PageSearchApiRequest', () => {
 
             api.get(requestData, (data) => {
                 expect(data.request_parameters.q).toBe('arquivo test');
+                done();
+            });
+        });
+    });
+
+    /**
+     * Regression tests: the request the client sends and what it returns on failure
+     */
+    describe('request sent and fallback reply', () => {
+        let captureServer;
+        let captured;
+        let status;
+
+        beforeAll((done) => {
+            captureServer = http.createServer((req, res) => {
+                captured.push(req.url);
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ estimated_nr_results: 1, response_items: [] }));
+            });
+            captureServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            captureServer.close(done);
+        });
+
+        beforeEach(() => {
+            captured = [];
+            status = 200;
+        });
+
+        const apiAtCaptureServer = () => {
+            const api = new PageSearchApiRequest();
+            api.apiUrl = `http://localhost:${captureServer.address().port}`;
+            return api;
+        };
+
+        it('sends the default params, in order, with the inline terms moved out of the query', (done) => {
+            const api = apiAtCaptureServer();
+            const requestData = new URLSearchParams({
+                q: 'lisboa collection:Roteiro site:publico.pt',
+                collection: 'Roteiro',
+                siteSearch: 'publico.pt',
+                offset: '20',
+                unknown: 'dropped',
+            });
+
+            api.get(requestData, (data) => {
+                expect(data).toEqual({ estimated_nr_results: 1, response_items: [] });
+                const expected = new URLSearchParams([
+                    ['q', 'lisboa'],
+                    ['from', '19910806'],
+                    ['to', todayYmd()],
+                    ['offset', '20'],
+                    ['siteSearch', 'publico.pt'],
+                    ['collection', 'Roteiro'],
+                    ['maxItems', '10'],
+                    ['dedupValue', '1'],
+                    ['prettyPrint', 'false'],
+                    ['timeline', 'true'],
+                ]);
+                expect(captured).toEqual(['/?' + expected.toString()]);
+                done();
+            });
+        });
+
+        it('returns the default reply structure when the API fails', (done) => {
+            status = 500;
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toBe(api.defaultApiReply);
+                expect(data).toEqual({
+                    estimated_nr_results: 0,
+                    response_items: [],
+                    request_parameters: { from: '19910806', to: todayYmd() },
+                    timeline: { impact: {} },
+                });
                 done();
             });
         });

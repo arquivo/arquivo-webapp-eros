@@ -1,11 +1,13 @@
 'use strict';
 
-const wayback = require('../wayback');
-
 // Mock dependencies — config uses __mocks__/config.js automatically
 jest.mock('config');
 jest.mock('node-fetch');
 jest.mock('../apis/page-search-api');
+const mockLogger = { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() };
+jest.mock('../logger', () => () => mockLogger);
+
+const wayback = require('../wayback');
 
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('../apis/page-search-api');
@@ -96,6 +98,44 @@ describe('wayback handler', () => {
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.render).toHaveBeenCalledWith('pages/arquivo-404');
+    });
+
+    // #180: the replay URL tells which page the user is reading, so it stays at debug.
+    describe('logging (#180)', () => {
+        const page = 'jane-doe.example.pt/private?token=s3cr3t';
+        const logged = (...levels) => levels.flatMap(level => mockLogger[level].mock.calls.flat().map(String)).join('\n');
+
+        beforeEach(() => {
+            req.url = '/wayback/20230101120000/' + page;
+        });
+
+        it('keeps the URL of a failed fetch to the debug log', async () => {
+            const error = Object.assign(new Error(`request to ${PYWB_URL}/20230101120000/${page} failed, reason: \r\nforged`),
+                { name: 'FetchError', type: 'system', code: 'ECONNREFUSED' });
+            mockFetch.mockRejectedValueOnce(error);
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockLogger.error).toHaveBeenCalledTimes(1);
+            expect(mockLogger.error).toHaveBeenCalledWith(
+                'Failed to fetch the replay URL. Reason: name: "FetchError", type: "system", code: "ECONNREFUSED"');
+            expect(logged('info', 'warn', 'error')).not.toContain('jane-doe');
+            expect(logged('debug')).toContain(page);
+            expect(logged('debug')).toContain('\\u000d\\u000aforged');
+            expect(logged('debug')).not.toMatch(/[\r\n]forged/);
+        });
+
+        it('keeps the URL of a response that is not ok to the debug log', async () => {
+            mockFetch.mockResolvedValueOnce({ ok: false, status: 502, url: `${PYWB_URL}/20230101120000/${page}`, headers: new Map() });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockLogger.error).toHaveBeenCalledWith('Something went wrong while trying to fetch the replay URL. Status: 502');
+            expect(logged('info', 'warn', 'error')).not.toContain('jane-doe');
+            expect(mockLogger.debug).toHaveBeenCalledWith(`Replay URL: ${PYWB_URL}/20230101120000/${page}`);
+        });
     });
 
     it('requests API metadata for rendering', async () => {
@@ -214,5 +254,113 @@ describe('wayback handler', () => {
         await flushPromises();
 
         expect(res.render).toHaveBeenCalled();
+    });
+
+    describe('splitting the timestamp from the archived URL', () => {
+        it('keeps every later "/" in the archived URL', async () => {
+            req.url = '/wayback/20230101120000/example.com/a/b';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000/example.com/a/b`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000/example.com/a/b',
+                    url: 'example.com/a/b',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+
+        it('uses an empty archived URL when there is no "/" after the timestamp', async () => {
+            req.url = '/wayback/20230101120000';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000',
+                    url: '',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+    });
+
+    describe('stripping the pywb prefix from the fetched URL', () => {
+        it('strips only up to the first "replay/" when the archived URL also contains it', async () => {
+            req.url = '/wayback/20230101120000/example.com/replay/page';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000/example.com/replay/page`,
+                headers: new Map()
+            });
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.render).toHaveBeenCalledWith('pages/replay', expect.objectContaining({
+                requestedPage: {
+                    fullUrl: '20230101120000/example.com/replay/page',
+                    url: 'example.com/replay/page',
+                    timestamp: '20230101120000'
+                }
+            }));
+        });
+
+        it('follows a redirect that leaves pywb with an empty path when "replay/" is absent', async () => {
+            mockFetch
+                .mockResolvedValueOnce({
+                    ok: true,
+                    url: 'https://other.example/20230101120000/example.com',
+                    headers: new Map()
+                })
+                .mockRejectedValueOnce(new Error('stop'));
+
+            wayback(req, res);
+            await flushPromises();
+
+            expect(mockFetch).toHaveBeenNthCalledWith(2, `${PYWB_URL}/`);
+            expect(res.status).toHaveBeenCalledWith(404);
+        });
+    });
+
+    describe('non-numeric timestamp (#56)', () => {
+        beforeEach(() => {
+            req.url = '/wayback/20230101120000id_/example.com';
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                url: `${PYWB_URL}/20230101120000id_/example.com`,
+                headers: new Map()
+            });
+        });
+
+        it('redirects to pywb once and stops instead of also rendering the replay page', async () => {
+            wayback(req, res);
+            await flushPromises();
+
+            expect(res.redirect).toHaveBeenCalledTimes(1);
+            expect(res.redirect).toHaveBeenCalledWith(`${PYWB_URL}/20230101120000id_/example.com`);
+            expect(PageSearchApiRequest).not.toHaveBeenCalled();
+            expect(res.render).not.toHaveBeenCalled();
+        });
+
+        it('does not leak newUrl into the global scope', async () => {
+            wayback(req, res);
+            await flushPromises();
+
+            expect(globalThis).not.toHaveProperty('newUrl');
+        });
     });
 });

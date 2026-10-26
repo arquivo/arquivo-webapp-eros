@@ -1,3 +1,5 @@
+'use strict';
+
 const exportImageSearch = require('../export-image-search');
 
 describe('Image Search Export', () => {

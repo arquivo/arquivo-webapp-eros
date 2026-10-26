@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock config before requiring modules
 jest.mock('config');
 
@@ -53,6 +55,9 @@ function getMockResponse(requestedUrl) {
     }
     if (requestedUrl === 'http://example.com/empty') {
         return '';
+    }
+    if (requestedUrl === 'http://example.com/malformed-long') {
+        return '{' + 'x'.repeat(10000) + '}\n{"url":"http://example.com","timestamp":"20230101120000","status":"200","digest":"abc"}';
     }
     return '{"url":"http://default.com","timestamp":"20230101120000","status":"200","digest":"default"}';
 }
@@ -303,7 +308,7 @@ describe('CDXSearchApiRequest', () => {
             // Spy on logger.error
             const errorSpy = jest.spyOn(api.logger, 'error');
 
-            const verifyErrorLogging = (data) => {
+            const verifyErrorLogging = () => {
                 // Should have logged error with both JSON and error message
                 expect(errorSpy).toHaveBeenCalled();
                 const errorCall = errorSpy.mock.calls.find(call => 
@@ -317,6 +322,25 @@ describe('CDXSearchApiRequest', () => {
             };
 
             api.get(requestData, verifyErrorLogging);
+        });
+
+        it('logs only the first 200 characters of a long malformed object, at debug level', (done) => {
+            const errorSpy = jest.spyOn(api.logger, 'error').mockImplementation(() => {});
+            const debugSpy = jest.spyOn(api.logger, 'debug').mockImplementation(() => {});
+
+            api.get(new URLSearchParams({ url: 'http://example.com/malformed-long' }), (data) => {
+                // the malformed object is skipped, the next one is still parsed
+                expect(data).toHaveLength(1);
+                expect(data[0].digest).toBe('abc');
+                // The capture (which holds the searched URL) is not in the error line
+                expect(errorSpy).toHaveBeenCalledWith('Failed to parse JSON object (10002 chars). Error: SyntaxError');
+                const debugCall = debugSpy.mock.calls.find(call => call[0].includes('Failed to parse JSON object'));
+                expect(debugCall[0]).toMatch(/^Failed to parse JSON object: \{x{199}\.\.\. \(10002 chars\)\. Error: /);
+                expect(debugCall[0].length).toBeLessThan(400);
+                errorSpy.mockRestore();
+                debugSpy.mockRestore();
+                done();
+            });
         });
 
         it('should handle empty response', (done) => {
@@ -449,6 +473,115 @@ describe('CDXSearchApiRequest', () => {
             const sanitized = api.sanitizeRequestData(requestData);
             expect(sanitized.get('from')).toBe('20200101');
             expect(sanitized.get('to')).toBe('20201231');
+        });
+    });
+    describe('Timeouts and size cap', () => {
+        const capture = (i) => JSON.stringify({ url: 'http://example.com', timestamp: `2023010112000${i}`, status: '200', digest: `d${i}` }) + '\n';
+        let stubServer;
+        let api;
+        let calls;
+
+        // Stub CDX server: the url parameter picks how the reply is sent
+        function handleStubRequest(req, res) {
+            const scenario = new URL(req.url, 'http://localhost').searchParams.get('url');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            let sent = 0;
+            let timer;
+            if (scenario === 'steady') {
+                // 10 captures, one every 50ms: 500ms in all, with no 200ms gap
+                timer = setInterval(() => {
+                    res.write(capture(sent++));
+                    if (sent === 10) {
+                        clearInterval(timer);
+                        res.end();
+                    }
+                }, 50);
+            } else if (scenario === 'stall') {
+                // one capture, then nothing
+                res.write(capture(0));
+            } else if (scenario === 'drip') {
+                // a capture every 20ms, forever
+                timer = setInterval(() => res.write(capture(sent++ % 10)), 20);
+            } else if (scenario === 'large') {
+                res.end(capture(0).repeat(100));
+            }
+            res.on('close', () => clearInterval(timer));
+        }
+
+        beforeAll((done) => {
+            stubServer = http.createServer(handleStubRequest);
+            stubServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            stubServer.closeAllConnections();
+            stubServer.close(done);
+        });
+
+        beforeEach(() => {
+            api = new CDXSearchApiRequest();
+            api.apiUrl = `http://localhost:${stubServer.address().port}`;
+            jest.spyOn(api.logger, 'error').mockImplementation(() => {});
+            calls = 0;
+        });
+
+        // Expects the callback to have been called once in total, a little after it was called
+        const expectSingleCall = (done) => setTimeout(() => {
+            expect(calls).toBe(1);
+            done();
+        }, 100);
+
+        it('has an explicit 5s idle timeout, a 1 minute deadline and a 64 MB cap', () => {
+            expect(api.options).toEqual({ method: 'GET', timeout: 60000, idleTimeout: 5000, maxResponseBytes: 64 * 1024 * 1024 });
+        });
+
+        it('reads a slow but steady stream that lasts longer than the idle timeout', (done) => {
+            api.options = { method: 'GET', timeout: 2000, idleTimeout: 200 };
+
+            api.get(new URLSearchParams({ url: 'steady' }), (data) => {
+                calls++;
+                expect(data).toHaveLength(10);
+                expect(data[9]).toMatchObject({ digest: 'd9' });
+                expect(api.logger.error).not.toHaveBeenCalled();
+                expectSingleCall(done);
+            });
+        });
+
+        it('returns [] once when the stream stops for the idle timeout', (done) => {
+            api.options = { method: 'GET', timeout: 5000, idleTimeout: 100 };
+            const start = Date.now();
+
+            api.get(new URLSearchParams({ url: 'stall' }), (data) => {
+                calls++;
+                expect(data).toEqual([]);
+                expect(Date.now() - start).toBeLessThan(1000);
+                expect(api.logger.error).toHaveBeenCalledWith(`${api.apiUrl} : Timeout (no data for 100ms)`);
+                expectSingleCall(done);
+            });
+        });
+
+        it('returns [] once when a stream that never stops reaches the deadline', (done) => {
+            api.options = { method: 'GET', timeout: 200, idleTimeout: 1000 };
+            const start = Date.now();
+
+            api.get(new URLSearchParams({ url: 'drip' }), (data) => {
+                calls++;
+                expect(data).toEqual([]);
+                expect(Date.now() - start).toBeLessThan(1000);
+                expect(api.logger.error).toHaveBeenCalledWith(`${api.apiUrl} : Timeout (200ms)`);
+                expectSingleCall(done);
+            });
+        });
+
+        it('returns [] once when the reply is larger than the size cap', (done) => {
+            api.options = { method: 'GET', timeout: 2000, idleTimeout: 1000, maxResponseBytes: 1024 };
+
+            api.get(new URLSearchParams({ url: 'large' }), (data) => {
+                calls++;
+                expect(data).toEqual([]);
+                expect(api.logger.error).toHaveBeenCalledWith(`${api.apiUrl} : Response too large (over 1024 bytes)`);
+                expectSingleCall(done);
+            });
         });
     });
 });

@@ -1,3 +1,5 @@
+'use strict';
+
 // Mock config module for Jest tests
 const mockConfig = {
   'backend.url': 'https://preprod.arquivo.pt',
@@ -14,9 +16,9 @@ const mockConfig = {
   'image.search.api': 'https://preprod.arquivo.pt/imagesearch',
   'query.suggestion.api': 'https://preprod.arquivo.pt/spellchecker/checker',
   'query.suggestion.api_enabled': false,
-  'text.search.api.solr': 'https://preprod.arquivo.pt/textsearch',
-  'text.search.api.nutchwax': 'https://preprod.arquivo.pt/textsearchnutchwax',
   'text.search.api.default': 'https://preprod.arquivo.pt/textsearch',
+  'text.search.api.yearBalance_enabled': false,
+  'text.search.api.spellcheck_enabled': true,
   'cdx.api': 'https://preprod.arquivo.pt/wayback/cdx',
   'search.start.date': '19910806',
   'text.results.per.page': 10,
@@ -24,13 +26,19 @@ const mockConfig = {
   'session.secret': 'test-secret',
   'session.length': 604800000,
   'webapp.showContameHistoriasButton': false,
-  'embargo-offset': '0001-00-00',
-  'google.analytics.token': '',
+  'express.trust.proxy': '',
+  'google.tagmanager.id': 'GTM-5SZHXPRP',
+  'google.tagmanager.auth': '',
+  'google.tagmanager.preview': '',
   'citation.saver.google.sheet.id': '',
   'citation.saver.max.upload.size': 100000000,
   'citation.saver.upload.folder.path': 'uploads/CitationSaver',
+  'citation.saver.upload.temp.folder.path': '',
+  'citation.saver.rate.limit.max': '',
+  'citation.saver.rate.limit.window.ms': 900000,
   'logger.type': 'console',
-  'logger.dir': 'logs/'
+  'logger.dir': 'logs/',
+  'logger.level': 'info'
 };
 
 module.exports = {

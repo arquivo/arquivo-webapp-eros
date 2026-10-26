@@ -1,4 +1,5 @@
-const config = require('config');
+'use strict';
+
 const sanitizeInputs = require('./utils/sanitize-search-params');
 const CDXSearchApiRequest = require('./apis/cdx-api')
 const cdxFilter = require('./filter-cdx')
@@ -25,7 +26,8 @@ module.exports = function (req, res) {
             apiRequest.get(requestData,
                 (apiData) => {
                     if(apiData.length == 0) {
-                        logger.info('No results found for the following query: '+JSON.stringify(requestData.get('q')));
+                        // Only the length: the query itself may hold personal data
+                        logger.info('No results found for a query of ' + (requestData.get('q') ?? '').length + ' characters');
                     }
                     res.render('partials/url-' + viewMode + '-results', {
                         requestData: requestData,

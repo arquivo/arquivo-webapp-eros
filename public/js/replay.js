@@ -1,3 +1,10 @@
+'use strict';
+
+// ArquivoReplay is used by views/templates/body/body-replay.ejs.
+/* exported ArquivoReplay */
+// dateFromTimestamp: functions.js.
+/* global dateFromTimestamp */
+
 class ArquivoReplay {
     constructor(configs) {
         this.configs = configs;
@@ -17,13 +24,13 @@ class ArquivoReplay {
 
     sendToAnalytics(category,action,label) {
         const replay = this;
-        if(!!gtag){
-            gtag("event", category, {
-                "action": action, 
-                "label": label || 'arquivo.pt/' + replay.getConfig('requestedPage.fullUrl') 
-            } );
-        }
-
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            "event": 'replay_interaction',
+            "event_category": category,
+            "event_action": action,
+            "event_label": label || 'arquivo.pt/' + replay.getConfig('requestedPage.fullUrl')
+        });
     }
 
     init() {
@@ -64,11 +71,11 @@ class ArquivoReplay {
             window.location = e.target.href;
         }) 
 
-        $('#menuTechnicalDetails').click((e) => {
+        $('#menuTechnicalDetails').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'MoreInformationMenuClick');
         })
 
-        $('#menuScreenshot').click((e) => {
+        $('#menuScreenshot').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuClick');
         })
 
@@ -82,7 +89,7 @@ class ArquivoReplay {
             replay.sendToAnalytics('ReplayBarFunctions', 'ScreenshotMenuCancel');
         });
 
-        $('#menuPrint').click((e) => {
+        $('#menuPrint').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuClick');
         })
 
@@ -130,7 +137,7 @@ class ArquivoReplay {
             replay.sendToAnalytics('ReplayBarFunctions', 'PrintMenuCancel');
         });
 
-        $('#menuCompleteThePage').click((e) => {
+        $('#menuCompleteThePage').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'Complete Page');
         })
 
@@ -149,7 +156,7 @@ class ArquivoReplay {
             window.location = e.target.href;
         }) 
 
-        $('#menuReplayWithOldBrowser').click((e) => {
+        $('#menuReplayWithOldBrowser').click(() => {
             replay.sendToAnalytics('ReplayBarFunctions', 'Replay with old browser');
         })
 
@@ -250,18 +257,17 @@ class ArquivoReplay {
         const url = replay.getConfig('requestedPage.url');
         const timestamp = replay.getConfig('requestedPage.timestamp');
         const fullUrl = replay.getConfig('requestedPage.fullUrl');
-        $.ajax({
-            url: '/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp),
-            success: (data, textStatus, jqXHR) => {
+        fetch('/partials/replay-technical-details?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
+            .then((data) => {
                 if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
-                    $('#technical-details').replaceWith(data); 
+                    $('#technical-details').replaceWith(data);
                 }
                 $('.modal').off('click').on('click','button.cancel',(e) => {
                     e.preventDefault();
                     $.modal.close();
                 });
-            }
-        });
+            }, () => {});
     }
 
     initCommunication() {
@@ -269,22 +275,52 @@ class ArquivoReplay {
         const eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
         const messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
+        // pywb posts the wb_type messages from the replay iframe's own window, on the
+        // origin of the configured pywb.url; init.js posts the arquivo_type ones from this
+        // page itself. Messages from any other origin, and wb_type messages from any other
+        // window (frames nested in the replayed page, windows it opens), are ignored.
+        const isHttp = (url) => ['http:', 'https:'].includes(url.protocol);
+        let pywbOrigin = null;
+        try {
+            const pywbUrl = new URL(replay.getConfig('pywb.url'));
+            pywbOrigin = isHttp(pywbUrl) ? pywbUrl.origin : null;
+        } catch {
+            // No valid pywb.url: no replay messages are accepted.
+        }
+        // Only http(s) URLs end up in the page links and history.
+        const isHttpUrl = (url) => {
+            try {
+                return typeof url === 'string' && isHttp(new URL(url));
+            } catch {
+                return false;
+            }
+        };
+
         window[eventMethod](messageEvent, (e) => {
             const key = e.message ? "message" : "data";
-            if (e[key] && e[key].wb_type) {
+            // Looked up on each message: refreshIframe replaces the iframe.
+            const iframe = document.getElementById('replay-in-iframe');
+            const fromReplay = e.origin === pywbOrigin && iframe !== null
+                && iframe.contentWindow !== null && e.source === iframe.contentWindow;
+            const fromThisPage = e.origin === window.location.origin;
+            if (fromReplay && e[key] && e[key].wb_type) {
                 if (e[key].wb_type == 'load' && e[key].title && e[key].title + ' - ' + replay.getConfig('preservedByArquivo') != document.title) {
                     document.title = e[key].title + ' - ' + replay.getConfig('preservedByArquivo');
                 }
-                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) ) {
+                if ( ['load', 'replace-url', 'unload'].includes(e[key].wb_type) && isHttpUrl(e[key].url) ) {
                     replay.setUrlAndTimestamp(e[key].url,e[key].ts,e[key].wb_type != 'load');
-                    gtag("event", 'page_view');
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        "event": 'replay_page_view',
+                        "event_label": e[key].url
+                    });
                 }
                 if ( e[key].wb_type == 'not-found' ) {
                     $('#replay-in-iframe').hide();
                     $('#replay-not-found').show();
                 }
             }
-            if(e[key] && e[key].arquivo_type && e[key].message){
+            if(fromThisPage && e[key] && e[key].arquivo_type && e[key].message){
                 if(e[key].arquivo_type == 'section-loaded' && e[key].message == 'date'){
                     const target = $('.date-selected');
                     if(target.length){
@@ -314,15 +350,14 @@ class ArquivoReplay {
         $('#menuListVersions').attr('href', '/page/search?q=' + url);
         const h3 = '<h3>' + $('#replay-left-nav > h3').html() + '</h3>';
         $('#replay-left-nav').html(h3 + replay.getConfig("loader.html"));
-        $.ajax({
-            url: '/partials/replay-nav?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp),
-            success: (data, textStatus, jqXHR) => {
+        fetch('/partials/replay-nav?url=' + encodeURIComponent(url) + '&timestamp=' + encodeURIComponent(timestamp))
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
+            .then((data) => {
                 if (replay.getConfig('requestedPage.fullUrl') == fullUrl) {
-                    $('#replay-left-nav').html(h3 + data);                    
+                    $('#replay-left-nav').html(h3 + data);
                     replay.updateSelection(true);
                 }
-            }
-        });
+            }, () => {});
     }
     updateTimestamp() {
         const replay = this;

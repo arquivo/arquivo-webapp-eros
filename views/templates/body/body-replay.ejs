@@ -1,6 +1,11 @@
+<%
+  // Writes a value as a JSON string literal for the script below, with < and >
+  // as \u escapes, so it is read back as the same text.
+  const jsString = (value) => JSON.stringify(String(value)).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
+-%>
 <!-- starts replay content -->
 <!-- <iframe id="replay-in-iframe" name="replay-page" title="replay page"
-    src="<%- config.get('pywb.url') + '/' +requestedPage.fullUrl %>">
+    src="<%= config.get('pywb.url') + '/' +requestedPage.fullUrl %>">
 </iframe> -->
 
 <!-- starts not found -->
@@ -11,10 +16,10 @@
     const arquivoReplay = new ArquivoReplay({
         "language": "<%= getLanguage() %>",
         "pywb.url": "<%- config.get('pywb.url') %>",
-        "requestedPage.fullUrl": "<%- requestedPage.fullUrl %>",
+        "requestedPage.fullUrl": <%- jsString(requestedPage.fullUrl) %>,
         "screenshot.url": "<%- config.get('screenshot.url') %>",
-        "requestedPage.url": "<%- requestedPage.url %>",
-        "requestedPage.timestamp": "<%- requestedPage.timestamp %>",
+        "requestedPage.url": <%- jsString(requestedPage.url) %>,
+        "requestedPage.timestamp": <%- jsString(requestedPage.timestamp) %>,
         "preservedByArquivo": "<%= t('wayback.title.preserved-by-arquivo'); %>",
         "loader.html": `<%- include('../fragments/preloader'); %>`,
         "oldweb.today.fullUrl": "<%- config.get('oldweb.today.fullUrl') %>",

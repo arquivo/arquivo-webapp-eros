@@ -104,7 +104,7 @@
                   <% 
                   apiData.years[year].months[month].forEach(item => {
                   %>
-                  <li class="menu-pages-replay-date-hour" id="list-results-timestamp-<%= item.timestamp %>"><a href="/wayback/<%-item.timestamp+'/'+item.url %>"> 
+                  <li class="menu-pages-replay-date-hour" id="list-results-timestamp-<%= item.timestamp %>"><a href="/wayback/<%= item.timestamp+'/'+item.url %>"> 
                     <%= utils.timestampToText(t).long(item.timestamp) %>
                   </a></li>
                   <% 

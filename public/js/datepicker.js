@@ -1,3 +1,8 @@
+'use strict';
+
+// lang and translations: views/templates/translatelibs.ejs. isMobile: functions.js.
+/* global lang, translations, isMobile */
+
 $(function () {
     //Make sure the targets exist
     if ($('#search-tools-date-slider').length) {
@@ -12,12 +17,9 @@ $(function () {
         var modalDatepickerContent = null;
         
         //load modal datepicker template into local variable
-        $.ajax({
-            url: '/partials/modal-datepicker?l='+lang,
-            success: function (data) {
-                modalDatepickerContent = data
-            }
-        });
+        fetch('/partials/modal-datepicker?l='+lang)
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
+            .then((data) => { modalDatepickerContent = data; }, () => {});
 
         //converts yyyymmdd into Date object
         let stringToDate = function (dateString) {
@@ -101,7 +103,7 @@ $(function () {
                     const minDay = Math.min(getDaysInMonth(m, y), d);
                     submitDate(new Date(y, m - 1, minDay));
                 },
-                onSelect: function (dateText, inst) {
+                onSelect: function (dateText) {
                     const newDateText = dateText.split('/').reverse().join('');
                     const newDate = stringToDate(newDateText);
                     submitDate(newDate);

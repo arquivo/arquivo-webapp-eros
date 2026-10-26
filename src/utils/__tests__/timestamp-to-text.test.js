@@ -1,10 +1,8 @@
+'use strict';
+
 // Mock the logger to avoid config dependency issues
-jest.mock('../../../src/logger', () => {
-  return jest.fn(() => ({
-    info: jest.fn(),
-    error: jest.fn()
-  }));
-});
+const mockLogger = { info: jest.fn(), error: jest.fn() };
+jest.mock('../../../src/logger', () => jest.fn(() => mockLogger));
 
 const timestampToText = require('../../../src/utils/timestamp-to-text');
 
@@ -104,10 +102,33 @@ describe('timestampToText', () => {
       expect(typeof result).toBe('string');
     });
 
+    it('logs the type of a non-string input, never its value (#180)', () => {
+      mockLogger.error.mockClear();
+      const formatter = timestampToText(mockTranslate);
+      formatter.short(['jane.doe@example.pt\r\nforged']);
+      expect(mockLogger.error).toHaveBeenCalledWith("Expected input to be 'string' but got 'object'");
+      expect(mockLogger.error.mock.calls.flat().join('\n')).not.toContain('jane.doe');
+    });
+
     it('should handle empty string', () => {
       const formatter = timestampToText(mockTranslate);
       const result = formatter.short('');
       expect(result).toBeDefined();
+    });
+
+    it('should treat non-string input as an empty (fully zero-padded) timestamp', () => {
+      const formatter = timestampToText(mockTranslate);
+      expect(formatter.short(12345678901234)).toBe('Jan 0');
+      expect(formatter.short(undefined)).toBe('Jan 0');
+      expect(formatter.short(null)).toBe('Jan 0');
+    });
+  });
+
+  describe('partial timestamps', () => {
+    it('should zero-pad the missing time of a date only timestamp', () => {
+      const formatter = timestampToText(mockTranslate);
+      expect(formatter.medium('20240215')).toBe('15 February 2024, 00:00');
+      expect(formatter.long('20241231')).toBe('31 de December de 2024, 00:00');
     });
   });
 });

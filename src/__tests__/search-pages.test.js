@@ -1,23 +1,31 @@
 'use strict';
 
+const http = require('node:http');
+const request = require('supertest');
+const config = require('config');
 const searchPages = require('../search-pages');
 
 // Mock dependencies
 jest.mock('../utils/sanitize-search-params');
 jest.mock('../apis/page-search-api');
-jest.mock('../apis/suggestion-api');
 jest.mock('../export-page-search');
+jest.mock('../logger', () => {
+    const logger = { info: jest.fn(), error: jest.fn(), debug: jest.fn() };
+    return jest.fn(() => logger);
+});
 
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const PageSearchApiRequest = require('../apis/page-search-api');
-const SuggestionApi = require('../apis/suggestion-api');
 const makeExportObject = require('../export-page-search');
+const loggerFactory = require('../logger');
+const logger = loggerFactory();
 
 describe('search-pages handler', () => {
     let req, res;
     let mockRequestData;
+    let mockSanitizedRequestData;
+    let mockSpellcheckRequestData;
     let mockApiRequest;
-    let mockSuggestionRequest;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -30,6 +38,9 @@ describe('search-pages handler', () => {
             const map = { q: 'test query', l: 'pt', api: 'solr' };
             return map[key];
         });
+        mockSpellcheckRequestData = new URLSearchParams({ q: 'test query', fields: 'spellcheck' });
+
+        mockSanitizedRequestData = new URLSearchParams({ q: 'test query' });
 
         req = {
             t: jest.fn((key) => key)
@@ -43,18 +54,13 @@ describe('search-pages handler', () => {
 
         mockApiRequest = {
             get: jest.fn((params, callback) => {
-                callback({ response_items: [{ title: 'Result 1' }] });
+                callback({ response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' });
             }),
-            sanitizeRequestData: jest.fn((data) => data)
+            withSpellcheck: jest.fn(() => mockSpellcheckRequestData),
+            getSuggestion: jest.fn((apiData, requestData) => apiData.suggested_query || requestData.get('q')),
+            sanitizeRequestData: jest.fn(() => mockSanitizedRequestData)
         };
         PageSearchApiRequest.mockImplementation(() => mockApiRequest);
-
-        mockSuggestionRequest = {
-            getSuggestion: jest.fn((query, lang, callback) => {
-                callback('suggested term');
-            })
-        };
-        SuggestionApi.mockImplementation(() => mockSuggestionRequest);
 
         makeExportObject.mockReturnValue({ export: 'data' });
     });
@@ -65,34 +71,28 @@ describe('search-pages handler', () => {
         expect(sanitizeInputs).toHaveBeenCalledWith(req, res);
     });
 
-    it('creates PageSearchApiRequest instance', () => {
+    it('creates PageSearchApiRequest instance, ignoring the api parameter', () => {
         searchPages(req, res);
 
-        expect(PageSearchApiRequest).toHaveBeenCalledWith('solr');
+        expect(PageSearchApiRequest).toHaveBeenCalledWith();
     });
 
-    it('creates SuggestionApi instance', () => {
+    it('requests API with spellcheck added to the sanitized request data', () => {
         searchPages(req, res);
 
-        expect(SuggestionApi).toHaveBeenCalled();
-    });
-
-    it('requests suggestion with query and language', () => {
-        searchPages(req, res);
-
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
+        expect(mockApiRequest.withSpellcheck).toHaveBeenCalledWith(mockRequestData);
+        expect(mockApiRequest.get).toHaveBeenCalledWith(
+            mockSpellcheckRequestData,
             expect.any(Function)
         );
     });
 
-    it('requests API with sanitized request data', () => {
+    it('takes the suggestion from the same API reply as the results', () => {
         searchPages(req, res);
 
-        expect(mockApiRequest.get).toHaveBeenCalledWith(
-            mockRequestData,
-            expect.any(Function)
+        expect(mockApiRequest.getSuggestion).toHaveBeenCalledWith(
+            { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
+            mockRequestData
         );
     });
 
@@ -101,32 +101,45 @@ describe('search-pages handler', () => {
 
         expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', {
             requestData: mockRequestData,
-            apiData: { response_items: [{ title: 'Result 1' }] },
+            apiData: { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             suggestion: 'suggested term',
             exportObject: { export: 'data' }
         });
     });
 
-    it('creates export object with sanitized request data', () => {
+    it('renders the original query as suggestion when the API has none', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [{ title: 'Result 1' }], suggested_query: '' });
+        });
+
         searchPages(req, res);
 
+        expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', expect.objectContaining({
+            suggestion: 'test query'
+        }));
+    });
+
+    it('creates export object with the request data without spellcheck', () => {
+        searchPages(req, res);
+
+        expect(mockApiRequest.sanitizeRequestData).toHaveBeenCalledWith(mockRequestData);
         expect(makeExportObject).toHaveBeenCalledWith(
-            mockRequestData,
-            { response_items: [{ title: 'Result 1' }] },
+            mockSanitizedRequestData,
+            { response_items: [{ title: 'Result 1' }], suggested_query: 'suggested term' },
             req.t
         );
     });
 
     it('handles empty results from API', () => {
         mockApiRequest.get.mockImplementationOnce((params, callback) => {
-            callback({ response_items: [] });
+            callback({ response_items: [], suggested_query: 'suggested term' });
         });
 
         searchPages(req, res);
 
         expect(res.render).toHaveBeenCalledWith('partials/pages-search-results', {
             requestData: mockRequestData,
-            apiData: { response_items: [] },
+            apiData: { response_items: [], suggested_query: 'suggested term' },
             suggestion: 'suggested term',
             exportObject: { export: 'data' }
         });
@@ -142,19 +155,181 @@ describe('search-pages handler', () => {
         expect(res.render).toHaveBeenCalled();
     });
 
-    it('uses default language when language is not provided', () => {
-        mockRequestData.get = jest.fn((key) => {
-            const map = { q: 'test query', l: undefined, api: 'solr' };
-            return map[key];
+    it('logs under the PageSearch label', () => {
+        // Load the handler in a fresh module registry, so the logger factory call doesn't depend on require order
+        jest.isolateModules(() => {
+            const isolatedLoggerFactory = require('../logger');
+            require('../search-pages');
+            expect(isolatedLoggerFactory).toHaveBeenCalledWith('PageSearch');
         });
-        sanitizeInputs.mockReturnValue(mockRequestData);
+    });
+
+    it('does not log a no-results message when response_items has results', () => {
+        searchPages(req, res);
+
+        expect(logger.info).not.toHaveBeenCalled();
+    });
+
+    it('logs a no-results message when response_items is empty', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ response_items: [] });
+        });
 
         searchPages(req, res);
 
-        expect(mockSuggestionRequest.getSuggestion).toHaveBeenCalledWith(
-            'test query',
-            'pt',
-            expect.any(Function)
-        );
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
+    });
+
+    it('logs a no-results message when the reply only has the image search responseItems key', () => {
+        mockApiRequest.get.mockImplementationOnce((params, callback) => {
+            callback({ responseItems: [{ title: 'Image 1' }] });
+        });
+
+        searchPages(req, res);
+
+        expect(logger.info).toHaveBeenCalledWith('No results found for a query of 10 characters');
+    });
+
+    it('renders synchronously in the API callback', () => {
+        const next = jest.fn();
+
+        searchPages(req, res, next);
+
+        expect(res.render).toHaveBeenCalledTimes(1);
+        expect(next).not.toHaveBeenCalled();
+    });
+
+    it('passes render errors to next instead of throwing them from the API callback', () => {
+        const next = jest.fn();
+        const error = new Error('render failed');
+        res.render.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+    });
+
+    it('passes suggestion errors to next without rendering', () => {
+        const next = jest.fn();
+        const error = new Error('suggestion failed');
+        mockApiRequest.getSuggestion.mockImplementationOnce(() => { throw error; });
+
+        expect(() => searchPages(req, res, next)).not.toThrow();
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(error);
+        expect(res.render).not.toHaveBeenCalled();
+    });
+});
+
+describe('GET /partials/pages-search-results when the API callback throws', () => {
+    let app;
+    let stubServer;
+    let stubHandler;
+    const error = new Error('export failed');
+    const replyJson = (res, status, body) => {
+        res.writeHead(status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(body));
+    };
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => stubHandler(req, res));
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.closeAllConnections();
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        // The real request flow and API client (with its success and fallback paths); only the
+        // API is a stub, and the export throws inside the API callback
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockImplementation(() => { throw error; });
+        const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
+        PageSearchApiRequest.mockImplementation(() => {
+            // A short timeout, so the timeout path is quick to reach
+            const api = new ActualPageSearchApiRequest({ timeout: 500 });
+            api.apiUrl = `http://localhost:${stubServer.address().port}`;
+            return api;
+        });
+    });
+
+    it.each([
+        ['replies with a 2xx status', (req, res) => replyJson(res, 200, { response_items: [] }), null],
+        ['replies with a non-2xx status', (req, res) => replyJson(res, 503, { error: 'unavailable' }), 'Invalid status code'],
+        ['resets the connection', (req) => req.socket.destroy(), 'Request error'],
+        ['does not reply in time', () => {}, 'Timeout'],
+    ])('replies with an error, instead of hanging or crashing, when the API %s', async (_name, handler, fallbackLog) => {
+        stubHandler = handler;
+
+        const res = await request(app).get('/partials/pages-search-results?q=test').timeout(3000);
+
+        expect(res.status).toBe(500);
+        expect(makeExportObject).toHaveBeenCalledTimes(1);
+        // The API client took the expected path (its success path, or the fallback reply)
+        if (fallbackLog) {
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(fallbackLog));
+        } else {
+            // Only the API client's own lines: the app's error middleware also logs the error
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(`localhost:${stubServer.address().port} :`));
+        }
+        if (fallbackLog !== 'Timeout') {
+            // A timeout also logs a request error ("socket hang up"), so rule it out
+            expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining(' : Timeout ('));
+        }
+        // Not swallowed and logged as a JSON parse error by the API client
+        expect(logger.error).not.toHaveBeenCalledWith(expect.stringContaining('JSON parse error'));
+    });
+});
+
+describe('GET /partials/pages-search-results with an api parameter', () => {
+    let app;
+    let stubServer;
+    let requestedUrls;
+    let defaultEndpoint;
+
+    beforeAll((done) => {
+        app = require('../../app');
+        stubServer = http.createServer((req, res) => {
+            requestedUrls.push(req.url);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ response_items: [] }));
+        });
+        stubServer.listen(0, done);
+    });
+
+    afterAll((done) => {
+        stubServer.closeAllConnections();
+        stubServer.close(done);
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        requestedUrls = [];
+        // The real request flow and API client, with its URL from the config pointed at the stub
+        sanitizeInputs.mockImplementation(jest.requireActual('../utils/sanitize-search-params'));
+        makeExportObject.mockReturnValue({});
+        const ActualPageSearchApiRequest = jest.requireActual('../apis/page-search-api');
+        PageSearchApiRequest.mockImplementation((...args) => new ActualPageSearchApiRequest(...args));
+        defaultEndpoint = config.get('text.search.api.default');
+        config.set('text.search.api.default', `http://localhost:${stubServer.address().port}/textsearch`);
+    });
+
+    afterEach(() => {
+        config.set('text.search.api.default', defaultEndpoint);
+    });
+
+    it('requests the configured text search API, whatever the api parameter says', async () => {
+        const res = await request(app).get('/partials/pages-search-results?q=test&api=nutchwax').timeout(3000);
+
+        expect(res.status).toBe(200);
+        expect(requestedUrls).toHaveLength(1);
+        const requestedUrl = new URL(requestedUrls[0], 'http://localhost');
+        expect(requestedUrl.pathname).toBe('/textsearch');
+        expect(requestedUrl.searchParams.get('q')).toBe('test');
+        expect(requestedUrl.searchParams.has('api')).toBe(false);
     });
 });

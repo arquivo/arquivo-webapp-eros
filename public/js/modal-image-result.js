@@ -1,12 +1,14 @@
+'use strict';
+
+// lang: views/templates/translatelibs.ejs. isMobile and dateFromTimestamp: functions.js.
+/* global lang, isMobile, dateFromTimestamp */
+
 $(function () {
   if ($('#images-results').length) {
     let modalImageDetails = '';
-    $.ajax({
-      url: '/partials/modal-image-details?l=' + lang,
-      success: function (data) {
-        modalImageDetails = data
-      }
-    });
+    fetch('/partials/modal-image-details?l=' + lang)
+      .then((response) => response.ok ? response.text() : Promise.reject(response))
+      .then((data) => { modalImageDetails = data; }, () => {});
     const modal = $('#modal');
     document.onkeydown = (e) => {
       if ($.modal.isActive() && modal.find('.image-navigation-button').length) {
@@ -87,7 +89,8 @@ $(function () {
 
       const form = $('#search-result-form-' + imageData.index);
       if (form.length) {
-        $.ajax(form.attr('action'));
+        // Logs the view (src/tracking.js); the reply is not used.
+        fetch(form.attr('action')).catch(() => {});
       }
 
       let setModalText = function (selector, fieldName, transform = (v) => v) {
@@ -228,7 +231,7 @@ $(function () {
           }
 
         },
-        start: function (event,ui){
+        start: function (event){
           const description = modal.find('.image-details-description').first();
           if (event.toElement && description.find(event.toElement).length){
             target.scrolling = true;

@@ -1,3 +1,5 @@
+'use strict';
+
 const sanitizeSearchParams = require('../sanitize-search-params');
 
 // Config is automatically mocked via __mocks__/config.js
@@ -155,6 +157,27 @@ describe('sanitizeSearchParams', () => {
             expect(result.get('adv_phr')).toBe('last phrase');
             expect(result.get('adv_and')).toContain('"first phrase"');
         });
+
+        it('should keep a repeated phrase once', () => {
+            mockReq.query = { q: '"a b" lisboa "c" "a b"' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('adv_phr')).toBe('c');
+            expect(result.get('adv_and')).toBe('lisboa "a b"');
+        });
+
+        // Regression: phrases were removed one at a time, rescanning the query for each one.
+        it('should take linear time in the number of phrases', () => {
+            const phrases = Array.from({ length: 12000 }, (_, i) => `"${i}"`);
+            mockReq.query = { q: phrases.join(' ') };
+
+            const start = process.hrtime.bigint();
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+            expect(result.get('adv_phr')).toBe('11999');
+            expect(result.get('adv_and')).toBe(phrases.slice(0, -1).join(' '));
+            expect(elapsedMs).toBeLessThan(200);
+        });
     });
 
     describe('Query parsing - exclusion terms', () => {
@@ -195,6 +218,26 @@ describe('sanitizeSearchParams', () => {
             expect(result.get('adv_and')).toBe('test');
         });
 
+        it('should join several collection: terms into one comma separated collection parameter', () => {
+            mockReq.query = { q: 'teste collection:EAWP6 collection:EAWP8 collection:EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+            expect(result.get('adv_and')).toBe('teste');
+        });
+
+        it('should keep a comma separated collection: term', () => {
+            mockReq.query = { q: 'teste collection:EAWP6,EAWP8,EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+        });
+
+        it('should remove the spaces from the collection parameter', () => {
+            mockReq.query = { adv_and: 'teste', collection: 'EAWP6, EAWP8 ,EAWP15' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('collection')).toBe('EAWP6,EAWP8,EAWP15');
+            expect(result.get('q')).toBe('teste collection:EAWP6,EAWP8,EAWP15');
+        });
+
         it('should extract safe: term to safeSearch parameter', () => {
             mockReq.query = { q: 'test safe:off' };
             const result = sanitizeSearchParams(mockReq, mockRes);
@@ -213,6 +256,61 @@ describe('sanitizeSearchParams', () => {
             mockReq.query = { q: 'test site:example.com', siteSearch: 'existing.com' };
             const result = sanitizeSearchParams(mockReq, mockRes);
             expect(result.get('siteSearch')).toBe('existing.com');
+        });
+    });
+
+    describe('Query parsing - year balance and language terms', () => {
+        it('should extract yearBalance: term to yearBalance parameter', () => {
+            mockReq.query = { q: 'test yearBalance:0.25' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('yearBalance')).toBe('0.25');
+            expect(result.get('adv_and')).toBe('test');
+        });
+
+        it('should extract language: term to language parameter', () => {
+            mockReq.query = { q: 'test language:pt' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('language')).toBe('pt');
+            expect(result.get('adv_and')).toBe('test');
+        });
+
+        it('should extract minLanguageConfidence: term to minLanguageConfidence parameter', () => {
+            mockReq.query = { q: 'test language:en minLanguageConfidence:MEDIUM' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('language')).toBe('en');
+            expect(result.get('minLanguageConfidence')).toBe('MEDIUM');
+            expect(result.get('adv_and')).toBe('test');
+        });
+
+        it.each(['true', 'false', '0', '0.25', '.5', '1'])('should keep valid yearBalance %s', (value) => {
+            mockReq.query = { q: 'test', yearBalance: value };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('yearBalance')).toBe(value);
+        });
+
+        it.each(['1.5', '-0.25', 'yes', 'TRUE'])('should drop invalid yearBalance %s', (value) => {
+            mockReq.query = { q: 'test', yearBalance: value };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.has('yearBalance')).toBe(false);
+        });
+
+        it.each(['portuguese', 'p', 'p1'])('should drop invalid language %s', (value) => {
+            mockReq.query = { q: 'test', language: value };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.has('language')).toBe(false);
+        });
+
+        it.each(['NONE', 'high', 'VERY_HIGH'])('should drop invalid minLanguageConfidence %s', (value) => {
+            mockReq.query = { q: 'test', minLanguageConfidence: value };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should drop an invalid value typed inline in the query', () => {
+            mockReq.query = { q: 'test yearBalance:2' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.has('yearBalance')).toBe(false);
+            expect(result.get('adv_and')).toBe('test');
         });
     });
 
@@ -271,6 +369,18 @@ describe('sanitizeSearchParams', () => {
             mockReq.query = { adv_and: 'test', collection: 'myCol' };
             const result = sanitizeSearchParams(mockReq, mockRes);
             expect(result.get('q')).toBe('test collection:myCol');
+        });
+
+        it('should reconstruct query with yearBalance, language and minLanguageConfidence parameters', () => {
+            mockReq.query = { adv_and: 'test', yearBalance: '0.25', language: 'pt', minLanguageConfidence: 'LOW' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('q')).toBe('test yearBalance:0.25 language:pt minLanguageConfidence:LOW');
+        });
+
+        it('should not add invalid yearBalance, language and minLanguageConfidence to the query', () => {
+            mockReq.query = { adv_and: 'test', yearBalance: '5', language: 'portuguese', minLanguageConfidence: 'NONE' };
+            const result = sanitizeSearchParams(mockReq, mockRes);
+            expect(result.get('q')).toBe('test');
         });
 
         it('should reconstruct query with multiple parameters', () => {

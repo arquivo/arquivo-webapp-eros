@@ -1,0 +1,79 @@
+# Sauce Labs cross-browser run, via saucectl's Playwright runner.
+#
+# Ported from arquivo/functional-tests' test_sauce.sh (Selenium + Sauce Labs)
+# matrix: Windows 10 Chrome/Firefox/Edge, macOS Chrome/Firefox/Safari, Android
+# Chrome, iOS Safari.
+#
+# Playwright itself only drives three browser *engines* (chromium, firefox,
+# webkit) rather than named browsers/devices the way Selenium/Appium did, so
+# this isn't a 1:1 port:
+# - Chrome/Firefox on Windows 10 and macOS map directly to the chromium/
+#   firefox engines on saucectl's "Windows 10"/"macOS 13" platforms below.
+# - Safari has no engine of its own in Playwright; "webkit" is the closest
+#   available equivalent and is what runs here on macOS in its place.
+# - Edge (Windows) and real Android/iOS devices have no Playwright engine
+#   equivalent at all (Playwright's mobile "devices" are viewport/UA
+#   emulation on chromium/webkit, not real Android/iOS automation) — these
+#   three are NOT covered by this config. If real Edge/Android/iOS coverage
+#   is required, it needs a separate Appium/WebDriver-based Sauce job
+#   alongside this one, which is out of scope for this Playwright port.
+#
+# Runs in `live` mode against real preprod (see playwright.config.js) so this
+# is a true cross-browser sanity check against genuine archived content, not
+# the mocked fixture corpus.
+apiVersion: v1alpha
+kind: playwright
+showConsoleLog: true
+
+sauce:
+  region: us-west-1
+  concurrency: 5
+  metadata:
+    tags:
+      - e2e
+      - functional-tests
+
+rootDir: .
+
+playwright:
+  version: package.json
+  configFile: ./playwright.config.js
+
+suites:
+  - name: "Windows 10 - Chrome"
+    platformName: "Windows 10"
+    screenResolution: "1280x1024"
+    testMatch: ['.*\.spec\.js']
+    params:
+      browserName: "chromium"
+
+  - name: "Windows 10 - Firefox"
+    platformName: "Windows 10"
+    screenResolution: "1280x1024"
+    testMatch: ['.*\.spec\.js']
+    params:
+      browserName: "firefox"
+
+  - name: "macOS 13 - Chrome"
+    platformName: "macOS 13"
+    screenResolution: "1280x1024"
+    testMatch: ['.*\.spec\.js']
+    params:
+      browserName: "chromium"
+
+  - name: "macOS 13 - Firefox"
+    platformName: "macOS 13"
+    screenResolution: "1280x1024"
+    testMatch: ['.*\.spec\.js']
+    params:
+      browserName: "firefox"
+
+  - name: "macOS 13 - Safari (webkit)"
+    platformName: "macOS 13"
+    screenResolution: "1280x1024"
+    testMatch: ['.*\.spec\.js']
+    params:
+      browserName: "webkit"
+
+env:
+  E2E_MODE: live

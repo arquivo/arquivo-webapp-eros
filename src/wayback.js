@@ -1,8 +1,12 @@
+'use strict';
 
 const config = require('config');
 const fetch = require('node-fetch');
 const PageSearchApiRequest = require('./apis/page-search-api');
 const logger = require('./logger')('Wayback');
+const textAfterFirst = require('./utils/text-after-first');
+const escapeForLog = require('./utils/escape-for-log');
+const describeError = require('./utils/describe-error');
 module.exports = function (req, res) {
     function sanitizeUrl(url){
         let res = url.replace(/(^\/+)|(\/+$)/g, '');
@@ -17,11 +21,12 @@ module.exports = function (req, res) {
             res.redirect('/wayback/' + fullUrl);
         } else {
             const timestamp = fullUrl.split('/')[0];
-            const url = fullUrl.split('/').filter((a, i) => i > 0).join('/');
+            const url = textAfterFirst(fullUrl, '/');
 
             if(/^\d+$/.test(timestamp) == false){
-                newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
+                const newUrl = config.get('pywb.url') + '/' + timestamp + '/' + url;
                 res.redirect(newUrl);
+                return;
             }
 
             //Api request for technical details.
@@ -52,7 +57,7 @@ module.exports = function (req, res) {
     function testUrl(url) {
         fetch(url)
             .then(res => {
-                const newUrl = res.url.split(splitToken).filter((a, i) => i > 0).join(splitToken);
+                const newUrl = textAfterFirst(res.url, splitToken);
                 if (sanitizeUrl(res.url) != sanitizeUrl(url)) {
                     const fullUrl = config.get('pywb.url') + '/' + newUrl;
                     testUrl(fullUrl);
@@ -61,13 +66,16 @@ module.exports = function (req, res) {
 
                     renderOk(newUrl);
                 } else {
-                    logger.error('Something went wrong while trying to fetch the following URL: '+url);
+                    // The URL tells which page the user is reading: debug only.
+                    logger.error('Something went wrong while trying to fetch the replay URL. Status: ' + res.status);
+                    logger.debug('Replay URL: ' + escapeForLog(url));
                     renderError();
                 }
             }).
             catch(error => {
-                logger.error('Failed to fetch the following URL: '+url);
-                logger.error(error);
+                // The error message quotes the URL: debug only.
+                logger.error('Failed to fetch the replay URL. Reason: ' + describeError(error));
+                logger.debug('Failed to fetch ' + escapeForLog(url) + ': ' + escapeForLog(error?.stack ?? error));
                 renderError();
             });
     }

@@ -1,3 +1,5 @@
+'use strict';
+
 const utilsMiddleware = require('../utils-middleware');
 
 describe('utilsMiddleware', () => {
@@ -43,6 +45,26 @@ describe('utilsMiddleware', () => {
         
         expect(mockReq.utils.isValidUrl).toBeDefined();
         expect(typeof mockReq.utils.isValidUrl).toBe('function');
+    });
+
+    it('should attach asciiHost utility', () => {
+        utilsMiddleware(mockReq, mockRes, mockNext);
+        
+        expect(mockReq.utils.asciiHost).toBeDefined();
+        expect(typeof mockReq.utils.asciiHost).toBe('function');
+    });
+
+    it('should attach displayUrl utility', () => {
+        utilsMiddleware(mockReq, mockRes, mockNext);
+        
+        expect(mockReq.utils.displayUrl).toBeDefined();
+        expect(typeof mockReq.utils.displayUrl).toBe('function');
+    });
+
+    it.each(['emphasizedHtml', 'snippetHtml'])('should attach the %s utility', (name) => {
+        utilsMiddleware(mockReq, mockRes, mockNext);
+
+        expect(typeof mockReq.utils[name]).toBe('function');
     });
 
     it('should attach sanitizeInputs utility', () => {

@@ -9,7 +9,17 @@
 
 ## Configuration
 
-Review `config/default.properties` to configure API endpoints and other settings before running the application.
+Review `config/default.properties` to configure API endpoints and other settings before running the application. `config/custom-environment-variables.json` lists the settings that environment variables can override, among them:
+
+- `SESSION_SECRET` (`session.secret`): the secret that signs the session cookie. `config/default.properties` only has a placeholder; with `NODE_ENV=production` the app refuses to start while `SESSION_SECRET` is unset or still the placeholder. Set it to a strong random value, e.g. `openssl rand -hex 32` (see [Production Mode](#production-mode)).
+- `EXPRESS_TRUST_PROXY` (`express.trust.proxy`): which reverse proxies may set the client IP with `X-Forwarded-For` (Express "trust proxy"). Empty by default: no proxy is trusted. Behind a proxy, set it to the exact number of proxy hops (e.g. `1`) or to the proxy addresses/subnets (e.g. `172.16.0.0/12`). `true` is refused at startup: it would let any client choose its IP with `X-Forwarded-For`. A higher hop count, `0.0.0.0/0` or `::/0` would do the same. The tracking log and the IP sent with Archive Page Now requests come from this setting: when upgrading from a version that read `X-Forwarded-For` directly, set it in the same release, or both record the proxy's address.
+- `CITATION_SAVER_RATE_LIMIT_MAX` / `CITATION_SAVER_RATE_LIMIT_WINDOW_MS`: at most that many Citation Saver submissions per client IP in each window. Empty or `0` (the default) turns the limit off; only turn it on once the deployment forwards a trustworthy client IP, or every client shares one limit.
+- `LOGGER_LEVEL` (`logger.level`): the lowest log level written, `info` by default. `debug` writes personal data (submitted URLs, error messages): enable it only briefly, never by default in production.
+- `CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH`: folder for uploads in progress. By default `.citationsaver-tmp` next to the upload folder, on the writable uploads volume. It must not be inside the upload folder. Anything that reads `uploads/` recursively should skip it.
+
+Logs go to stdout by default (`logger.type = console`). Their retention and rotation are up to the runtime environment (e.g. the container log driver), not the app. With `logger.type = file` or `daily`, the app writes the files under `logger.dir` (and rotates them daily for `daily`) but never deletes them: removing old files is also the runtime's job.
+
+The app requires a Google service account key file at `config/service_account.json` (used by the Citation Saver) and does not start without it. The path is fixed: there is no setting or environment variable for it.
 
 ## Docker (Recommended)
 
@@ -28,6 +38,9 @@ docker compose up --build
 
 # Stop containers
 docker compose down
+
+# Run the tests inside the development container
+docker compose -f docker-compose.yml run node npm run test
 ```
 
 The application will be available at: http://localhost:3000/
@@ -55,6 +68,8 @@ docker compose -f docker-compose.prod.yml logs -f
 # Stop containers
 docker compose -f docker-compose.prod.yml down
 ```
+
+In production mode (`NODE_ENV=production`), `/switchlang` only switches the language for pages on the `backend.url` host; from any other host, such as the production compose file at http://localhost:3000, it goes to the home page and the language stays the same. The Docker image and the production compose file already set `NODE_ENV=production`; production runs outside Docker should set it too.
 
 **Production optimizations:**
 - Minimal image size (production dependencies only)
@@ -116,9 +131,6 @@ npm run test:coverage
 
 # Run accessibility tests (WCAG 2.1 AA — no external APIs needed)
 npm run test:a11y
-
-# Run tests inside the development container
-docker compose -f docker-compose.yml run node npm run test
 ```
 
 ## Health Check

@@ -20,7 +20,7 @@ div.citation-saver-input-selection {
     font-size: 15px;
     line-height: 18px;
     background-color: rgba(205, 206, 207, 1);
-    color: #0F0F0F80;
+    color: #575858; /* WCAG AA 4.5:1 on #cdcecf */
 
     border-left: 1px solid rgb(234 235 238); 
     width: calc(100%/3 - 2px/3 - 28px);
@@ -114,6 +114,13 @@ input[type="radio"]:checked+label+div+input+label{
 
 .citation-saver-input-selection .input-tab button {
     font-size: 14px;
+}
+
+.citation-saver-input-selection .input-tab input:disabled,
+.citation-saver-input-selection .input-tab textarea:disabled,
+.citation-saver-input-selection .input-tab button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .citation-saver-input-selection .input-tab button[type="submit"] {
@@ -222,6 +229,35 @@ section#citation-saver-modal form button {
 
 a.learn-more {
     color: #1c75c0;
+}
+
+.citation-saver-consent {
+    max-width: 900px;
+    min-width: 80%;
+    font-family: 'Roboto', sans-serif;
+}
+
+.citation-saver-consent-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.citation-saver-consent-item input[type="checkbox"] {
+    margin: 3px 8px 0 0;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+}
+
+.citation-saver-consent-item label {
+    visibility: initial;
+    height: auto;
+    width: auto;
+    flex: 1;
+    font-size: 16px;
+    line-height: 24px;
 }
 
 #input-file-text {

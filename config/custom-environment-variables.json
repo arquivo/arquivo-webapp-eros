@@ -1,5 +1,68 @@
 {
   "session": {
     "secret": "SESSION_SECRET"
+  },
+  "google": {
+    "tagmanager": {
+      "id": "GOOGLE_TAGMANAGER_ID",
+      "auth": "GOOGLE_TAGMANAGER_AUTH",
+      "preview": "GOOGLE_TAGMANAGER_PREVIEW"
+    }
+  },
+  "backend": {
+    "url": "BACKEND_URL"
+  },
+  "wayback": {
+    "url": "WAYBACK_URL"
+  },
+  "pywb": {
+    "url": "PYWB_URL"
+  },
+  "text": {
+    "search": {
+      "api": {
+        "default": "TEXT_SEARCH_API_DEFAULT"
+      }
+    }
+  },
+  "image": {
+    "search": {
+      "api": "IMAGE_SEARCH_API"
+    }
+  },
+  "cdx": {
+    "api": "CDX_API"
+  },
+  "services": {
+    "archivepagenow": {
+      "url": "SERVICES_ARCHIVEPAGENOW_URL"
+    }
+  },
+  "citation": {
+    "saver": {
+      "upload": {
+        "temp": {
+          "folder": {
+            "path": "CITATION_SAVER_UPLOAD_TEMP_FOLDER_PATH"
+          }
+        }
+      },
+      "rate": {
+        "limit": {
+          "max": "CITATION_SAVER_RATE_LIMIT_MAX",
+          "window": {
+            "ms": "CITATION_SAVER_RATE_LIMIT_WINDOW_MS"
+          }
+        }
+      }
+    }
+  },
+  "express": {
+    "trust": {
+      "proxy": "EXPRESS_TRUST_PROXY"
+    }
+  },
+  "logger": {
+    "level": "LOGGER_LEVEL"
   }
 }

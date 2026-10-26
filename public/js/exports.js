@@ -1,5 +1,16 @@
-$(function () {
-    let _exportSERPInfo = [];
+'use strict';
+
+// XLSX: the SheetJS library (public/vendor/js/xlsx.full.min.js).
+/* global XLSX */
+
+(function (init) {
+    // Same timing as jQuery's $(fn): once the DOM is parsed, or now if it already is.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(function () {
     let addZero = function (i) {
         if (i < 10) {
             i = "0" + i;
@@ -32,16 +43,18 @@ $(function () {
         };
         const sheetName = type + " export";
         wb.SheetNames.push(sheetName);
-        let _exportSERPInfo = JSON.parse($('#options-export-json').text())
+        let _exportSERPInfo = JSON.parse(document.getElementById('options-export-json').textContent)
         const ws = XLSX.utils.aoa_to_sheet(_exportSERPInfo);
         wb.Sheets[sheetName] = ws;
         const filename = "arquivo_pt_" + type + "_" + jsDateToTimetamp(new Date()) + "." + outputFileExtension;
         XLSX.writeFile(wb, filename);
 
-        gtag("event", 'exportSERP', {
-            "type": type, 
-            "outputFileExtension": outputFileExtension 
-        } );
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            "event": 'export_serp',
+            "event_category": type,
+            "event_label": outputFileExtension
+        });
     }
 
     // To be called after a search have been finished.
@@ -49,9 +62,9 @@ $(function () {
     //     document.getElementById("replayMenuButton").style.display = totalResults > 0 ? 'block' : 'none';
     const fileExtensions = ['xlsx', 'csv', 'ods', 'txt'];
     fileExtensions.forEach(fileExtension => {
-        $('#options-export-' + fileExtension).click((e) => {
+        document.getElementById('options-export-' + fileExtension)?.addEventListener('click', (e) => {
             e.preventDefault()
-            if($('#options-export-json').length){
+            if(document.getElementById('options-export-json')){
                 exportSERP('page_search', fileExtension);
             }
         })

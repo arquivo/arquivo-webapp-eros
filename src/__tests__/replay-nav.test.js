@@ -1,3 +1,5 @@
+'use strict';
+
 const replayNav = require('../replay-nav');
 const sanitizeInputs = require('../utils/sanitize-search-params');
 const CDXSearchApiRequest = require('../apis/cdx-api');

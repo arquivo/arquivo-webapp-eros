@@ -32,25 +32,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm run test:coverage
+      - name: Lint (npm run lint)
+        run: npm run lint
+
+      - name: Run unit and accessibility tests (npm run ci)
+        run: npm run ci
 
       - name: Smoke test (boot the app and verify it serves)
-        run: |
-          node server.js &
-          APP_PID=$!
-          ok=0
-          for i in $(seq 1 20); do
-            if curl -sf --max-time 2 -o /dev/null http://localhost:3000/; then
-              echo "App responded on / (attempt $i)"; ok=1; break
-            fi
-            sleep 1
-          done
-          kill "$APP_PID" 2>/dev/null || true
-          if [ "$ok" -ne 1 ]; then
-            echo "::error::App failed to serve / on :3000 — boot smoke test failed"
-            exit 1
-          fi
+        run: npm run test:smoke
 
       - name: SonarCloud analysis
         if: github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push'
@@ -58,6 +47,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # jsdom (npm run test:a11y) can't compute colour contrast, so it is checked in a real browser
+  a11y-contrast:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run colour contrast tests (WCAG 2.1 AA, chromium)
+        run: npm run test:a11y:contrast
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-contrast-report
+          path: playwright-report/
+          retention-days: 14
 
   compose-smoke-dev:
     runs-on: ubuntu-latest

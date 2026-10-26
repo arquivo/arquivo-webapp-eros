@@ -1,16 +1,17 @@
+'use strict';
+
 // Mock config before requiring modules
 jest.mock('config');
 
 const ImageSearchApiRequest = require('../image-search-api');
 const config = require('config');
 const http = require('node:http');
+const todayYmd = require('../../utils/today-ymd');
 
 /**
  * ImageSearchApiRequest Test Suite
  * 
- * STATUS: ✅ ALL 30 TESTS PASSING (100%)
- * 
- * This class successfully extends the refactored ApiRequest and demonstrates proper
+ * This class successfully extends JsonApiRequest and demonstrates proper
  * subclass implementation:
  * - Simple constructor that only configures parameters
  * - Uses parent class for all HTTP request handling
@@ -25,7 +26,7 @@ const http = require('node:http');
  * - Date range handling (3 tests)
  * 
  * Along with PageSearchApiRequest, this demonstrates the correct pattern for
- * extending ApiRequest after the refactor.
+ * extending JsonApiRequest.
  */
 describe('ImageSearchApiRequest', () => {
     let mockServer;
@@ -38,8 +39,8 @@ describe('ImageSearchApiRequest', () => {
             
             // Mock successful image search response
             const mockResponse = {
-                estimated_nr_results: 50,
-                response_items: [
+                totalItems: 50,
+                responseItems: [
                     {
                         imgSrc: 'http://example.com/image.jpg',
                         imgMimeType: 'image/jpeg',
@@ -109,9 +110,11 @@ describe('ImageSearchApiRequest', () => {
             expect(api.defaultApiParams.trackingId).toBeNull();
         });
 
-        it('should have empty object as default reply', () => {
+        it('should have a no results default reply, frozen as all requests share it', () => {
             const api = new ImageSearchApiRequest();
-            expect(api.defaultApiReply).toEqual({});
+            expect(api.defaultApiReply).toEqual({ totalItems: 0, responseItems: [] });
+            expect(Object.isFrozen(api.defaultApiReply)).toBe(true);
+            expect(Object.isFrozen(api.defaultApiReply.responseItems)).toBe(true);
         });
     });
 
@@ -167,6 +170,36 @@ describe('ImageSearchApiRequest', () => {
             expect(sanitized.get('collection')).toBe('FCCN');
         });
 
+        it('should remove the collection and page search only terms from the query', () => {
+            const requestData = new URLSearchParams({
+                q: 'lisboa collection:EAWP6 collection:EAWP8 yearBalance:0.5 language:pt minLanguageConfidence:MEDIUM',
+                collection: 'EAWP6,EAWP8',
+                yearBalance: '0.5',
+                language: 'pt',
+                minLanguageConfidence: 'MEDIUM'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.get('collection')).toBe('EAWP6,EAWP8');
+            expect(sanitized.has('yearBalance')).toBe(false);
+            expect(sanitized.has('language')).toBe(false);
+            expect(sanitized.has('minLanguageConfidence')).toBe(false);
+        });
+
+        it('should keep the inline terms the image search API understands in the query', () => {
+            const requestData = new URLSearchParams({
+                q: 'lisboa site:www.publico.pt type:png size:sm safe:off',
+                siteSearch: 'www.publico.pt',
+                type: 'png',
+                size: 'sm',
+                safeSearch: 'off'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('lisboa site:www.publico.pt type:png size:sm safe:off');
+        });
+
         it('should handle trackingId parameter', () => {
             const trackingId = 'test-tracking-id-123';
             const requestData = new URLSearchParams({
@@ -205,11 +238,11 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                expect(data).toHaveProperty('estimated_nr_results');
-                expect(data).toHaveProperty('response_items');
+                expect(data).toHaveProperty('totalItems');
+                expect(data).toHaveProperty('responseItems');
                 expect(data).toHaveProperty('request_parameters');
-                expect(data.response_items).toBeInstanceOf(Array);
-                expect(data.response_items.length).toBeGreaterThan(0);
+                expect(data.responseItems).toBeInstanceOf(Array);
+                expect(data.responseItems.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -220,7 +253,7 @@ describe('ImageSearchApiRequest', () => {
             });
 
             api.get(requestData, (data) => {
-                const firstImage = data.response_items[0];
+                const firstImage = data.responseItems[0];
                 expect(firstImage).toHaveProperty('imgSrc');
                 expect(firstImage).toHaveProperty('imgMimeType');
                 expect(firstImage).toHaveProperty('imgHeight');
@@ -283,6 +316,89 @@ describe('ImageSearchApiRequest', () => {
             const sanitized = api.sanitizeRequestData(requestData);
             expect(sanitized.get('from')).toBe('20200101');
             expect(sanitized.get('to')).toBe('20201231');
+        });
+    });
+
+    /**
+     * Regression tests: the request the client sends and what it returns on failure
+     */
+    describe('request sent and fallback reply', () => {
+        let captureServer;
+        let captured;
+        let status;
+        let body;
+
+        beforeAll((done) => {
+            captureServer = http.createServer((req, res) => {
+                captured.push(req.url);
+                res.writeHead(status, { 'Content-Type': 'application/json' });
+                res.end(body);
+            });
+            captureServer.listen(0, done);
+        });
+
+        afterAll((done) => {
+            captureServer.close(done);
+        });
+
+        beforeEach(() => {
+            captured = [];
+            status = 200;
+            body = JSON.stringify({ totalItems: 1, responseItems: [] });
+        });
+
+        const apiAtCaptureServer = () => {
+            const api = new ImageSearchApiRequest();
+            api.apiUrl = `http://localhost:${captureServer.address().port}`;
+            return api;
+        };
+
+        it('sends the default params, in order, without the page search only terms in the query', (done) => {
+            const api = apiAtCaptureServer();
+            const requestData = new URLSearchParams({
+                q: 'gato collection:Roteiro language:pt size:lg',
+                collection: 'Roteiro',
+                size: 'lg',
+                offset: '25',
+                unknown: 'dropped',
+            });
+
+            api.get(requestData, (data) => {
+                expect(data).toEqual({ totalItems: 1, responseItems: [] });
+                const expected = new URLSearchParams([
+                    ['q', 'gato size:lg'],
+                    ['from', '19910806'],
+                    ['to', todayYmd()],
+                    ['offset', '25'],
+                    ['collection', 'Roteiro'],
+                    ['maxItems', '25'],
+                    ['fields', api.defaultApiParams.fields],
+                    ['prettyPrint', 'false'],
+                    ['size', 'lg'],
+                    ['safeSearch', 'on'],
+                ]);
+                expect(captured).toEqual(['/?' + expected.toString()]);
+                done();
+            });
+        });
+
+        it('returns a no results reply when the API fails', (done) => {
+            status = 503;
+            const api = apiAtCaptureServer();
+
+            api.get(new URLSearchParams({ q: 'test' }), (data) => {
+                expect(data).toEqual({ totalItems: 0, responseItems: [] });
+                done();
+            });
+        });
+
+        // A 2xx reply the results partial can't render; the totalItems of a reply without responseItems isn't kept
+        it.each(['{}', 'null', '{"totalItems":3}'])('returns a no results reply when the API replies %s', async (reply) => {
+            body = reply;
+            const api = apiAtCaptureServer();
+
+            const data = await new Promise((resolve) => api.get(new URLSearchParams({ q: 'test' }), resolve));
+            expect(data).toEqual({ totalItems: 0, responseItems: [] });
         });
     });
 });
