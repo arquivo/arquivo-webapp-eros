@@ -173,11 +173,22 @@ router.get('/services/archivepagenow', function (req, res) {
     });
 });
 
-// With a 'logging' query parameter the request is only acknowledged (empty 200), not archived
+// The form submits here with GET: archiving a page changes nothing on this server, it
+// only renders the recorder page, so the result can be bookmarked and shared. It has its
+// own path so that a plain link to /services/archivepagenow?url=... only pre-fills the form.
+router.get('/services/archivepagenow/save', archivePageNow);
+
+// With a 'logging' query parameter the request is only acknowledged (empty 200), not archived.
+// Any other POST comes from a form loaded before it submitted with GET: it is redirected
+// (303, so the browser follows with GET) to the same submission on the GET route.
 router.post('/services/archivepagenow', function (req, res) {
     const requestData = new URLSearchParams(req.query);
     if (!requestData.has('logging')) {
-        archivePageNow(req, res);
+        const submission = new URLSearchParams({ url: new URLSearchParams(req.body).get('url') ?? '' });
+        if (requestData.has('l')) {
+            submission.set('l', requestData.get('l'));
+        }
+        res.redirect(303, '/services/archivepagenow/save?' + submission.toString());
     } else {
         res.end();
     }

@@ -23,7 +23,7 @@ describe('Archive Page Now Service', () => {
     beforeEach(() => {
         // Setup mock request
         req = {
-            body: {},
+            query: {},
             get: jest.fn((header) => {
                 if (header === 'user-agent') return 'test-user-agent';
                 return null;
@@ -54,7 +54,7 @@ describe('Archive Page Now Service', () => {
 
     describe('Valid URL Processing', () => {
         it('should render success page for valid URL', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -67,7 +67,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should log successful archiving request to backend', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -78,7 +78,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should include user-agent in backend logging', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -89,7 +89,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should include IP address in backend logging', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -100,7 +100,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should send req.ip, never the X-Forwarded-For header or the socket address', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -111,7 +111,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should include recordingUrl with timestamp in response', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -123,7 +123,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should trim whitespace from URL', () => {
-            req.body = { url: '  http://example.com  ' };
+            req.query = { url: '  http://example.com  ' };
 
             archivePageNow(req, res);
 
@@ -135,7 +135,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should handle URLs without protocol', () => {
-            req.body = { url: 'example.com' };
+            req.query = { url: 'example.com' };
 
             archivePageNow(req, res);
 
@@ -149,7 +149,7 @@ describe('Archive Page Now Service', () => {
 
     describe('Invalid URL Processing', () => {
         it('should render error page for invalid URL', () => {
-            req.body = { url: 'not a valid url' };
+            req.query = { url: 'not a valid url' };
 
             archivePageNow(req, res);
 
@@ -163,7 +163,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should log failed request for invalid URL', () => {
-            req.body = { url: 'invalid url' };
+            req.query = { url: 'invalid url' };
 
             archivePageNow(req, res);
 
@@ -174,7 +174,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should handle empty URL', () => {
-            req.body = { url: '' };
+            req.query = { url: '' };
 
             archivePageNow(req, res);
 
@@ -185,8 +185,21 @@ describe('Archive Page Now Service', () => {
             );
         });
 
+        it('should read the URL from the query string, not the request body', () => {
+            req.body = { url: 'http://example.com' };
+
+            archivePageNow(req, res);
+
+            expect(res.render).toHaveBeenCalledWith('pages/services-archivepagenow',
+                expect.objectContaining({
+                    url: '',
+                    error: true
+                })
+            );
+        });
+
         it('should handle missing URL parameter', () => {
-            req.body = {};
+            req.query = {};
 
             archivePageNow(req, res);
 
@@ -200,7 +213,7 @@ describe('Archive Page Now Service', () => {
 
     describe('Error Handling', () => {
         it('should handle fetch errors gracefully without crashing', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             mockFetch.mockRejectedValue(new Error('Network error'));
 
             expect(() => {
@@ -209,7 +222,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should still render success page even if logging fails', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             mockFetch.mockRejectedValue(new Error('Logging failed'));
 
             archivePageNow(req, res);
@@ -233,7 +246,7 @@ describe('Archive Page Now Service', () => {
             withBackendUrl('http://user:s3cr3t@bad host');
 
             it('should render the page and send the error to the app logger instead of throwing', () => {
-                req.body = { url: 'http://example.com' };
+                req.query = { url: 'http://example.com' };
 
                 expect(() => archivePageNow(req, res)).not.toThrow();
 
@@ -248,7 +261,7 @@ describe('Archive Page Now Service', () => {
             });
 
             it('should also log the error on the invalid-url branch', () => {
-                req.body = { url: 'not a valid url' };
+                req.query = { url: 'not a valid url' };
 
                 expect(() => archivePageNow(req, res)).not.toThrow();
 
@@ -268,7 +281,7 @@ describe('Archive Page Now Service', () => {
                 mockFetch.mockImplementation(url => Promise.reject(new FetchError(
                     `request to ${url} failed, reason: connect ECONNREFUSED 127.0.0.1:1`,
                     'system', { code: 'ECONNREFUSED', errno: 'ECONNREFUSED' })));
-                req.body = { url: 'http://example.com/submitted-page' };
+                req.query = { url: 'http://example.com/submitted-page' };
                 req.get = jest.fn(() => 'agent-under-test');
                 req.ip = '203.0.113.9';
 
@@ -289,7 +302,7 @@ describe('Archive Page Now Service', () => {
 
         it('should log a non-URL synchronous error by its name', () => {
             // A lone surrogate makes encodeURIComponent throw a URIError.
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.get = jest.fn(() => 'agent-\uD800');
 
             expect(() => archivePageNow(req, res)).not.toThrow();
@@ -300,7 +313,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should handle special characters in URL', () => {
-            req.body = { url: 'http://example.com/path?query=test&value=123' };
+            req.query = { url: 'http://example.com/path?query=test&value=123' };
 
             archivePageNow(req, res);
 
@@ -313,7 +326,7 @@ describe('Archive Page Now Service', () => {
 
     describe('Logging', () => {
         it('should encode URL parameters in logging request', () => {
-            req.body = { url: 'http://example.com/test?q=hello world' };
+            req.query = { url: 'http://example.com/test?q=hello world' };
 
             archivePageNow(req, res);
 
@@ -322,7 +335,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should encode user-agent in logging request', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.get = jest.fn(() => 'Mozilla/5.0 (Test Agent)');
 
             archivePageNow(req, res);
@@ -332,7 +345,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should include logging=true parameter', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -352,7 +365,7 @@ describe('Archive Page Now Service', () => {
         const loggedUrl = () => mockFetch.mock.calls[0][0];
 
         it('should log a successful request with every parameter in order', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
 
             archivePageNow(req, res);
 
@@ -365,7 +378,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should encode &, ? and # in the archived URL', () => {
-            req.body = { url: 'http://example.com/path?a=1&b=2#frag' };
+            req.query = { url: 'http://example.com/path?a=1&b=2#frag' };
 
             archivePageNow(req, res);
 
@@ -375,7 +388,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should encode spaces as %20 (not +) on a failed request', () => {
-            req.body = { url: 'not a valid url' };
+            req.query = { url: 'not a valid url' };
 
             archivePageNow(req, res);
 
@@ -385,7 +398,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should percent-encode unicode as UTF-8', () => {
-            req.body = { url: 'http://exemplo.pt/ação?q=café' };
+            req.query = { url: 'http://exemplo.pt/ação?q=café' };
 
             archivePageNow(req, res);
 
@@ -395,7 +408,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it("should keep ' ( ) ! ~ * literal", () => {
-            req.body = { url: "http://example.com/it's(1)!~*" };
+            req.query = { url: "http://example.com/it's(1)!~*" };
 
             archivePageNow(req, res);
 
@@ -406,7 +419,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should encode a browser user-agent with %20 and literal parentheses', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.get = jest.fn(() => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)');
 
             archivePageNow(req, res);
@@ -418,7 +431,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should send an empty user-agent parameter when the header is empty', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.get = jest.fn(() => '');
 
             archivePageNow(req, res);
@@ -428,7 +441,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should send "undefined" when the user-agent header is missing', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.get = jest.fn(() => undefined);
 
             archivePageNow(req, res);
@@ -438,7 +451,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should send req.ip, not a multi-hop X-Forwarded-For list', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.headers = { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' };
             req.ip = '10.0.0.1';
 
@@ -450,7 +463,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should encode an IPv6 req.ip', () => {
-            req.body = { url: 'http://example.com' };
+            req.query = { url: 'http://example.com' };
             req.ip = '::ffff:127.0.0.1';
 
             archivePageNow(req, res);
@@ -461,7 +474,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should log an empty url parameter when the url is missing', () => {
-            req.body = {};
+            req.query = {};
 
             archivePageNow(req, res);
 
@@ -472,7 +485,7 @@ describe('Archive Page Now Service', () => {
 
     describe('Request isolation', () => {
         const makeReq = (userAgent, ip) => ({
-            body: { url: 'http://example.com' },
+            query: { url: 'http://example.com' },
             get: jest.fn(() => userAgent),
             ip,
             headers: {},
@@ -504,7 +517,7 @@ describe('Archive Page Now Service', () => {
             .flat().join('\n');
 
         it('should log the submitted URL only at debug level', () => {
-            req.body = { url: 'http://example.com/jane.doe@example.pt' };
+            req.query = { url: 'http://example.com/jane.doe@example.pt' };
 
             archivePageNow(req, res);
 
@@ -513,7 +526,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should log the length of an invalid URL, not the URL', () => {
-            req.body = { url: 'not a url jane.doe@example.pt' };
+            req.query = { url: 'not a url jane.doe@example.pt' };
 
             archivePageNow(req, res);
 
@@ -523,7 +536,7 @@ describe('Archive Page Now Service', () => {
         });
 
         it('should escape CR and LF in the submitted URL, so it cannot forge a log line', () => {
-            req.body = { url: 'x\r\n01/Jan/2026:00:00:00\tINFO\tArchivePageNow\t-\tforged' };
+            req.query = { url: 'x\r\n01/Jan/2026:00:00:00\tINFO\tArchivePageNow\t-\tforged' };
 
             archivePageNow(req, res);
 
@@ -542,28 +555,27 @@ describe('Archive Page Now Service', () => {
         function appTrusting(setting) {
             const app = express();
             app.set('trust proxy', parseTrustProxy(setting));
-            app.use(express.urlencoded({ extended: false }));
             // Renders nothing: only the logging request matters here
-            app.post('/services/archivepagenow', (req, res) => archivePageNow(req, { render: () => res.end() }));
+            app.get('/services/archivepagenow/save', (req, res) => archivePageNow(req, { render: () => res.end() }));
             return app;
         }
         const sentIp = () => new URL(mockFetch.mock.calls[0][0]).searchParams.get('ip');
 
         it('should send the TCP peer and ignore X-Forwarded-For when no proxy is trusted (the default)', async () => {
             await request(appTrusting(''))
-                .post('/services/archivepagenow')
+                .get('/services/archivepagenow/save')
                 .set('X-Forwarded-For', '203.0.113.66')
-                .type('form').send({ url: 'http://example.com' });
+                .query({ url: 'http://example.com' });
 
             expect(sentIp()).toMatch(/^(::ffff:)?127\.0\.0\.1$/);
         });
 
         it('should send only the address the trusted proxy saw, not one the client added', async () => {
             await request(appTrusting('1'))
-                .post('/services/archivepagenow')
+                .get('/services/archivepagenow/save')
                 // The client sent "X-Forwarded-For: 203.0.113.66"; the proxy appended 198.51.100.7
                 .set('X-Forwarded-For', '203.0.113.66, 198.51.100.7')
-                .type('form').send({ url: 'http://example.com' });
+                .query({ url: 'http://example.com' });
 
             expect(sentIp()).toBe('198.51.100.7');
         });
