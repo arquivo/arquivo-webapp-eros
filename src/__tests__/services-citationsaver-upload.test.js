@@ -637,7 +637,7 @@ describe('POST /services/citationsaver through the app', () => {
                 expect(() => loadApp(uploadFolder, { 'citation.saver.upload.temp.folder.path': path.join(link, 'tmp') }))
                     .toThrow('must not be inside');
             } finally {
-                fs.rmSync(link);
+                fs.unlinkSync(link);
             }
         });
 
