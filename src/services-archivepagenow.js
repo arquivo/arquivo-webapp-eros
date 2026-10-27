@@ -3,7 +3,9 @@
 /**
  * Archive Page Now Service
  * 
- * Handles requests to archive a web page immediately. This service:
+ * Handles requests to archive a web page immediately, submitted with GET (the 'url'
+ * query parameter): it changes no state on this server, only renders the recorder page.
+ * This service:
  * 1. Validates the submitted URL
  * 2. Renders success page with links to:
  *    - The archiving service URL
@@ -35,7 +37,7 @@ const loggingEndpoint = function () {
 }
 
 module.exports = function (req, res) {
-    const requestData = new URLSearchParams(req.body);
+    const requestData = new URLSearchParams(req.query);
     const url = (requestData.get('url') ?? '').trim();
 
     // Logging info, scoped to this request:
