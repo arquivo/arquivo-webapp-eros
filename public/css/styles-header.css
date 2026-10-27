@@ -5,7 +5,7 @@ header {
   top: 0;
   z-index: 2;
   height: auto;
-  padding: 8px 0 4px 0;
+  padding: 8px 0 0 0;
   background-color: #033f72;
   text-align: center;
 }
@@ -76,6 +76,63 @@ header .background-top-curve {
 
 body#landing-replay header .background-top-curve {
   display: none;
+}
+
+/* Cookie consent notice: see [[header-replay.ejs]] for the dismissal script and
+   [[../../translations/wayback.yml]] "cookie-notice" for the copy. */
+div.cookie-notice-cl {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 0px;
+  margin-left: 200px;
+  padding: 6px 110px 6px 16px;
+  border-top: 1px solid #3b668b;
+  background-color: #033f72;
+  color: white;
+  font-size: 0.8em;
+  line-height: 1.4;
+  text-align: center;
+}
+
+div.cookie-notice-cl a,
+div.cookie-notice-cl a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+button.cookie-notice-close-cl {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background-color: #1c75c0;
+  border: 1px solid #1c75c0;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.75em;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+button.cookie-notice-close-cl:hover {
+  background-color: white;
+  color: #1c75c0;
+}
+
+@media (min-width: 0px) and (max-width: 767px) {
+  div.cookie-notice-cl {
+    margin-left: 0;
+    padding: 6px 16px 34px 16px;
+  }
+
+  button.cookie-notice-close-cl {
+    top: auto;
+    right: 50%;
+    bottom: 6px;
+    transform: translateX(50%);
+  }
 }
 
 /* Header container wrap */

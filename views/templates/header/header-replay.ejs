@@ -35,11 +35,12 @@
   <h3><%= t('wayback.popups.complete-the-page.accessibility') %></h3>
   <ul class="replay-options">
     <li><p><span class="fas fa-laptop-medical" aria-hidden="true" style="padding-right:5px;"></span><%= t('wayback.popups.complete-the-page.confirmation') %></p></li>
+    <li class="web-access-notice"><p><%- t('wayback.popups.complete-the-page.web-access-notice') %></p></li>
     <li><button class="confirm"><%= t('wayback.popups.buttons.ok') %></button></li>
-    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>    
+    <li><button class="cancel"><%= t('wayback.popups.buttons.cancel') %></button></li>
   </ul>
 </section>
-<!-- ends complete -->  
+<!-- ends complete -->
 
 <!-- starts open replay page in fullscreen -->
 <section id="fullscreen-mode" class="modal">
@@ -101,5 +102,31 @@
 <!-- starts shows url link of page selected and timestamp -->
 <p id="chosen-url" class="chosen-url-cl"><a id="chosen-url-a" class="chosen-url-cl" target="_blank" href="<%= requestedPage.url %>"><%= requestedPage.url %></a> <br> <span id="chosen-url-date"><%= date %></span></p>
 <!-- ends shows url link of page selected and timestamp -->
+
+<!-- starts cookie consent notice -->
+<div id="cookie-notice" class="cookie-notice-cl noprint">
+  <span id="cookie-notice-text"><%= t('wayback.cookie-notice.text') %> <a id="cookie-notice-link" href="<%= t('wayback.cookie-notice.link-url') %>" target="_blank" rel="noopener"><%= t('wayback.cookie-notice.link-text') %></a>.</span>
+  <button type="button" id="cookie-notice-close" class="cookie-notice-close-cl"><%= t('wayback.cookie-notice.close') %></button>
+</div>
+<script>
+  (function () {
+    var COOKIE_NAME = 'cookieNoticeDismissed';
+    function hasCookie(name) {
+      return document.cookie.split('; ').some(function (entry) {
+        return entry.indexOf(name + '=') === 0;
+      });
+    }
+    if (hasCookie(COOKIE_NAME)) {
+      document.getElementById('cookie-notice').style.display = 'none';
+      return;
+    }
+    $('#cookie-notice-close').on('click', function () {
+      $('#cookie-notice').hide();
+      var expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = COOKIE_NAME + '=1; expires=' + expires + '; path=/';
+    });
+  })();
+</script>
+<!-- ends cookie consent notice -->
 
 </header>
