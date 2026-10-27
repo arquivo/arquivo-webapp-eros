@@ -137,7 +137,7 @@ h2 {
 
 body#landing-replay p#chosen-url {
   margin: 0 auto;
-  padding: 0 0 5px 0;
+  padding: 0 0 6px 0;
   font-size: 0.7em;
   line-height: 1.8em;
   color: white;
@@ -1422,6 +1422,17 @@ section.modal ul.replay-options li p {
 section.modal ul.replay-options li button {
   margin: 10px;
   width: 100px;
+}
+
+section.modal ul.replay-options li.web-access-notice p {
+  padding: 0 6px 6px 6px;
+  font-size: 0.65em;
+  text-align: justify;
+  color: #2a2a2a;
+}
+
+section.modal ul.replay-options li.web-access-notice p strong {
+  font-weight: bold;
 }
 
 section#confirm-narrative-modal,

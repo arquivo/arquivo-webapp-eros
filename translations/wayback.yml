@@ -31,12 +31,15 @@ popups:
       en: 'Print this page?'
       pt: 'Imprimir esta página?'
   complete-the-page:
-    accessibility: 
+    accessibility:
       en: Complete the page
       pt: completar a página
     confirmation:
       en: We will try to complete the page with resources from other web archives
       pt: Vamos tentar completar a página com recursos externos
+    web-access-notice:
+      en: '<strong>Live Web Access:</strong> This feature may query the Internet and other archives to retrieve missing resources and improve the replay of the archived page. Retrieved content may become part of the Arquivo.pt collection.'
+      pt: '<strong>Acesso à Web atual:</strong> Esta funcionalidade pode consultar a Internet e outros arquivos para recuperar recursos em falta e melhorar a reprodução da página arquivada. Os conteúdos recuperados poderão integrar o acervo do Arquivo.pt.'
   fullscreen-mode:
     accessibility:
       en: Open page in fullscreen
@@ -93,6 +96,19 @@ nav-menu:
   list:
     en: List
     pt: Lista
+cookie-notice:
+  text:
+    en: 'While replaying archived pages, the original code of those pages may generate cookies. These cookies are associated with the arquivo.pt domain and are only ever used to faithfully replay the pages. To learn more, see our'
+    pt: 'Durante a reprodução de páginas arquivadas, o código original dessas páginas pode gerar cookies. Esses cookies são associados ao domínio arquivo.pt e são usados exclusivamente para reprodução fiel das páginas. Para saber mais consulte a nossa'
+  link-text:
+    en: 'Cookie Policy'
+    pt: 'Política de Cookies'
+  link-url:
+    en: 'https://arquivo.pt/cookies-policy'
+    pt: 'https://arquivo.pt/cookies-politica'
+  close:
+    en: Got it
+    pt: Entendi
 title:
   preserved-by-arquivo:
     en: preserved by Arquivo.pt
