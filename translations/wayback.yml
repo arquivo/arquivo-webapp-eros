@@ -35,7 +35,7 @@ popups:
       en: Complete the page
       pt: completar a página
     confirmation:
-      en: We will try to complete the page with resources from other web archives
+      en: We will try to complete the page using other web archives
       pt: Vamos tentar completar a página com recursos externos
     web-access-notice:
       en: '<strong>Live Web Access:</strong> This feature may query the Internet and other archives to retrieve missing resources and improve the replay of the archived page. Retrieved content may become part of the Arquivo.pt collection.'

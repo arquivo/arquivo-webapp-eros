@@ -83,7 +83,7 @@ body#landing-replay header .background-top-curve {
 div.cookie-notice-cl {
   position: relative;
   box-sizing: border-box;
-  margin-top: 4px;
+  margin-top: 0px;
   margin-left: 200px;
   padding: 6px 110px 6px 16px;
   border-top: 1px solid #3b668b;
