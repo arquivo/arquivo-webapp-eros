@@ -3,6 +3,7 @@
 const request = require('supertest');
 
 // Mock API modules before app is loaded
+jest.mock('node-fetch'); // the ArchivePageNow backend logging request
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
@@ -27,6 +28,9 @@ CDXSearchApiRequest.mockImplementation(() => ({
 SuggestionApi.mockImplementation(() => ({
     get: (_query, _lang, cb) => cb(null),
 }));
+
+const fetch = require('node-fetch');
+fetch.mockResolvedValue({});
 
 const app = require('../../app');
 
@@ -56,6 +60,36 @@ describe('SEC-01 — Reflected XSS regression', () => {
                 .get('/services/archivepagenow?url=http://example.com');
             expect(res.status).toBe(200);
             expect(res.text).toContain('value="http://example.com"');
+        });
+    });
+
+    describe('GET /services/archivepagenow/save — submitted url', () => {
+        it('escapes an attribute-breaking payload in the error page input', async () => {
+            const res = await request(app)
+                .get(`/services/archivepagenow/save?url=${encodeURIComponent(ATTR_BREAK)}`);
+            expect(res.status).toBe(200);
+            expect(res.text).toContain('<p id="save-page-url-message-error">');
+            expect(res.text).not.toContain(ATTR_BREAK);
+            expect(res.text).not.toContain('<script>alert(1)');
+        });
+
+        it('does not render the recorder page for a javascript: URI', async () => {
+            const res = await request(app)
+                .get(`/services/archivepagenow/save?url=${encodeURIComponent(JAVASCRIPT)}`);
+            expect(res.status).toBe(200);
+            expect(res.text).not.toContain('id="archivepagenow-landing"');
+            expect(res.text).not.toMatch(/(href|src)="javascript:alert/);
+        });
+
+        it('keeps a percent-encoded payload encoded on the recorder page', async () => {
+            const url = 'http://example.com/?q=' + encodeURIComponent(ATTR_BREAK);
+            const res = await request(app)
+                .get(`/services/archivepagenow/save?url=${encodeURIComponent(url)}`);
+            expect(res.status).toBe(200);
+            expect(res.text).toContain('id="archivepagenow-landing"');
+            expect(res.text).toContain(`href="${url}"`);
+            expect(res.text).not.toContain(ATTR_BREAK);
+            expect(res.text).not.toContain('<script>alert(1)');
         });
     });
 

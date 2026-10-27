@@ -15,6 +15,7 @@ const request = require('supertest');
 const { axe, toHaveNoViolations } = require('jest-axe');
 
 // Mock API modules before app is loaded (jest.mock is hoisted automatically)
+jest.mock('node-fetch'); // the ArchivePageNow backend logging request
 jest.mock('../../src/apis/page-search-api');
 jest.mock('../../src/apis/image-search-api');
 jest.mock('../../src/apis/cdx-api');
@@ -105,6 +106,8 @@ SuggestionApi.mockImplementation(() => ({
     getSuggestion: (query, lang, callback) => callback(`${query} sugestão`),
 }));
 
+require('node-fetch').mockResolvedValue({});
+
 expect.extend(toHaveNoViolations);
 
 const app = require('../../app');
@@ -139,6 +142,7 @@ describe('Accessibility – WCAG 2.1 AA', () => {
         it('/page/advanced/search – advanced page search',  () => testA11y('/page/advanced/search'));
         it('/image/advanced/search – advanced image search', () => testA11y('/image/advanced/search'));
         it('/services/archivepagenow – archive page now form', () => testA11y('/services/archivepagenow'));
+        it('/services/archivepagenow/save – form with an invalid URL error', () => testA11y('/services/archivepagenow/save?url=not%20a%20url'));
         it('/services/citationsaver – citation saver form',    () => testA11y('/services/citationsaver'));
     });
 

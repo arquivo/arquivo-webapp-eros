@@ -13,18 +13,19 @@
     </h4>
 
     <section id="search-tools">
+        <%# The consent is only checked in the browser (required): the checkboxes have no name, so they are not sent with the form %>
         <div class="archivepagenow-consent">
             <div class="archivepagenow-consent-item">
-                <input type="checkbox" name="consent-protection" id="consent-protection" form="search-form" required autofocus>
+                <input type="checkbox" id="consent-protection" form="search-form" required autofocus>
                 <label for="consent-protection"><%- t('services-archivepagenow.consent.protection.checkbox.before') %><a class="learn-more" href="<%- t('services-archivepagenow.consent.protection.link.href') %>" target="_blank" rel="noopener"><%- t('services-archivepagenow.consent.protection.link.text') %></a><%- t('services-archivepagenow.consent.protection.checkbox.after') %></label>
             </div>
             <div class="archivepagenow-consent-item">
-                <input type="checkbox" name="consent-processing" id="consent-processing" form="search-form" required>
+                <input type="checkbox" id="consent-processing" form="search-form" required>
                 <label for="consent-processing"><%- t('services-archivepagenow.consent.processing.checkbox') %></label>
             </div>
         </div>
 
-        <form id="search-form" role="form" action="/services/archivepagenow?l=<%= getLanguage() %>" method="POST">
+        <form id="search-form" role="form" action="/services/archivepagenow/save" method="GET">
             <span class="search-input-button">
                 <input id="submit-search-input" type="search" placeholder="<%= t('services-archivepagenow.form.label') %>"
                     autocapitalize="off" autocomplete="off" disabled onmouseout="removeSearchBoxShadow()" name="url"
@@ -34,7 +35,8 @@
                         <%= t('services-archivepagenow.form.button') %>
                     </span></button>
             </span>
-
+            <%# A GET form drops the query string of its action, so the language goes in a field %>
+            <input type="hidden" name="l" value="<%= getLanguage() %>">
         </form>
 
         <script>
