@@ -58,7 +58,7 @@ body#archivepagenow p#save-page-url-message-error {
 /* Hides "Copy link" when in ArchivePageNow mode */
 
 section#archivepagenow-description {
-    margin: 0;
+    margin: 0 0 16px 0;
     line-height: 27px;
 }
 
