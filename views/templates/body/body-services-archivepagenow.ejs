@@ -12,10 +12,16 @@
     <%= t('services-archivepagenow.form.text') %>
     </h4>
 
+    <section id="archivepagenow-description">
+        <p><%- t('services-archivepagenow.description.first-line') %></p>
+        <p><%= t('services-archivepagenow.description.second-line') %></p>
+        <p><a href="<%- t('services-archivepagenow.learn-more.href') %>" target="_blank" rel="noopener"><%= t('services-archivepagenow.learn-more.text') %></a></p>
+    </section>
+
     <section id="search-tools">
         <div class="archivepagenow-consent">
             <div class="archivepagenow-consent-item">
-                <input type="checkbox" name="consent-protection" id="consent-protection" form="search-form" required autofocus>
+                <input type="checkbox" name="consent-protection" id="consent-protection" form="search-form" required>
                 <label for="consent-protection"><%- t('services-archivepagenow.consent.protection.checkbox.before') %><a class="learn-more" href="<%- t('services-archivepagenow.consent.protection.link.href') %>" target="_blank" rel="noopener"><%- t('services-archivepagenow.consent.protection.link.text') %></a><%- t('services-archivepagenow.consent.protection.checkbox.after') %></label>
             </div>
             <div class="archivepagenow-consent-item">
@@ -75,10 +81,5 @@
                     <%= t('services-archivepagenow.form.example') %>
                 </small>
                 <% } %>
-    </section>
-    <section id="archivepagenow-description">
-        <p><%- t('services-archivepagenow.description.first-line') %></p>
-        <p><%= t('services-archivepagenow.description.second-line') %></p>
-        <p><a href="<%- t('services-archivepagenow.learn-more.href') %>"><%= t('services-archivepagenow.learn-more.text') %></a></p>
     </section>
 </section>
