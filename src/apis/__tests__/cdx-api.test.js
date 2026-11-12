@@ -531,8 +531,8 @@ describe('CDXSearchApiRequest', () => {
             done();
         }, 100);
 
-        it('has an explicit 5s idle timeout, a 1 minute deadline and a 64 MB cap', () => {
-            expect(api.options).toEqual({ method: 'GET', timeout: 60000, idleTimeout: 5000, maxResponseBytes: 64 * 1024 * 1024 });
+        it('has an explicit 1 minute deadline and a 64 MB cap, and no idle timeout', () => {
+            expect(api.options).toEqual({ method: 'GET', timeout: 60000, maxResponseBytes: 64 * 1024 * 1024 });
         });
 
         it('reads a slow but steady stream that lasts longer than the idle timeout', (done) => {
