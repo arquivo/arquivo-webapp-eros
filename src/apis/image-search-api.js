@@ -4,10 +4,7 @@ const JsonApiRequest = require('./json-api-request');
 const config = require('config');
 const removeInlineTerms = require('../utils/remove-inline-terms');
 const todayYmd = require('../utils/today-ymd');
-
-// Inline terms the image search API doesn't understand in the query, where it would search them as words.
-// collection is sent in its own parameter, the others only apply to page search.
-const PAGE_ONLY_INLINE_PARAMS = ['collection', 'yearBalance', 'language', 'minLanguageConfidence'];
+const INLINE_SEARCH_TERMS = require('../utils/inline-search-terms');
 
 // Reply on failure, with the keys the results partial and the export read, so it renders "not found".
 // Frozen, because every request shares it.
@@ -48,10 +45,17 @@ class ImageSearchApiRequest extends JsonApiRequest {
         }, requestData);
     }
 
+    // The API searches the whole q as text, so q keeps only the words to search. The inline terms
+    // (site:, type:, size:, ...) are sent in their own parameters, which sanitize-search-params sets,
+    // or only apply to page search.
     sanitizeRequestData(requestData) {
         const apiRequestData = new URLSearchParams(requestData);
         if (apiRequestData.has('q')) {
-            apiRequestData.set('q', removeInlineTerms(apiRequestData.get('q'), PAGE_ONLY_INLINE_PARAMS));
+            apiRequestData.set('q', removeInlineTerms(apiRequestData.get('q'), INLINE_SEARCH_TERMS, { keepPhrases: true }));
+        }
+        // The API only knows the lowercase sizes (sm, md, lg)
+        if (apiRequestData.has('size')) {
+            apiRequestData.set('size', apiRequestData.get('size').toLowerCase());
         }
         return super.sanitizeRequestData(apiRequestData);
     }

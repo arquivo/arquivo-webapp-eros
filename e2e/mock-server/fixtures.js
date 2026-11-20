@@ -166,7 +166,9 @@ function buildImageSearchResults({ q, offset, maxItems }) {
     const start = parseInt(offset ?? '0', 10) || 0;
     const size = parseInt(maxItems ?? '25', 10) || 25;
 
-    if (isNoResultsQuery(query)) {
+    // Like the image search API, an empty query matches every image (e.g. a site search
+    // without words, where the site is in siteSearch)
+    if (query.includes(NO_RESULTS_QUERY)) {
         return { totalItems: 0, responseItems: [] };
     }
 

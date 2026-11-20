@@ -2,9 +2,7 @@
 
 const config = require('config');
 const todayYmd = require('./today-ymd');
-
-// Inline query terms (e.g. "collection:FCCN") that are extracted into their own request parameter
-const specialTerms = ['site', 'type', 'collection', 'safe', 'size', 'yearBalance', 'language', 'minLanguageConfidence'];
+const specialTerms = require('./inline-search-terms');
 
 // Values the text search API accepts, anything else makes it reply with an error
 const isValidYearBalance = (v) => ['true', 'false'].includes(v) || (/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(v) && Number.parseFloat(v) <= 1);
