@@ -187,7 +187,7 @@ describe('ImageSearchApiRequest', () => {
             expect(sanitized.has('minLanguageConfidence')).toBe(false);
         });
 
-        it('should keep the inline terms the image search API understands in the query', () => {
+        it('should send the site, type, size and safe terms in their own parameters only, not in the query', () => {
             const requestData = new URLSearchParams({
                 q: 'lisboa site:www.publico.pt type:png size:sm safe:off',
                 siteSearch: 'www.publico.pt',
@@ -197,7 +197,44 @@ describe('ImageSearchApiRequest', () => {
             });
 
             const sanitized = api.sanitizeRequestData(requestData);
-            expect(sanitized.get('q')).toBe('lisboa site:www.publico.pt type:png size:sm safe:off');
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.get('siteSearch')).toBe('www.publico.pt');
+            expect(sanitized.get('type')).toBe('png');
+            expect(sanitized.get('size')).toBe('sm');
+            expect(sanitized.get('safeSearch')).toBe('off');
+        });
+
+        it('should remove an inline term whose parameter was given explicitly, keeping the parameter', () => {
+            const requestData = new URLSearchParams({ q: 'lisboa site:a.pt', siteSearch: 'b.pt' });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.get('siteSearch')).toBe('b.pt');
+        });
+
+        it('should remove the inline terms whose value was dropped as a default', () => {
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'lisboa type:all size:all safe:on' }));
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.has('type')).toBe(false);
+            expect(sanitized.get('size')).toBe('all');
+            expect(sanitized.get('safeSearch')).toBe('on');
+        });
+
+        it('should keep exact phrases, exclusions and wildcards in the query, with the terms inside a phrase', () => {
+            const requestData = new URLSearchParams({
+                q: '"farol site:publico.pt" -site:sapo.pt lis* site:*.sapo.pt',
+                siteSearch: '*.sapo.pt'
+            });
+
+            const sanitized = api.sanitizeRequestData(requestData);
+            expect(sanitized.get('q')).toBe('"farol site:publico.pt" -site:sapo.pt lis*');
+            expect(sanitized.get('siteSearch')).toBe('*.sapo.pt');
+        });
+
+        it('should send the size in lowercase', () => {
+            const sanitized = api.sanitizeRequestData(new URLSearchParams({ q: 'lisboa size:LG', size: 'LG' }));
+            expect(sanitized.get('q')).toBe('lisboa');
+            expect(sanitized.get('size')).toBe('lg');
         });
 
         it('should handle trackingId parameter', () => {
@@ -353,7 +390,7 @@ describe('ImageSearchApiRequest', () => {
             return api;
         };
 
-        it('sends the default params, in order, without the page search only terms in the query', (done) => {
+        it('sends the default params, in order, without the inline terms in the query', (done) => {
             const api = apiAtCaptureServer();
             const requestData = new URLSearchParams({
                 q: 'gato collection:Roteiro language:pt size:lg',
@@ -366,7 +403,7 @@ describe('ImageSearchApiRequest', () => {
             api.get(requestData, (data) => {
                 expect(data).toEqual({ totalItems: 1, responseItems: [] });
                 const expected = new URLSearchParams([
-                    ['q', 'gato size:lg'],
+                    ['q', 'gato'],
                     ['from', '19910806'],
                     ['to', todayYmd()],
                     ['offset', '25'],

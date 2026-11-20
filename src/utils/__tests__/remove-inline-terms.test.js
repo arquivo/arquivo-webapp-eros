@@ -28,6 +28,21 @@ describe('removeInlineTerms', () => {
     expect(removeInlineTerms('lisboa  porto', ['language'])).toBe('lisboa  porto');
   });
 
+  it('should remove the terms inside double quoted phrases, unless keepPhrases is set', () => {
+    const query = 'lisboa "farol language:pt porto" language:en';
+    expect(removeInlineTerms(query, ['language'])).toBe('lisboa "farol porto"');
+    expect(removeInlineTerms(query, ['language'], { keepPhrases: true })).toBe('lisboa "farol language:pt porto"');
+  });
+
+  it('should keep the whitespace around phrases with keepPhrases', () => {
+    expect(removeInlineTerms('language:pt "a b"  lisboa language:en "c"porto language:fr', ['language'], { keepPhrases: true }))
+      .toBe('"a b"  lisboa "c"porto');
+  });
+
+  it('should read the terms after an unpaired quote with keepPhrases, as they are not in a phrase', () => {
+    expect(removeInlineTerms('"a" "lisboa language:pt', ['language'], { keepPhrases: true })).toBe('"a" "lisboa');
+  });
+
   // Regression: a `\s+name:` pattern was quadratic on long whitespace runs.
   it('should take linear time on long whitespace runs', () => {
     const query = 'lisboa' + ' '.repeat(50000) + 'porto';
@@ -37,6 +52,17 @@ describe('removeInlineTerms', () => {
     const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
 
     expect(result).toBe(query);
+    expect(elapsedMs).toBeLessThan(200);
+  });
+
+  it('should take linear time on many quotes with keepPhrases', () => {
+    const query = '"a" '.repeat(20000) + '"' + ' '.repeat(50000) + 'language:pt';
+
+    const start = process.hrtime.bigint();
+    const result = removeInlineTerms(query, ['language'], { keepPhrases: true });
+    const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;
+
+    expect(result).toBe(('"a" '.repeat(20000) + '"').trim());
     expect(elapsedMs).toBeLessThan(200);
   });
 });
