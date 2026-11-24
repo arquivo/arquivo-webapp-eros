@@ -1,9 +1,14 @@
 'use strict';
 
+const config = require('config');
 const { archiveTimestampToDate } = require('./utils/archive-timestamp');
+const { parseEmbargoExemptDomains, isEmbargoExempt } = require('./utils/embargo-exempt-domains');
 // Legally sensitive: versions younger than this are never listed. Not configurable on purpose;
 // if it ever becomes configurable, validate it (minimum 1) and refuse to start on a bad value.
 const EMBARGO_YEARS = 1;
+// Legally sensitive too: captures of these domains and their subdomains skip the embargo.
+// Read once, when the app starts, which fails on a bad value.
+const EMBARGO_EXEMPT_DOMAINS = parseEmbargoExemptDomains(config.get('embargo.exempt.domains'));
 // A well-formed 'YYYYMMDDhhmmss' archive timestamp (years 1900-2099); anything else is embargoed
 // Shorter ones (e.g. 12-digit 'YYYYMMDDhhmm' in some 2000-2001 captures) are right-padded with zeros before this check
 // The month/day/hour/minute/second ranges only reject junk rows; order and embargo rely solely on fixed-width 14-digit string comparison
@@ -52,8 +57,10 @@ module.exports = function (apiData) {
         .filter((item, index, array) => {
             return (index == 0 || item.status[0] != '2' || item.digest != array[index - 1].digest || item.timestamp.substring(0, 8) != array[index - 1].timestamp.substring(0, 8))
         })
-        // Embargo: don't display versions younger than EMBARGO_YEARS; fails closed on malformed timestamps
-        .filter(item => ARCHIVE_TIMESTAMP.test(item.timestamp) && item.timestamp < embargoCutoff)
+        // Embargo: don't display versions younger than EMBARGO_YEARS, unless their host is exempt;
+        // fails closed on malformed timestamps
+        .filter(item => ARCHIVE_TIMESTAMP.test(item.timestamp)
+            && (item.timestamp < embargoCutoff || isEmbargoExempt(item.url, EMBARGO_EXEMPT_DOMAINS)))
         // Sort by timestamp, oldest first (the order the CDX server sends and the views list)
         .sort(sortByTimestamp)
 

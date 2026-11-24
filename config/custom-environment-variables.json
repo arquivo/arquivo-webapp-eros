@@ -33,6 +33,11 @@
   "cdx": {
     "api": "CDX_API"
   },
+  "embargo": {
+    "exempt": {
+      "domains": "EMBARGO_EXEMPT_DOMAINS"
+    }
+  },
   "services": {
     "archivepagenow": {
       "url": "SERVICES_ARCHIVEPAGENOW_URL"
