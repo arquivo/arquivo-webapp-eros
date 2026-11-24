@@ -266,6 +266,44 @@ describe('filterCdx', () => {
         ])('should filter out timestamps with %s', (_, timestamp) => {
             expect(filterCdx([item(timestamp)])).toEqual([]);
         });
+
+        describe('with exempt domains', () => {
+            // The setting is read when the module loads: load a copy, with its own config mock
+            function filterCdxExempting(domains) {
+                let isolatedFilterCdx;
+                jest.isolateModules(() => {
+                    require('config').set('embargo.exempt.domains', domains);
+                    isolatedFilterCdx = require('../filter-cdx');
+                });
+                return isolatedFilterCdx;
+            }
+            const capture = (url, timestamp = '20260101120000') => ({ status: '200', timestamp, digest: url, url });
+
+            it('should keep recent captures of an exempt domain and its subdomains only', () => {
+                const exempting = filterCdxExempting('blogs.sapo.pt');
+                const data = [
+                    capture('http://blogs.sapo.pt/'),
+                    capture('http://xpto.blogs.sapo.pt/post'),
+                    capture('http://notblogs.sapo.pt/'),
+                    capture('http://blogs.sapo.pt.example.com/'),
+                    capture('http://example.com/'),
+                ];
+                expect(exempting(data).map(c => c.url)).toEqual(['http://blogs.sapo.pt/', 'http://xpto.blogs.sapo.pt/post']);
+            });
+
+            it('should still filter out malformed timestamps of an exempt domain', () => {
+                const exempting = filterCdxExempting('blogs.sapo.pt');
+                expect(exempting([capture('http://xpto.blogs.sapo.pt/', '2026031012000a')])).toEqual([]);
+            });
+
+            it('should apply the embargo to every site by default', () => {
+                expect(filterCdx([capture('http://xpto.blogs.sapo.pt/')])).toEqual([]);
+            });
+
+            it('should refuse to load on an invalid setting', () => {
+                expect(() => filterCdxExempting('pt')).toThrow(/EMBARGO_EXEMPT_DOMAINS/);
+            });
+        });
     });
 
     describe('Sorting', () => {

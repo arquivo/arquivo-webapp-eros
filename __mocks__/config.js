@@ -21,6 +21,7 @@ const mockConfig = {
   'text.search.api.spellcheck_enabled': true,
   'cdx.api': 'https://preprod.arquivo.pt/wayback/cdx',
   'search.start.date': '19910806',
+  'embargo.exempt.domains': '',
   'text.results.per.page': 10,
   'image.results.per.page': 25,
   'session.secret': 'test-secret',
