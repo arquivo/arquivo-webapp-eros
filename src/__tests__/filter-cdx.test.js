@@ -296,7 +296,7 @@ describe('filterCdx', () => {
                 expect(exempting([capture('http://xpto.blogs.sapo.pt/', '2026031012000a')])).toEqual([]);
             });
 
-            it('should apply the embargo to every site by default', () => {
+            it('should apply the embargo to every site when no domain is exempt', () => {
                 expect(filterCdx([capture('http://xpto.blogs.sapo.pt/')])).toEqual([]);
             });
 
