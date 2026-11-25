@@ -7,6 +7,30 @@
 <%- include('../../partials/replay-technical-details.ejs') %>
 <!-- ends image modal when user clicks to see image and its details -->
 
+<!-- starts search on site -->
+<section id="search-on-site" class="modal" role="dialog" aria-modal="true" aria-labelledby="search-on-site-title">
+  <h3><%= t('wayback.popups.search-on-site.accessibility') %></h3>
+  <form id="search-on-site-form" action="/page/search" method="get">
+    <input type="hidden" name="l" value="<%= getLanguage() %>">
+    <input type="hidden" name="q" id="search-on-site-query">
+    <p id="search-on-site-title"><span class="fas fa-search" aria-hidden="true"></span> <%= t('wayback.popups.search-on-site.accessibility') %> <strong id="search-on-site-host"></strong></p>
+    <label for="search-on-site-terms"><%= t('wayback.popups.search-on-site.terms') %></label>
+    <input type="search" id="search-on-site-terms" autocomplete="off">
+    <div id="search-on-site-subdomains-option">
+      <input type="checkbox" id="search-on-site-subdomains" aria-describedby="search-on-site-subdomains-hint">
+      <label for="search-on-site-subdomains"><%= t('wayback.popups.search-on-site.include-subdomains') %></label>
+      <p id="search-on-site-subdomains-hint"><%= t('wayback.popups.search-on-site.subdomains-hint') %> <span id="search-on-site-hint-host"></span></p>
+    </div>
+    <div class="search-on-site-buttons">
+      <button type="submit" id="search-on-site-pages" formaction="/page/search" disabled><%= t('wayback.popups.search-on-site.pages') %></button>
+      <button type="submit" id="search-on-site-images" formaction="/image/search" disabled><%= t('wayback.popups.search-on-site.images') %></button>
+    </div>
+    <button type="button" id="search-on-site-cancel"><%= t('wayback.popups.buttons.cancel') %></button>
+  </form>
+</section>
+<script src="/js/search-on-site.js"></script>
+<!-- ends search on site -->
+
 <!-- starts take screenshot -->
 <section id="screenshot" class="modal">
   <h3><%= t('wayback.popups.screenshot.accessibility') %></h3>

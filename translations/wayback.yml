@@ -51,6 +51,25 @@ popups:
     confirmation:
       en: You are leaving Arquivo.pt to oldweb.today
       pt: Vai sair do Arquivo.pt para o oldweb.today
+  search-on-site:
+    accessibility:
+      en: Search on site
+      pt: Pesquisar no site
+    terms:
+      en: Search terms
+      pt: Termos de pesquisa
+    include-subdomains:
+      en: Include subdomains
+      pt: Incluir subdomínios
+    subdomains-hint:
+      en: 'Also searches addresses ending in'
+      pt: 'Pesquisa também endereços terminados em'
+    pages:
+      en: Pages
+      pt: Páginas
+    images:
+      en: Images
+      pt: Imagens
   search-other-archives:
     accessibility:
       en: Browse other web archives
@@ -68,6 +87,9 @@ options-menu:
   list-versions:
     en: List versions
     pt: Listar versões
+  search-on-site:
+    en: Search on site
+    pt: Pesquisar no site
   technical-details:
     en: Technical details
     pt: Detalhes técnicos

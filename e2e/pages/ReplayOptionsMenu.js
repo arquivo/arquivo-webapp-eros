@@ -18,6 +18,7 @@ class ReplayOptionsMenu {
         this.nav = page.locator('#replay-right-nav');
 
         this.listVersionsLink = page.locator('#menuListVersions');
+        this.searchOnSiteLink = page.locator('#menuSearchOnSite');
         this.technicalDetailsLink = page.locator('#menuTechnicalDetails');
         this.screenshotLink = page.locator('#menuScreenshot');
         this.printLink = page.locator('#menuPrint');
@@ -25,6 +26,13 @@ class ReplayOptionsMenu {
         this.fullScreenLink = page.locator('#menuFullScreen');
         this.replayWithOldBrowserLink = page.locator('#menuReplayWithOldBrowser');
 
+        this.searchOnSiteModal = page.locator('#search-on-site.modal');
+        this.searchOnSiteHost = page.locator('#search-on-site-host');
+        this.searchOnSiteTerms = page.locator('#search-on-site-terms');
+        this.searchOnSiteSubdomains = page.locator('#search-on-site-subdomains');
+        this.searchOnSitePagesButton = page.locator('#search-on-site-pages');
+        this.searchOnSiteImagesButton = page.locator('#search-on-site-images');
+        this.searchOnSiteCancelButton = page.locator('#search-on-site-cancel');
         this.screenshotModal = page.locator('#screenshot.modal');
         this.printModal = page.locator('#print.modal');
         this.completeThePageModal = page.locator('#complete-the-page.modal');
