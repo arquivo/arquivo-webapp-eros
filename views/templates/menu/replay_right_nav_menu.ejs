@@ -10,6 +10,7 @@
     <ul>      
       <li><span id="menuUrl" class="link-line-height"><%= requestedPage.url %></span><br><span id="menuTs" class="page-date"><%= date %></span></li>
       <li><a id="menuListVersions" href="/page/search?q=<%= encodeURIComponent(requestedPage.url) %>"><span class="fas fa-list" aria-hidden="true"></span><%= t('wayback.options-menu.list-versions'); %></a></li>
+      <li><a id="menuSearchOnSite" href="#search-on-site" rel="modal:open" aria-haspopup="dialog"><span class="fas fa-search" aria-hidden="true"></span><%= t('wayback.options-menu.search-on-site'); %></a></li>
       <li><a id="menuTechnicalDetails" href="#technical-details" rel="modal:open"><span class="fas fa-info-circle" aria-hidden="true"></span><%= t('wayback.options-menu.technical-details'); %></a></li>
       <li><a id="menuScreenshot" href="#screenshot" rel="modal:open""><span class="fas fa-camera" aria-hidden="true"></span><%= t('wayback.options-menu.screenshot'); %></a></li>
       <li><a id="menuPrint" href="#print" rel="modal:open"><span class="fas fa-print" aria-hidden="true"></span><%= t('wayback.options-menu.print'); %></a></li>

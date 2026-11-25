@@ -1467,6 +1467,91 @@ div.jquery-modal section#replay-with-old-browser li#netscape-icon {
   padding-right: 0px;
 }
 
+div.jquery-modal section#search-on-site {
+  max-width: 420px;
+  padding: 15px 20px !important;
+  text-align: left;
+  font-size: 0.85em;
+}
+
+/* The global form and label rules lay out and hide the search bar's labels */
+section#search-on-site form {
+  display: block;
+}
+
+section#search-on-site label {
+  visibility: visible;
+  height: auto;
+  width: auto;
+}
+
+section#search-on-site #search-on-site-title {
+  margin-bottom: 15px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+section#search-on-site #search-on-site-terms {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 5px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 1em;
+  border: 1px solid #767676;
+  border-radius: 4px;
+}
+
+section#search-on-site #search-on-site-subdomains-option {
+  margin-top: 10px;
+}
+
+section#search-on-site #search-on-site-subdomains-hint {
+  margin-top: 2px;
+  font-size: 0.85em;
+  color: #555;
+  overflow-wrap: anywhere;
+}
+
+section#search-on-site .search-on-site-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+section#search-on-site .search-on-site-buttons button {
+  margin: 0 10px;
+  width: 100px;
+}
+
+section#search-on-site .search-on-site-buttons button:disabled,
+section#search-on-site .search-on-site-buttons button:disabled:hover {
+  color: white;
+  background-color: #1c75c0;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+section#search-on-site button#search-on-site-cancel {
+  display: block;
+  margin: 10px auto 0 auto;
+  color: #1c75c0;
+  background: none;
+  border: none;
+  text-decoration: underline;
+}
+
+section#search-on-site input:focus-visible,
+section#search-on-site button:focus-visible {
+  outline: 2px solid #033f72;
+  outline-offset: 2px;
+}
+
+nav#replay-right-nav a#menuSearchOnSite:focus-visible {
+  outline: 2px solid white;
+}
+
 section#replay-not-found {
   display: flex;
   flex-direction: column;
